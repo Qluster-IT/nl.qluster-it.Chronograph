@@ -1,0 +1,115 @@
+{
+	"id": "transition_start",
+	"title": {
+		"en": "Start or replace transition",
+		"nl": "Start of vervang transitie",
+		"de": "Übergang starten oder ersetzen"
+	},
+	"titleFormatted": {
+		"en": "Start or replace transition [[name]] from [[from]] to [[to]] in [[steps]] steps during [[time]] [[unit]]",
+		"nl": "Start of vervang transitie [[name]] van [[from]] naar [[to]] in [[steps]] stappen gedurende [[time]] [[unit]]",
+		"de": "Übergang [[name]] von [[from]] nach [[to]] in [[steps]] Schritten während [[time]] [[unit]] starten oder ersetzen"
+	},
+	"hint": {
+		"en": "Use this card to start a new transition with the provided name, duration and steps. If a transition with the same name already exists, it is replaced.",
+		"nl": "Gebruik dit kaartje om een transitie te starten met de ingevoerde naam, looptijd en stappen. Als er al een transitie met dezelfde naam loopt dan wordt deze vervangen.",
+		"de": "Verwende diese Karte um einen neuen Ubergang mit dem angegebenen Namen, Dauer und Schritten zu starten. Wenn bereits ein Ubergang mit dem gleichen Namen vorhanden ist, wird er ersetzt."
+	},
+	"args": [
+		{
+			"name": "name",
+			"title": {
+				"en": "Name",
+				"nl": "Naam",
+				"de": "Name"
+			},
+			"type": "text"
+		},
+		{
+			"name": "from",
+			"title": {
+				"en": "From",
+				"nl": "Van",
+				"de": "Von"
+			},
+			"type": "number",
+			"min": 0,
+			"step": 0.01
+		},
+		{
+			"name": "to",
+			"title": {
+				"en": "To",
+				"nl": "Naar",
+				"de": "Nach"
+			},
+			"type": "number",
+			"min": 0,
+			"step": 0.01
+		},
+		{
+			"name": "steps",
+			"title": {
+				"en": "Steps",
+				"nl": "Stappen",
+				"de": "Schritte"
+			},
+			"type": "number",
+			"min": 2,
+			"step": 1
+		},
+		{
+			"name": "time",
+			"title": {
+				"en": "Duration",
+				"nl": "Looptijd",
+				"de": "Dauer"
+			},
+			"type": "text"
+		},
+		{
+			"name": "unit",
+			"title": {
+				"en": "Unit",
+				"nl": "Eenheid",
+				"de": "Einheit"
+			},
+			"type": "dropdown",
+			"values": [
+				{
+					"id": "seconds",
+					"label": {
+						"en": "seconds",
+						"nl": "seconden",
+						"de": "Sekunden"
+					}
+				},
+				{
+					"id": "minutes",
+					"label": {
+						"en": "minutes",
+						"nl": "minuten",
+						"de": "Minuten"
+					}
+				},
+				{
+					"id": "hours",
+					"label": {
+						"en": "hours",
+						"nl": "uren",
+						"de": "Stunden"
+					}
+				},
+				{
+					"id": "days",
+					"label": {
+						"en": "days",
+						"nl": "dagen",
+						"de": "Tage"
+
+					}
+				}
+			]
+		}
+	]
+}

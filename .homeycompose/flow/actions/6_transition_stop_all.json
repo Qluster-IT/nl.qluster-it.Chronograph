@@ -1,0 +1,14 @@
+{
+	"id": "transition_stop_all",
+	"title": {
+		"en": "Stop all transitions",
+		"nl": "Stop alle transities",
+		"de": "Alle Übergänge anhalten"
+
+	},
+	"hint": {
+		"en": "Use this card to stop all running transitions.",
+		"nl": "Gebruik dit kaartje om alle transities te stoppen.",
+		"de": "Verwende diese Karte um alle laufenden Übergange zu stoppen."
+	}
+}

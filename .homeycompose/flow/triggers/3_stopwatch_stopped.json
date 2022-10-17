@@ -1,0 +1,56 @@
+
+	{
+		"id": "stopwatch_stopped",
+		"title": {
+			"en": "Stopwatch is stopped",
+			"nl": "Stopwatch is gestopt",
+			"de": "Stoppuhr ist gestoppt"
+		},
+		"titleFormatted": {
+			"en": "Stopwatch [[name]] is stopped",
+			"nl": "Stopwatch [[name]] is gestopt",
+			"de": "Stoppuhr [[name]] ist gestoppt"
+		},
+		"hint": {
+			"en": "This card is activated when a stopwatch with the provided name is stopped.",
+			"nl": "Dit kaartje wordt geactiveerd als een stopwatch met de ingevoerde naam is gestopt.",
+			"de": "Diese Karte wird aktiviert wenn eine Stoppuhr mit dem angegebenen Namen gestoppt ist."
+		},
+		"args": [
+			{
+				"name": "name",
+				"title": {
+					"en": "Name",
+					"nl": "Naam",
+					"de": "Name"
+				},
+				"type": "text"
+			}
+		],
+		"tokens": [
+			{
+				"name": "name",
+				"type": "string",
+				"title": {
+					"en": "Name",
+					"nl": "Naam",
+					"de": "Name"
+				},
+				"example": {
+					"en": "bathroom",
+					"nl": "badkamer",
+					"de": "Badezimmer"
+				}
+			},
+			{
+				"name": "seconds",
+				"type": "number",
+				"title": {
+					"en": "Duration (s)",
+					"nl": "Looptijd (s)",
+					"de": "Dauer (s)"
+				},
+				"example": 60
+			}
+		]
+	}

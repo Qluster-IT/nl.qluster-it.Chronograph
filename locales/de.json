@@ -1,0 +1,20 @@
+{
+  "timer_not_running": "Timer __name__ läuft nicht.",
+  "stopwatch_not_running": "Stoppuhr __name__ läuft nicht.",
+  "transition_not_running": "Übergang __name__ läuft nicht.",
+  "invalid_duration": "Ungültige Dauer.",
+  "invalid_transition": "Ungültiger Übergang.",
+  "invalid_name": "Ungültiger Name.",
+  "settings": {
+    "timers": "Timer",
+    "stopwatches": "Stoppuhren",
+    "transitions": "Übergänge",
+    "no_active_timers": "Keine aktiven Timer.",
+    "no_active_stopwatches": "Keine aktiven Stoppuhren.",
+    "no_active_transitions": "Keine aktiven Übergänge.",
+    "days_abbreviation": "d",
+    "stop": "Stopp",
+    "pause": "Pause",
+    "resume": "Fortsetzen"
+  }
+}

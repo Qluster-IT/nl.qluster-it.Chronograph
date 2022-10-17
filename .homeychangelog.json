@@ -1,0 +1,23 @@
+{
+  "1.1.2": {
+    "en": "Fixed a timer display bug. Additional capabilities for monitoring.",
+    "nl": "Een timer weergave bug opgelost. Aanvullende monitoring mogelijkheden.",
+    "de": "Ein Fehler bei der Timer-Anzeige wurde behoben. Zusätzliche Überwachungsfunktionen."
+  },
+  "1.1.1": {
+    "en": "Ability to delay the execution of flows. Additional tokens for transition cards. Simplified monitoring of timers, stopwatches and transitions.",
+    "nl": "Mogelijkheid tot vertragen van het uitvoeren van de flows. Extra tokens voor transitie kaartjes. Eenvoudigere monitoring van timers, stopwatches en transities.",
+    "de": "Möglichkeit, die Ausführung von Flows zu verzögern. Zusätzliche Token für Übergangskarten. Vereinfachte Überwachung von Timern, Stoppuhren und Übergängen."
+  },
+  "1.1.0": {
+    "en": "Support for new Homey App Store.",
+    "nl": "Ondersteuning voor de nieuwe Homey App Store.",
+    "de": "Unterstützung für den neuen Homey App Store."
+  }
+  ,
+  "1.2.0": {
+    "en": "Rewriten to SDK3.",
+    "nl": "Herschreven naar SDK3.",
+    "de": "Umgeschrieben auf SDK3."
+  }
+}

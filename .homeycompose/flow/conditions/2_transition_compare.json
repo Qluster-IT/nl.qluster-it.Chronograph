@@ -1,0 +1,83 @@
+{
+	"id": "transition_compare",
+	"title": {
+		"en": "Transition longer or shorter than",
+		"nl": "Transitie langer of korter dan",
+		"de": "Übergang länger oder kurzer als"
+	},
+	"titleFormatted": {
+		"en": "Transition [[name]] has a duration !{{longer|shorter}} than [[time]] [[unit]]",
+		"nl": "Transitie [[name]] heeft een looptijd !{{langer|korter}} dan [[time]] [[unit]]",
+		"de": "Übergang [[name]] hat eine Dauer !{{länger|kürzer}} als [[time]] [[unit]]"
+	},
+	"hint": {
+		"en": "Use this card to run or cancel a flow depending on the duration of the transition with the provided name.",
+		"nl": "Gebruik dit kaartje om een flow wel of niet uit te voeren afhankelijk van de looptijd van de transitie met de ingevoerde naam.",
+		"de": "Verwende diese Karte um einen Flow abhängig von der Dauer des Übergangs mit dem angegebenen Namen auszuführen oder abzubrechen."
+	},
+	"args": [
+		{
+			"name": "name",
+			"title": {
+				"en": "Name",
+				"nl": "Naam",
+				"de": "Name"
+			},
+			"type": "text"
+		},
+		{
+			"name": "time",
+			"title": {
+				"en": "Duration",
+				"nl": "Looptijd",
+				"de": "Dauer"
+			},
+			"type": "number",
+			"min": 0,
+			"step": 0.01
+		},
+		{
+			"name": "unit",
+			"title": {
+				"en": "Unit",
+				"nl": "Eenheid",
+				"de": "Einheit"
+			},
+			"type": "dropdown",
+			"values": [
+				{
+					"id": "seconds",
+					"label": {
+						"en": "seconds",
+						"nl": "seconden",
+						"de": "Sekunden"
+					}
+				},
+				{
+					"id": "minutes",
+					"label": {
+						"en": "minutes",
+						"nl": "minuten",
+						"de": "Minuten"
+					}
+				},
+				{
+					"id": "hours",
+					"label": {
+						"en": "hours",
+						"nl": "uren",
+						"de": "Stunden"
+					}
+				},
+				{
+					"id": "days",
+					"label": {
+						"en": "days",
+						"nl": "dagen",
+						"de": "Tage"
+					}
+				}
+			]
+		}
+	]
+}

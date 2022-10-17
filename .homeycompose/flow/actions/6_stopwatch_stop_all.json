@@ -1,0 +1,13 @@
+{
+	"id": "stopwatch_stop_all",
+	"title": {
+		"en": "Stop all stopwatches",
+		"nl": "Stop alle stopwatches",
+		"de": "Stoppe alle Stoppuhren"
+	},
+	"hint": {
+		"en": "Use this card to stop all stopwatches.",
+		"nl": "Gebruik dit kaartje om alle stopwatches te stoppen.",
+		"de": "Verwende diese Karte um alle Stoppuhren zu stoppen."
+	}
+}

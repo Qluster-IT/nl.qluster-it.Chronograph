@@ -1,0 +1,55 @@
+{
+	"id": "transition_paused",
+	"title": {
+		"en": "Transition is paused",
+		"nl": "Transitie is gepauzeerd",
+		"de": "Übergang ist pausiert"
+	},
+	"titleFormatted": {
+		"en": "Transition [[name]] is paused",
+		"nl": "Transitie [[name]] is gepauzeerd",
+		"de": "Übergang [[name]] ist pausiert"
+	},
+	"hint": {
+		"en": "This card is activated when a transition with the provided name is paused.",
+		"nl": "Dit kaartje wordt geactiveerd als een transitie met de ingevoerde naam is gepauzeerd.",
+		"de": "Diese Karte wird aktiviert wenn ein Übergang mit dem angegebenen Namen pausiert ist."
+	},
+	"args": [
+		{
+			"name": "name",
+			"title": {
+				"en": "Name",
+				"nl": "Naam",
+				"de": "Name"
+			},
+			"type": "text"
+		}
+	],
+	"tokens": [
+		{
+			"name": "name",
+			"type": "string",
+			"title": {
+				"en": "Name",
+				"nl": "Naam",
+				"de": "Name"
+			},
+			"example": {
+				"en": "bathroom",
+				"nl": "badkamer",
+				"de": "Badezimmer"
+			}
+		},
+		{
+			"name": "seconds",
+			"type": "number",
+			"title": {
+				"en": "Duration (s)",
+				"nl": "Looptijd (s)",
+				"de": "Dauer (s)"
+			},
+			"example": 60
+		}
+	]
+}
