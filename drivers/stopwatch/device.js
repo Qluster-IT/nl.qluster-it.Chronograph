@@ -6,11 +6,11 @@ const Device = require('../../lib/device.js');
 
 class StopwatchDevice extends Device {
 	getStartCards() {
-		return Homey.ManagerSettings.get('stopwatch_start_cards') || [];
+		return this.homey.settings.get('stopwatch_start_cards') || [];
 	}
 
 	getResumeCards() {
-		return Homey.ManagerSettings.get('stopwatch_resume_cards') || [];
+		return this.homey.settings.get('stopwatch_resume_cards') || [];
 	}
 
 	getChronographType() {

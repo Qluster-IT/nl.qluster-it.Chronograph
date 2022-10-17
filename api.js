@@ -13,30 +13,38 @@ let getAllFn = (getter, args, callback) => {
 			running: entity.isRunning()
 		});
 	});
-	callback(null, JSON.stringify(result));
+	return JSON.stringify(result);
+	//callback(null, JSON.stringify(result));
 };
 
 let getOneFn = (getter, args, callback) => {
 	let entity = getter(args.params.id);
 	if (!entity) {
-		callback(new Error('entity not found'), false);
+		throw new Error('entity not found');
 		return;
 	}
-	callback(null, {
+	return {
 		id: entity.getId(),
 		name: entity.getName(),
 		data: entity.getAllData(),
 		duration: entity.getDuration(),
 		targetDuration: entity.getTargetDuration(),
 		running: entity.isRunning()
-	});
+	};
+	// callback(null, {
+	// 	id: entity.getId(),
+	// 	name: entity.getName(),
+	// 	data: entity.getAllData(),
+	// 	duration: entity.getDuration(),
+	// 	targetDuration: entity.getTargetDuration(),
+	// 	running: entity.isRunning()
+	// });
 };
 
 let putOneFn = (getter, args, callback) => {
 	let entity = getter(args.params.id);
 	if (!entity) {
-		callback(new Error('entity not found'), false);
-		return;
+		throw new Error('entity not found');
 	}
 	if (
 		args.body.running
@@ -50,121 +58,88 @@ let putOneFn = (getter, args, callback) => {
 	) {
 		entity.pause();
 	}
-	callback(null, {
+	return {
 		id: entity.getId(),
 		name: entity.getName(),
 		data: entity.getAllData(),
 		duration: entity.getDuration(),
 		targetDuration: entity.getTargetDuration(),
 		running: entity.isRunning()
-	});
+	};
+	// callback(null, {
+	// 	id: entity.getId(),
+	// 	name: entity.getName(),
+	// 	data: entity.getAllData(),
+	// 	duration: entity.getDuration(),
+	// 	targetDuration: entity.getTargetDuration(),
+	// 	running: entity.isRunning()
+	// });
 };
 
 let deleteOneFn = (getter, args, callback) => {
 	let entity = getter(args.params.id);
 	if (!entity) {
-		callback(new Error('entity not found'), false);
-		return;
+		throw new Error('entity not found');
 	}
 	entity.stop();
-	callback(null, true);
+	return true;
+	//callback(null, true);
 };
 
-module.exports = [
-	{
-		method: 'GET',
-		path: '/timers/',
-		public: false,
-		fn: getAllFn.bind(null, () => Chronograph.all().filter(entity => entity.getData('type') == ChronographType.TIMER))
+module.exports = {
+	async getTimers({homey}) {
+		let a = getAllFn.call(null, () => Chronograph.all().filter(entity => entity.getData('type') == ChronographType.TIMER));
+		return a;
 	},
-	{
-		method: 'GET',
-		path: '/timers/:id',
-		public: false,
-		fn: getOneFn.bind(null, Chronograph.get)
+	async getTimer({homey, params}) {
+		return getOneFn.call(null, Chronograph.get, params);
 	},
-	{
-		method: 'PUT',
-		path: '/timers/:id',
-		public: false,
-		fn: putOneFn.bind(null, Chronograph.get)
+	async putTimer({homey, params}) {
+		return putOneFn.call(null, Chronograph.get, params);
 	},
-	{
-		method: 'DELETE',
-		path: '/timers/:id',
-		public: false,
-		fn: deleteOneFn.bind(null, Chronograph.get)
+	async deleteTimer({homey, params}) {
+		return deleteOneFn.call(null, Chronograph.get, params);
 	},
-	{
-		method: 'GET',
-		path: '/stopwatches/',
-		public: false,
-		fn: getAllFn.bind(null, () => Chronograph.all().filter(entity => entity.getData('type') == ChronographType.STOPWATCH))
+
+	async getStopwatches({homey}) {
+		let a = getAllFn.call(null, () => Chronograph.all().filter(entity => entity.getData('type') == ChronographType.STOPWATCH));
+		return a;
 	},
-	{
-		method: 'GET',
-		path: '/stopwatches/:id',
-		public: false,
-		fn: getOneFn.bind(null, Chronograph.get)
+	async getStopwatch({homey, params}) {
+		return getOneFn.call(null, Chronograph.get, params);
 	},
-	{
-		method: 'PUT',
-		path: '/stopwatches/:id',
-		public: false,
-		fn: putOneFn.bind(null, Chronograph.get)
+	async putStopwatch({homey, params}) {
+		return putOneFn.call(null, Chronograph.get, params);
 	},
-	{
-		method: 'DELETE',
-		path: '/stopwatches/:id',
-		public: false,
-		fn: deleteOneFn.bind(null, Chronograph.get)
+	async deleteStopwatch({homey, params}) {
+		return deleteOneFn.call(null, Chronograph.get, params);
 	},
-	{
-		method: 'GET',
-		path: '/transitions/',
-		public: false,
-		fn: getAllFn.bind(null, () => Chronograph.all().filter(entity => entity.getData('type') == ChronographType.TRANSITION))
+
+	async getTransitions({homey}) {
+		let a = getAllFn.call(null, () => Chronograph.all().filter(entity => entity.getData('type') == ChronographType.TRANSITION));
+		return a;
 	},
-	{
-		method: 'GET',
-		path: '/transitions/:id',
-		public: false,
-		fn: getOneFn.bind(null, Chronograph.get)
+	async getTransition({homey, params}) {
+		return getOneFn.call(null, Chronograph.get, params);
 	},
-	{
-		method: 'PUT',
-		path: '/transitions/:id',
-		public: false,
-		fn: putOneFn.bind(null, Chronograph.get)
+	async putTransition({homey, params}) {
+		return putOneFn.call(null, Chronograph.get, params);
 	},
-	{
-		method: 'DELETE',
-		path: '/transitions/:id',
-		public: false,
-		fn: deleteOneFn.bind(null, Chronograph.get)
+	async deleteTransition({homey, params}) {
+		return deleteOneFn.call(null, Chronograph.get, params);
 	},
-	{
-		method: 'GET',
-		path: '/chronographs/',
-		public: false,
-		fn: getAllFn.bind(null, Chronograph.all)
+
+	async getChronographs({homey}) {
+		let a = getAllFn.call(null, Chronograph.all);
+		return a;
 	},
-	{
-		method: 'GET',
-		path: '/chronographs/:id',
-		public: false,
-		fn: getOneFn.bind(null, Chronograph.get)
+	async getChronograph({homey, params}) {
+		return getOneFn.call(null, Chronograph.get, params);
 	},
-	{
-		method: 'PUT',
-		path: '/chronographs/:id',
-		public: false,
-		fn: putOneFn.bind(null, Chronograph.get)
+	async putChronograph({homey, params}) {
+		return putOneFn.call(null, Chronograph.get, params);
 	},
-	{
-		method: 'DELETE',
-		path: '/chronographs/:id',
-		public: false,
-		fn: deleteOneFn.bind(null, Chronograph.get)
+	async deleteChronograph({homey, params}) {
+		return deleteOneFn.call(null, Chronograph.get, params);
 	}
-];
+};

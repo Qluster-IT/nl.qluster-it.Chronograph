@@ -6,11 +6,11 @@ const Device = require('../../lib/device.js');
 
 class TransitionDevice extends Device {
 	getStartCards() {
-		return Homey.ManagerSettings.get('transition_start_cards') || [];
+		return this.homey.settings.get('transition_start_cards') || [];
 	}
 
 	getResumeCards() {
-		return Homey.ManagerSettings.get('transition_resume_cards') || [];
+		return this.homey.settings.get('transition_resume_cards') || [];
 	}
 
 	getChronographType() {

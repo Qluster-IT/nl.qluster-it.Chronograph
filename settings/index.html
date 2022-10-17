@@ -49,7 +49,7 @@
 			template:
 				'<li>'
 					+ '<span><strong>{{ chronograph.name }}</strong></span>'
-					+ '<span><button v-on:click="toggle">{{ chronograph.running ? Homey.__("settings.pause") : Homey.__("settings.resume") }}</button><button v-on:click="stop">{{ Homey.__("settings.stop") }}</button></span>'
+					+ '<span><button v-on:click="toggle">{{ chronograph.running ? this.homey.__("settings.pause") : this.homey.__("settings.resume") }}</button><button v-on:click="stop">{{ this.homey.__("settings.stop") }}</button></span>'
 					+ '<span>{{ calculateDuration(chronograph) }}</span>'
 					+ '<br class="cb">'
 				+ '</li>',
@@ -110,7 +110,7 @@
 						result = hours.toString().padStart(2, '0') + ':' + result;
 					}
 					if (days > 0) {
-						result = days + Homey.__('settings.days_abbreviation') + ' ' + result;
+						result = days + this.homey.__('settings.days_abbreviation') + ' ' + result;
 					}
 
 					return result;

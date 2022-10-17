@@ -1,6 +1,6 @@
 {
 	"id": "nl.fellownet.chronograph",
-	"version": "1.1.2",
+	"version": "1.2.0",
 	"compatibility": ">=5.0.0",
 	"sdk": 3,
 	"name": {
@@ -41,6 +41,9 @@
 			"sanduhr"
 		]
 	},
+	"bugs": {
+		"url": "https://bitbucket.org/QlusterIT/nl.qluster-it.chronograph/issues"
+	  },
 	"homeyCommunityTopicId": 18214,
 	"permissions": [],
 	"images": {
@@ -48,13 +51,13 @@
 		"small": "/assets/images/small.png"
 	},
 	"author": {
-		"name": "Fellownet",
-		"email": "bob@fellownet.nl"
+		"name": "Arie J. Godschalk",
+		"email": "arie@qluster-it.nl"
 	},
 	"contributing": {
 		"donate": {
 			"paypal": {
-				"username": "bobkersten"
+				"username": "QlusterIT"
 			}
 		}
 	},
@@ -65,6 +68,72 @@
 				"email": "bob@fellownet.nl"
 			}
 		]
+	},
+	"api": {
+		"getTimers": {
+			"method": "GET",
+			"path": "/timers/"
+		},
+		"getTimer": {
+			"method": "GET",
+			"path": "/timers/:id"
+		},
+		"putTimer": {
+			"method": "PUT",
+			"path": "/timers/"
+		},
+		"deleteTimer": {
+			"method": "DELETE",
+			"path": "/timers/"
+		},
+		"getStopwatches": {
+			"method": "GET",
+			"path": "/stopwatches/"
+		},
+		"getStopwatch": {
+			"method": "GET",
+			"path": "/stopwatches/:id"
+		},
+		"putStopwatch": {
+			"method": "PUT",
+			"path": "/stopwatches/"
+		},
+		"deleteStopwatch": {
+			"method": "DELETE",
+			"path": "/stopwatches/"
+		},
+		"getTransitions": {
+			"method": "GET",
+			"path": "/transitions/"
+		},
+		"getTransition": {
+			"method": "GET",
+			"path": "/transitions/:id"
+		},
+		"putTransition": {
+			"method": "PUT",
+			"path": "/transitions/"
+		},
+		"deleteTransition": {
+			"method": "DELETE",
+			"path": "/transitions/"
+		},
+		"getChronographs": {
+			"method": "GET",
+			"path": "/chronographs/"
+		},
+		"getChronograph": {
+			"method": "GET",
+			"path": "/chronographs/:id"
+		},
+		"putChronograph": {
+			"method": "PUT",
+			"path": "/chronographs/"
+		},
+		"deleteChronograph": {
+			"method": "DELETE",
+			"path": "/chronographs/"
+		}
 	},
 	"drivers": [
 		{
@@ -100,7 +169,11 @@
 				"small": "drivers/timer_driver/assets/images/small.png"
 			},
 			"class": "sensor",
-			"capabilities": [ "alarm_running", "duration", "onoff.0" ],
+			"capabilities": [
+				"alarm_running",
+				"duration",
+				"onoff.0"
+			],
 			"capabilitiesOptions": {
 				"alarm_running": {
 					"preventTag": true
@@ -109,7 +182,7 @@
 					"preventTag": true
 				},
 				"onoff.0": {
-					"title":{
+					"title": {
 						"en": "Start / Stop",
 						"nl": "Starten / Stoppen"
 					},
@@ -167,7 +240,11 @@
 				"small": "drivers/stopwatch_driver/assets/images/small.png"
 			},
 			"class": "sensor",
-			"capabilities": [ "alarm_running", "duration", "onoff.0" ],
+			"capabilities": [
+				"alarm_running",
+				"duration",
+				"onoff.0"
+			],
 			"capabilitiesOptions": {
 				"alarm_running": {
 					"preventTag": true
@@ -176,7 +253,7 @@
 					"preventTag": true
 				},
 				"onoff.0": {
-					"title":{
+					"title": {
 						"en": "Start / Stop",
 						"nl": "Starten / Stoppen"
 					},

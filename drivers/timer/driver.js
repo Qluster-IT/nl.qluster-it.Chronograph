@@ -6,11 +6,11 @@ const Driver = require('../../lib/driver.js');
 
 class TimerDriver extends Driver {
 	getStartCards() {
-		return Homey.ManagerSettings.get('timer_start_cards') || [];
+		return this.homey.settings.get('timer_start_cards') || [];
 	}
 
 	getResumeCards() {
-		return Homey.ManagerSettings.get('timer_resume_cards') || [];
+		return this.homey.settings.get('timer_resume_cards') || [];
 	}
 
 	getChronographType() {

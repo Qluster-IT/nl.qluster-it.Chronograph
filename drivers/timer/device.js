@@ -6,11 +6,11 @@ const Device = require('../../lib/device.js');
 
 class TimerDevice extends Device {
 	getStartCards() {
-		return Homey.ManagerSettings.get('timer_start_cards') || [];
+		return this.homey.settings.get('timer_start_cards') || [];
 	}
 
 	getResumeCards() {
-		return Homey.ManagerSettings.get('timer_resume_cards') || [];
+		return this.homey.settings.get('timer_resume_cards') || [];
 	}
 
 	getChronographType() {

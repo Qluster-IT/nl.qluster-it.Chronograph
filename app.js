@@ -75,72 +75,72 @@ class Application extends Homey.App {
 	_initializeTimerCards() {
 		this._cards = {
 			// Actions.
-			"timer_start": new TimerStart('timer_start'),
-			"timer_start_v2": new TimerStart('timer_start_v2'),
-			"timer_resume": new TimerResume('timer_resume'),
-			"timer_resume_v2": new TimerResume('timer_resume_v2'),
-			"timer_adjust": new TimerAdjust('timer_adjust'),
-			"timer_adjust_v2": new TimerAdjust('timer_adjust_v2'),
-			"timer_pause": new TimerPause('timer_pause'),
-			"timer_stop": new TimerStop('timer_stop'),
-			"timer_stop_all": new TimerStopAll('timer_stop_all'),
+			"timer_start": new TimerStart('timer_start', this.homey),
+			"timer_start_v2": new TimerStart('timer_start_v2', this.homey),
+			"timer_resume": new TimerResume('timer_resume', this.homey),
+			"timer_resume_v2": new TimerResume('timer_resume_v2', this.homey),
+			"timer_adjust": new TimerAdjust('timer_adjust', this.homey),
+			"timer_adjust_v2": new TimerAdjust('timer_adjust_v2', this.homey),
+			"timer_pause": new TimerPause('timer_pause', this.homey),
+			"timer_stop": new TimerStop('timer_stop', this.homey),
+			"timer_stop_all": new TimerStopAll('timer_stop_all', this.homey),
 
 			// Conditions.
-			"timer_compare": new TimerCompare("timer_compare"),
-			"timer_running": new TimerRunning("timer_running"),
+			"timer_compare": new TimerCompare("timer_compare", this.homey),
+			"timer_running": new TimerRunning("timer_running", this.homey),
 
 			// Triggers.
-			"timer_started": new TimerStarted('timer_started'),
-			"timer_split": new TimerSplit('timer_split'),
-			"timer_finished": new TimerFinished('timer_finished'),
-			"timer_stopped": new TimerStopped('timer_stopped'),
-			"timer_paused": new TimerPaused('timer_paused')
+			"timer_started": new TimerStarted('timer_started', this.homey),
+			"timer_split": new TimerSplit('timer_split', this.homey),
+			"timer_finished": new TimerFinished('timer_finished', this.homey),
+			"timer_stopped": new TimerStopped('timer_stopped', this.homey),
+			"timer_paused": new TimerPaused('timer_paused', this.homey)
 		};
 	}
 
 	_initializeStopwatchCards() {
 		this._cards = {
 			// Actions.
-			"stopwatch_start": new StopwatchStart('stopwatch_start'),
-			"stopwatch_resume": new StopwatchResume('stopwatch_resume'),
-			"stopwatch_adjust": new StopwatchAdjust('stopwatch_adjust'),
-			"stopwatch_adjust_v2": new StopwatchAdjust('stopwatch_adjust_v2'),
-			"stopwatch_pause": new StopwatchPause('stopwatch_pause'),
-			"stopwatch_stop": new StopwatchStop('stopwatch_stop'),
-			"stopwatch_stop_all": new StopwatchStopAll('stopwatch_stop_all'),
+			"stopwatch_start": new StopwatchStart('stopwatch_start', this.homey),
+			"stopwatch_resume": new StopwatchResume('stopwatch_resume', this.homey),
+			"stopwatch_adjust": new StopwatchAdjust('stopwatch_adjust', this.homey),
+			"stopwatch_adjust_v2": new StopwatchAdjust('stopwatch_adjust_v2', this.homey),
+			"stopwatch_pause": new StopwatchPause('stopwatch_pause', this.homey),
+			"stopwatch_stop": new StopwatchStop('stopwatch_stop', this.homey),
+			"stopwatch_stop_all": new StopwatchStopAll('stopwatch_stop_all', this.homey),
 
 			// Conditions.
-			"stopwatch_compare": new StopwatchCompare("stopwatch_compare"),
-			"stopwatch_running": new StopwatchRunning("stopwatch_running"),
+			"stopwatch_compare": new StopwatchCompare("stopwatch_compare", this.homey),
+			"stopwatch_running": new StopwatchRunning("stopwatch_running", this.homey),
 
 			// Triggers.
-			"stopwatch_started": new StopwatchStarted('stopwatch_started'),
-			"stopwatch_split": new StopwatchSplit('stopwatch_split'),
-			"stopwatch_stopped": new StopwatchStopped('stopwatch_stopped'),
-			"stopwatch_paused": new StopwatchPaused('stopwatch_paused')
+			"stopwatch_started": new StopwatchStarted('stopwatch_started', this.homey),
+			"stopwatch_split": new StopwatchSplit('stopwatch_split', this.homey),
+			"stopwatch_stopped": new StopwatchStopped('stopwatch_stopped', this.homey),
+			"stopwatch_paused": new StopwatchPaused('stopwatch_paused', this.homey)
 		};
 	}
 
 	_initializeTransitionCards() {
 		this._cards = {
 			// Actions.
-			"transition_start": new TransitionStart('transition_start'),
-			"transition_resume": new TransitionResume('transition_resume'),
-			"transition_adjust": new TransitionAdjust('transition_adjust'),
-			"transition_pause": new TransitionPause('transition_pause'),
-			"transition_stop": new TransitionStop('transition_stop'),
-			"transition_stop_all": new TransitionStopAll('transition_stop_all'),
+			"transition_start": new TransitionStart('transition_start', this.homey),
+			"transition_resume": new TransitionResume('transition_resume', this.homey),
+			"transition_adjust": new TransitionAdjust('transition_adjust', this.homey),
+			"transition_pause": new TransitionPause('transition_pause', this.homey),
+			"transition_stop": new TransitionStop('transition_stop', this.homey),
+			"transition_stop_all": new TransitionStopAll('transition_stop_all', this.homey),
 
 			// Conditions.
-			"transition_compare": new TransitionCompare("transition_compare"),
-			"transition_running": new TransitionRunning("transition_running"),
+			"transition_compare": new TransitionCompare("transition_compare", this.homey),
+			"transition_running": new TransitionRunning("transition_running", this.homey),
 
 			// Triggers.
-			"transition_started": new TransitionStarted('transition_started'),
-			"transition_split": new TransitionSplit('transition_split'),
-			"transition_finished": new TransitionFinished('transition_finished'),
-			"transition_stopped": new TransitionStopped('transition_stopped'),
-			"transition_paused": new TransitionPaused('transition_paused')
+			"transition_started": new TransitionStarted('transition_started', this.homey),
+			"transition_split": new TransitionSplit('transition_split', this.homey),
+			"transition_finished": new TransitionFinished('transition_finished', this.homey),
+			"transition_stopped": new TransitionStopped('transition_stopped', this.homey),
+			"transition_paused": new TransitionPaused('transition_paused', this.homey)
 		};
 	}
 
@@ -149,7 +149,7 @@ class Application extends Homey.App {
 			// Actions.
 
 			// Conditions.
-			"delay_passed": new DelayPassed("delay_passed"),
+			"delay_passed": new DelayPassed("delay_passed", this.homey),
 
 			// Triggers.
 		};
@@ -177,20 +177,20 @@ class Application extends Homey.App {
 				removed: event == 'removed',
 				now: (new Date()).getTime()
 			};
-			Homey.ManagerApi.realtime('chronograph_event', raw);
-			let active = Homey.ManagerSettings.get('chronographs_active') || {};
+			this.homey.api.realtime('chronograph_event', raw);
+			let active = this.homey.settings.get('chronographs_active') || {};
 			if (event == 'removed') {
 				delete(active[chronograph.getId()]);
 			} else {
 				active[chronograph.getId()] = raw;
 			}
-			Homey.ManagerSettings.set('chronographs_active', active);
+			this.homey.settings.set('chronographs_active', active);
 		});
 	}
 
 	_restoreChronographs() {
-		let active = Homey.ManagerSettings.get('chronographs_active') || {};
-		Homey.ManagerSettings.set('chronographs_active', {});
+		let active = this.homey.settings.get('chronographs_active') || {};
+		this.homey.settings.set('chronographs_active', {});
 		Object.values(active).forEach(raw => {
 			// Create the correct type of chronograph.
 			if (!raw.data || !raw.data.type || !raw.name) {
@@ -207,7 +207,7 @@ class Application extends Homey.App {
 
 			// Add the splits.
 			if (raw.data.type == ChronographType.TIMER) {
-				let splits = Homey.ManagerSettings.get('timer_splits') || [];
+				let splits = this.homey.settings.get('timer_splits') || [];
 				splits
 					.filter(split => split.name == chronograph.getName())
 					.forEach(split => {
@@ -217,7 +217,7 @@ class Application extends Homey.App {
 			}
 
 			if (raw.data.type == ChronographType.STOPWATCH) {
-				let splits = Homey.ManagerSettings.get('stopwatch_splits') || [];
+				let splits = this.homey.settings.get('stopwatch_splits') || [];
 				splits
 					.filter(split => split.name == chronograph.getName())
 					.forEach(split => chronograph.addSplit(split.time, split.unit, split));
