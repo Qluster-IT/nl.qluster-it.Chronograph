@@ -19,5 +19,11 @@
     "en": "Rewriten to SDK3.",
     "nl": "Herschreven naar SDK3.",
     "de": "Umgeschrieben auf SDK3."
+  },
+  "1.2.1": {
+    "en": "Bugfixed SDK3."
+  },
+  "1.2.2": {
+    "en": "Bugfixed existing issues."
   }
 }
