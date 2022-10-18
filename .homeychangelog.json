@@ -25,5 +25,8 @@
   },
   "1.2.2": {
     "en": "Bugfixed existing issues."
+  },
+  "1.2.3": {
+    "en": "Added: Sourcecode link."
   }
 }
