@@ -1,0 +1,12 @@
+{
+	"id": "button_startstop",
+	"type": "boolean",
+	"title": {
+		"en": "Start / Stop",
+		"nl": "Starten / Stoppen"
+	},
+	"getable": true,
+	"setable": true,
+	"uiComponent": "button",
+	"uiQuickAction": true
+}

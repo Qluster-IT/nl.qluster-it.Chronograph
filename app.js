@@ -52,6 +52,9 @@ const TransitionPaused = require('./lib/transition/triggers/transition_paused.js
 class Application extends Homey.App {
 	onInit() {
 		// Initializing cards.
+		if (process.env.DEBUG === '1') require('inspector').open(9228, '0.0.0.0', true);
+		
+
 		this.log('Initializing cards.');
 		this._initializeTimerCards();
 		this._initializeStopwatchCards();

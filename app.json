@@ -2781,8 +2781,8 @@
       "capabilities": [
         "alarm_started",
         "duration",
-        "button.pause",
-        "button.stop"
+        "button_pause",
+        "button_startstop"
       ],
       "capabilitiesOptions": {
         "alarm_started": {
@@ -2790,18 +2790,6 @@
         },
         "duration": {
           "preventTag": true
-        },
-        "button.pause": {
-          "title": {
-            "en": "Pause / Resume",
-            "nl": "Pauzeren / Hervatten"
-          }
-        },
-        "button.stop": {
-          "title": {
-            "en": "Stop",
-            "nl": "Stoppen"
-          }
         }
       },
       "pair": [
@@ -2835,6 +2823,30 @@
       "setable": false,
       "uiComponent": "sensor",
       "icon": "assets/alarm_started.svg"
+    },
+    "button_pause": {
+      "id": "button_pause",
+      "type": "boolean",
+      "title": {
+        "en": "Pause / Resume",
+        "nl": "Pauzeren / Hervatten"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "button",
+      "uiQuickAction": true
+    },
+    "button_startstop": {
+      "id": "button_startstop",
+      "type": "boolean",
+      "title": {
+        "en": "Start / Stop",
+        "nl": "Starten / Stoppen"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "button",
+      "uiQuickAction": true
     },
     "duration": {
       "id": "duration",

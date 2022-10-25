@@ -1,0 +1,12 @@
+{
+	"id": "button_pause",
+	"type": "boolean",
+	"title": {
+		"en": "Pause / Resume",
+		"nl": "Pauzeren / Hervatten"
+	},
+	"getable": true,
+	"setable": true,
+	"uiComponent": "button",
+	"uiQuickAction": true
+}
