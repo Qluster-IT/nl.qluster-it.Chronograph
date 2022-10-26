@@ -1,6 +1,6 @@
 {
 	"id": "nl.fellownet.chronograph",
-	"version": "1.2.3",
+	"version": "1.3.0",
 	"compatibility": ">=5.0.0",
 	"sdk": 3,
 	"name": {
@@ -52,8 +52,8 @@
 		"small": "/assets/images/small.png"
 	},
 	"author": {
-		"name": "Arie J. Godschalk",
-		"email": "arie@qluster-it.nl"
+		"name": "Bob Kersten",
+		"email": "bob@fellownet.nl"
 	},
 	"contributing": {
 		"donate": {
@@ -67,6 +67,10 @@
 			{
 				"name": "Bob Kersten",
 				"email": "bob@fellownet.nl"
+			},
+			{
+				"name": "Arie J. Godschalk",
+				"email": "arie@qluster-it.nl"
 			}
 		]
 	},
