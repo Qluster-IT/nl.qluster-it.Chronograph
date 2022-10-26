@@ -11,9 +11,9 @@
 		"de": "Übergang [[name]] mit einer Dauer von [[time]] [[unit]] einstellen"
 	},
 	"hint": {
-		"en": "Use this card to adjust the duration of the transition with the provided name. Use a positive duration to extend the transition, or a negative duration to shorten the transition.",
-		"nl": "Gebruik dit kaartje om de looptijd van de transitie met de ingevoerde naam aan te passen. Gebruik een positive looptijd om de transitie te verlengen, of een negative looptijd om de transitie te verkorten.",
-		"de": "Verwende diese Karte um die Dauer des Übergang mit dem angegebenen Namen anzupassen. Verwende eine positive Dauer um den Übergang zu verlängern oder eine negative Dauer um den Übergang zu verkürzen."
+		"en": "Use this card to adjust the duration of the transition with the provided name. Use a negative duration to extend the transition, or a positive duration to shorten the transition. One can't extend the duration, when the new duration will be longer than the transition's original duration. One can't shorten the duration, when the new duration will be lower than zero.",
+		"nl": "Gebruik dit kaartje om de looptijd van de transitie met de ingevoerde naam aan te passen. Gebruik een negative looptijd om de transitie te verlengen, of een positive looptijd om de transitie te verkorten. Men kan de duur niet verlengen, wanneer de nieuwe duur langer zal zijn dan de oorspronkelijke duur van de overgang. Men kan de looptijd niet verkorten, wanneer de nieuwe looptijd lager dan nul zal zijn.",
+		"de": "Verwende diese Karte um die Dauer des Übergang mit dem angegebenen Namen anzupassen. Verwende eine negative Dauer um den Übergang zu verlängern oder eine positive Dauer um den Übergang zu verkürzen. Man kann die Dauer nicht verlängern, wenn die neue Dauer länger als die ursprüngliche Dauer des Übergangs sein wird. Man kann die Dauer nicht verkürzen, wenn die neue Dauer kleiner als Null sein wird."
 	},
 	"args": [
 		{
