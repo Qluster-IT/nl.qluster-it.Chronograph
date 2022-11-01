@@ -17,6 +17,18 @@
 		},
 		"duration": {
 			"preventTag": true
+		},
+		"button.pause": {
+			"title": {
+				"en": "Pause / Resume",
+				"nl": "Pauzeren / Hervatten"
+			}
+		},
+		"button.stop": {
+			"title": {
+				"en": "Stop",
+				"nl": "Stoppen"
+			}
 		}
 	},
 	"pair": [
