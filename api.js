@@ -94,11 +94,11 @@ module.exports = {
 	async getTimer({homey, params}) {
 		return getOneFn.call(null, Chronograph.get, params);
 	},
-	async putTimer({homey, params}) {
-		return putOneFn.call(null, Chronograph.get, params);
+	async putTimer({homey, params, body}) {
+		return putOneFn.call(null, Chronograph.get, {params, body});
 	},
-	async deleteTimer({homey, params}) {
-		return deleteOneFn.call(null, Chronograph.get, params);
+	async deleteTimer({homey, params, body}) {
+		return deleteOneFn.call(null, Chronograph.get, {params, body});
 	},
 
 	async getStopwatches({homey}) {
@@ -108,11 +108,11 @@ module.exports = {
 	async getStopwatch({homey, params}) {
 		return getOneFn.call(null, Chronograph.get, params);
 	},
-	async putStopwatch({homey, params}) {
-		return putOneFn.call(null, Chronograph.get, params);
+	async putStopwatch({homey, params, body}) {
+		return putOneFn.call(null, Chronograph.get, {params, body});
 	},
-	async deleteStopwatch({homey, params}) {
-		return deleteOneFn.call(null, Chronograph.get, params);
+	async deleteStopwatch({homey, params, body}) {
+		return deleteOneFn.call(null, Chronograph.get, {params, body});
 	},
 
 	async getTransitions({homey}) {
@@ -122,11 +122,11 @@ module.exports = {
 	async getTransition({homey, params}) {
 		return getOneFn.call(null, Chronograph.get, params);
 	},
-	async putTransition({homey, params}) {
-		return putOneFn.call(null, Chronograph.get, params);
+	async putTransition({homey, params, body}) {
+		return putOneFn.call(null, Chronograph.get, {params, body});
 	},
-	async deleteTransition({homey, params}) {
-		return deleteOneFn.call(null, Chronograph.get, params);
+	async deleteTransition({homey, params, body}) {
+		return deleteOneFn.call(null, Chronograph.get, {params, body});
 	},
 
 	async getChronographs({homey}) {
@@ -136,10 +136,10 @@ module.exports = {
 	async getChronograph({homey, params}) {
 		return getOneFn.call(null, Chronograph.get, params);
 	},
-	async putChronograph({homey, params}) {
-		return putOneFn.call(null, Chronograph.get, params);
+	async putChronograph({homey, params, body}) {
+		return putOneFn.call(null, Chronograph.get, {params, body});
 	},
-	async deleteChronograph({homey, params}) {
-		return deleteOneFn.call(null, Chronograph.get, params);
+	async deleteChronograph({homey, params, body}) {
+		return deleteOneFn.call(null, Chronograph.get, {params, body});
 	}
 };
