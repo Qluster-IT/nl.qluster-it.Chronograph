@@ -50,7 +50,9 @@ const TransitionStopped = require('./lib/transition/triggers/transition_stopped.
 const TransitionPaused = require('./lib/transition/triggers/transition_paused.js');
 
 class Application extends Homey.App {
+
 	onInit() {
+		//Application.homey = this.homey;
 		// Initializing cards.
 		if (process.env.DEBUG === '1') require('inspector').open(9228, '0.0.0.0', true);
 		
@@ -161,9 +163,11 @@ class Application extends Homey.App {
 	_installLogEventHandler() {
 		Chronograph.events.on('log', (chronograph, text, level) => {
 			if (level >= LogLevel.WARNING) {
-				this.error('[' + chronograph.getData('type') + '] [' + chronograph.getName() + '] ' + text);
+				if(chronograph) this.error('[' + chronograph.getData('type') + '] [' + chronograph.getName() + '] ' + text);
+				else this.error(text);
 			} else {
-				this.log('[' + chronograph.getData('type') + '] [' + chronograph.getName() + '] ' + text);
+				if(chronograph) this.log('[' + chronograph.getData('type') + '] [' + chronograph.getName() + '] ' + text);
+				else this.log(text);
 			}
 		});
 	}
