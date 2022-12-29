@@ -11,9 +11,9 @@
 		"de": "Verzögerung von [[time]] [[unit]] ist vergangen"
 	},
 	"hint": {
-		"en": "Use this card to delay executing the then flow cards.",
-		"nl": "Gebruik dit kaartje om de Dan flow kaartjes vertraagd uit te voeren.",
-		"de": "Verwenden Sie diese Karte, um die Dann-Flow-Karten zu verzögern."
+		"en": "Use this card to delay executing the then flow cards by max. 89 seconds.",
+		"nl": "Gebruik dit kaartje om de Dan flow kaartjes vertraagd uit te voeren door max. 89 seconden.",
+		"de": "Verwenden Sie diese Karte, um die Dann-Flow-Karten um maximal 89 Sekunden zu verzögern."
 	},
 	"args": [
 		{

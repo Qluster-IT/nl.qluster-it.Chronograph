@@ -49,5 +49,8 @@
   },
   "1.4.0": {
     "en": "Added: Wildcard can now be used in variablenames within Is-Running-conditioncards."
+  },
+  "1.4.1": {
+    "en": "Added description: (Chronograph) Delay card works for max. 89 seconds."
   }
 }
