@@ -52,5 +52,8 @@
   },
   "1.4.1": {
     "en": "Added description: (Chronograph) Delay card works for max. 89 seconds."
+  },
+  "1.4.2": {
+    "en": "Improved: Works with Early 2023!"
   }
 }

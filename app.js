@@ -54,7 +54,7 @@ class Application extends Homey.App {
 	onInit() {
 		//Application.homey = this.homey;
 		// Initializing cards.
-		if (process.env.DEBUG === '1') require('inspector').open(9228, '0.0.0.0', true);
+		//if (process.env.DEBUG === '1') require('inspector').open(9228, '0.0.0.0', true);
 		
 
 		this.log('Initializing cards.');
