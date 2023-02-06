@@ -55,5 +55,8 @@
   },
   "1.4.2": {
     "en": "Improved: Works with Early 2023!"
+  },
+  "1.4.3": {
+    "en": "Added: New flowcards to retrieve the (Elapsed/ToGo) duration of Timers, Stopwatches and Transitions."
   }
 }

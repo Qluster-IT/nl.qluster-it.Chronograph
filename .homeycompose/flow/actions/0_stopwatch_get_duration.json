@@ -1,0 +1,62 @@
+{
+	"id": "stopwatch_get_duration",
+	"title": {
+		"en": "Get the elapsed duration of a stopwatch",
+		"nl": "Get the elapsed duration of a stopwatch",
+		"de": "Get the elapsed duration of a stopwatch"
+	},
+	"titleFormatted": {
+		"en": "Get the elapsed duration of stopwatch [[name]]",
+		"nl": "Krijg de verlopen duur van stopwatch [[name]]",
+		"de": "Erhalten Sie die verstrichene Dauer von stopwatch [[name]]"
+	},
+	"args": [
+		{
+			"name": "name",
+			"title": {
+				"en": "Name",
+				"nl": "Naam",
+				"de": "Name"
+			},
+			"type": "text"
+		}
+	],
+	"tokens": [		
+		{
+			"name": "elapsed",
+			"type": "number",
+			"title": {
+				"en": "Elapsed",
+				"nl": "Verlopen",
+				"de": "Verstrichen"
+			}
+		},		
+		{
+			"name": "elapsedInSeconds",
+			"type": "number",
+			"title": {
+				"en": "Elapsed in Seconds",
+				"nl": "Verlopen in seconden",
+				"de": "Verstrichen in Sekunden"
+			}
+		},		
+		{
+			"name": "elapsedInMinutes",
+			"type": "number",
+			"title": {
+				"en": "Elapsed in Minutes",
+				"nl": "Verlopen in minuten",
+				"de": "Verstrichen in Minuten"
+			}
+		},		
+		{
+			"name": "elapsedInHours",
+			"type": "number",
+			"title": {
+				"en": "Elapsed in Hours",
+				"nl": "Verlopen in uren",
+				"de": "Verstrichen in Stunden"
+			}
+		}
+	]
+}

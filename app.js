@@ -5,19 +5,21 @@ const Chronograph = require('./lib/chronograph.js');
 const { Utils, ChronographType, LogLevel } = require('./lib/utils.js');
 
 // Actions.
-const GetDuration = require('./lib/generic/actions/get_duration.js');
+const TimerGetDuration = require('./lib/timer/actions/timer_get_duration.js');
 const TimerStart = require('./lib/timer/actions/timer_start.js');
 const TimerResume = require('./lib/timer/actions/timer_resume.js');
 const TimerAdjust = require('./lib/timer/actions/timer_adjust.js');
 const TimerPause = require('./lib/timer/actions/timer_pause.js');
 const TimerStop = require('./lib/timer/actions/timer_stop.js');
 const TimerStopAll = require('./lib/timer/actions/timer_stop_all.js');
+const StopwatchGetDuration = require('./lib/stopwatch/actions/stopwatch_get_duration.js');
 const StopwatchStart = require('./lib/stopwatch/actions/stopwatch_start.js');
 const StopwatchResume = require('./lib/stopwatch/actions/stopwatch_resume.js');
 const StopwatchAdjust = require('./lib/stopwatch/actions/stopwatch_adjust.js');
 const StopwatchPause = require('./lib/stopwatch/actions/stopwatch_pause.js');
 const StopwatchStop = require('./lib/stopwatch/actions/stopwatch_stop.js');
 const StopwatchStopAll = require('./lib/stopwatch/actions/stopwatch_stop_all.js');
+const TransitionGetDuration = require('./lib/transition/actions/transition_get_duration.js');
 const TransitionStart = require('./lib/transition/actions/transition_start.js');
 const TransitionResume = require('./lib/transition/actions/transition_resume.js');
 const TransitionAdjust = require('./lib/transition/actions/transition_adjust.js');
@@ -81,6 +83,7 @@ class Application extends Homey.App {
 	_initializeTimerCards() {
 		this._cards = {
 			// Actions.
+			"timer_get_duration": new TimerGetDuration("timer_get_duration", this.homey),
 			"timer_start": new TimerStart('timer_start', this.homey),
 			"timer_start_v2": new TimerStart('timer_start_v2', this.homey),
 			"timer_resume": new TimerResume('timer_resume', this.homey),
@@ -107,6 +110,7 @@ class Application extends Homey.App {
 	_initializeStopwatchCards() {
 		this._cards = {
 			// Actions.
+			"stopwatch_get_duration": new StopwatchGetDuration("stopwatch_get_duration", this.homey),
 			"stopwatch_start": new StopwatchStart('stopwatch_start', this.homey),
 			"stopwatch_resume": new StopwatchResume('stopwatch_resume', this.homey),
 			"stopwatch_adjust": new StopwatchAdjust('stopwatch_adjust', this.homey),
@@ -130,6 +134,7 @@ class Application extends Homey.App {
 	_initializeTransitionCards() {
 		this._cards = {
 			// Actions.
+			"transition_get_duration": new TransitionGetDuration("transition_get_duration", this.homey),
 			"transition_start": new TransitionStart('transition_start', this.homey),
 			"transition_resume": new TransitionResume('transition_resume', this.homey),
 			"transition_adjust": new TransitionAdjust('transition_adjust', this.homey),
@@ -154,7 +159,6 @@ class Application extends Homey.App {
 		this._cards = {
 			// Actions.
 
-			"get_duration": new GetDuration("get_duration", this.homey),
 			// Conditions.
 			"delay_passed": new DelayPassed("delay_passed", this.homey),
 

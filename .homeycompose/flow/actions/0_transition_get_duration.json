@@ -1,0 +1,99 @@
+{
+	"id": "transition_get_duration",
+	"title": {
+		"en": "Get the remaining duration of a transition",
+		"nl": "Get the remaining duration of a transition",
+		"de": "Get the remaining duration of a transition"
+	},
+	"titleFormatted": {
+		"en": "Get the remaining duration of transition [[name]]",
+		"nl": "Krijg de resterende duur van transition [[name]]",
+		"de": "Holen Sie sich die verbleibende Dauer von transition [[name]]"
+	},
+	"args": [
+		{
+			"name": "name",
+			"title": {
+				"en": "Name",
+				"nl": "Naam",
+				"de": "Name"
+			},
+			"type": "text"
+		}
+	],
+	"tokens": [
+		{
+			"name": "duration",
+			"type": "number",
+			"title": {
+				"en": "Duration",
+				"nl": "Duur",
+				"de": "Dauer"
+			}
+		},		
+		{
+			"name": "durationInSeconds",
+			"type": "number",
+			"title": {
+				"en": "Duration in Seconds",
+				"nl": "Duur in seconden",
+				"de": "Dauer in Sekunden"
+			}
+		},		
+		{
+			"name": "durationInMinutes",
+			"type": "number",
+			"title": {
+				"en": "Duration in Minutes",
+				"nl": "Duur in minuten",
+				"de": "Dauer in Minuten"
+			}
+		},		
+		{
+			"name": "durationInHours",
+			"type": "number",
+			"title": {
+				"en": "Duration in Hours",
+				"nl": "Duur in uren",
+				"de": "Dauer in Stunden"
+			}
+		},
+		
+		{
+			"name": "elapsed",
+			"type": "number",
+			"title": {
+				"en": "Elapsed",
+				"nl": "Verlopen",
+				"de": "Verstrichen"
+			}
+		},		
+		{
+			"name": "elapsedInSeconds",
+			"type": "number",
+			"title": {
+				"en": "Elapsed in Seconds",
+				"nl": "Verlopen in seconden",
+				"de": "Verstrichen in Sekunden"
+			}
+		},		
+		{
+			"name": "elapsedInMinutes",
+			"type": "number",
+			"title": {
+				"en": "Elapsed in Minutes",
+				"nl": "Verlopen in minuten",
+				"de": "Verstrichen in Minuten"
+			}
+		},		
+		{
+			"name": "elapsedInHours",
+			"type": "number",
+			"title": {
+				"en": "Elapsed in Hours",
+				"nl": "Verlopen in uren",
+				"de": "Verstrichen in Stunden"
+			}
+		}
+	]
+}
