@@ -1,0 +1,97 @@
+{
+	"id": "get_duration",
+	"title": {
+		"en": "Get the remaining duration of a timer, transition or stopwatch",
+		"nl": "",
+		"de": ""
+	},
+	"titleFormatted": {
+		"en": "Get the remaining duration of [[chronograph_type]] [[name]]",
+		"nl": "Krijg de resterende duur van [[chronograph_type]] [[name]]",
+		"de": "Holen Sie sich die verbleibende Dauer von [[chronograph_type]] [[name]]"
+	},
+	"args": [
+		{
+			"name": "name",
+			"title": {
+				"en": "Name",
+				"nl": "Naam",
+				"de": "Name"
+			},
+			"type": "text"
+		},		
+		{
+			"name": "chronograph_type",
+			"title": {
+				"en": "Chronograph Type",
+				"nl": "Chronograph Type",
+				"de": "Chronograph Type"
+			},
+			"type": "dropdown",
+			"values": [
+				{
+					"id": "Timer",
+					"label": {
+						"en": "Timer",
+						"nl": "Timer",
+						"de": "Timer"
+					}
+				},
+				{
+					"id": "Stopwatch",
+					"label": {
+						"en": "Stopwatch",
+						"nl": "Stopwatch",
+						"de": "Stopwatch"
+					}
+				},
+				{
+					"id": "Transition",
+					"label": {
+						"en": "Transition",
+						"nl": "Transition",
+						"de": "Transition"
+					}
+				}
+			]
+		}
+	],
+	"tokens": [
+		{
+			"name": "duration",
+			"type": "string",
+			"title": {
+				"en": "Duration in Seconds",
+				"nl": "Naam",
+				"de": "Name"
+			}
+		},		
+		{
+			"name": "durationInSeconds",
+			"type": "string",
+			"title": {
+				"en": "Duration in Seconds",
+				"nl": "Naam",
+				"de": "Name"
+			}
+		},		
+		{
+			"name": "durationInMinutes",
+			"type": "string",
+			"title": {
+				"en": "Duration in Minutes",
+				"nl": "Naam",
+				"de": "Name"
+			}
+		},		
+		{
+			"name": "durationInHours",
+			"type": "string",
+			"title": {
+				"en": "Duration in Hours",
+				"nl": "Naam",
+				"de": "Name"
+			}
+		}
+	]
+}

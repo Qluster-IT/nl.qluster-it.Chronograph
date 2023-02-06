@@ -5,6 +5,7 @@ const Chronograph = require('./lib/chronograph.js');
 const { Utils, ChronographType, LogLevel } = require('./lib/utils.js');
 
 // Actions.
+const GetDuration = require('./lib/generic/actions/get_duration.js');
 const TimerStart = require('./lib/timer/actions/timer_start.js');
 const TimerResume = require('./lib/timer/actions/timer_resume.js');
 const TimerAdjust = require('./lib/timer/actions/timer_adjust.js');
@@ -153,6 +154,7 @@ class Application extends Homey.App {
 		this._cards = {
 			// Actions.
 
+			"get_duration": new GetDuration("get_duration", this.homey),
 			// Conditions.
 			"delay_passed": new DelayPassed("delay_passed", this.homey),
 
