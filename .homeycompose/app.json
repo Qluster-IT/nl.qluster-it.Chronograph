@@ -157,7 +157,8 @@
 					"type": "group",
 					"label": {
 						"en": "Timer",
-						"nl": "Timer"
+						"nl": "Timer",
+						"de": "Timer"
 					},
 					"children": [
 						{
@@ -165,11 +166,13 @@
 							"type": "text",
 							"label": {
 								"en": "Name",
-								"nl": "Naam"
+								"nl": "Naam",
+								"de": "Name"
 							},
 							"hint": {
 								"en": "The name of the timer this device controls.",
-								"nl": "De naam van de timer die door dit apparaat wordt bestuurd."
+								"nl": "De naam van de timer die door dit apparaat wordt bestuurd.",
+								"de": "Der Name des Timers, der von diesem Gerät gesteuert wird."
 							}
 						}
 					]
@@ -195,7 +198,8 @@
 				"onoff.0": {
 					"title": {
 						"en": "Start / Stop",
-						"nl": "Starten / Stoppen"
+						"nl": "Starten / Stoppen",
+						"de": "Starten / Stoppen"
 					},
 					"preventTag": true,
 					"preventInsights": true
@@ -228,7 +232,8 @@
 					"type": "group",
 					"label": {
 						"en": "Timer",
-						"nl": "Timer"
+						"nl": "Timer",
+						"de": "Stoppuhr"
 					},
 					"children": [
 						{
@@ -240,7 +245,8 @@
 							},
 							"hint": {
 								"en": "The name of the stopwatch this device controls.",
-								"nl": "De naam van de stopwatch die door dit apparaat wordt bestuurd."
+								"nl": "De naam van de stopwatch die door dit apparaat wordt bestuurd.",
+								"de": "Der Name der Stoppuhr, die von diesem Gerät gesteuert wird."
 							}
 						}
 					]
@@ -266,7 +272,8 @@
 				"onoff.0": {
 					"title": {
 						"en": "Start / Stop",
-						"nl": "Starten / Stoppen"
+						"nl": "Starten / Stoppen",
+						"de": "Starten / Stoppen"
 					},
 					"preventTag": true,
 					"preventInsights": true
