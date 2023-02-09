@@ -8,7 +8,7 @@
 	"titleFormatted": {
 		"en": "Get the elapsed duration of stopwatch [[name]]",
 		"nl": "Krijg de verlopen duur van stopwatch [[name]]",
-		"de": "Erhalten Sie die verstrichene Dauer von stopwatch [[name]]"
+		"de": "Abfrage der verstrichenen Stoppuhrzeit [[name]]"
 	},
 	"args": [
 		{
