@@ -3,7 +3,8 @@
 	"type": "boolean",
 	"title": {
 		"en": "Pause / Resume",
-		"nl": "Pauzeren / Hervatten"
+		"nl": "Pauzeren / Hervatten",
+		"de": "Pause / Fortsetzen"
 	},
 	"getable": true,
 	"setable": true,
