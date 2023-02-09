@@ -3,7 +3,7 @@
 	"name": {
 		"en": "Transition",
 		"nl": "Transitie",
-		"de": "Übergäng"
+		"de": "Übergang"
 	},
 	"images": {
 		"large": "{{driverAssetsPath}}/images/large.png",
@@ -21,13 +21,15 @@
 		"button.pause": {
 			"title": {
 				"en": "Pause / Resume",
-				"nl": "Pauzeren / Hervatten"
+				"nl": "Pauzeren / Hervatten",
+				"de": "Pause / Fortsetzen"
 			}
 		},
 		"button.stop": {
 			"title": {
 				"en": "Stop",
-				"nl": "Stoppen"
+				"nl": "Stoppen",
+				"de": "Stopp"
 			}
 		}
 	},
