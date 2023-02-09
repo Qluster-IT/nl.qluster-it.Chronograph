@@ -61,5 +61,8 @@
   },
   "1.4.4": {
     "en": "Improved: Better coding and implementations of SDK3. Also, some triggercards are now also used to generate timers/stopwatches/transitions in the background, for creating a device."
+  },  
+  "1.4.5": {
+    "en": "Improved: More German translations."
   }
 }
