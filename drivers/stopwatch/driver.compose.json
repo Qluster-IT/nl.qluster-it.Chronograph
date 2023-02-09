@@ -21,13 +21,15 @@
 		"button.pause": {
 			"title": {
 				"en": "Pause / Resume",
-				"nl": "Pauzeren / Hervatten"
+				"nl": "Pauzeren / Hervatten",
+				"de": "Pause / Fortsetzen"
 			}
 		},
 		"button.stop": {
 			"title": {
 				"en": "Stop",
-				"nl": "Stoppen"
+				"nl": "Stoppen",
+				"de": "Stopp"
 			}
 		}
 	},
