@@ -8,7 +8,7 @@
 	"titleFormatted": {
 		"en": "Get the duration of timer [[name]]",
 		"nl": "Krijg de duur van timer [[name]]",
-		"de": "Holen Sie sich die Dauer von timer [[name]]"
+		"de": "Abfrage der Timerlaufzeit [[name]]"
 	},
 	"args": [
 		{
