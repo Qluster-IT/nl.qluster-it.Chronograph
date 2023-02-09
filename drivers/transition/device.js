@@ -13,6 +13,10 @@ class TransitionDevice extends Device {
 		return this.homey.settings.get('transition_resume_cards') || [];
 	}
 
+	getTriggerCards() {
+		return this.homey.settings.get('transition_trigger_cards') || [];
+	}
+
 	getChronographType() {
 		return ChronographType.TRANSITION;
 	}

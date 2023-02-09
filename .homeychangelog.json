@@ -58,5 +58,8 @@
   },
   "1.4.3": {
     "en": "Added: New flowcards to retrieve the (Elapsed/ToGo) duration of Timers, Stopwatches and Transitions."
+  },
+  "1.4.4": {
+    "en": "Improved: Better coding and implementations of SDK3. Also, some triggercards are now also used to generate timers/stopwatches/transitions in the background, for creating a device."
   }
 }

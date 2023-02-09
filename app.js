@@ -71,8 +71,9 @@ class Application extends Homey.App {
 		this._installLogEventHandler();
 		this._installEventHandlers();
 
+		Chronograph.homey = this.homey;
 		// Restore chronographs from settings after the application has started.
-		setTimeout(() => {
+		this.homey.setTimeout(() => {
 			this.log('Restoring chronographs.');
 			this._restoreChronographs();
 		}, 1000);

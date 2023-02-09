@@ -13,6 +13,10 @@ class StopwatchDevice extends Device {
 		return this.homey.settings.get('stopwatch_resume_cards') || [];
 	}
 
+	getTriggerCards() {
+		return this.homey.settings.get('stopwatch_trigger_cards') || [];
+	}
+	
 	getChronographType() {
 		return ChronographType.STOPWATCH;
 	}

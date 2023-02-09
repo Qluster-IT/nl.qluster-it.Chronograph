@@ -13,6 +13,10 @@ class TimerDriver extends Driver {
 		return this.homey.settings.get('timer_resume_cards') || [];
 	}
 
+	getTriggerCards() {
+		return this.homey.settings.get('timer_trigger_cards') || [];
+	}
+
 	getChronographType() {
 		return ChronographType.TIMER;
 	}
