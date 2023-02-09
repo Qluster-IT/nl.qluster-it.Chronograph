@@ -8,7 +8,7 @@
 	"titleFormatted": {
 		"en": "Get the remaining duration of transition [[name]]",
 		"nl": "Krijg de resterende duur van transition [[name]]",
-		"de": "Holen Sie sich die verbleibende Dauer von transition [[name]]"
+		"de": "Abfrage verbleibende Dauer von Übergang [[name]]"
 	},
 	"args": [
 		{
