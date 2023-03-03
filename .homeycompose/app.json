@@ -1,149 +1,149 @@
 {
-	"id": "nl.fellownet.chronograph",
-	"version": "1.4.6",
-	"compatibility": ">=5.0.0",
-	"sdk": 3,
-	"name": {
-		"en": "Chronograph"
-	},
-	"description": {
-		"en": "Adds precise timer, stopwatch and transition functionality to Homey.",
-		"nl": "Voegt accurate timer, stopwatch en transitie functionaliteit toe aan Homey.",
-		"de": "Fügt Homey präzise Timer, Stoppuhrfunktionen und Übergänge hinzu."
-	},
-	"brandColor": "#5583C3",
-	"category": [
-		"tools"
-	],
-	"tags": {
-		"en": [
-			"timer",
-			"countdown",
-			"stopwatch",
-			"transitions",
-			"chronograph",
-			"hourglass"
-		],
-		"nl": [
-			"timer",
-			"countdown",
-			"stopwatch",
-			"transities",
-			"chronograph",
-			"zandloper"
-		],
-		"de": [
-			"timer",
-			"countdown",
-			"stoppuhr",
-			"übergänge",
-			"chronograph",
-			"sanduhr"
-		]
-	},
-	"source": "https://bitbucket.org/QlusterIT/nl.qluster-it.chronograph/",
-	"bugs": {
-		"url": "https://bitbucket.org/QlusterIT/nl.qluster-it.chronograph/issues"
-	},
-	"homeyCommunityTopicId": 18214,
-	"permissions": [],
-	"images": {
-		"large": "/assets/images/large.png",
-		"small": "/assets/images/small.png"
-	},
-	"author": {
-		"name": "Arie J. Godschalk",
-		"email": "arie@qluster-it.nl"
-	},
-	"contributing": {
-		"donate": {
-			"paypal": {
-				"username": "QlusterIT"
-			},
+  "id": "nl.fellownet.chronograph",
+  "version": "1.4.7",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "name": {
+    "en": "Chronograph"
+  },
+  "description": {
+    "en": "Adds precise timer, stopwatch and transition functionality to Homey.",
+    "nl": "Voegt accurate timer, stopwatch en transitie functionaliteit toe aan Homey.",
+    "de": "Fügt Homey präzise Timer, Stoppuhrfunktionen und Übergänge hinzu."
+  },
+  "brandColor": "#5583C3",
+  "category": [
+    "tools"
+  ],
+  "tags": {
+    "en": [
+      "timer",
+      "countdown",
+      "stopwatch",
+      "transitions",
+      "chronograph",
+      "hourglass"
+    ],
+    "nl": [
+      "timer",
+      "countdown",
+      "stopwatch",
+      "transities",
+      "chronograph",
+      "zandloper"
+    ],
+    "de": [
+      "timer",
+      "countdown",
+      "stoppuhr",
+      "übergänge",
+      "chronograph",
+      "sanduhr"
+    ]
+  },
+  "source": "https://bitbucket.org/QlusterIT/nl.qluster-it.chronograph/",
+  "bugs": {
+    "url": "https://bitbucket.org/QlusterIT/nl.qluster-it.chronograph/issues"
+  },
+  "homeyCommunityTopicId": 18214,
+  "permissions": [],
+  "images": {
+    "large": "/assets/images/large.png",
+    "small": "/assets/images/small.png"
+  },
+  "author": {
+    "name": "Arie J. Godschalk",
+    "email": "arie@qluster-it.nl"
+  },
+  "contributing": {
+    "donate": {
+      "paypal": {
+        "username": "QlusterIT"
+      },
       "patreon": {
-				"username": "QlusterIT"
-			},
+        "username": "QlusterIT"
+      },
       "githubSponsors": {
         "username": "XeroxQ"
       }
-		}
-	},
-	"contributors": {
-		"developers": [
-			{
-				"name": "Bob Kersten",
-				"email": "bob@fellownet.nl"
-			},
-			{
-				"name": "Arie J. Godschalk",
-				"email": "arie@qluster-it.nl"
-			}
-		]
-	},
-	"api": {
-		"getTimers": {
-			"method": "GET",
-			"path": "/timers/"
-		},
-		"getTimer": {
-			"method": "GET",
-			"path": "/timers/:id"
-		},
-		"putTimer": {
-			"method": "PUT",
-			"path": "/timers/:id"
-		},
-		"deleteTimer": {
-			"method": "DELETE",
-			"path": "/timers/:id"
-		},
-		"getStopwatches": {
-			"method": "GET",
-			"path": "/stopwatches/"
-		},
-		"getStopwatch": {
-			"method": "GET",
-			"path": "/stopwatches/:id"
-		},
-		"putStopwatch": {
-			"method": "PUT",
-			"path": "/stopwatches/:id"
-		},
-		"deleteStopwatch": {
-			"method": "DELETE",
-			"path": "/stopwatches/:id"
-		},
-		"getTransitions": {
-			"method": "GET",
-			"path": "/transitions/"
-		},
-		"getTransition": {
-			"method": "GET",
-			"path": "/transitions/:id"
-		},
-		"putTransition": {
-			"method": "PUT",
-			"path": "/transitions/:id"
-		},
-		"deleteTransition": {
-			"method": "DELETE",
-			"path": "/transitions/:id"
-		},
-		"getChronographs": {
-			"method": "GET",
-			"path": "/chronographs/"
-		},
-		"getChronograph": {
-			"method": "GET",
-			"path": "/chronographs/:id"
-		},
-		"putChronograph": {
-			"method": "PUT",
-			"path": "/chronographs/:id"
-		},
-		"deleteChronograph": {
-			"method": "DELETE",
-			"path": "/chronographs/:id"
-		}
-	}	
-} 
+    }
+  },
+  "contributors": {
+    "developers": [
+      {
+        "name": "Bob Kersten",
+        "email": "bob@fellownet.nl"
+      },
+      {
+        "name": "Arie J. Godschalk",
+        "email": "arie@qluster-it.nl"
+      }
+    ]
+  },
+  "api": {
+    "getTimers": {
+      "method": "GET",
+      "path": "/timers/"
+    },
+    "getTimer": {
+      "method": "GET",
+      "path": "/timers/:id"
+    },
+    "putTimer": {
+      "method": "PUT",
+      "path": "/timers/:id"
+    },
+    "deleteTimer": {
+      "method": "DELETE",
+      "path": "/timers/:id"
+    },
+    "getStopwatches": {
+      "method": "GET",
+      "path": "/stopwatches/"
+    },
+    "getStopwatch": {
+      "method": "GET",
+      "path": "/stopwatches/:id"
+    },
+    "putStopwatch": {
+      "method": "PUT",
+      "path": "/stopwatches/:id"
+    },
+    "deleteStopwatch": {
+      "method": "DELETE",
+      "path": "/stopwatches/:id"
+    },
+    "getTransitions": {
+      "method": "GET",
+      "path": "/transitions/"
+    },
+    "getTransition": {
+      "method": "GET",
+      "path": "/transitions/:id"
+    },
+    "putTransition": {
+      "method": "PUT",
+      "path": "/transitions/:id"
+    },
+    "deleteTransition": {
+      "method": "DELETE",
+      "path": "/transitions/:id"
+    },
+    "getChronographs": {
+      "method": "GET",
+      "path": "/chronographs/"
+    },
+    "getChronograph": {
+      "method": "GET",
+      "path": "/chronographs/:id"
+    },
+    "putChronograph": {
+      "method": "PUT",
+      "path": "/chronographs/:id"
+    },
+    "deleteChronograph": {
+      "method": "DELETE",
+      "path": "/chronographs/:id"
+    }
+  }
+}
