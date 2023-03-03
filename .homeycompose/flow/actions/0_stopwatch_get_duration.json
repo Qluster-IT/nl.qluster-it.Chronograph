@@ -57,6 +57,26 @@
 				"nl": "Verlopen in uren",
 				"de": "Verstrichen in Stunden"
 			}
+		},
+		{
+			"name": "elapsedTimeInMinutes",
+			"type": "string",
+			"title": {
+				"en": "Elapsed in Minutes",
+				"nl": "Verlopen in minuten",
+				"de": "Verstrichen in Minuten"
+			},
+			"example":"mm:ss"
+		},		
+		{
+			"name": "elapsedTimeInHours",
+			"type": "string",
+			"title": {
+				"en": "Elapsed in Hours",
+				"nl": "Verlopen in uren",
+				"de": "Verstrichen in Stunden"
+			},
+			"example":"HH:mm:ss"
 		}
 	]
 }

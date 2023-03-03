@@ -58,7 +58,7 @@ class Application extends Homey.App {
 		//Application.homey = this.homey;
 		// Initializing cards.
 		//if (process.env.DEBUG === '1') require('inspector').open(9228, '0.0.0.0', true);
-		
+
 
 		this.log('Initializing cards.');
 		this._initializeTimerCards();
@@ -80,6 +80,27 @@ class Application extends Homey.App {
 
 		this.log('Application is running.');
 	}
+
+	getTimeAsString(durationInMs, returnType) {
+		var milliseconds = Math.floor((durationInMs % 1000) / 100),
+			seconds = Math.floor((durationInMs / 1000) % 60),
+			minutes = Math.floor((durationInMs / (1000 * 60)) % 60),
+			hours = Math.floor((durationInMs / (1000 * 60 * 60)) % 24);
+
+		hours = (hours < 10) ? "0" + hours : hours;
+		minutes = (minutes < 10) ? "0" + minutes : minutes;
+		seconds = (seconds < 10) ? "0" + seconds : seconds;
+		switch (returnType) {
+			case 'mm:ss': return minutes + ":" + seconds ;
+			case 'HH:mm': return  hours + ":" + minutes ;
+			
+			case 'HH:mm:ss': 
+			default:
+				return  hours + ":" + minutes + ":" + seconds ;
+			
+		}
+	}
+
 
 	_initializeTimerCards() {
 		this._cards = {
@@ -170,17 +191,17 @@ class Application extends Homey.App {
 	_installLogEventHandler() {
 		Chronograph.events.on('log', (chronograph, text, level) => {
 			if (level >= LogLevel.WARNING) {
-				if(chronograph) this.error('[' + chronograph.getData('type') + '] [' + chronograph.getName() + '] ' + text);
+				if (chronograph) this.error('[' + chronograph.getData('type') + '] [' + chronograph.getName() + '] ' + text);
 				else this.error(text);
 			} else {
-				if(chronograph) this.log('[' + chronograph.getData('type') + '] [' + chronograph.getName() + '] ' + text);
+				if (chronograph) this.log('[' + chronograph.getData('type') + '] [' + chronograph.getName() + '] ' + text);
 				else this.log(text);
 			}
 		});
 	}
 
 	_installEventHandlers() {
-		Chronograph.events.mon([ 'created', 'started', 'resumed', 'paused', 'updated', 'removed' ], (event, chronograph) => {
+		Chronograph.events.mon(['created', 'started', 'resumed', 'paused', 'updated', 'removed'], (event, chronograph) => {
 			let raw = {
 				id: chronograph.getId(),
 				name: chronograph.getName(),
@@ -194,7 +215,7 @@ class Application extends Homey.App {
 			this.homey.api.realtime('chronograph_event', raw);
 			let active = this.homey.settings.get('chronographs_active') || {};
 			if (event == 'removed') {
-				delete(active[chronograph.getId()]);
+				delete (active[chronograph.getId()]);
 			} else {
 				active[chronograph.getId()] = raw;
 			}
@@ -240,7 +261,7 @@ class Application extends Homey.App {
 			if (raw.data.type == ChronographType.TRANSITION) {
 				let steps = raw.data.steps--;
 				let stepDuration = chronograph.getTargetDuration() / steps;
-				while(--steps > 0) {
+				while (--steps > 0) {
 					chronograph.addSplit(steps * stepDuration, 'milliseconds');
 				}
 			}

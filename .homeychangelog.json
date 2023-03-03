@@ -64,5 +64,8 @@
   },  
   "1.4.5": {
     "en": "Improved: More German translations."
+  },  
+  "1.4.6": {
+    "en": "Improved: Get duration/elapsed flowcards now have addition text-tags with HH:mm:ss and mm:ss."
   }
 }

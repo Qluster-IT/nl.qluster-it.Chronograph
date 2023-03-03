@@ -57,8 +57,27 @@
 				"nl": "Duur in uren",
 				"de": "Dauer in Stunden"
 			}
-		},
-		
+		},	
+		{
+			"name": "durationTimeInMinutes",
+			"type": "string",
+			"title": {
+				"en": "Duration in Minutes",
+				"nl": "Duur in minuten",
+				"de": "Dauer in Minuten"
+			},
+			"example":"mm:ss"
+		},		
+		{
+			"name": "durationTimeInHours",
+			"type": "string",
+			"title": {
+				"en": "Duration in Hours",
+				"nl": "Duur in uren",
+				"de": "Dauer in Stunden"
+			},
+			"example":"HH:mm:ss"
+		},		
 		{
 			"name": "elapsed",
 			"type": "number",
@@ -94,6 +113,26 @@
 				"nl": "Verlopen in uren",
 				"de": "Verstrichen in Stunden"
 			}
+		},
+		{
+			"name": "elapsedTimeInMinutes",
+			"type": "string",
+			"title": {
+				"en": "Elapsed in Minutes",
+				"nl": "Verlopen in minuten",
+				"de": "Verstrichen in Minuten"
+			},
+			"example":"mm:ss"
+		},		
+		{
+			"name": "elapsedTimeInHours",
+			"type": "string",
+			"title": {
+				"en": "Elapsed in Hours",
+				"nl": "Verlopen in uren",
+				"de": "Verstrichen in Stunden"
+			},
+			"example":"HH:mm:ss"
 		}
 	]
 }
