@@ -77,6 +77,16 @@
 				"de": "Verstrichen in Stunden"
 			},
 			"example":"HH:mm:ss"
+		},
+		{
+			"name": "elapsedTimeInHoursShort",
+			"type": "string",
+			"title": {
+				"en": "Elapsed in Hours (short)",
+				"nl": "Verlopen in uren (kort)",
+				"de": "Verstrichen in Stunden (kurz)"
+			},
+			"example": "HH:mm"
 		}
 	]
 }

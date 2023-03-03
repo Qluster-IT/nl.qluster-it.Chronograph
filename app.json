@@ -1504,6 +1504,16 @@
               "de": "Verstrichen in Stunden"
             },
             "example": "HH:mm:ss"
+          },
+          {
+            "name": "elapsedTimeInHoursShort",
+            "type": "string",
+            "title": {
+              "en": "Elapsed in Hours (short)",
+              "nl": "Verlopen in uren (kort)",
+              "de": "Verstrichen in Stunden (kurz)"
+            },
+            "example": "HH:mm"
           }
         ]
       },
@@ -1588,6 +1598,16 @@
             "example": "HH:mm:ss"
           },
           {
+            "name": "durationTimeInHoursShort",
+            "type": "string",
+            "title": {
+              "en": "Duration in Hours (short)",
+              "nl": "Duur in uren (kort)",
+              "de": "Dauer in Stunden (kurz)"
+            },
+            "example": "HH:mm"
+          },
+          {
             "name": "elapsed",
             "type": "number",
             "title": {
@@ -1642,6 +1662,16 @@
               "de": "Verstrichen in Stunden"
             },
             "example": "HH:mm:ss"
+          },
+          {
+            "name": "elapsedTimeInHoursShort",
+            "type": "string",
+            "title": {
+              "en": "Elapsed in Hours (short)",
+              "nl": "Verlopen in uren (kort)",
+              "de": "Verstrichen in Stunden (kurz)"
+            },
+            "example": "HH:mm"
           }
         ]
       },
@@ -1726,6 +1756,16 @@
             "example": "HH:mm:ss"
           },
           {
+            "name": "durationTimeInHoursShort",
+            "type": "string",
+            "title": {
+              "en": "Duration in Hours (short)",
+              "nl": "Duur in uren (kort)",
+              "de": "Dauer in Stunden (kurz)"
+            },
+            "example": "HH:mm"
+          },
+          {
             "name": "elapsed",
             "type": "number",
             "title": {
@@ -1780,6 +1820,16 @@
               "de": "Verstrichen in Stunden"
             },
             "example": "HH:mm:ss"
+          },
+          {
+            "name": "elapsedTimeInHoursShort",
+            "type": "string",
+            "title": {
+              "en": "Elapsed in Hours (short)",
+              "nl": "Verlopen in uren (kort)",
+              "de": "Verstrichen in Stunden (kurz)"
+            },
+            "example": "HH:mm"
           }
         ]
       },
