@@ -26,9 +26,9 @@
 			"name": "elapsed",
 			"type": "number",
 			"title": {
-				"en": "Elapsed",
-				"nl": "Verlopen",
-				"de": "Verstrichen"
+				"en": "Elapsed in Milliseconds",
+				"nl": "Verlopen in milliseconden",
+				"de": "Verstrichen in Millisekunden"
 			}
 		},		
 		{

@@ -70,5 +70,8 @@
   },  
   "1.4.7": {
     "en": "Improved: Get duration/elapsed flowcards now have more addition text-tags with HH:mm:ss, mm:ss and HH:mm."
+  },  
+  "1.4.8": {
+    "en": "Bugfixed and minor description adjustments."
   }
 }

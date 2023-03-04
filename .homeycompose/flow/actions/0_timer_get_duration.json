@@ -26,9 +26,9 @@
 			"name": "duration",
 			"type": "number",
 			"title": {
-				"en": "Duration",
-				"nl": "Duur",
-				"de": "Dauer"
+				"en": "Duration in Milliseconds",
+				"nl": "Duur in milliseconden",
+				"de": "Dauer in Millisekunden"
 			}
 		},		
 		{
@@ -92,9 +92,9 @@
 			"name": "elapsed",
 			"type": "number",
 			"title": {
-				"en": "Elapsed",
-				"nl": "Verlopen",
-				"de": "Verstrichen"
+				"en": "Elapsed in Milliseconds",
+				"nl": "Verlopen in milliseconden",
+				"de": "Verstrichen in Millisekunden"
 			}
 		},		
 		{
