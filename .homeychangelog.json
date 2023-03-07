@@ -76,5 +76,8 @@
   },  
   "1.4.9": {
     "en": "Bugfixed crash-reports."
+  },  
+  "1.4.10": {
+    "en": "Bugfixed another crash-report."
   }
 }
