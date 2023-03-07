@@ -73,5 +73,8 @@
   },  
   "1.4.8": {
     "en": "Bugfixed and minor description adjustments."
+  },  
+  "1.4.9": {
+    "en": "Bugfixed crash-reports."
   }
 }
