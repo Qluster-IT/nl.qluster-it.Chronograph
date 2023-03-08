@@ -60,6 +60,8 @@ class Application extends Homey.App {
 		//if (process.env.DEBUG === '1') require('inspector').open(9228, '0.0.0.0', true);
 
 
+		this.setRoundOfDurationsFlowcards();
+
 		this.log('Initializing cards.');
 		this._initializeTimerCards();
 		this._initializeStopwatchCards();
@@ -79,6 +81,18 @@ class Application extends Homey.App {
 		}, 1000);
 
 		this.log('Application is running.');
+		
+		this.homey.settings.on('set', async (settingName)=> {
+			if (settingName == 'roundOfDurationsFlowcards') {
+				this.setRoundOfDurationsFlowcards();
+			}
+		});
+
+	}
+
+	setRoundOfDurationsFlowcards() {
+		this.roundOfDurationsFlowcards = this.homey.settings.get('roundOfDurationsFlowcards');
+		if(this.roundOfDurationsFlowcards===null || this.roundOfDurationsFlowcards===undefined) this.homey.settings.set('roundOfDurationsFlowcards', (this.roundOfDurationsFlowcards=2));
 	}
 
 	getTimeAsString(durationInMs, returnType) {

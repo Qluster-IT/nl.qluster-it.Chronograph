@@ -1,5 +1,6 @@
 <!doctype html>
 <html>
+
 <head>
 	<script type="text/javascript" src="/homey.js" data-origin="settings"></script>
 	<script type="text/javascript" src="assets/vue.js"></script>
@@ -8,187 +9,184 @@
 
 <body>
 
-<div id="app">
+	<div id="app">
 
-<h1><img src="assets/timer.svg" /><span data-i18n="settings.timers">Timers</span></h1>
-<ol v-if="timers.length > 0">
-	<chronograph-item
-		v-for="timer in timers"
-		v-bind:chronograph="timer"
-		v-bind:key="timer.id"
-	></chronograph-item>
-</ol>
-<em v-else data-i18n="settings.no_active_timers">No active timers.</em>
+		<div>
+			<h6>{{ Homey.__("settings.roundOfDurationsFlowcards") }}</h6>
 
-<h1><img src="assets/stopwatch.svg" /><span data-i18n="settings.stopwatches">Stopwatches</span></h1>
-<ol v-if="stopwatches.length > 0">
-	<chronograph-item
-		v-for="stopwatch in stopwatches"
-		v-bind:chronograph="stopwatch"
-		v-bind:key="stopwatch.id"
-	></chronograph-item>
-</ol>
-<em v-else data-i18n="settings.no_active_stopwatches">No active stopwatches.</em>
+			<button v-on:click="setRoundOfDurationsFlowcards">{{ Homey.__("settings.save") }}</button>
+		</div>
+		<h1><img src="assets/timer.svg" /><span data-i18n="settings.timers">Timers</span></h1>
+		<ol v-if="timers.length > 0">
+			<chronograph-item v-for="timer in timers" v-bind:chronograph="timer" v-bind:key="timer.id"></chronograph-item>
+		</ol>
+		<em v-else data-i18n="settings.no_active_timers">No active timers.</em>
 
-<h1><img src="assets/transition.svg" /><span data-i18n="settings.transitions">Transitions</span></h1>
-<ol v-if="transitions.length > 0">
-	<chronograph-item
-		v-for="transition in transitions"
-		v-bind:chronograph="transition"
-		v-bind:key="transition.id"
-	></chronograph-item>
-</ol>
-<em v-else data-i18n="settings.no_active_transitions">No active transitions.</em>
+		<h1><img src="assets/stopwatch.svg" /><span data-i18n="settings.stopwatches">Stopwatches</span></h1>
+		<ol v-if="stopwatches.length > 0">
+			<chronograph-item v-for="stopwatch in stopwatches" v-bind:chronograph="stopwatch" v-bind:key="stopwatch.id"></chronograph-item>
+		</ol>
+		<em v-else data-i18n="settings.no_active_stopwatches">No active stopwatches.</em>
 
-</div>
+		<h1><img src="assets/transition.svg" /><span data-i18n="settings.transitions">Transitions</span></h1>
+		<ol v-if="transitions.length > 0">
+			<chronograph-item v-for="transition in transitions" v-bind:chronograph="transition" v-bind:key="transition.id"></chronograph-item>
+		</ol>
+		<em v-else data-i18n="settings.no_active_transitions">No active transitions.</em>
 
-<script type="text/javascript">
-	function onHomeyReady(Homey) {
-		Vue.component('chronograph-item', {
-			props: [ 'chronograph' ],
-			template:
-				'<li>'
+	</div>
+
+	<script type="text/javascript">
+		function onHomeyReady(Homey) {
+			Vue.component('chronograph-item', {
+				props: ['chronograph'],
+				template:
+					'<li>'
 					+ '<span><strong>{{ chronograph.name }}</strong></span>'
 					+ '<span><button v-on:click="toggle">{{ chronograph.running ? Homey.__("settings.pause") : Homey.__("settings.resume") }}</button><button v-on:click="stop">{{ Homey.__("settings.stop") }}</button></span>'
 					+ '<span>{{ calculateDuration(chronograph) }}</span>'
 					+ '<br class="cb">'
-				+ '</li>',
-			updated: function() {
-				this.update();
-			},
-			mounted: function() {
-				this.update();
-			},
-			beforeDestroy: function() {
-				clearInterval(this.interval);
-			},
-			methods: {
-				stop: function(event) {
-					Homey.api('DELETE', '/chronographs/' + this.chronograph.id);
-					var index = app.chronographs.length;
-					while (index--) {
-						if (app.chronographs[index].id == this.chronograph.id) {
-							app.chronographs.splice(index, 1);
-							return;
-						}
-					}
+					+ '</li>',
+				updated: function () {
+					this.update();
 				},
-				toggle: function(event) {
-					this.chronograph.running = !this.chronograph.running;
-					Homey.api('PUT', '/chronographs/' + this.chronograph.id, this.chronograph);
+				mounted: function () {
+					this.update();
 				},
-				update: function() {
-					if (this.chronograph.running) {
-						if (!this.interval) {
-							this.interval = setInterval(() => {
-								this.chronograph.duration = this.chronograph.duration + 100;
-							}, 100);
-						}
-					} else {
-						if (this.interval) {
-							clearInterval(this.interval);
-							delete(this.interval);
-						}
-					}
+				beforeDestroy: function () {
+					clearInterval(this.interval);
 				},
-				calculateDuration: function(chronograph) {
-					var duration = Math.max(0, chronograph.data.type == 'Timer' ? chronograph.targetDuration - chronograph.duration : chronograph.duration);
-					duration /= 1e3;
-					var days = Math.floor(duration / (24 * 3600));
-					duration %= (24 * 3600);
-					var hours = Math.floor(duration / 3600);
-					duration %= 3600;
-					var minutes = Math.floor(duration / 60);
-					duration %= 60;
-					var seconds = duration.toFixed(2);
-
-					var result = seconds.toString().padStart(5, '0');
-					if (minutes > 0 || hours > 0 || days > 0) {
-						result = minutes.toString().padStart(2, '0') + ':' + result;
-					}
-					if (hours > 0 || days > 0) {
-						result = hours.toString().padStart(2, '0') + ':' + result;
-					}
-					if (days > 0) {
-						result = days + Homey.__('settings.days_abbreviation') + ' ' + result;
-					}
-
-					return result;
-				}
-			}
-		});
-
-		var app = new Vue({
-			el: '#app',
-			data: {
-				chronographs: []
-			},
-			computed: {
-				timers: function() {
-					return this.chronographs.filter(chronograph => chronograph.data.type == 'Timer');
-				},
-				stopwatches: function() {
-					return this.chronographs.filter(chronograph => chronograph.data.type == 'Stopwatch');
-				},
-				transitions: function() {
-					return this.chronographs.filter(chronograph => chronograph.data.type == 'Transition');
-				}
-			},
-			methods: {
-				refresh: function() {
-					return new Promise((resolve, reject) => {
-						Homey.api('GET', '/chronographs/', null, (err, body) => {
-							if (err) {
-								reject(err);
-							} else {
-								this.chronographs = this.sort(JSON.parse(body));
-								resolve();
+				methods: {
+					stop: function (event) {
+						Homey.api('DELETE', '/chronographs/' + this.chronograph.id);
+						var index = app.chronographs.length;
+						while (index--) {
+							if (app.chronographs[index].id == this.chronograph.id) {
+								app.chronographs.splice(index, 1);
+								return;
 							}
-						});
-					});
-				},
-				sort(what) {
-					return what.sort((left, right) => left.duration == right.duration ? left.name.localeCompare(right.name) : (left.duration > right.duration ? 1 : -1));
-				}
-			},
-			mounted: function() {
-				this.refresh()
-					.then(() => {
-						// After the first refresh, keep on refreshing to make sure the view is updated
-						// even when the events are not properly received.
-						setInterval(this.refresh, 5000);
+						}
+					},
+					toggle: function (event) {
+						this.chronograph.running = !this.chronograph.running;
+						Homey.api('PUT', '/chronographs/' + this.chronograph.id, this.chronograph);
+					},
+					update: function () {
+						if (this.chronograph.running) {
+							if (!this.interval) {
+								this.interval = setInterval(() => {
+									this.chronograph.duration = this.chronograph.duration + 100;
+								}, 100);
+							}
+						} else {
+							if (this.interval) {
+								clearInterval(this.interval);
+								delete (this.interval);
+							}
+						}
+					},
+					calculateDuration: function (chronograph) {
+						var duration = Math.max(0, chronograph.data.type == 'Timer' ? chronograph.targetDuration - chronograph.duration : chronograph.duration);
+						duration /= 1e3;
+						var days = Math.floor(duration / (24 * 3600));
+						duration %= (24 * 3600);
+						var hours = Math.floor(duration / 3600);
+						duration %= 3600;
+						var minutes = Math.floor(duration / 60);
+						duration %= 60;
+						var seconds = duration.toFixed(2);
 
-						// Install the event handlers that process real-time events.
-						Homey.on('chronograph_event', (event) => {
-							console.log('chronograph_event recieved');
-							var index = this.chronographs.length;
-							while (index--) {
-								if (this.chronographs[index].id == event.id) {
-									if (event.removed) {
-										this.chronographs.splice(index, 1);
-									} else {
-										this.chronographs[index].duration = event.duration;
-										this.chronographs[index].running = event.running;
-									}
-									return;
+						var result = seconds.toString().padStart(5, '0');
+						if (minutes > 0 || hours > 0 || days > 0) {
+							result = minutes.toString().padStart(2, '0') + ':' + result;
+						}
+						if (hours > 0 || days > 0) {
+							result = hours.toString().padStart(2, '0') + ':' + result;
+						}
+						if (days > 0) {
+							result = days + Homey.__('settings.days_abbreviation') + ' ' + result;
+						}
+
+						return result;
+					}
+				}
+			});
+
+			var app = new Vue({
+				el: '#app',
+				data: {
+					chronographs: []
+				},
+				computed: {
+					timers: function () {
+						return this.chronographs.filter(chronograph => chronograph.data.type == 'Timer');
+					},
+					stopwatches: function () {
+						return this.chronographs.filter(chronograph => chronograph.data.type == 'Stopwatch');
+					},
+					transitions: function () {
+						return this.chronographs.filter(chronograph => chronograph.data.type == 'Transition');
+					}
+				},
+				methods: {
+					refresh: function () {
+						return new Promise((resolve, reject) => {
+							Homey.api('GET', '/chronographs/', null, (err, body) => {
+								if (err) {
+									reject(err);
+								} else {
+									this.chronographs = this.sort(JSON.parse(body));
+									resolve();
 								}
-							}
-							if (!event.removed) {
-								this.chronographs.push(event);
-							}
+							});
 						});
+					},
+					setRoundOfDurationsFlowcards: function () {
+						Homey.set('roundOfDurationsFlowcards', this.roundOfDurationsFlowcards);
+					},
+					sort(what) {
+						return what.sort((left, right) => left.duration == right.duration ? left.name.localeCompare(right.name) : (left.duration > right.duration ? 1 : -1));
+					}
+				},
+				mounted: function () {
+					this.refresh()
+						.then(() => {
+							// After the first refresh, keep on refreshing to make sure the view is updated
+							// even when the events are not properly received.
+							setInterval(this.refresh, 5000);
 
-						// Set the app to ready; this removes the loading indicator.
-						Homey.ready();
-					})
-					.catch((error) => {
-						console.log(error);
-					});
-				;
-			}
-		});
-	}
-</script>
+							// Install the event handlers that process real-time events.
+							Homey.on('chronograph_event', (event) => {
+								console.log('chronograph_event recieved');
+								var index = this.chronographs.length;
+								while (index--) {
+									if (this.chronographs[index].id == event.id) {
+										if (event.removed) {
+											this.chronographs.splice(index, 1);
+										} else {
+											this.chronographs[index].duration = event.duration;
+											this.chronographs[index].running = event.running;
+										}
+										return;
+									}
+								}
+								if (!event.removed) {
+									this.chronographs.push(event);
+								}
+							});
+
+							// Set the app to ready; this removes the loading indicator.
+							Homey.ready();
+						})
+						.catch((error) => {
+							console.log(error);
+						});
+					;
+				}
+			});
+		}
+	</script>
 
 </body>
+
 </html>
