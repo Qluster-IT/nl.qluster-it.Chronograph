@@ -17,6 +17,7 @@
     "pause": "Pause",
     "resume": "Resume",
     "roundOfDurationsFlowcards": "Round of numbers from the 'Get the Duration of [x]' flowcards.",
-	"save":"Save"
+    "save": "Save",
+    "saved": "Saved."
   }
 }

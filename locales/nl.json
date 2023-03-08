@@ -17,6 +17,7 @@
     "pause": "Pauzeren",
     "resume": "Hervatten",
     "roundOfDurationsFlowcards": "Afronden van getallen uit de 'Krijg de Duur van [x]' flowkaarten.",
-	"save":"Opslaan"
+    "save": "Opslaan",
+    "saved": "Opgeslagen."
   }
 }

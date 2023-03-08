@@ -13,6 +13,7 @@
 
 		<div>
 			<h6>{{ Homey.__("settings.roundOfDurationsFlowcards") }}</h6>
+			<input type="number" min="0" max="10" step="1" required v-model="roundOfDurationsFlowcards"></input>
 
 			<button v-on:click="setRoundOfDurationsFlowcards">{{ Homey.__("settings.save") }}</button>
 		</div>
@@ -115,7 +116,8 @@
 			var app = new Vue({
 				el: '#app',
 				data: {
-					chronographs: []
+					chronographs: [],
+					roundOfDurationsFlowcards: 5,
 				},
 				computed: {
 					timers: function () {
@@ -142,13 +144,20 @@
 						});
 					},
 					setRoundOfDurationsFlowcards: function () {
-						Homey.set('roundOfDurationsFlowcards', this.roundOfDurationsFlowcards);
+						Homey.set('roundOfDurationsFlowcards', this.roundOfDurationsFlowcards, (err) => {
+							if (err) return Homey.alert(err);
+							return Homey.alert(Homey.__('settings.saved'));
+						});
 					},
 					sort(what) {
 						return what.sort((left, right) => left.duration == right.duration ? left.name.localeCompare(right.name) : (left.duration > right.duration ? 1 : -1));
 					}
 				},
 				mounted: function () {
+					Homey.get('roundOfDurationsFlowcards', (err, val) => {
+						if (err) return Homey.alert(err);
+						this.roundOfDurationsFlowcards = val;
+					});
 					this.refresh()
 						.then(() => {
 							// After the first refresh, keep on refreshing to make sure the view is updated

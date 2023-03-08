@@ -17,6 +17,7 @@
     "pause": "Pause",
     "resume": "Fortsetzen",
     "roundOfDurationsFlowcards": "Zahlenrunde aus den Flussdiagrammen „Get the Duration of [x]“.",
-	"save":"Speichern"
+    "save": "Speichern",
+    "saved": "Gespeichert."
   }
 }

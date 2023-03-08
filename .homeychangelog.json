@@ -82,5 +82,11 @@
   },  
   "1.4.11": {
     "en": "Bugfixed one more crash-report."
+  },  
+  "1.5.0": {
+    "en": "Improved: Get Duration of [x] flowcards are now Rounded Of to two decimals. This can be adjusted in the App Settings."
+  },  
+  "1.5.1": {
+    "en": "Improved: Get Duration of [x] flowcards are now Rounded Of to two decimals. This can be adjusted in the App Settings."
   }
 }

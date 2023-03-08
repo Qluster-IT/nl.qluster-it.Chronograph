@@ -92,7 +92,7 @@ class Application extends Homey.App {
 
 	setRoundOfDurationsFlowcards() {
 		this.roundOfDurationsFlowcards = this.homey.settings.get('roundOfDurationsFlowcards');
-		if(this.roundOfDurationsFlowcards===null || this.roundOfDurationsFlowcards===undefined) this.homey.settings.set('roundOfDurationsFlowcards', (this.roundOfDurationsFlowcards=2));
+		if(this.roundOfDurationsFlowcards===null || this.roundOfDurationsFlowcards===undefined || !Number.isInteger(this.roundOfDurationsFlowcards)) this.homey.settings.set('roundOfDurationsFlowcards', (this.roundOfDurationsFlowcards=2));
 	}
 
 	getTimeAsString(durationInMs, returnType) {
