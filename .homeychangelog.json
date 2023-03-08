@@ -91,5 +91,8 @@
   },  
   "1.5.2": {
     "en": "Bugfixed: Get Duration of Stopwatch gave an error."
+  },  
+  "1.5.3": {
+    "en": "Improved: Get Duration of [x] flowcards are now Rounded Of to two decimals (or less). This can be adjusted in the App Settings."
   }
 }
