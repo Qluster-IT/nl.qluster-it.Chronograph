@@ -97,5 +97,8 @@
   },  
   "1.5.4": {
     "en": "Improved: App Settings will now also show in-active Chronographs."
+  },  
+  "1.5.5": {
+    "en": "Bugfixed: Get Duration of Transition also gave an error."
   }
 }
