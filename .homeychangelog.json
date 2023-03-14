@@ -94,5 +94,8 @@
   },  
   "1.5.3": {
     "en": "Improved: Get Duration of [x] flowcards are now Rounded Of to two decimals (or less). This can be adjusted in the App Settings."
+  },  
+  "1.5.4": {
+    "en": "Improved: App Settings will now also show in-active Chronographs."
   }
 }

@@ -54,11 +54,18 @@ const TransitionPaused = require('./lib/transition/triggers/transition_paused.js
 
 class Application extends Homey.App {
 
-	onInit() {
+	async onInit() {
 		//Application.homey = this.homey;
 		// Initializing cards.
 		//if (process.env.DEBUG === '1') require('inspector').open(9228, '0.0.0.0', true);
-
+		if (process.env.DEBUG === '1' || false) {
+			try {
+				require('inspector').waitForDebugger();
+			}
+			catch (error) {
+				require('inspector').open(9210, '0.0.0.0', true);
+			}
+		}
 
 		this.setRoundOfDurationsFlowcards();
 
@@ -67,6 +74,10 @@ class Application extends Homey.App {
 		this._initializeStopwatchCards();
 		this._initializeTransitionCards();
 		this._initializeGenericCards();
+
+		await this._initializeChronographsFromFlowArguments();
+
+		this.log('Chronographs', this.chronographs);
 
 		// Install event handlers.
 		this.log('Installing event handlers.');
@@ -80,9 +91,11 @@ class Application extends Homey.App {
 			this._restoreChronographs();
 		}, 1000);
 
+		this.log('Chronograph.all', Chronograph.all());
+
 		this.log('Application is running.');
-		
-		this.homey.settings.on('set', async (settingName)=> {
+
+		this.homey.settings.on('set', async (settingName) => {
 			if (settingName == 'roundOfDurationsFlowcards') {
 				this.setRoundOfDurationsFlowcards();
 			}
@@ -92,7 +105,7 @@ class Application extends Homey.App {
 
 	setRoundOfDurationsFlowcards() {
 		this.roundOfDurationsFlowcards = this.homey.settings.get('roundOfDurationsFlowcards');
-		if(this.roundOfDurationsFlowcards===null || this.roundOfDurationsFlowcards===undefined || !Number.isInteger(this.roundOfDurationsFlowcards)) this.homey.settings.set('roundOfDurationsFlowcards', (this.roundOfDurationsFlowcards=2));
+		if (this.roundOfDurationsFlowcards === null || this.roundOfDurationsFlowcards === undefined || !Number.isInteger(this.roundOfDurationsFlowcards)) this.homey.settings.set('roundOfDurationsFlowcards', (this.roundOfDurationsFlowcards = 2));
 	}
 
 	getTimeAsString(durationInMs, returnType) {
@@ -105,16 +118,86 @@ class Application extends Homey.App {
 		minutes = (minutes < 10) ? "0" + minutes : minutes;
 		seconds = (seconds < 10) ? "0" + seconds : seconds;
 		switch (returnType) {
-			case 'mm:ss': return minutes + ":" + seconds ;
-			case 'HH:mm': return  hours + ":" + minutes ;
-			
-			case 'HH:mm:ss': 
+			case 'mm:ss': return minutes + ":" + seconds;
+			case 'HH:mm': return hours + ":" + minutes;
+
+			case 'HH:mm:ss':
 			default:
-				return  hours + ":" + minutes + ":" + seconds ;
-			
+				return hours + ":" + minutes + ":" + seconds;
+
 		}
 	}
 
+
+
+
+
+	async _initializeChronographsFromFlowArguments() {
+		for (const flowTypeId in this.homey.manifest.flow) {
+			if (Object.hasOwnProperty.call(this.homey.manifest.flow, flowTypeId)) {
+				const flowType = this.homey.manifest.flow[flowTypeId];
+				let type = flowTypeId == 'actions' ? 'Action' : flowTypeId == 'conditions' ? 'Condition' : 'Trigger';
+				for (const flowcard of flowType) {
+					let nameArg;
+					if (flowcard.args && (nameArg = flowcard.args.find(x => x.name))) switch (type) {
+						case "Action":
+						case "Trigger":
+						case "Condition":
+							const card = this.homey.flow['get' + type + 'Card'](flowcard.id)
+							await this.setArgumentNames(card, flowcard);
+							card.on('update', async () => {
+								await this.setArgumentNames(card, flowcard);
+							});;
+							break;
+
+						default:
+							break;
+					}
+				}
+			}
+		}
+	}
+
+	async setArgumentNames(card, flowcard) {
+		this.log('setArgumentNames');
+		if (!this.chronographs) this.chronographs = {};
+		let type = flowcard.id.split('_')[0];
+		if (!this.chronographs[type]) this.chronographs[type] = [];
+
+
+		let args = await card.getArgumentValues();
+		args = args.filter(x => x.name);
+		let names = args.map(x => x.name);
+		let changed = false;
+
+		for (let i = 0; i < names.length; i++)
+			if (names[i] && this.chronographs[type].indexOf(names[i]) === -1) this.chronographs[type].push(names[i]) & (changed=true);
+
+		if(changed) this.homey.settings.set('chronographs', this.chronographs);
+
+	}
+
+	// async readChronographsFromFlowArguments() {
+	// 	for (const flowTypeId in this.homey.manifest.flow) {
+	// 		if (Object.hasOwnProperty.call(this.homey.manifest.flow, flowTypeId)) {
+	// 			const flowType = this.homey.manifest.flow[flowTypeId];
+
+	// 			let type = flowTypeId == 'actions' ? 'Action' : flowTypeId == 'conditions' ? 'Condition' : 'Trigger';
+	// 			for (const flowcard of flowType) {
+	// 				if (flowcard.args && flowcard.args.find(x => x.name === 'variable' && x.type === 'autocomplete')) {
+	// 					if (!this.cards[flowcard.id]) {
+	// 						this.cards[flowcard.id] = { card: await this.homey.flow['get' + type + 'Card'](flowcard.id), names: [], id: flowcard.id };
+	// 					}
+	// 					await this.setArgumentNames(this.cards[flowcard.id]);
+	// 					this.cards[flowcard.id].card.on('update', async () => {
+	// 						await this.setArgumentNames(this.cards[flowcard.id]);
+	// 						await this.setVariablesFromArguments();
+	// 					});
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// };
 
 	_initializeTimerCards() {
 		this._cards = {

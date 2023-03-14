@@ -23,17 +23,38 @@
 		</ol>
 		<em v-else data-i18n="settings.no_active_timers">No active timers.</em>
 
+		<ol v-if="chronographsNames && chronographsNames.timer && chronographsNames.timer.length > 0">
+			<chronograph-name-item v-for="chronograph in chronographsNames.timer" v-bind:chronograph="chronograph" v-bind:key="chronograph"></chronograph-name-item>
+		</ol>
+		<em v-else data-i18n="settings.no_timers">No timers.</em>
+
 		<h1><img src="assets/stopwatch.svg" /><span data-i18n="settings.stopwatches">Stopwatches</span></h1>
 		<ol v-if="stopwatches.length > 0">
 			<chronograph-item v-for="stopwatch in stopwatches" v-bind:chronograph="stopwatch" v-bind:key="stopwatch.id"></chronograph-item>
 		</ol>
 		<em v-else data-i18n="settings.no_active_stopwatches">No active stopwatches.</em>
 
+		<ol v-if="chronographsNames && chronographsNames.stopwatch && chronographsNames.stopwatch.length > 0">
+			<chronograph-name-item v-for="chronograph in chronographsNames.stopwatch" v-bind:chronograph="chronograph" v-bind:key="chronograph"></chronograph-name-item>
+		</ol>
+		<em v-else data-i18n="settings.no_stopwatches">No stopwatches.</em>
+
 		<h1><img src="assets/transition.svg" /><span data-i18n="settings.transitions">Transitions</span></h1>
 		<ol v-if="transitions.length > 0">
 			<chronograph-item v-for="transition in transitions" v-bind:chronograph="transition" v-bind:key="transition.id"></chronograph-item>
 		</ol>
 		<em v-else data-i18n="settings.no_active_transitions">No active transitions.</em>
+		
+		<ol v-if="chronographsNames && chronographsNames.transition && chronographsNames.transition.length > 0">
+			<chronograph-name-item v-for="chronograph in chronographsNames.transition" v-bind:chronograph="chronograph" v-bind:key="chronograph"></chronograph-name-item>
+		</ol>
+		<em v-else data-i18n="settings.no_transitions">No transitions.</em>
+		<!-- <h1><img src="assets/chronographs.svg" /><span data-i18n="settings.chronographs">Chronographs</span></h1>
+		<ol v-if="chronographsNames.length > 0">
+			<chronograph-item v-for="chronograph in chronographsNames" v-bind:chronograph="chronograph" v-bind:key="chronograph"></chronograph-item>
+		</ol>
+		<em v-else data-i18n="settings.no_active_chronographs">No active chronographs.</em> -->
+
 
 	</div>
 
@@ -112,12 +133,22 @@
 					}
 				}
 			});
+			Vue.component('chronograph-name-item', {
+				props: ['chronograph'],
+				template:
+					'<li>'
+					+ '<span><strong>{{ chronograph }}</strong></span>'
+					+ '<br class="cb">'
+					+ '</li>'
+					
+			});
 
 			var app = new Vue({
 				el: '#app',
 				data: {
 					chronographs: [],
 					roundOfDurationsFlowcards: 5,
+					chronographsNames:{}
 				},
 				computed: {
 					timers: function () {
@@ -128,6 +159,9 @@
 					},
 					transitions: function () {
 						return this.chronographs.filter(chronograph => chronograph.data.type == 'Transition');
+					},
+					chronographsNames: function () {
+						return this.chronographsNames;
 					}
 				},
 				methods: {
@@ -183,7 +217,12 @@
 									this.chronographs.push(event);
 								}
 							});
+							Homey.get('chronographs', (err, val) => {
+								if(err) return Homey.alert(err);
+								this.chronographsNames = val;
+								console.log('this.chronographsNames', this.chronographsNames);
 
+							});
 							// Set the app to ready; this removes the loading indicator.
 							Homey.ready();
 						})
