@@ -77,8 +77,7 @@ class Application extends Homey.App {
 
 		await this._initializeChronographsFromFlowArguments();
 
-		this.log('Chronographs', this.chronographs);
-
+		
 		// Install event handlers.
 		this.log('Installing event handlers.');
 		this._installLogEventHandler();
@@ -133,6 +132,7 @@ class Application extends Homey.App {
 
 
 	async _initializeChronographsFromFlowArguments() {
+		this.chronographs = {};
 		for (const flowTypeId in this.homey.manifest.flow) {
 			if (Object.hasOwnProperty.call(this.homey.manifest.flow, flowTypeId)) {
 				const flowType = this.homey.manifest.flow[flowTypeId];
@@ -159,7 +159,7 @@ class Application extends Homey.App {
 	}
 
 	async setArgumentNames(card, flowcard) {
-		this.log('setArgumentNames');
+		//this.log('setArgumentNames');
 		if (!this.chronographs) this.chronographs = {};
 		let type = flowcard.id.split('_')[0];
 		if (!this.chronographs[type]) this.chronographs[type] = [];
@@ -171,9 +171,9 @@ class Application extends Homey.App {
 		let changed = false;
 
 		for (let i = 0; i < names.length; i++)
-			if (names[i] && this.chronographs[type].indexOf(names[i]) === -1) this.chronographs[type].push(names[i]) & (changed=true);
+			if (names[i] && this.chronographs[type].indexOf(names[i]) === -1) this.chronographs[type].push(names[i]) & (changed = true);
 
-		if(changed) this.homey.settings.set('chronographs', this.chronographs);
+		if (changed) this.homey.settings.set('chronographs', this.chronographs);
 
 	}
 
@@ -299,6 +299,10 @@ class Application extends Homey.App {
 
 	_installEventHandlers() {
 		Chronograph.events.mon(['created', 'started', 'resumed', 'paused', 'updated', 'removed'], (event, chronograph) => {
+			let target = timer.getTargetDuration();
+			let elapsed = timer.getDuration();
+			let duration = target - elapsed;
+
 			let raw = {
 				id: chronograph.getId(),
 				name: chronograph.getName(),
@@ -307,7 +311,23 @@ class Application extends Homey.App {
 				data: chronograph.getAllData(),
 				running: chronograph.isRunning(),
 				removed: event == 'removed',
-				now: (new Date()).getTime()
+				now: (new Date()).getTime(),
+
+				duration,
+				durationInSeconds: Number((duration / 1000).toFixed(this.roundOfDurationsFlowcards)),
+				durationInMinutes: Number((duration / 1000 / 60).toFixed(this.roundOfDurationsFlowcards)),
+				durationInHours: Number((duration / 1000 / 60 / 60).toFixed(this.roundOfDurationsFlowcards)),
+				durationTimeInMinutes: this.getTimeAsString(duration, 'mm:ss'),
+				durationTimeInHours: this.getTimeAsString(duration, 'HH:mm:ss'),
+				durationTimeInHoursShort: this.getTimeAsString(duration, 'HH:mm'),
+
+				elapsed,
+				elapsedInSeconds: Number((elapsed / 1000).toFixed(this.roundOfDurationsFlowcards)),
+				elapsedInMinutes: Number((elapsed / 1000 / 60).toFixed(this.roundOfDurationsFlowcards)),
+				elapsedInHours: Number((elapsed / 1000 / 60 / 60).toFixed(this.roundOfDurationsFlowcards)),
+				elapsedTimeInMinutes: this.getTimeAsString(elapsed, 'mm:ss'),
+				elapsedTimeInHours: this.getTimeAsString(elapsed, 'HH:mm:ss'),
+				elapsedTimeInHoursShort: this.getTimeAsString(elapsed, 'HH:mm')
 			};
 			this.homey.api.realtime('chronograph_event', raw);
 			let active = this.homey.settings.get('chronographs_active') || {};
