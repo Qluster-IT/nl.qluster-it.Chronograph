@@ -13,7 +13,8 @@ let getAllFn = (getter, args, callback) => {
 			running: entity.isRunning()
 		});
 	});
-	return JSON.stringify(result);
+	//return JSON.stringify(result);
+	return result;
 	//callback(null, JSON.stringify(result));
 };
 

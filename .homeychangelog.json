@@ -100,5 +100,8 @@
   },  
   "1.5.5": {
     "en": "Bugfixed: Get Duration of Transition also gave an error."
+  },  
+  "1.6.0": {
+    "en": "Breaking: Get All APIs give JSON respond instead of stringified."
   }
 }
