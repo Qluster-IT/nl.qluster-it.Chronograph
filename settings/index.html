@@ -171,7 +171,7 @@
 								if (err) {
 									reject(err);
 								} else {
-									this.chronographs = this.sort(JSON.parse(body));
+									this.chronographs = this.sort(body);
 									resolve();
 								}
 							});
