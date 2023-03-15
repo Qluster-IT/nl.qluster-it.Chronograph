@@ -396,6 +396,7 @@ class Application extends Homey.App {
 				chronograph.start();
 			}
 		});
+		Chronograph._resetUpdateTimeout();
 	}
 }
 

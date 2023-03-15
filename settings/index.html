@@ -200,7 +200,7 @@
 
 							// Install the event handlers that process real-time events.
 							Homey.on('chronograph_event', (event) => {
-								console.log('chronograph_event recieved');
+								//console.log('chronograph_event recieved');
 								var index = this.chronographs.length;
 								while (index--) {
 									if (this.chronographs[index].id == event.id) {
