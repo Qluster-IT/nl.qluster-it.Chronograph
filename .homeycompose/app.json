@@ -144,6 +144,10 @@
     "deleteChronograph": {
       "method": "DELETE",
       "path": "/chronographs/:id"
+    },
+    "getAllChronographs": {
+      "method": "GET",
+      "path": "/allchronographs/"
     }
   }
 }

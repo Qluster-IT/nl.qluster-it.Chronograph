@@ -141,5 +141,9 @@ module.exports = {
 	},
 	async deleteChronograph({homey, params, body}) {
 		return deleteOneFn.call(null, Chronograph.get, {params, body});
-	}
+	},
+	
+	async getAllChronographs({homey}) {
+		return homey.settings.get('chronographs');
+	},
 };
