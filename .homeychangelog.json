@@ -106,5 +106,8 @@
   },  
   "1.6.1": {
     "en": "Bugfixed: Devices HP2023."
+  },  
+  "1.6.2": {
+    "en": "Improvement: Better performance when having Chronograph devices."
   }
 }

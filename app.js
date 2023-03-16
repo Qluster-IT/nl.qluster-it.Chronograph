@@ -298,7 +298,8 @@ class Application extends Homey.App {
 	}
 
 	_installEventHandlers() {
-		Chronograph.events.mon(['created', 'started', 'resumed', 'paused', 'updated', 'removed'], (event, chronograph) => {
+		Chronograph.events.mon(['created', 'started', 'resumed', 'paused', 'updated', 'removed', 'realtime_update'], (event, chronograph) => {
+			//this.log('Chronograph.events.mon( ', event)
 			let target = chronograph.getTargetDuration();
 			let elapsed = chronograph.getDuration();
 			let remaining = target - elapsed;
