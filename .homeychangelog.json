@@ -102,6 +102,6 @@
     "en": "Bugfixed: Get Duration of Transition also gave an error."
   },  
   "1.6.0": {
-    "en": "Breaking: Get All APIs give JSON respond instead of stringified."
+    "en": "Breaking: Get All APIs gives JSON respond instead of stringified."
   }
 }
