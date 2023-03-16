@@ -103,5 +103,8 @@
   },  
   "1.6.0": {
     "en": "Added: Support for other apps to listen to Chronograph changes. See the Device Capabilities app for example. Breaking: The Get All APIs gives JSON respond instead of stringified."
+  },  
+  "1.6.1": {
+    "en": "Bugfixed: Devices HP2023."
   }
 }
