@@ -112,5 +112,8 @@
   },  
   "1.6.3": {
     "en": "Bugfixing: Resolving new issue, better error handling and logging."
+  },  
+  "1.6.4": {
+    "en": "Bugfixed: Resolved some (older) crashreport."
   }
 }
