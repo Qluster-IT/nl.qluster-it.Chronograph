@@ -56,7 +56,8 @@ class Application extends Homey.App {
 
 	async onInit() {
 		this.log('OnInit');
-		this.onInitLoader();
+		
+		this.onInitLoader().catch(x=>this.error('OnInit loaded catch', x));
 	}
 	async onInitLoader() {
 		//Application.homey = this.homey;
