@@ -67,39 +67,48 @@ class Application extends Homey.App {
 			}
 		}
 
-		this.setRoundOfDurationsFlowcards();
+		try {
 
-		this.log('Initializing cards.');
-		this._initializeTimerCards();
-		this._initializeStopwatchCards();
-		this._initializeTransitionCards();
-		this._initializeGenericCards();
+			this.setRoundOfDurationsFlowcards();
 
-		await this._initializeChronographsFromFlowArguments();
+			this.log('Initializing cards.');
+			this._initializeTimerCards();
+			this._initializeStopwatchCards();
+			this._initializeTransitionCards();
+			this._initializeGenericCards();
 
-
-		// Install event handlers.
-		this.log('Installing event handlers.');
-		this._installLogEventHandler();
-		this._installEventHandlers();
-
-		Chronograph.homey = this.homey;
-		// Restore chronographs from settings after the application has started.
-		this.homey.setTimeout(() => {
-			this.log('Restoring chronographs.');
-			this._restoreChronographs();
-		}, 1000);
-
-		this.log('Chronograph.all', Chronograph.all());
-
-		this.log('Application is running.');
-
-		this.homey.settings.on('set', async (settingName) => {
-			if (settingName == 'roundOfDurationsFlowcards') {
-				this.setRoundOfDurationsFlowcards();
+			try {
+				await this._initializeChronographsFromFlowArguments();
+			} catch (error) {
+				this.homey.error('_initializeChronographsFromFlowArguments', error)
 			}
-		});
 
+
+			// Install event handlers.
+			this.log('Installing event handlers.');
+			this._installLogEventHandler();
+			this._installEventHandlers();
+
+			Chronograph.homey = this.homey;
+			// Restore chronographs from settings after the application has started.
+			this.homey.setTimeout(() => {
+				this.log('Restoring chronographs.');
+				this._restoreChronographs();
+			}, 1000);
+
+			this.log('Chronograph.all', Chronograph.all());
+
+			this.log('Application is running.');
+
+			this.homey.settings.on('set', async (settingName) => {
+				if (settingName == 'roundOfDurationsFlowcards') {
+					this.setRoundOfDurationsFlowcards();
+				}
+			});
+
+		} catch (error) {
+			this.homey.error('app init', error)
+		}
 	}
 
 	setRoundOfDurationsFlowcards() {
