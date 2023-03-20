@@ -124,5 +124,8 @@
   },  
   "1.6.7": {
     "en": "Bugfixing: Resolving new issue, better error handling and logging, when having lots of chronographs."
+  },  
+  "1.6.8": {
+    "en": "Bugfixing: Resolving new issue, better error handling and logging, when having lots of chronographs."
   }
 }

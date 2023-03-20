@@ -55,10 +55,12 @@ const TransitionPaused = require('./lib/transition/triggers/transition_paused.js
 class Application extends Homey.App {
 
 	async onInit() {
+		this.log('OnInit');
 		this.onInitLoader();
 	}
-	async onInit() {
+	async onInitLoader() {
 		//Application.homey = this.homey;
+		this.log('onInitLoader');
 		// Initializing cards.
 		//if (process.env.DEBUG === '1') require('inspector').open(9228, '0.0.0.0', true);
 		if (process.env.DEBUG === '1' || false) {
@@ -99,7 +101,6 @@ class Application extends Homey.App {
 
 				this.log('Restoring chronographs.');
 				this._restoreChronographs();
-
 
 			}, 1000);
 
