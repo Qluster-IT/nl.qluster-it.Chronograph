@@ -77,7 +77,7 @@ class Application extends Homey.App {
 
 		await this._initializeChronographsFromFlowArguments();
 
-		
+
 		// Install event handlers.
 		this.log('Installing event handlers.');
 		this._installLogEventHandler();
@@ -299,105 +299,115 @@ class Application extends Homey.App {
 
 	_installEventHandlers() {
 		Chronograph.events.mon(['created', 'started', 'resumed', 'paused', 'updated', 'removed', 'realtime_update'], (event, chronograph) => {
-			//this.log('Chronograph.events.mon( ', event)
-			let target = chronograph.getTargetDuration();
-			let elapsed = chronograph.getDuration();
-			let remaining = target - elapsed;
+			try {
 
-			let raw = {
-				id: chronograph.getId(),
-				name: chronograph.getName(),
-				duration: elapsed,//chronograph.getDuration(),
-				targetDuration: target,//chronograph.getTargetDuration(),
-				data: chronograph.getAllData(),
-				running: chronograph.isRunning(),
-				removed: event == 'removed',
-				now: (new Date()).getTime(),
-				remaining,
-				elapsed,
-				// duration,
-				// durationInSeconds: Number((duration / 1000).toFixed(this.roundOfDurationsFlowcards)),
-				// durationInMinutes: Number((duration / 1000 / 60).toFixed(this.roundOfDurationsFlowcards)),
-				// durationInHours: Number((duration / 1000 / 60 / 60).toFixed(this.roundOfDurationsFlowcards)),
-				// durationTimeInMinutes: this.getTimeAsString(duration, 'mm:ss'),
-				// durationTimeInHours: this.getTimeAsString(duration, 'HH:mm:ss'),
-				// durationTimeInHoursShort: this.getTimeAsString(duration, 'HH:mm'),
+				//this.log('Chronograph.events.mon( ', event)
+				let target = chronograph.getTargetDuration();
+				let elapsed = chronograph.getDuration();
+				let remaining = target - elapsed;
 
-				// elapsed,
-				// elapsedInSeconds: Number((elapsed / 1000).toFixed(this.roundOfDurationsFlowcards)),
-				// elapsedInMinutes: Number((elapsed / 1000 / 60).toFixed(this.roundOfDurationsFlowcards)),
-				// elapsedInHours: Number((elapsed / 1000 / 60 / 60).toFixed(this.roundOfDurationsFlowcards)),
-				// elapsedTimeInMinutes: this.getTimeAsString(elapsed, 'mm:ss'),
-				// elapsedTimeInHours: this.getTimeAsString(elapsed, 'HH:mm:ss'),
-				// elapsedTimeInHoursShort: this.getTimeAsString(elapsed, 'HH:mm')
-			};
-			this.homey.api.realtime('chronograph_event', raw);
-			let active = this.homey.settings.get('chronographs_active') || {};
-			if (event == 'removed') {
-				delete (active[chronograph.getId()]);
-			} else {
-				active[chronograph.getId()] = raw;
+				let raw = {
+					id: chronograph.getId(),
+					name: chronograph.getName(),
+					duration: elapsed,//chronograph.getDuration(),
+					targetDuration: target,//chronograph.getTargetDuration(),
+					data: chronograph.getAllData(),
+					running: chronograph.isRunning(),
+					removed: event == 'removed',
+					now: (new Date()).getTime(),
+					remaining,
+					elapsed,
+					// duration,
+					// durationInSeconds: Number((duration / 1000).toFixed(this.roundOfDurationsFlowcards)),
+					// durationInMinutes: Number((duration / 1000 / 60).toFixed(this.roundOfDurationsFlowcards)),
+					// durationInHours: Number((duration / 1000 / 60 / 60).toFixed(this.roundOfDurationsFlowcards)),
+					// durationTimeInMinutes: this.getTimeAsString(duration, 'mm:ss'),
+					// durationTimeInHours: this.getTimeAsString(duration, 'HH:mm:ss'),
+					// durationTimeInHoursShort: this.getTimeAsString(duration, 'HH:mm'),
+
+					// elapsed,
+					// elapsedInSeconds: Number((elapsed / 1000).toFixed(this.roundOfDurationsFlowcards)),
+					// elapsedInMinutes: Number((elapsed / 1000 / 60).toFixed(this.roundOfDurationsFlowcards)),
+					// elapsedInHours: Number((elapsed / 1000 / 60 / 60).toFixed(this.roundOfDurationsFlowcards)),
+					// elapsedTimeInMinutes: this.getTimeAsString(elapsed, 'mm:ss'),
+					// elapsedTimeInHours: this.getTimeAsString(elapsed, 'HH:mm:ss'),
+					// elapsedTimeInHoursShort: this.getTimeAsString(elapsed, 'HH:mm')
+				};
+				this.homey.api.realtime('chronograph_event', raw);
+				let active = this.homey.settings.get('chronographs_active') || {};
+				if (event == 'removed') {
+					delete (active[chronograph.getId()]);
+				} else {
+					active[chronograph.getId()] = raw;
+				}
+				this.homey.settings.set('chronographs_active', active);
+			} catch (error) {
+				this.homey.error('_installEventHandlers', event, 'error', error);
 			}
-			this.homey.settings.set('chronographs_active', active);
 		});
 	}
 
 	_restoreChronographs() {
-		let active = this.homey.settings.get('chronographs_active') || {};
-		this.homey.settings.set('chronographs_active', {});
-		Object.values(active).forEach(raw => {
-			// Create the correct type of chronograph.
-			if (!raw.data || !raw.data.type || !raw.name) {
-				return;
-			}
-			let id = Utils.generateId(raw.data.type, raw.name);
-			let chronograph;
-			if (raw.targetDuration) {
-				chronograph = new Chronograph(id, raw.name, raw.targetDuration, 'milliseconds');
-			} else {
-				chronograph = new Chronograph(id, raw.name);
-			}
-			chronograph.setData('type', raw.data.type);
-
-			// Add the splits.
-			if (raw.data.type == ChronographType.TIMER) {
-				let splits = this.homey.settings.get('timer_splits') || [];
-				splits
-					.filter(split => split.name == chronograph.getName())
-					.forEach(split => {
-						let reversedSplit = chronograph.getTargetDuration() - Utils.calculateDuration(split.time, split.unit);
-						chronograph.addSplit(reversedSplit, 'milliseconds', split);
-					});
-			}
-
-			if (raw.data.type == ChronographType.STOPWATCH) {
-				let splits = this.homey.settings.get('stopwatch_splits') || [];
-				splits
-					.filter(split => split.name == chronograph.getName())
-					.forEach(split => chronograph.addSplit(split.time, split.unit, split));
-			}
-
-			if (raw.data.type == ChronographType.TRANSITION) {
-				let steps = raw.data.steps--;
-				let stepDuration = chronograph.getTargetDuration() / steps;
-				while (--steps > 0) {
-					chronograph.addSplit(steps * stepDuration, 'milliseconds');
+		try {
+			let active = this.homey.settings.get('chronographs_active') || {};
+			this.homey.settings.set('chronographs_active', {});
+			Object.values(active).forEach(raw => {
+				// Create the correct type of chronograph.
+				if (!raw.data || !raw.data.type || !raw.name) {
+					return;
 				}
-			}
+				let id = Utils.generateId(raw.data.type, raw.name);
+				let chronograph;
+				if (raw.targetDuration) {
+					chronograph = new Chronograph(id, raw.name, raw.targetDuration, 'milliseconds');
+				} else {
+					chronograph = new Chronograph(id, raw.name);
+				}
+				chronograph.setData('type', raw.data.type);
 
-			// Move to exact duration, taking the offline time into account.
-			let duration = raw.duration;
-			if (raw.running) {
-				duration += ((new Date()).getTime() - raw.now);
-			}
-			chronograph.adjust(duration, 'milliseconds', true);
+				// Add the splits.
+				if (raw.data.type == ChronographType.TIMER) {
+					let splits = this.homey.settings.get('timer_splits') || [];
+					splits
+						.filter(split => split.name == chronograph.getName())
+						.forEach(split => {
+							let reversedSplit = chronograph.getTargetDuration() - Utils.calculateDuration(split.time, split.unit);
+							chronograph.addSplit(reversedSplit, 'milliseconds', split);
+						});
+				}
 
-			// Start chronograph if it was running before.
-			if (raw.running) {
-				chronograph.start();
-			}
-		});
-		Chronograph._resetUpdateTimeout();
+				if (raw.data.type == ChronographType.STOPWATCH) {
+					let splits = this.homey.settings.get('stopwatch_splits') || [];
+					splits
+						.filter(split => split.name == chronograph.getName())
+						.forEach(split => chronograph.addSplit(split.time, split.unit, split));
+				}
+
+				if (raw.data.type == ChronographType.TRANSITION) {
+					let steps = raw.data.steps--;
+					let stepDuration = chronograph.getTargetDuration() / steps;
+					while (--steps > 0) {
+						chronograph.addSplit(steps * stepDuration, 'milliseconds');
+					}
+				}
+
+				// Move to exact duration, taking the offline time into account.
+				let duration = raw.duration;
+				if (raw.running) {
+					duration += ((new Date()).getTime() - raw.now);
+				}
+				chronograph.adjust(duration, 'milliseconds', true);
+
+				// Start chronograph if it was running before.
+				if (raw.running) {
+					chronograph.start();
+				}
+			});
+			Chronograph._resetUpdateTimeout();
+
+		} catch (error) {
+			this.homey.error('_restoreChronographs', 'error', error);
+		}
 	}
 }
 

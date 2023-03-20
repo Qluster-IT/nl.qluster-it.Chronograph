@@ -109,5 +109,8 @@
   },  
   "1.6.2": {
     "en": "Improvement: Better performance when having Chronograph devices. And another bugfix."
+  },  
+  "1.6.3": {
+    "en": "Bugfixing: Resolving new issue, better error handling and logging."
   }
 }
