@@ -55,6 +55,9 @@ const TransitionPaused = require('./lib/transition/triggers/transition_paused.js
 class Application extends Homey.App {
 
 	async onInit() {
+		this.onInitLoader();
+	}
+	async onInit() {
 		//Application.homey = this.homey;
 		// Initializing cards.
 		//if (process.env.DEBUG === '1') require('inspector').open(9228, '0.0.0.0', true);
@@ -77,11 +80,6 @@ class Application extends Homey.App {
 			this._initializeTransitionCards();
 			this._initializeGenericCards();
 
-			try {
-				await this._initializeChronographsFromFlowArguments();
-			} catch (error) {
-				this.homey.error('_initializeChronographsFromFlowArguments', error)
-			}
 
 
 			// Install event handlers.
@@ -91,9 +89,18 @@ class Application extends Homey.App {
 
 			Chronograph.homey = this.homey;
 			// Restore chronographs from settings after the application has started.
-			this.homey.setTimeout(() => {
+			this.homey.setTimeout(async () => {
+
+				try {
+					await this._initializeChronographsFromFlowArguments();
+				} catch (error) {
+					this.homey.error('_initializeChronographsFromFlowArguments', error)
+				}
+
 				this.log('Restoring chronographs.');
 				this._restoreChronographs();
+
+
 			}, 1000);
 
 			this.log('Chronograph.all', Chronograph.all());
@@ -168,21 +175,26 @@ class Application extends Homey.App {
 	}
 
 	async setArgumentNames(card, flowcard) {
-		//this.log('setArgumentNames');
-		if (!this.chronographs) this.chronographs = {};
-		let type = flowcard.id.split('_')[0];
-		if (!this.chronographs[type]) this.chronographs[type] = [];
+		try {
+
+			//this.log('setArgumentNames');
+			if (!this.chronographs) this.chronographs = {};
+			let type = flowcard.id.split('_')[0];
+			if (!this.chronographs[type]) this.chronographs[type] = [];
 
 
-		let args = await card.getArgumentValues();
-		args = args.filter(x => x.name);
-		let names = args.map(x => x.name);
-		let changed = false;
+			let args = await card.getArgumentValues();
+			args = args.filter(x => x.name);
+			let names = args.map(x => x.name);
+			let changed = false;
 
-		for (let i = 0; i < names.length; i++)
-			if (names[i] && this.chronographs[type].indexOf(names[i]) === -1) this.chronographs[type].push(names[i]) & (changed = true);
+			for (let i = 0; i < names.length; i++)
+				if (names[i] && this.chronographs[type].indexOf(names[i]) === -1) this.chronographs[type].push(names[i]) & (changed = true);
 
-		if (changed) this.homey.settings.set('chronographs', this.chronographs);
+			if (changed) this.homey.settings.set('chronographs', this.chronographs);
+		} catch (error) {
+			this.homey.error('setArgumentNames error', error);
+		}
 
 	}
 
