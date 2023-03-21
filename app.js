@@ -426,7 +426,12 @@ class Application extends Homey.App {
 					chronograph.start();
 				}
 			});
+
+			
+		this.homey.setTimeout(() => {			
 			Chronograph._resetUpdateTimeout();
+		}, 5000);
+		
 
 		} catch (error) {
 			this.homey.error('_restoreChronographs', 'error', error);
