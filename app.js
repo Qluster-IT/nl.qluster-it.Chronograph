@@ -356,7 +356,7 @@ class Application extends Homey.App {
 					// elapsedTimeInHours: this.getTimeAsString(elapsed, 'HH:mm:ss'),
 					// elapsedTimeInHoursShort: this.getTimeAsString(elapsed, 'HH:mm')
 				};
-				this.homey.api.realtime('chronograph_event', raw);
+				this.homey.api.realtime('chronograph_event', raw).catch(()=>{}).then(()=>{});
 				let active = this.homey.settings.get('chronographs_active') || {};
 				if (event == 'removed') {
 					delete (active[chronograph.getId()]);
