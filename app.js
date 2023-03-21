@@ -54,8 +54,8 @@ const TransitionPaused = require('./lib/transition/triggers/transition_paused.js
 
 class Application extends Homey.App {
 
-	async onInit() {
-		this.log('OnInit');
+	onInit() {
+		this.log('OnInit (sync)');
 		
 		this.onInitLoader().catch(x=>this.error('OnInit loaded catch', x));
 	}

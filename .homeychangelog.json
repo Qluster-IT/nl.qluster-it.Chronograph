@@ -130,5 +130,8 @@
   },  
   "1.6.9": {
     "en": "Bugfixing: Resolving new issue, better error handling and logging, when having lots of chronographs."
+  },  
+  "1.6.10": {
+    "en": "Bugfixing: One more try."
   }
 }
