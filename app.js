@@ -340,22 +340,8 @@ class Application extends Homey.App {
 					now: (new Date()).getTime(),
 					remaining,
 					elapsed,
-					// duration,
-					// durationInSeconds: Number((duration / 1000).toFixed(this.roundOfDurationsFlowcards)),
-					// durationInMinutes: Number((duration / 1000 / 60).toFixed(this.roundOfDurationsFlowcards)),
-					// durationInHours: Number((duration / 1000 / 60 / 60).toFixed(this.roundOfDurationsFlowcards)),
-					// durationTimeInMinutes: this.getTimeAsString(duration, 'mm:ss'),
-					// durationTimeInHours: this.getTimeAsString(duration, 'HH:mm:ss'),
-					// durationTimeInHoursShort: this.getTimeAsString(duration, 'HH:mm'),
-
-					// elapsed,
-					// elapsedInSeconds: Number((elapsed / 1000).toFixed(this.roundOfDurationsFlowcards)),
-					// elapsedInMinutes: Number((elapsed / 1000 / 60).toFixed(this.roundOfDurationsFlowcards)),
-					// elapsedInHours: Number((elapsed / 1000 / 60 / 60).toFixed(this.roundOfDurationsFlowcards)),
-					// elapsedTimeInMinutes: this.getTimeAsString(elapsed, 'mm:ss'),
-					// elapsedTimeInHours: this.getTimeAsString(elapsed, 'HH:mm:ss'),
-					// elapsedTimeInHoursShort: this.getTimeAsString(elapsed, 'HH:mm')
 				};
+				
 				this.homey.api.realtime('chronograph_event', raw).catch(()=>{}).then(()=>{});
 				let active = this.homey.settings.get('chronographs_active') || {};
 				if (event == 'removed') {
