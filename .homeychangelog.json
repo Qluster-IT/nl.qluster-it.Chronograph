@@ -139,5 +139,8 @@
   },  
   "1.6.12": {
     "en": "Bugfixing: One more try."
+  },  
+  "1.6.13": {
+    "en": "Bugfixing: Resovling startup issues with older models with many Chronographs."
   }
 }
