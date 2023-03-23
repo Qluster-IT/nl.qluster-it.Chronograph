@@ -141,6 +141,9 @@
     "en": "Bugfixing: One more try."
   },  
   "1.6.13": {
-    "en": "Bugfixing: Resovling startup issues with older models with many Chronographs."
+    "en": "Bugfixing: Resolving startup issues with older models with many Chronographs."
+  },  
+  "1.6.14": {
+    "en": "Improved: Small performance when there are no running Chronographs."
   }
 }
