@@ -321,7 +321,7 @@ class Application extends Homey.App {
 	}
 
 	_installEventHandlers() {
-		Chronograph.events.mon(['created', 'started', 'resumed', 'paused', 'updated', 'removed', 'realtime_update'], (event, chronograph) => {
+		Chronograph.events.mon(['created', 'started', 'resumed', 'paused', 'updated', 'removed'], (event, chronograph) => { //, 'realtime_update'
 			try {
 
 				//this.log('Chronograph.events.mon( ', event)
