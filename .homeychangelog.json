@@ -145,5 +145,8 @@
   },  
   "1.6.14": {
     "en": "Improved: Small performance when there are no running Chronographs."
+  },  
+  "1.6.15": {
+    "en": "Bugfixed: Chronographs were not correctly updated for other apps every second, only on start/stop. This is now resolved."
   }
 }
