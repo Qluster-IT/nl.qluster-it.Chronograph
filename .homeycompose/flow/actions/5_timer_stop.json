@@ -19,7 +19,23 @@
 	},
 	"args": [
 		{
+			"name": "namedd",
+			"required":false,
+			"type": "autocomplete",
+			"title": {
+				"en": "Pick",
+				"nl": "Kies",
+				"de": "Wählen"
+			},
+			"placeholder": {
+				"en": "Pick or type",
+				"nl": "Kies of type",
+				"de": "Wählen oder eingeben"
+			}
+		},
+		{
 			"name": "name",
+			"required":false,
 			"title": {
 				"en": "Name",
 				"nl": "Naam",

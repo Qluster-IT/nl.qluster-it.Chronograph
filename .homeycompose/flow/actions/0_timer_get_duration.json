@@ -6,13 +6,29 @@
 		"de": "Get the duration of a timer"
 	},
 	"titleFormatted": {
-		"en": "Get the duration of timer [[name]]",
+		"en": "Get the duration of timer [[namedd]] (or [[name]])",
 		"nl": "Krijg de duur van timer [[name]]",
 		"de": "Abfrage der Timerlaufzeit [[name]]"
 	},
 	"args": [
 		{
+			"name": "namedd",
+			"required":false,
+			"type": "autocomplete",
+			"title": {
+				"en": "Pick",
+				"nl": "Kies",
+				"de": "Wählen"
+			},
+			"placeholder": {
+				"en": "Pick or type",
+				"nl": "Kies of type",
+				"de": "Wählen oder eingeben"
+			}
+		},
+		{
 			"name": "name",
+			"required":false,
 			"title": {
 				"en": "Name",
 				"nl": "Naam",

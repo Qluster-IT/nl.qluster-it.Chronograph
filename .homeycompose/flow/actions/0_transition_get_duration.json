@@ -6,13 +6,29 @@
 		"de": "Get the remaining duration of a transition"
 	},
 	"titleFormatted": {
-		"en": "Get the remaining duration of transition [[name]]",
+		"en": "Get the remaining duration of transition [[namedd]] (or [[name]])",
 		"nl": "Krijg de resterende duur van transition [[name]]",
 		"de": "Abfrage verbleibende Dauer von Übergang [[name]]"
 	},
 	"args": [
 		{
+			"name": "namedd",
+			"required":false,
+			"type": "autocomplete",
+			"title": {
+				"en": "Pick",
+				"nl": "Kies",
+				"de": "Wählen"
+			},
+			"placeholder": {
+				"en": "Pick or type",
+				"nl": "Kies of type",
+				"de": "Wählen oder eingeben"
+			}
+		},
+		{
 			"name": "name",
+			"required":false,
 			"title": {
 				"en": "Name",
 				"nl": "Naam",
