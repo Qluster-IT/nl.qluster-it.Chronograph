@@ -150,6 +150,6 @@
     "en": "Bugfixed: Chronographs were not correctly updated for other apps every second, only on start/stop. This is now resolved."
   },  
   "2.0.0": {
-    "en": "New: Chrnographs can now be created and selected within each flowcard. Just type a name and select it and press save. Now you can select it in any flows: No need to remember the names!"
+    "en": "New: Chrnographs can now be created and selected within each flowcard. Just type a name, select it and press save. Now you can select it in any flows: No need to remember the names!"
   }
 }
