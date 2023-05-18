@@ -6,6 +6,8 @@
   "invalid_transition": "Ungültige Übergang.",
   "invalid_name": "Ungültige Name.",
   "name_required": "Sie müssen einen Namen (eintippen und) auswählen oder einen Namen eingeben.",
+  "existing":"Bestehende",
+  "new":"Neu",
   "settings": {
     "timers": "Timer",
     "stopwatches": "Stopuhren",

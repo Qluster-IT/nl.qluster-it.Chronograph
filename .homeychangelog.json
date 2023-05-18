@@ -151,5 +151,8 @@
   },  
   "2.0.0": {
     "en": "New: Chrnographs can now be created and selected within each flowcard. Just type a name, select it and press save. Now you can select it in any flows: No need to remember the names!"
+  },  
+  "2.0.1": {
+    "en": "New: Chrnographs can now be created and selected within each flowcard. Just type a name, select it and press save. Now you can select it in any flows: No need to remember the names!"
   }
 }

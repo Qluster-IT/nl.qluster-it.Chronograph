@@ -173,10 +173,10 @@ class Application extends Homey.App {
 								l = l .map(x => {
 									return {
 										name: x,
-										description: x
+										description: this.homey.__("existing")
 									}
 								});
-								if (query && this.chronographs[chronograph_type].indexOf(query) === -1) l.unshift({ name: query, description: query });
+								if (query && this.chronographs[chronograph_type].indexOf(query) === -1) l.unshift({ name: query, description: this.homey.__("new") });
 								return l;
 
 							});
