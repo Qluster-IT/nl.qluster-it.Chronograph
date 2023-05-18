@@ -6,8 +6,8 @@
   "invalid_transition": "Invalid transition.",
   "invalid_name": "Invalid name.",
   "name_required": "You need to (type and) pick a name or enter a name.",
-  "existing":"Existing",
-  "new":"New",
+  "existing": "Existing",
+  "new": "New",
   "settings": {
     "timers": "Timers",
     "stopwatches": "Stopwatches",
