@@ -56,8 +56,8 @@ class Application extends Homey.App {
 
 	onInit() {
 		this.log('OnInit (sync)');
-		
-		this.onInitLoader().catch(x=>this.error('OnInit loaded catch', x));
+
+		this.onInitLoader().catch(x => this.error('OnInit loaded catch', x));
 	}
 	async onInitLoader() {
 		//Application.homey = this.homey;
@@ -157,11 +157,26 @@ class Application extends Homey.App {
 				let type = flowTypeId == 'actions' ? 'Action' : flowTypeId == 'conditions' ? 'Condition' : 'Trigger';
 				for (const flowcard of flowType) {
 					let nameArg;
-					if (flowcard.args && (nameArg = flowcard.args.find(x => x.name))) switch (type) {
+					if (flowcard.args && (nameArg = flowcard.args.find(x => x.name == 'name'))) switch (type) {
 						case "Action":
 						case "Trigger":
 						case "Condition":
 							const card = this.homey.flow['get' + type + 'Card'](flowcard.id)
+							if (flowcard.args.find(x => x.name == 'namedd')) card.getArgument('namedd').registerAutocompleteListener(async (query, args) => {
+
+								let type = flowcard.id.split('_')[0];
+								if (!this.chronographs[type]) this.chronographs[type] = [];
+								let l = this.chronographs[type].map(x => {
+									return {
+										name: x,
+										description: x
+									}
+								});
+								if(this.chronographs[type].indexOf(query)===-1) l.unshift({id:query, description:query});
+								return l;
+
+							});
+							//if (!this.chronographs[type])
 							await this.setArgumentNames(card, flowcard);
 							card.on('update', async () => {
 								await this.setArgumentNames(card, flowcard);
@@ -341,8 +356,8 @@ class Application extends Homey.App {
 					remaining,
 					elapsed,
 				};
-				
-				this.homey.api.realtime('chronograph_event', raw).catch(()=>{}).then(()=>{});
+
+				this.homey.api.realtime('chronograph_event', raw).catch(() => { }).then(() => { });
 				let active = this.homey.settings.get('chronographs_active') || {};
 				if (event == 'removed') {
 					delete (active[chronograph.getId()]);
@@ -413,11 +428,11 @@ class Application extends Homey.App {
 				}
 			});
 
-			
-		this.homey.setTimeout(() => {			
-			Chronograph._resetUpdateTimeout();
-		}, 5000);
-		
+
+			this.homey.setTimeout(() => {
+				Chronograph._resetUpdateTimeout();
+			}, 5000);
+
 
 		} catch (error) {
 			this.homey.error('_restoreChronographs', 'error', error);

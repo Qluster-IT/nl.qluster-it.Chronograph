@@ -161,9 +161,9 @@
           "de": "Stoppuhr ist gestartet"
         },
         "titleFormatted": {
-          "en": "Stopwatch [[name]] is started",
-          "nl": "Stopwatch [[name]] is gestart",
-          "de": "Stoppuhr [[name]] ist gestartet"
+          "en": "Stopwatch [[namedd]] / [[name]] is started",
+          "nl": "Stopwatch [[namedd]] / [[name]] is gestart",
+          "de": "Stoppuhr [[namedd]] / [[name]] ist gestartet"
         },
         "hint": {
           "en": "This card is activated when a stopwatch with the provided name is started.",
@@ -172,11 +172,22 @@
         },
         "args": [
           {
-            "name": "name",
-            "title": {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "placeholder": {
               "en": "Name",
               "nl": "Naam",
               "de": "Name"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "title": {
+              "en": "Tag",
+              "nl": "Tag",
+              "de": "Tag"
             },
             "type": "text"
           }
