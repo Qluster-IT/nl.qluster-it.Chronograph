@@ -95,6 +95,7 @@ class Application extends Homey.App {
 			this.homey.setTimeout(async () => {
 
 				try {
+					this.chronographsCards = {};
 					await this._initializeChronographsFromFlowArguments();
 				} catch (error) {
 					this.homey.error('_initializeChronographsFromFlowArguments', error)
@@ -161,22 +162,23 @@ class Application extends Homey.App {
 						case "Action":
 						case "Trigger":
 						case "Condition":
+							let chronograph_type = flowcard.id.split('_')[0];
 							const card = this.homey.flow['get' + type + 'Card'](flowcard.id)
 							if (flowcard.args.find(x => x.name == 'namedd')) card.getArgument('namedd').registerAutocompleteListener(async (query, args) => {
 
-								let type = flowcard.id.split('_')[0];
-								if (!this.chronographs[type]) this.chronographs[type] = [];
-								let l = this.chronographs[type].map(x => {
+								if (!this.chronographs[chronograph_type]) this.chronographs[chronograph_type] = [];
+								let l = this.chronographs[chronograph_type].map(x => {
 									return {
 										name: x,
 										description: x
 									}
 								});
-								if(this.chronographs[type].indexOf(query)===-1) l.unshift({id:query, description:query});
+								if(this.chronographs[chronograph_type].indexOf(query)===-1) l.unshift({id:query, description:query});
 								return l;
 
 							});
-							//if (!this.chronographs[type])
+							if (!this.chronographsCards[chronograph_type])this.chronographsCards[chronograph_type] = [];
+							this.chronographsCards[chronograph_type].push({card, flowcard});
 							await this.setArgumentNames(card, flowcard);
 							card.on('update', async () => {
 								await this.setArgumentNames(card, flowcard);
@@ -197,8 +199,11 @@ class Application extends Homey.App {
 			//this.log('setArgumentNames');
 			if (!this.chronographs) this.chronographs = {};
 			let type = flowcard.id.split('_')[0];
-			if (!this.chronographs[type]) this.chronographs[type] = [];
-
+			//if (!this.chronographs[type]) this.chronographs[type] = [];
+			this.chronographs[type] = []
+			for (const obj of this.chronographsCards[type]) {
+				let a = obj;
+			}
 
 			let args = await card.getArgumentValues();
 			args = args.filter(x => x.name);
