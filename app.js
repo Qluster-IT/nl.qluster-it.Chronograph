@@ -173,13 +173,13 @@ class Application extends Homey.App {
 										description: x
 									}
 								});
-								if(this.chronographs[chronograph_type].indexOf(query)===-1) l.unshift({id:query, description:query});
+								if (query && this.chronographs[chronograph_type].indexOf(query) === -1) l.unshift({ name: query, description: query });
 								return l;
 
 							});
-							if (!this.chronographsCards[chronograph_type])this.chronographsCards[chronograph_type] = [];
-							this.chronographsCards[chronograph_type].push({card, flowcard});
-							await this.setArgumentNames(card, flowcard);
+							if (!this.chronographsCards[chronograph_type]) this.chronographsCards[chronograph_type] = [];
+							this.chronographsCards[chronograph_type].push({ card, flowcard });
+							await this.setArgumentNames(card, flowcard, true);
 							card.on('update', async () => {
 								await this.setArgumentNames(card, flowcard);
 							});;
@@ -193,33 +193,43 @@ class Application extends Homey.App {
 		}
 	}
 
-	async setArgumentNames(card, flowcard) {
+	async setArgumentNamesCard(card, type) {
+		let args = await card.getArgumentValues();
+		let names = [];
+		let nameArgs = args.filter(x => x.name);
+		if(nameArgs.length) names = names.concat(nameArgs.map(x => x.name));
+
+		let nameDdArgs = args.filter(x => x.namedd);
+		if(nameDdArgs.length) names = names.concat(nameDdArgs.map(x => x.namedd.name))
+		//names.concat() = ;
+
+		let changed = false;
+		for (let i = 0; i < names.length; i++)
+			if (names[i] && this.chronographs[type].indexOf(names[i]) === -1) this.chronographs[type].push(names[i]) & (changed = true);
+		return changed;
+	}
+	async setArgumentNames(card, flowcard, firstRun) {
 		try {
 
 			//this.log('setArgumentNames');
 			if (!this.chronographs) this.chronographs = {};
 			let type = flowcard.id.split('_')[0];
-			//if (!this.chronographs[type]) this.chronographs[type] = [];
-			this.chronographs[type] = []
-			for (const obj of this.chronographsCards[type]) {
-				let a = obj;
-			}
-
-			let args = await card.getArgumentValues();
-			args = args.filter(x => x.name);
-			let names = args.map(x => x.name);
+			if (firstRun) {
+				if (!this.chronographs[type]) this.chronographs[type] = [];
+			} else this.chronographs[type] = []
+			
 			let changed = false;
-
-			for (let i = 0; i < names.length; i++)
-				if (names[i] && this.chronographs[type].indexOf(names[i]) === -1) this.chronographs[type].push(names[i]) & (changed = true);
-
+			if (firstRun) changed = await this.setArgumentNamesCard(card, type);
+			else for (const obj of this.chronographsCards[type]) {
+				let card = obj.card;
+				if (await this.setArgumentNamesCard(card, type)) changed = true;
+			}
 			if (changed) this.homey.settings.set('chronographs', this.chronographs);
 		} catch (error) {
 			this.homey.error('setArgumentNames error', error);
 		}
 
 	}
-
 	// async readChronographsFromFlowArguments() {
 	// 	for (const flowTypeId in this.homey.manifest.flow) {
 	// 		if (Object.hasOwnProperty.call(this.homey.manifest.flow, flowTypeId)) {

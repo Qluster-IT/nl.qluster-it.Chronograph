@@ -7,9 +7,9 @@
 
 	},
 	"titleFormatted": {
-		"en": "Start or replace stopwatch [[name]]",
-		"nl": "Start of vervang stopwatch [[name]]",
-		"de": "Stoppuhr starten oder ersetzen [[name]]"
+		"en": "Start or replace stopwatch [[namedd]] (or [[name]])",
+		"nl": "Start of vervang stopwatch [[namedd]] (of [[name]])",
+		"de": "Stoppuhr starten oder ersetzen [[namedd]] (oder [[name]])"
 
 	},
 	"hint": {
@@ -20,7 +20,23 @@
 	},
 	"args": [
 		{
+			"name": "namedd",
+			"required":false,
+			"type": "autocomplete",
+			"title": {
+				"en": "Pick",
+				"nl": "Kies",
+				"de": "Wählen"
+			},
+			"placeholder": {
+				"en": "Pick or type",
+				"nl": "Kies of type",
+				"de": "Wählen oder eingeben"
+			}
+		},
+		{
 			"name": "name",
+			"required":false,
 			"title": {
 				"en": "Name",
 				"nl": "Naam",
