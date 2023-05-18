@@ -8,7 +8,7 @@
 	"titleFormatted": {
 		"en": "Transition [[namedd]] (or [[name]]) !{{is running|is not running}}",
 		"nl": "Transitie [[namedd]] (of [[name]]) !{{loopt|loopt niet}}",
-		"de": "Übergang [[name]] !{{läuft|läuft nicht}}"
+		"de": "Übergang [[namedd]] (oder [[name]]) !{{läuft|läuft nicht}}"
 	},
 	"hint": {
 		"en": "Use this card to run or cancel a flow depending on the run state of the transition with the provided name.",

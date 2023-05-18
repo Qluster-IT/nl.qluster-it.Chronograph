@@ -9,7 +9,7 @@
 		"titleFormatted": {
 			"en": "Stopwatch [[namedd]] (or [[name]]) is stopped",
 			"nl": "Stopwatch [[namedd]] (of [[name]]) is gestopt",
-			"de": "Stoppuhr [[name]] ist gestoppt"
+			"de": "Stoppuhr [[namedd]] (oder [[name]]) ist gestoppt"
 		},
 		"hint": {
 			"en": "This card is activated when a stopwatch with the provided name is stopped.",

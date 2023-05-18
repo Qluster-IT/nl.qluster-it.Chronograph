@@ -8,7 +8,7 @@
 	"titleFormatted": {
 		"en": "Adjust stopwatch [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
 		"nl": "Pas stopwatch [[namedd]] (of [[name]]) aan met een looptijd van [[time]] [[unit]]",
-		"de": "Stellen Sie die Stoppuhr [[name]] mit einer Dauer von [[time]] [[unit]] ein"
+		"de": "Stellen Sie die Stoppuhr [[namedd]] (oder [[name]]) mit einer Dauer von [[time]] [[unit]] ein"
 	},
 	"hint": {
 		"en": "Use this card to adjust the duration of the stopwatch with the provided name. Use a positive duration to extend the stopwatch, or a negative duration to shorten the stopwatch.",

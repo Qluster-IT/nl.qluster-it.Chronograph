@@ -8,7 +8,7 @@
 	"titleFormatted": {
 		"en": "Transition [[namedd]] (or [[name]]) has a duration !{{longer|shorter}} than [[time]] [[unit]]",
 		"nl": "Transitie [[namedd]] (of [[name]]) heeft een looptijd !{{langer|korter}} dan [[time]] [[unit]]",
-		"de": "Übergang [[name]] hat eine Dauer !{{länger|kürzer}} als [[time]] [[unit]]"
+		"de": "Übergang [[namedd]] (oder [[name]]) hat eine Dauer !{{länger|kürzer}} als [[time]] [[unit]]"
 	},
 	"hint": {
 		"en": "Use this card to run or cancel a flow depending on the duration of the transition with the provided name.",

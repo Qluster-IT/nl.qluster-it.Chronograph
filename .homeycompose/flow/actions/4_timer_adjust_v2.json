@@ -8,7 +8,7 @@
 	"titleFormatted": {
 		"en": "Adjust timer [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
 		"nl": "Pas timer [[namedd]] (of [[name]]) aan met een looptijd van [[time]] [[unit]]",
-		"de": "Timer [[name]] mit einer Dauer von [[time]] [[unit]] einstellen"
+		"de": "Timer [[namedd]] (oder [[name]]) mit einer Dauer von [[time]] [[unit]] einstellen"
 	},
 	"hint": {
 		"en": "Use this card to adjust the duration of the timer with the provided name. Use a negative duration to extend the timer, or a positive duration to shorten the timer. One can't extend the duration, when the new duration will be longer than the timer's original duration. One can't shorten the duration, when the new duration will be lower than zero.",

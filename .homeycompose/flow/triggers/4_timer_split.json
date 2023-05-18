@@ -8,7 +8,7 @@
 		"titleFormatted": {
 			"en": "Timer [[namedd]] (or [[name]]) has reached a duration of [[time]] [[unit]]",
 			"nl": "Timer [[namedd]] (of [[name]]) heeft een looptijd van [[time]] [[unit]] bereikt",
-			"de": "Timer [[name]] hat eine Dauer von [[time]] [[unit]] erreicht"
+			"de": "Timer [[namedd]] (oder [[name]]) hat eine Dauer von [[time]] [[unit]] erreicht"
 		},
 		"hint": {
 			"en": "This card is activated when a timer with the provided name has reached a specific duration.",

@@ -9,7 +9,7 @@
 	"titleFormatted": {
 		"en": "Stop timer [[namedd]] (or [[name]])",
 		"nl": "Stop timer [[namedd]] (of [[name]])",
-		"de": "Timer stoppen [[name]]"
+		"de": "Timer stoppen [[namedd]] (oder [[name]])"
 	},
 	"hint": {
 		"en": "Use this card to stop a timer with the provided name.",

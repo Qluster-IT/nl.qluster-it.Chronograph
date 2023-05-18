@@ -9,7 +9,7 @@
 		"titleFormatted": {
 			"en": "Stopwatch [[namedd]] (or [[name]]) has reached a duration of [[time]] [[unit]]",
 			"nl": "Stopwatch [[namedd]] (of [[name]]) heeft een looptijd van [[time]] [[unit]] bereikt",
-			"de": "Stoppuhr [[name]] hat eine Dauer von [[time]] [[unit]] erreicht"
+			"de": "Stoppuhr [[namedd]] (oder [[name]]) hat eine Dauer von [[time]] [[unit]] erreicht"
 		},
 		"hint": {
 			"en": "This card is activated when a stopwatch with the provided name has reached a specific duration.",

@@ -8,7 +8,7 @@
 	"titleFormatted": {
 		"en": "Timer [[namedd]] (or [[name]]) has a duration !{{longer|shorter}} than [[time]] [[unit]]",
 		"nl": "Timer [[namedd]] (of [[name]]) heeft een looptijd !{{langer|korter}} dan [[time]] [[unit]]",
-		"de": "Timer [[name]] hat eine Dauer !{{länger|kürzer}} als [[time]] [[unit]]"
+		"de": "Timer [[namedd]] (oder [[name]]) hat eine Dauer !{{länger|kürzer}} als [[time]] [[unit]]"
 	},
 	"hint": {
 		"en": "Use this card to run or cancel a flow depending on the duration of the timer with the provided name.",

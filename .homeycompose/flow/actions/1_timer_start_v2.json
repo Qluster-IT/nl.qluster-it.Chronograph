@@ -8,7 +8,7 @@
 	"titleFormatted": {
 		"en": "Start or replace timer [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
 		"nl": "Start of vervang timer [[namedd]] (of [[name]]) met een looptijd van [[time]] [[unit]]",
-		"de": "Timer [[name]] mit einer Dauer von [[time]] [[unit]] starten oder ersetzen"
+		"de": "Timer [[namedd]] (oder [[name]]) mit einer Dauer von [[time]] [[unit]] starten oder ersetzen"
 	},
 	"hint": {
 		"en": "Use this card to start a new timer with the provided name and duration. If a timer with the same name already exists, it is replaced.",

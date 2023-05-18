@@ -8,7 +8,7 @@
 	"titleFormatted": {
 		"en": "Transition [[namedd]] (or [[name]]) is paused",
 		"nl": "Transitie [[namedd]] (of [[name]]) is gepauzeerd",
-		"de": "Übergang [[name]] ist pausiert"
+		"de": "Übergang [[namedd]] (oder [[name]]) ist pausiert"
 	},
 	"hint": {
 		"en": "This card is activated when a transition with the provided name is paused.",

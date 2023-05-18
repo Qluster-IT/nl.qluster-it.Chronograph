@@ -8,7 +8,7 @@
 	"titleFormatted": {
 		"en": "Transition [[namedd]] (or [[name]]) has reached a step",
 		"nl": "Transitie [[namedd]] (of [[name]]) heeft een stap bereikt",
-		"de": "Übergang [[name]] hat einen Schritt erreicht"
+		"de": "Übergang [[namedd]] (oder [[name]]) hat einen Schritt erreicht"
 	},
 	"hint": {
 		"en": "This card is activated when a transition with the provided name has reached a step.",

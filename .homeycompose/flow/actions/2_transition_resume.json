@@ -8,7 +8,7 @@
 	"titleFormatted": {
 		"en": "Start or resume transition [[namedd]] (or [[name]]) from [[from]] to [[to]] in [[steps]] steps during [[time]] [[unit]]",
 		"nl": "Start of hervat transitie [[namedd]] (of [[name]]) van [[from]] naar [[to]] in [[steps]] stappen gedurende [[time]] [[unit]]",
-		"de": "Übergang [[name]] von [[from]] nach [[to]] in [[steps]] Schritten während [[time]] [[unit]] starten oder fortsetzen"
+		"de": "Übergang [[namedd]] (oder [[name]]) von [[from]] nach [[to]] in [[steps]] Schritten während [[time]] [[unit]] starten oder fortsetzen"
 	},
 	"hint": {
 		"en": "Use this card to start a new transition with the provided name, duration and steps. If a transition with the same name already exists, it is replaced.",

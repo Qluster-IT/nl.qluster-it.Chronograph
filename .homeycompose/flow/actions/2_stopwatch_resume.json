@@ -9,7 +9,7 @@
 	"titleFormatted": {
 		"en": "Start or resume stopwatch [[namedd]] (or [[name]])",
 		"nl": "Start of hervat stopwatch [[namedd]] (of [[name]])",
-		"de": "Stoppuhr starten oder fortsetzen [[name]]"
+		"de": "Stoppuhr starten oder fortsetzen [[namedd]] (oder [[name]])"
 
 	},
 	"hint": {

@@ -8,7 +8,7 @@
 	"titleFormatted": {
 		"en": "Stopwatch [[namedd]] (or [[name]]) has a duration !{{longer|shorter}} than [[time]] [[unit]]",
 		"nl": "Stopwatch [[namedd]] (of [[name]]) heeft een looptijd !{{langer|korter}} dan [[time]] [[unit]]",
-		"de": "Stopwatch [[name]] hat eine Dauer !{{länger|kürzer}} als [[time]] [[unit]]"
+		"de": "Stopwatch [[namedd]] (oder [[name]]) hat eine Dauer !{{länger|kürzer}} als [[time]] [[unit]]"
 	},
 	"hint": {
 		"en": "Use this card to run or cancel a flow depending on the duration of the stopwatch with the provided name.",

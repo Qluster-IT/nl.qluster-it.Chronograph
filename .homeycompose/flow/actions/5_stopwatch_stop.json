@@ -8,7 +8,7 @@
 	"titleFormatted": {
 		"en": "Stop stopwatch [[namedd]] (or [[name]])",
 		"nl": "Stop stopwatch [[namedd]] (of [[name]])",
-		"de": "Stoppe Stopuhren [[name]]"
+		"de": "Stoppe Stopuhren [[namedd]] (oder [[name]])"
 	},
 	"hint": {
 		"en": "Use this card to stop a stopwatch with the provided name.",

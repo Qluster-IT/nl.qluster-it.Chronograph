@@ -8,7 +8,7 @@
 	"titleFormatted": {
 		"en": "Stopwatch [[namedd]] (or [[name]]) !{{is running|is not running}}",
 		"nl": "Stopwatch [[namedd]] (of [[name]]) !{{loopt|loopt niet}}",
-		"de": "Stopwatch [[name]] !{{läuft|läuft nicht}}"
+		"de": "Stopwatch [[namedd]] (oder [[name]]) !{{läuft|läuft nicht}}"
 	},
 	"hint": {
 		"en": "Use this card to run or cancel a flow depending on the run state of the stopwatch with the provided name.",

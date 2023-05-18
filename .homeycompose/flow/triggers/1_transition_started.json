@@ -8,7 +8,7 @@
 	"titleFormatted": {
 		"en": "Transition [[namedd]] (or [[name]]) is started",
 		"nl": "Transitie [[namedd]] (of [[name]]) is gestart",
-		"de": "Übergang [[name]] ist gestartet"
+		"de": "Übergang [[namedd]] (oder [[name]]) ist gestartet"
 	},
 	"hint": {
 		"en": "This card is activated when a transition with the provided name is started.",

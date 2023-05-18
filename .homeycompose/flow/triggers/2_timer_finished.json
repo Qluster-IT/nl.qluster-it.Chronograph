@@ -8,7 +8,7 @@
 	"titleFormatted": {
 		"en": "Timer [[namedd]] (or [[name]]) is finished",
 		"nl": "Timer [[namedd]] (of [[name]]) is afgelopen",
-		"de": "Timer [[name]] ist abgelaufen"
+		"de": "Timer [[namedd]] (oder [[name]]) ist abgelaufen"
 	},
 	"hint": {
 		"en": "This card is activated when a timer with the provided name is finished, not when a timer is prematurely stopped.",

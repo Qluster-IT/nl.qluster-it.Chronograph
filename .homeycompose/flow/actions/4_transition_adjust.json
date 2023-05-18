@@ -8,7 +8,7 @@
 	"titleFormatted": {
 		"en": "Adjust transition [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
 		"nl": "Pas transitie [[namedd]] (of [[name]]) aan met een looptijd van [[time]] [[unit]]",
-		"de": "Übergang [[name]] mit einer Dauer von [[time]] [[unit]] einstellen"
+		"de": "Übergang [[namedd]] (oder [[name]]) mit einer Dauer von [[time]] [[unit]] einstellen"
 	},
 	"hint": {
 		"en": "Use this card to adjust the duration of the transition with the provided name. Use a negative duration to extend the transition, or a positive duration to shorten the transition. One can't extend the duration, when the new duration will be longer than the transition's original duration. One can't shorten the duration, when the new duration will be lower than zero.",

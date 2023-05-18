@@ -9,7 +9,7 @@
 	"titleFormatted": {
 		"en": "Stop transition [[namedd]] (or [[name]])",
 		"nl": "Stop transitie [[namedd]] (of [[name]])",
-		"de": "Übergang stoppen [[name]]"
+		"de": "Übergang stoppen [[namedd]] (oder [[name]])"
 	},
 	"hint": {
 		"en": "Use this card to stop a transition with the provided name.",
