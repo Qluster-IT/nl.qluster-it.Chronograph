@@ -200,7 +200,8 @@ class Application extends Homey.App {
 		if(nameArgs.length) names = names.concat(nameArgs.map(x => x.name));
 
 		let nameDdArgs = args.filter(x => x.namedd);
-		if(nameDdArgs.length) names = names.concat(nameDdArgs.map(x => x.namedd.name))
+		if(nameDdArgs.length) names = names.concat(nameDdArgs.map(x => x.namedd.name));
+		names = names.filter(x=>!(x.startsWith('[[') && x.endsWith(']]')));
 		//names.concat() = ;
 
 		let changed = false;

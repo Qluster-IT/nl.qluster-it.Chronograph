@@ -175,19 +175,24 @@
             "name": "namedd",
             "required": false,
             "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
             "placeholder": {
-              "en": "Name",
-              "nl": "Naam",
-              "de": "Name"
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
             }
           },
           {
             "name": "name",
             "required": false,
             "title": {
-              "en": "Tag",
-              "nl": "Tag",
-              "de": "Tag"
+              "en": "Name",
+              "nl": "Naam",
+              "de": "Name"
             },
             "type": "text"
           }
@@ -217,9 +222,9 @@
           "de": "Timer ist gestartet"
         },
         "titleFormatted": {
-          "en": "Timer [[name]] is started",
-          "nl": "Timer [[name]] is gestart",
-          "de": "Timer [[name]] ist gestartet"
+          "en": "Timer [[namedd]] (or [[name]]) is started",
+          "nl": "Timer [[namedd]] (of [[name]]) is gestart",
+          "de": "Timer [[namedd]] (oder [[name]]) ist gestartet"
         },
         "hint": {
           "en": "This card is activated when a timer with the provided name is started.",
@@ -228,7 +233,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -272,9 +293,9 @@
           "de": "Übergang ist gestartet"
         },
         "titleFormatted": {
-          "en": "Transition [[name]] is started",
-          "nl": "Transitie [[name]] is gestart",
-          "de": "Übergang [[name]] ist gestartet"
+          "en": "Transition [[namedd]] (or [[name]]) is started",
+          "nl": "Transitie [[namedd]] (of [[name]]) is gestart",
+          "de": "Übergang [[namedd]] (oder [[name]]) ist gestartet"
         },
         "hint": {
           "en": "This card is activated when a transition with the provided name is started.",
@@ -283,7 +304,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -327,9 +364,9 @@
           "de": "Timer ist abgelaufen"
         },
         "titleFormatted": {
-          "en": "Timer [[name]] is finished",
-          "nl": "Timer [[name]] is afgelopen",
-          "de": "Timer [[name]] ist abgelaufen"
+          "en": "Timer [[namedd]] (or [[name]]) is finished",
+          "nl": "Timer [[namedd]] (of [[name]]) is afgelopen",
+          "de": "Timer [[namedd]] (oder [[name]]) ist abgelaufen"
         },
         "hint": {
           "en": "This card is activated when a timer with the provided name is finished, not when a timer is prematurely stopped.",
@@ -338,7 +375,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -372,9 +425,9 @@
           "de": "Übergang ist abgelaufen"
         },
         "titleFormatted": {
-          "en": "Transition [[name]] is finished",
-          "nl": "Transitie [[name]] is afgelopen",
-          "de": "Übergang [[name]] ist abgelaufen"
+          "en": "Transition [[namedd]] (or [[name]]) is finished",
+          "nl": "Transitie [[namedd]] (of [[name]]) is afgelopen",
+          "de": "Übergang [[namedd]] (oder [[name]]) ist abgelaufen"
         },
         "hint": {
           "en": "This card is activated when a transition with the provided name is finished, not when a transition is prematurely stopped.",
@@ -383,7 +436,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -417,9 +486,9 @@
           "de": "Stoppuhr ist gestoppt"
         },
         "titleFormatted": {
-          "en": "Stopwatch [[name]] is stopped",
-          "nl": "Stopwatch [[name]] is gestopt",
-          "de": "Stoppuhr [[name]] ist gestoppt"
+          "en": "Stopwatch [[namedd]] (or [[name]]) is stopped",
+          "nl": "Stopwatch [[namedd]] (of [[name]]) is gestopt",
+          "de": "Stoppuhr [[namedd]] (oder [[name]]) ist gestoppt"
         },
         "hint": {
           "en": "This card is activated when a stopwatch with the provided name is stopped.",
@@ -428,7 +497,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -472,9 +557,9 @@
           "de": "Timer ist gestoppt"
         },
         "titleFormatted": {
-          "en": "Timer [[name]] is stopped",
-          "nl": "Timer [[name]] is gestopt",
-          "de": "Timer [[name]] ist gestoppt"
+          "en": "Timer [[namedd]] (or [[name]]) is stopped",
+          "nl": "Timer [[namedd]] (of [[name]]) is gestopt",
+          "de": "Timer [[namedd]] (oder [[name]]) ist gestoppt"
         },
         "hint": {
           "en": "This card is activated when a timer with the provided name is prematurely stopped, not when a timer is finished.",
@@ -483,7 +568,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -527,9 +628,9 @@
           "de": "Übergang ist gestoppt"
         },
         "titleFormatted": {
-          "en": "Transition [[name]] is stopped",
-          "nl": "Transitie [[name]] is gestopt",
-          "de": "Übergang [[name]] ist gestoppt"
+          "en": "Transition [[namedd]] (or [[name]]) is stopped",
+          "nl": "Transitie [[namedd]] (of [[name]]) is gestopt",
+          "de": "Übergang [[namedd]] (oder [[name]]) ist gestoppt"
         },
         "hint": {
           "en": "This card is activated when a transition with the provided name is prematurely stopped, not when a transition is finished.",
@@ -538,7 +639,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -582,9 +699,9 @@
           "de": "Stoppuhr hat eine Dauer erreicht."
         },
         "titleFormatted": {
-          "en": "Stopwatch [[name]] has reached a duration of [[time]] [[unit]]",
-          "nl": "Stopwatch [[name]] heeft een looptijd van [[time]] [[unit]] bereikt",
-          "de": "Stoppuhr [[name]] hat eine Dauer von [[time]] [[unit]] erreicht"
+          "en": "Stopwatch [[namedd]] (or [[name]]) has reached a duration of [[time]] [[unit]]",
+          "nl": "Stopwatch [[namedd]] (of [[name]]) heeft een looptijd van [[time]] [[unit]] bereikt",
+          "de": "Stoppuhr [[namedd]] (oder [[name]]) hat eine Dauer von [[time]] [[unit]] erreicht"
         },
         "hint": {
           "en": "This card is activated when a stopwatch with the provided name has reached a specific duration.",
@@ -593,7 +710,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -691,9 +824,9 @@
           "de": "Timer hat eine Dauer erreicht"
         },
         "titleFormatted": {
-          "en": "Timer [[name]] has reached a duration of [[time]] [[unit]]",
-          "nl": "Timer [[name]] heeft een looptijd van [[time]] [[unit]] bereikt",
-          "de": "Timer [[name]] hat eine Dauer von [[time]] [[unit]] erreicht"
+          "en": "Timer [[namedd]] (or [[name]]) has reached a duration of [[time]] [[unit]]",
+          "nl": "Timer [[namedd]] (of [[name]]) heeft een looptijd van [[time]] [[unit]] bereikt",
+          "de": "Timer [[namedd]] (oder [[name]]) hat eine Dauer von [[time]] [[unit]] erreicht"
         },
         "hint": {
           "en": "This card is activated when a timer with the provided name has reached a specific duration.",
@@ -702,7 +835,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -800,9 +949,9 @@
           "de": "Übergang hat einen Schritt"
         },
         "titleFormatted": {
-          "en": "Transition [[name]] has reached a step",
-          "nl": "Transitie [[name]] heeft een stap bereikt",
-          "de": "Übergang [[name]] hat einen Schritt erreicht"
+          "en": "Transition [[namedd]] (or [[name]]) has reached a step",
+          "nl": "Transitie [[namedd]] (of [[name]]) heeft een stap bereikt",
+          "de": "Übergang [[namedd]] (oder [[name]]) hat einen Schritt erreicht"
         },
         "hint": {
           "en": "This card is activated when a transition with the provided name has reached a step.",
@@ -811,7 +960,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -885,9 +1050,9 @@
           "de": "Stoppuhr ist pausiert"
         },
         "titleFormatted": {
-          "en": "Stopwatch [[name]] is paused",
-          "nl": "Stopwatch [[name]] is gepauzeerd",
-          "de": "Stoppuhr [[name]] ist pausiert"
+          "en": "Stopwatch [[namedd]] (or [[name]]) is paused",
+          "nl": "Stopwatch [[namedd]] (of [[name]]) is gepauzeerd",
+          "de": "Stoppuhr [[namedd]] (oder [[name]]) ist pausiert"
         },
         "hint": {
           "en": "This card is activated when a stopwatch with the provided name is paused.",
@@ -896,7 +1061,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -940,9 +1121,9 @@
           "de": "Timer ist pausiert"
         },
         "titleFormatted": {
-          "en": "Timer [[name]] is paused",
-          "nl": "Timer [[name]] is gepauzeerd",
-          "de": "Timer [[name]] ist pausiert"
+          "en": "Timer [[namedd]] (or [[name]]) is paused",
+          "nl": "Timer [[namedd]] (of [[name]]) is gepauzeerd",
+          "de": "Timer [[namedd]] (oder [[name]]) ist pausiert"
         },
         "hint": {
           "en": "This card is activated when a timer with the provided name is paused.",
@@ -951,7 +1132,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -995,9 +1192,9 @@
           "de": "Übergang ist pausiert"
         },
         "titleFormatted": {
-          "en": "Transition [[name]] is paused",
-          "nl": "Transitie [[name]] is gepauzeerd",
-          "de": "Übergang [[name]] ist pausiert"
+          "en": "Transition [[namedd]] (or [[name]]) is paused",
+          "nl": "Transitie [[namedd]] (of [[name]]) is gepauzeerd",
+          "de": "Übergang [[namedd]] (oder [[name]]) ist pausiert"
         },
         "hint": {
           "en": "This card is activated when a transition with the provided name is paused.",
@@ -1006,7 +1203,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -1052,9 +1265,9 @@
           "de": "Stopwatch läuft oder nicht"
         },
         "titleFormatted": {
-          "en": "Stopwatch [[name]] !{{is running|is not running}}",
-          "nl": "Stopwatch [[name]] !{{loopt|loopt niet}}",
-          "de": "Stopwatch [[name]] !{{läuft|läuft nicht}}"
+          "en": "Stopwatch [[namedd]] (or [[name]]) !{{is running|is not running}}",
+          "nl": "Stopwatch [[namedd]] (of [[name]]) !{{loopt|loopt niet}}",
+          "de": "Stopwatch [[namedd]] (oder [[name]]) !{{läuft|läuft nicht}}"
         },
         "hint": {
           "en": "Use this card to run or cancel a flow depending on the run state of the stopwatch with the provided name.",
@@ -1063,7 +1276,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -1081,9 +1310,9 @@
           "de": "Timer läuft oder nicht"
         },
         "titleFormatted": {
-          "en": "Timer [[name]] !{{is running|is not running}}",
-          "nl": "Timer [[name]] !{{loopt|loopt niet}}",
-          "de": "Timer [[name]] !{{läuft|läuft nicht}}"
+          "en": "Timer [[namedd]] (or [[name]]) !{{is running|is not running}}",
+          "nl": "Timer [[namedd]] (of [[name]]) !{{loopt|loopt niet}}",
+          "de": "Timer [[namedd]] (oder [[name]]) !{{läuft|läuft nicht}}"
         },
         "hint": {
           "en": "Use this card to run or cancel a flow depending on the run state of the timer with the provided name.",
@@ -1092,7 +1321,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -1110,9 +1355,9 @@
           "de": "Übergang läuft oder nicht"
         },
         "titleFormatted": {
-          "en": "Transition [[name]] !{{is running|is not running}}",
-          "nl": "Transitie [[name]] !{{loopt|loopt niet}}",
-          "de": "Übergang [[name]] !{{läuft|läuft nicht}}"
+          "en": "Transition [[namedd]] (or [[name]]) !{{is running|is not running}}",
+          "nl": "Transitie [[namedd]] (of [[name]]) !{{loopt|loopt niet}}",
+          "de": "Übergang [[namedd]] (oder [[name]]) !{{läuft|läuft nicht}}"
         },
         "hint": {
           "en": "Use this card to run or cancel a flow depending on the run state of the transition with the provided name.",
@@ -1121,7 +1366,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -1139,9 +1400,9 @@
           "de": "Stopwatch länger oder kürzer als"
         },
         "titleFormatted": {
-          "en": "Stopwatch [[name]] has a duration !{{longer|shorter}} than [[time]] [[unit]]",
-          "nl": "Stopwatch [[name]] heeft een looptijd !{{langer|korter}} dan [[time]] [[unit]]",
-          "de": "Stopwatch [[name]] hat eine Dauer !{{länger|kürzer}} als [[time]] [[unit]]"
+          "en": "Stopwatch [[namedd]] (or [[name]]) has a duration !{{longer|shorter}} than [[time]] [[unit]]",
+          "nl": "Stopwatch [[namedd]] (of [[name]]) heeft een looptijd !{{langer|korter}} dan [[time]] [[unit]]",
+          "de": "Stopwatch [[namedd]] (oder [[name]]) hat eine Dauer !{{länger|kürzer}} als [[time]] [[unit]]"
         },
         "hint": {
           "en": "Use this card to run or cancel a flow depending on the duration of the stopwatch with the provided name.",
@@ -1150,7 +1411,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -1222,9 +1499,9 @@
           "de": "Timer länger oder kurzer als"
         },
         "titleFormatted": {
-          "en": "Timer [[name]] has a duration !{{longer|shorter}} than [[time]] [[unit]]",
-          "nl": "Timer [[name]] heeft een looptijd !{{langer|korter}} dan [[time]] [[unit]]",
-          "de": "Timer [[name]] hat eine Dauer !{{länger|kürzer}} als [[time]] [[unit]]"
+          "en": "Timer [[namedd]] (or [[name]]) has a duration !{{longer|shorter}} than [[time]] [[unit]]",
+          "nl": "Timer [[namedd]] (of [[name]]) heeft een looptijd !{{langer|korter}} dan [[time]] [[unit]]",
+          "de": "Timer [[namedd]] (oder [[name]]) hat eine Dauer !{{länger|kürzer}} als [[time]] [[unit]]"
         },
         "hint": {
           "en": "Use this card to run or cancel a flow depending on the duration of the timer with the provided name.",
@@ -1233,7 +1510,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -1305,9 +1598,9 @@
           "de": "Übergang länger oder kurzer als"
         },
         "titleFormatted": {
-          "en": "Transition [[name]] has a duration !{{longer|shorter}} than [[time]] [[unit]]",
-          "nl": "Transitie [[name]] heeft een looptijd !{{langer|korter}} dan [[time]] [[unit]]",
-          "de": "Übergang [[name]] hat eine Dauer !{{länger|kürzer}} als [[time]] [[unit]]"
+          "en": "Transition [[namedd]] (or [[name]]) has a duration !{{longer|shorter}} than [[time]] [[unit]]",
+          "nl": "Transitie [[namedd]] (of [[name]]) heeft een looptijd !{{langer|korter}} dan [[time]] [[unit]]",
+          "de": "Übergang [[namedd]] (oder [[name]]) hat eine Dauer !{{länger|kürzer}} als [[time]] [[unit]]"
         },
         "hint": {
           "en": "Use this card to run or cancel a flow depending on the duration of the transition with the provided name.",
@@ -1316,7 +1609,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -1448,13 +1757,29 @@
           "de": "Get the elapsed duration of a stopwatch"
         },
         "titleFormatted": {
-          "en": "Get the elapsed duration of stopwatch [[name]]",
-          "nl": "Krijg de verlopen duur van stopwatch [[name]]",
-          "de": "Abfrage der verstrichenen Stoppuhrzeit [[name]]"
+          "en": "Get the elapsed duration of stopwatch [[namedd]] (or [[name]])",
+          "nl": "Krijg de verlopen duur van stopwatch [[namedd]] (of [[name]])",
+          "de": "Abfrage der verstrichenen Stoppuhrzeit [[namedd]] (oder [[name]])"
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -1540,13 +1865,29 @@
           "de": "Get the duration of a timer"
         },
         "titleFormatted": {
-          "en": "Get the duration of timer [[name]]",
-          "nl": "Krijg de duur van timer [[name]]",
-          "de": "Abfrage der Timerlaufzeit [[name]]"
+          "en": "Get the duration of timer [[namedd]] (or [[name]])",
+          "nl": "Krijg de duur van timer [[namedd]] (of [[name]])",
+          "de": "Abfrage der Timerlaufzeit [[namedd]] (oder [[name]])"
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -1698,13 +2039,29 @@
           "de": "Get the remaining duration of a transition"
         },
         "titleFormatted": {
-          "en": "Get the remaining duration of transition [[name]]",
-          "nl": "Krijg de resterende duur van transition [[name]]",
-          "de": "Abfrage verbleibende Dauer von Übergang [[name]]"
+          "en": "Get the remaining duration of transition [[namedd]] (or [[name]])",
+          "nl": "Krijg de resterende duur van transition [[namedd]] (of [[name]])",
+          "de": "Abfrage verbleibende Dauer von Übergang [[namedd]] (oder [[name]])"
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -1902,9 +2259,9 @@
           "de": "Timer starten oder ersetzen"
         },
         "titleFormatted": {
-          "en": "Start or replace timer [[name]] with a duration of [[time]] [[unit]]",
-          "nl": "Start of vervang timer [[name]] met een looptijd van [[time]] [[unit]]",
-          "de": "Timer [[name]] mit einer Dauer von [[time]] [[unit]] starten oder ersetzen"
+          "en": "Start or replace timer [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
+          "nl": "Start of vervang timer [[namedd]] (of [[name]]) met een looptijd van [[time]] [[unit]]",
+          "de": "Timer [[namedd]] (oder [[name]]) mit einer Dauer von [[time]] [[unit]] starten oder ersetzen"
         },
         "hint": {
           "en": "Use this card to start a new timer with the provided name and duration. If a timer with the same name already exists, it is replaced.",
@@ -1913,7 +2270,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -1985,9 +2358,9 @@
           "de": "Timer starten oder ersetzen"
         },
         "titleFormatted": {
-          "en": "Start or replace timer [[name]] with a duration of [[time]] [[unit]]",
-          "nl": "Start of vervang timer [[name]] met een looptijd van [[time]] [[unit]]",
-          "de": "Timer [[name]] mit einer Dauer von [[time]] [[unit]] starten oder ersetzen"
+          "en": "Start or replace timer [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
+          "nl": "Start of vervang timer [[namedd]] (of [[name]]) met een looptijd van [[time]] [[unit]]",
+          "de": "Timer [[namedd]] (oder [[name]]) mit einer Dauer von [[time]] [[unit]] starten oder ersetzen"
         },
         "hint": {
           "en": "Use this card to start a new timer with the provided name and duration. If a timer with the same name already exists, it is replaced.",
@@ -1996,7 +2369,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -2066,9 +2455,9 @@
           "de": "Übergang starten oder ersetzen"
         },
         "titleFormatted": {
-          "en": "Start or replace transition [[name]] from [[from]] to [[to]] in [[steps]] steps during [[time]] [[unit]]",
-          "nl": "Start of vervang transitie [[name]] van [[from]] naar [[to]] in [[steps]] stappen gedurende [[time]] [[unit]]",
-          "de": "Übergang [[name]] von [[from]] nach [[to]] in [[steps]] Schritten während [[time]] [[unit]] starten oder ersetzen"
+          "en": "Start or replace transition [[namedd]] (or [[name]]) from [[from]] to [[to]] in [[steps]] steps during [[time]] [[unit]]",
+          "nl": "Start of vervang transitie [[namedd]] (of [[name]]) van [[from]] naar [[to]] in [[steps]] stappen gedurende [[time]] [[unit]]",
+          "de": "Übergang [[namedd]] (oder [[name]]) von [[from]] nach [[to]] in [[steps]] Schritten während [[time]] [[unit]] starten oder ersetzen"
         },
         "hint": {
           "en": "Use this card to start a new transition with the provided name, duration and steps. If a transition with the same name already exists, it is replaced.",
@@ -2077,7 +2466,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -2180,9 +2585,9 @@
           "de": "Stoppuhr starten oder fortsetzen"
         },
         "titleFormatted": {
-          "en": "Start or resume stopwatch [[name]]",
-          "nl": "Start of hervat stopwatch [[name]]",
-          "de": "Stoppuhr starten oder fortsetzen [[name]]"
+          "en": "Start or resume stopwatch [[namedd]] (or [[name]])",
+          "nl": "Start of hervat stopwatch [[namedd]] (of [[name]])",
+          "de": "Stoppuhr starten oder fortsetzen [[namedd]] (oder [[name]])"
         },
         "hint": {
           "en": "Use this card to start a stopwatch with the provided name. If a stopwatch with the same name is already running, it is resumed.",
@@ -2191,7 +2596,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -2210,9 +2631,9 @@
           "de": "Timer starten oder fortsetzen"
         },
         "titleFormatted": {
-          "en": "Start or resume timer [[name]] with a duration of [[time]] [[unit]]",
-          "nl": "Start of hervat timer [[name]] met een looptijd van [[time]] [[unit]]",
-          "de": "Timer [[name]] mit einer Dauer von [[time]] [[unit]] starten oder fortsetzen"
+          "en": "Start or resume timer [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
+          "nl": "Start of hervat timer [[namedd]] (of [[name]]) met een looptijd van [[time]] [[unit]]",
+          "de": "Timer [[namedd]] (oder [[name]]) mit einer Dauer von [[time]] [[unit]] starten oder fortsetzen"
         },
         "hint": {
           "en": "Use this card to start a new timer with the provided name and duration. If a timer with the same name already exists, it is resumed.",
@@ -2221,7 +2642,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -2293,9 +2730,9 @@
           "de": "Timer starten oder fortsetzen"
         },
         "titleFormatted": {
-          "en": "Start or resume timer [[name]] with a duration of [[time]] [[unit]]",
-          "nl": "Start of hervat timer [[name]] met een looptijd van [[time]] [[unit]]",
-          "de": "Timer [[name]] mit einer Dauer von [[time]] [[unit]] starten oder fortsetzen"
+          "en": "Start or resume timer [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
+          "nl": "Start of hervat timer [[namedd]] (of [[name]]) met een looptijd van [[time]] [[unit]]",
+          "de": "Timer [[namedd]] (oder [[name]]) mit einer Dauer von [[time]] [[unit]] starten oder fortsetzen"
         },
         "hint": {
           "en": "Use this card to start a new timer with the provided name and duration. If a timer with the same name already exists, it is resumed.",
@@ -2304,7 +2741,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -2374,9 +2827,9 @@
           "de": "Übergang starten oder fortsetzen"
         },
         "titleFormatted": {
-          "en": "Start or resume transition [[name]] from [[from]] to [[to]] in [[steps]] steps during [[time]] [[unit]]",
-          "nl": "Start of hervat transitie [[name]] van [[from]] naar [[to]] in [[steps]] stappen gedurende [[time]] [[unit]]",
-          "de": "Übergang [[name]] von [[from]] nach [[to]] in [[steps]] Schritten während [[time]] [[unit]] starten oder fortsetzen"
+          "en": "Start or resume transition [[namedd]] (or [[name]]) from [[from]] to [[to]] in [[steps]] steps during [[time]] [[unit]]",
+          "nl": "Start of hervat transitie [[namedd]] (of [[name]]) van [[from]] naar [[to]] in [[steps]] stappen gedurende [[time]] [[unit]]",
+          "de": "Übergang [[namedd]] (oder [[name]]) von [[from]] nach [[to]] in [[steps]] Schritten während [[time]] [[unit]] starten oder fortsetzen"
         },
         "hint": {
           "en": "Use this card to start a new transition with the provided name, duration and steps. If a transition with the same name already exists, it is replaced.",
@@ -2385,7 +2838,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -2488,9 +2957,9 @@
           "de": "Pausiere Stoppuhr"
         },
         "titleFormatted": {
-          "en": "Pause stopwatch [[name]]",
-          "nl": "Pauzeer stopwatch [[name]]",
-          "de": "Pausiere Stoppuhr [[name]]"
+          "en": "Pause stopwatch [[namedd]] (or [[name]])",
+          "nl": "Pauzeer stopwatch [[namedd]] (of [[name]])",
+          "de": "Pausiere Stoppuhr [[namedd]] (oder [[name]])"
         },
         "hint": {
           "en": "Use this card to pause a stopwatch with the provided name.",
@@ -2499,7 +2968,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -2517,9 +3002,9 @@
           "de": "Timer pausieren"
         },
         "titleFormatted": {
-          "en": "Pause timer [[name]]",
-          "nl": "Pauzeer timer [[name]]",
-          "de": "Timer anhalten [[name]]"
+          "en": "Pause timer [[namedd]] (or [[name]])",
+          "nl": "Pauzeer timer [[namedd]] (of [[name]])",
+          "de": "Timer anhalten [[namedd]] (oder [[name]])"
         },
         "hint": {
           "en": "Use this card to pause a timer with the provided name.",
@@ -2528,7 +3013,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -2546,9 +3047,9 @@
           "de": "Übergang pausieren"
         },
         "titleFormatted": {
-          "en": "Pause transition [[name]]",
-          "nl": "Pauzeer transitie [[name]]",
-          "de": "Übergang anhalten [[name]]"
+          "en": "Pause transition [[namedd]] (or [[name]])",
+          "nl": "Pauzeer transitie [[namedd]] (of [[name]])",
+          "de": "Übergang anhalten [[namedd]] (oder [[name]])"
         },
         "hint": {
           "en": "Use this card to pause a transition with the provided name.",
@@ -2557,7 +3058,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -2576,9 +3093,9 @@
           "de": "Stoppuhr einstellen"
         },
         "titleFormatted": {
-          "en": "Adjust stopwatch [[name]] with a duration of [[time]] [[unit]]",
-          "nl": "Pas stopwatch [[name]] aan met een looptijd van [[time]] [[unit]]",
-          "de": "Stellen Sie die Stoppuhr [[name]] mit einer Dauer von [[time]] [[unit]] ein"
+          "en": "Adjust stopwatch [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
+          "nl": "Pas stopwatch [[namedd]] (of [[name]]) aan met een looptijd van [[time]] [[unit]]",
+          "de": "Stellen Sie die Stoppuhr [[namedd]] (oder [[name]]) mit einer Dauer von [[time]] [[unit]] ein"
         },
         "hint": {
           "en": "Use this card to adjust the duration of the stopwatch with the provided name. Use a positive duration to extend the stopwatch, or a negative duration to shorten the stopwatch.",
@@ -2587,7 +3104,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -2658,9 +3191,9 @@
           "de": "Stoppuhr einstellen"
         },
         "titleFormatted": {
-          "en": "Adjust stopwatch [[name]] with a duration of [[time]] [[unit]]",
-          "nl": "Pas stopwatch [[name]] aan met een looptijd van [[time]] [[unit]]",
-          "de": "Stellen Sie die Stoppuhr [[name]] mit einer Dauer von [[time]] [[unit]] ein"
+          "en": "Adjust stopwatch [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
+          "nl": "Pas stopwatch [[namedd]] (of [[name]]) aan met een looptijd van [[time]] [[unit]]",
+          "de": "Stellen Sie die Stoppuhr [[namedd]] (oder [[name]]) mit einer Dauer von [[time]] [[unit]] ein"
         },
         "hint": {
           "en": "Use this card to adjust the duration of the stopwatch with the provided name. Use a positive duration to extend the stopwatch, or a negative duration to shorten the stopwatch.",
@@ -2669,7 +3202,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -2740,9 +3289,9 @@
           "de": "Timer justieren"
         },
         "titleFormatted": {
-          "en": "Adjust timer [[name]] with a duration of [[time]] [[unit]]",
-          "nl": "Pas timer [[name]] aan met een looptijd van [[time]] [[unit]]",
-          "de": "Timer [[name]] mit einer Dauer von [[time]] [[unit]] einstellen"
+          "en": "Adjust timer [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
+          "nl": "Pas timer [[namedd]] (of [[name]]) aan met een looptijd van [[time]] [[unit]]",
+          "de": "Timer [[namedd]] (oder [[name]]) mit einer Dauer von [[time]] [[unit]] einstellen"
         },
         "hint": {
           "en": "Use this card to adjust the duration of the timer with the provided name. Use a negative duration to extend the timer, or a positive duration to shorten the timer. One can't extend the duration, when the new duration will be longer than the timer's original duration. One can't shorten the duration, when the new duration will be lower than zero.",
@@ -2751,7 +3300,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -2822,9 +3387,9 @@
           "de": "Timer justieren"
         },
         "titleFormatted": {
-          "en": "Adjust timer [[name]] with a duration of [[time]] [[unit]]",
-          "nl": "Pas timer [[name]] aan met een looptijd van [[time]] [[unit]]",
-          "de": "Timer [[name]] mit einer Dauer von [[time]] [[unit]] einstellen"
+          "en": "Adjust timer [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
+          "nl": "Pas timer [[namedd]] (of [[name]]) aan met een looptijd van [[time]] [[unit]]",
+          "de": "Timer [[namedd]] (oder [[name]]) mit einer Dauer von [[time]] [[unit]] einstellen"
         },
         "hint": {
           "en": "Use this card to adjust the duration of the timer with the provided name. Use a negative duration to extend the timer, or a positive duration to shorten the timer. One can't extend the duration, when the new duration will be longer than the timer's original duration. One can't shorten the duration, when the new duration will be lower than zero.",
@@ -2833,7 +3398,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -2903,9 +3484,9 @@
           "de": "Übergang justieren"
         },
         "titleFormatted": {
-          "en": "Adjust transition [[name]] with a duration of [[time]] [[unit]]",
-          "nl": "Pas transitie [[name]] aan met een looptijd van [[time]] [[unit]]",
-          "de": "Übergang [[name]] mit einer Dauer von [[time]] [[unit]] einstellen"
+          "en": "Adjust transition [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
+          "nl": "Pas transitie [[namedd]] (of [[name]]) aan met een looptijd van [[time]] [[unit]]",
+          "de": "Übergang [[namedd]] (oder [[name]]) mit einer Dauer von [[time]] [[unit]] einstellen"
         },
         "hint": {
           "en": "Use this card to adjust the duration of the transition with the provided name. Use a negative duration to extend the transition, or a positive duration to shorten the transition. One can't extend the duration, when the new duration will be longer than the transition's original duration. One can't shorten the duration, when the new duration will be lower than zero.",
@@ -2914,7 +3495,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -2984,9 +3581,9 @@
           "de": "Stoppe Stopuhr"
         },
         "titleFormatted": {
-          "en": "Stop stopwatch [[name]]",
-          "nl": "Stop stopwatch [[name]]",
-          "de": "Stoppe Stopuhren [[name]]"
+          "en": "Stop stopwatch [[namedd]] (or [[name]])",
+          "nl": "Stop stopwatch [[namedd]] (of [[name]])",
+          "de": "Stoppe Stopuhren [[namedd]] (oder [[name]])"
         },
         "hint": {
           "en": "Use this card to stop a stopwatch with the provided name.",
@@ -2995,7 +3592,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -3013,9 +3626,9 @@
           "de": "Timer anhalten"
         },
         "titleFormatted": {
-          "en": "Stop timer [[name]]",
-          "nl": "Stop timer [[name]]",
-          "de": "Timer stoppen [[name]]"
+          "en": "Stop timer [[namedd]] (or [[name]])",
+          "nl": "Stop timer [[namedd]] (of [[name]])",
+          "de": "Timer stoppen [[namedd]] (oder [[name]])"
         },
         "hint": {
           "en": "Use this card to stop a timer with the provided name.",
@@ -3024,7 +3637,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
@@ -3042,9 +3671,9 @@
           "de": "Übergang anhalten"
         },
         "titleFormatted": {
-          "en": "Stop transition [[name]]",
-          "nl": "Stop transitie [[name]]",
-          "de": "Übergang stoppen [[name]]"
+          "en": "Stop transition [[namedd]] (or [[name]])",
+          "nl": "Stop transitie [[namedd]] (of [[name]])",
+          "de": "Übergang stoppen [[namedd]] (oder [[name]])"
         },
         "hint": {
           "en": "Use this card to stop a transition with the provided name.",
@@ -3053,7 +3682,23 @@
         },
         "args": [
           {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "de": "Wählen"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "de": "Wählen oder eingeben"
+            }
+          },
+          {
             "name": "name",
+            "required": false,
             "title": {
               "en": "Name",
               "nl": "Naam",
