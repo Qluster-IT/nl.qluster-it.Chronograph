@@ -7,7 +7,7 @@
 	},
 	"titleFormatted": {
 		"en": "Get the duration of timer [[namedd]] (or [[name]])",
-		"nl": "Krijg de duur van timer [[name]]",
+		"nl": "Krijg de duur van timer [[namedd]] (of [[name]])",
 		"de": "Abfrage der Timerlaufzeit [[name]]"
 	},
 	"args": [

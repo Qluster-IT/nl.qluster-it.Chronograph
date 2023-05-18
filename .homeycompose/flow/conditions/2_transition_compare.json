@@ -7,7 +7,7 @@
 	},
 	"titleFormatted": {
 		"en": "Transition [[namedd]] (or [[name]]) has a duration !{{longer|shorter}} than [[time]] [[unit]]",
-		"nl": "Transitie [[name]] heeft een looptijd !{{langer|korter}} dan [[time]] [[unit]]",
+		"nl": "Transitie [[namedd]] (of [[name]]) heeft een looptijd !{{langer|korter}} dan [[time]] [[unit]]",
 		"de": "Übergang [[name]] hat eine Dauer !{{länger|kürzer}} als [[time]] [[unit]]"
 	},
 	"hint": {

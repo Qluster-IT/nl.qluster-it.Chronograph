@@ -7,7 +7,7 @@
 	},
 	"titleFormatted": {
 		"en": "Get the remaining duration of transition [[namedd]] (or [[name]])",
-		"nl": "Krijg de resterende duur van transition [[name]]",
+		"nl": "Krijg de resterende duur van transition [[namedd]] (of [[name]])",
 		"de": "Abfrage verbleibende Dauer von Übergang [[name]]"
 	},
 	"args": [

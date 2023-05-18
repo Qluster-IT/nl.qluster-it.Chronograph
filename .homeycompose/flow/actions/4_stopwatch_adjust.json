@@ -8,7 +8,7 @@
 	},
 	"titleFormatted": {
 		"en": "Adjust stopwatch [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
-		"nl": "Pas stopwatch [[name]] aan met een looptijd van [[time]] [[unit]]",
+		"nl": "Pas stopwatch [[namedd]] (of [[name]]) aan met een looptijd van [[time]] [[unit]]",
 		"de": "Stellen Sie die Stoppuhr [[name]] mit einer Dauer von [[time]] [[unit]] ein"
 	},
 	"hint": {

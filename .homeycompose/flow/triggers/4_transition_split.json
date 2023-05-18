@@ -7,7 +7,7 @@
 	},
 	"titleFormatted": {
 		"en": "Transition [[namedd]] (or [[name]]) has reached a step",
-		"nl": "Transitie [[name]] heeft een stap bereikt",
+		"nl": "Transitie [[namedd]] (of [[name]]) heeft een stap bereikt",
 		"de": "Übergang [[name]] hat einen Schritt erreicht"
 	},
 	"hint": {

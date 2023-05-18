@@ -7,7 +7,7 @@
 	},
 	"titleFormatted": {
 		"en": "Pause stopwatch [[namedd]] (or [[name]])",
-		"nl": "Pauzeer stopwatch [[name]]",
+		"nl": "Pauzeer stopwatch [[namedd]] (of [[name]])",
 		"de": "Pausiere Stoppuhr [[name]]"
 	},
 	"hint": {

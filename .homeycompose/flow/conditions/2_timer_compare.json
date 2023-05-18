@@ -7,7 +7,7 @@
 	},
 	"titleFormatted": {
 		"en": "Timer [[namedd]] (or [[name]]) has a duration !{{longer|shorter}} than [[time]] [[unit]]",
-		"nl": "Timer [[name]] heeft een looptijd !{{langer|korter}} dan [[time]] [[unit]]",
+		"nl": "Timer [[namedd]] (of [[name]]) heeft een looptijd !{{langer|korter}} dan [[time]] [[unit]]",
 		"de": "Timer [[name]] hat eine Dauer !{{länger|kürzer}} als [[time]] [[unit]]"
 	},
 	"hint": {

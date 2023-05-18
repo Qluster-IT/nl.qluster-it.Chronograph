@@ -7,7 +7,7 @@
 		},
 		"titleFormatted": {
 			"en": "Timer [[namedd]] (or [[name]]) has reached a duration of [[time]] [[unit]]",
-			"nl": "Timer [[name]] heeft een looptijd van [[time]] [[unit]] bereikt",
+			"nl": "Timer [[namedd]] (of [[name]]) heeft een looptijd van [[time]] [[unit]] bereikt",
 			"de": "Timer [[name]] hat eine Dauer von [[time]] [[unit]] erreicht"
 		},
 		"hint": {

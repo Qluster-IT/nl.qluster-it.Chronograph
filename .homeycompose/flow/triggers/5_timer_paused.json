@@ -7,7 +7,7 @@
 	},
 	"titleFormatted": {
 		"en": "Timer [[namedd]] (or [[name]]) is paused",
-		"nl": "Timer [[name]] is gepauzeerd",
+		"nl": "Timer [[namedd]] (of [[name]]) is gepauzeerd",
 		"de": "Timer [[name]] ist pausiert"
 	},
 	"hint": {

@@ -8,7 +8,7 @@
 	},
 	"titleFormatted": {
 		"en": "Start or replace timer [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
-		"nl": "Start of vervang timer [[name]] met een looptijd van [[time]] [[unit]]",
+		"nl": "Start of vervang timer [[namedd]] (of [[name]]) met een looptijd van [[time]] [[unit]]",
 		"de": "Timer [[name]] mit einer Dauer von [[time]] [[unit]] starten oder ersetzen"
 	},
 	"hint": {

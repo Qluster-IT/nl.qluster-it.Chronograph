@@ -7,7 +7,7 @@
 	},
 	"titleFormatted": {
 		"en": "Transition [[namedd]] (or [[name]]) is paused",
-		"nl": "Transitie [[name]] is gepauzeerd",
+		"nl": "Transitie [[namedd]] (of [[name]]) is gepauzeerd",
 		"de": "Übergang [[name]] ist pausiert"
 	},
 	"hint": {

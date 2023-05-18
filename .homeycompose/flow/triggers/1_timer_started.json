@@ -7,7 +7,7 @@
 	},
 	"titleFormatted": {
 		"en": "Timer [[namedd]] (or [[name]]) is started",
-		"nl": "Timer [[name]] is gestart",
+		"nl": "Timer [[namedd]] (of [[name]]) is gestart",
 		"de": "Timer [[name]] ist gestartet"
 	},
 	"hint": {

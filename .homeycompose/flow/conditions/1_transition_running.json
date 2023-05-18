@@ -7,7 +7,7 @@
 	},
 	"titleFormatted": {
 		"en": "Transition [[namedd]] (or [[name]]) !{{is running|is not running}}",
-		"nl": "Transitie [[name]] !{{loopt|loopt niet}}",
+		"nl": "Transitie [[namedd]] (of [[name]]) !{{loopt|loopt niet}}",
 		"de": "Übergang [[name]] !{{läuft|läuft nicht}}"
 	},
 	"hint": {

@@ -7,7 +7,7 @@
 	},
 	"titleFormatted": {
 		"en": "Transition [[namedd]] (or [[name]]) is started",
-		"nl": "Transitie [[name]] is gestart",
+		"nl": "Transitie [[namedd]] (of [[name]]) is gestart",
 		"de": "Übergang [[name]] ist gestartet"
 	},
 	"hint": {

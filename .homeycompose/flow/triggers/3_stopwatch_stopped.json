@@ -8,7 +8,7 @@
 		},
 		"titleFormatted": {
 			"en": "Stopwatch [[namedd]] (or [[name]]) is stopped",
-			"nl": "Stopwatch [[name]] is gestopt",
+			"nl": "Stopwatch [[namedd]] (of [[name]]) is gestopt",
 			"de": "Stoppuhr [[name]] ist gestoppt"
 		},
 		"hint": {

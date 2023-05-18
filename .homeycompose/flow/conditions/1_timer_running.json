@@ -7,7 +7,7 @@
 	},
 	"titleFormatted": {
 		"en": "Timer [[namedd]] (or [[name]]) !{{is running|is not running}}",
-		"nl": "Timer [[name]] !{{loopt|loopt niet}}",
+		"nl": "Timer [[namedd]] (of [[name]]) !{{loopt|loopt niet}}",
 		"de": "Timer [[name]] !{{läuft|läuft nicht}}"
 	},
 	"hint": {

@@ -7,7 +7,7 @@
 	},
 	"titleFormatted": {
 		"en": "Timer [[namedd]] (or [[name]]) is finished",
-		"nl": "Timer [[name]] is afgelopen",
+		"nl": "Timer [[namedd]] (of [[name]]) is afgelopen",
 		"de": "Timer [[name]] ist abgelaufen"
 	},
 	"hint": {

@@ -7,7 +7,7 @@
 	},
 	"titleFormatted": {
 		"en": "Pause timer [[namedd]] (or [[name]])",
-		"nl": "Pauzeer timer [[name]]",
+		"nl": "Pauzeer timer [[namedd]] (of [[name]])",
 		"de": "Timer anhalten [[name]]"
 
 	},
