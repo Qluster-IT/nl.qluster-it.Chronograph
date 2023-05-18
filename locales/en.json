@@ -5,7 +5,7 @@
   "invalid_duration": "Invalid duration.",
   "invalid_transition": "Invalid transition.",
   "invalid_name": "Invalid name.",
-  "name_required":"You need to (type and) pick a name or enter a name.",
+  "name_required": "You need to (type and) pick a name or enter a name.",
   "settings": {
     "timers": "Timers",
     "stopwatches": "Stopwatches",

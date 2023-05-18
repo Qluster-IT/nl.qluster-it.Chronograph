@@ -5,7 +5,7 @@
   "invalid_duration": "Ungültige Dauer.",
   "invalid_transition": "Ungültige Übergang.",
   "invalid_name": "Ungültige Name.",
-  "name_required":"Sie müssen einen Namen (eintippen und) auswählen oder einen Namen eingeben.",
+  "name_required": "Sie müssen einen Namen (eintippen und) auswählen oder einen Namen eingeben.",
   "settings": {
     "timers": "Timer",
     "stopwatches": "Stopuhren",

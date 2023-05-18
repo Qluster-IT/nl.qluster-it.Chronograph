@@ -167,7 +167,10 @@ class Application extends Homey.App {
 							if (flowcard.args.find(x => x.name == 'namedd')) card.getArgument('namedd').registerAutocompleteListener(async (query, args) => {
 
 								if (!this.chronographs[chronograph_type]) this.chronographs[chronograph_type] = [];
-								let l = this.chronographs[chronograph_type].map(x => {
+								let l = this.chronographs[chronograph_type];
+								if(query) l = l.filter(x=>x.indexOf(query)>-1);
+								l = l.sort();
+								l = l .map(x => {
 									return {
 										name: x,
 										description: x
