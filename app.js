@@ -168,7 +168,7 @@ class Application extends Homey.App {
 
 								if (!this.chronographs[chronograph_type]) this.chronographs[chronograph_type] = [];
 								let l = this.chronographs[chronograph_type];
-								if(query) l = l.filter(x=>x.indexOf(query)>-1);
+								if(query) l = l.filter(x=>x.toLowerCase().indexOf(query.toLowerCase())>-1);
 								l = l.sort();
 								l = l .map(x => {
 									return {
