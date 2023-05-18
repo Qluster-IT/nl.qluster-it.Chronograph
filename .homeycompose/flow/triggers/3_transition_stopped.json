@@ -6,7 +6,7 @@
 		"de": "Übergang ist gestoppt"
 	},
 	"titleFormatted": {
-		"en": "Transition [[name]] is stopped",
+		"en": "Transition [[namedd]] (or [[name]]) is stopped",
 		"nl": "Transitie [[name]] is gestopt",
 		"de": "Übergang [[name]] ist gestoppt"
 	},

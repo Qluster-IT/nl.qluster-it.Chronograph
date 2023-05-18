@@ -6,7 +6,7 @@
 		"de": "Stoppe Stopuhr"
 	},
 	"titleFormatted": {
-		"en": "Stop stopwatch [[name]]",
+		"en": "Stop stopwatch [[namedd]] (or [[name]])",
 		"nl": "Stop stopwatch [[name]]",
 		"de": "Stoppe Stopuhren [[name]]"
 	},

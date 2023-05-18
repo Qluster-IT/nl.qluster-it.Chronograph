@@ -6,7 +6,7 @@
 		"de": "Stopwatch läuft oder nicht"
 	},
 	"titleFormatted": {
-		"en": "Stopwatch [[name]] !{{is running|is not running}}",
+		"en": "Stopwatch [[namedd]] (or [[name]]) !{{is running|is not running}}",
 		"nl": "Stopwatch [[name]] !{{loopt|loopt niet}}",
 		"de": "Stopwatch [[name]] !{{läuft|läuft nicht}}"
 	},

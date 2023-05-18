@@ -6,7 +6,7 @@
 		"de": "Timer starten oder fortsetzen"
 	},
 	"titleFormatted": {
-		"en": "Start or resume timer [[name]] with a duration of [[time]] [[unit]]",
+		"en": "Start or resume timer [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
 		"nl": "Start of hervat timer [[name]] met een looptijd van [[time]] [[unit]]",
 		"de": "Timer [[name]] mit einer Dauer von [[time]] [[unit]] starten oder fortsetzen"
 	},

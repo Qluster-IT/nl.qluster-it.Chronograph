@@ -6,7 +6,7 @@
 		"de": "Übergang justieren"
 	},
 	"titleFormatted": {
-		"en": "Adjust transition [[name]] with a duration of [[time]] [[unit]]",
+		"en": "Adjust transition [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
 		"nl": "Pas transitie [[name]] aan met een looptijd van [[time]] [[unit]]",
 		"de": "Übergang [[name]] mit einer Dauer von [[time]] [[unit]] einstellen"
 	},

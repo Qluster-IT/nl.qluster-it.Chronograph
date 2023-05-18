@@ -6,7 +6,7 @@
 		"de": "Übergang ist gestartet"
 	},
 	"titleFormatted": {
-		"en": "Transition [[name]] is started",
+		"en": "Transition [[namedd]] (or [[name]]) is started",
 		"nl": "Transitie [[name]] is gestart",
 		"de": "Übergang [[name]] ist gestartet"
 	},

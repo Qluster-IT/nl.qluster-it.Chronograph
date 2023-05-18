@@ -6,7 +6,7 @@
 		"de": "Timer justieren"
 	},
 	"titleFormatted": {
-		"en": "Adjust timer [[name]] with a duration of [[time]] [[unit]]",
+		"en": "Adjust timer [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
 		"nl": "Pas timer [[name]] aan met een looptijd van [[time]] [[unit]]",
 		"de": "Timer [[name]] mit einer Dauer von [[time]] [[unit]] einstellen"
 	},

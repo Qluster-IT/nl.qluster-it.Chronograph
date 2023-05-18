@@ -7,7 +7,7 @@
 
 	},
 	"titleFormatted": {
-		"en": "Stop timer [[name]]",
+		"en": "Stop timer [[namedd]] (or [[name]])",
 		"nl": "Stop timer [[name]]",
 		"de": "Timer stoppen [[name]]"
 	},

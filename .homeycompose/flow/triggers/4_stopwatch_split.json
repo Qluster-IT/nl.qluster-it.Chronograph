@@ -7,7 +7,7 @@
 			"de": "Stoppuhr hat eine Dauer erreicht."
 		},
 		"titleFormatted": {
-			"en": "Stopwatch [[name]] has reached a duration of [[time]] [[unit]]",
+			"en": "Stopwatch [[namedd]] (or [[name]]) has reached a duration of [[time]] [[unit]]",
 			"nl": "Stopwatch [[name]] heeft een looptijd van [[time]] [[unit]] bereikt",
 			"de": "Stoppuhr [[name]] hat eine Dauer von [[time]] [[unit]] erreicht"
 		},

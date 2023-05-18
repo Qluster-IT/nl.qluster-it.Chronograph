@@ -7,7 +7,7 @@
 
 	},
 	"titleFormatted": {
-		"en": "Stop transition [[name]]",
+		"en": "Stop transition [[namedd]] (or [[name]])",
 		"nl": "Stop transitie [[name]]",
 		"de": "Übergang stoppen [[name]]"
 	},

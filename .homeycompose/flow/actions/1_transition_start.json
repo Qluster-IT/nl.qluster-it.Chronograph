@@ -6,7 +6,7 @@
 		"de": "Übergang starten oder ersetzen"
 	},
 	"titleFormatted": {
-		"en": "Start or replace transition [[name]] from [[from]] to [[to]] in [[steps]] steps during [[time]] [[unit]]",
+		"en": "Start or replace transition [[namedd]] (or [[name]]) from [[from]] to [[to]] in [[steps]] steps during [[time]] [[unit]]",
 		"nl": "Start of vervang transitie [[name]] van [[from]] naar [[to]] in [[steps]] stappen gedurende [[time]] [[unit]]",
 		"de": "Übergang [[name]] von [[from]] nach [[to]] in [[steps]] Schritten während [[time]] [[unit]] starten oder ersetzen"
 	},

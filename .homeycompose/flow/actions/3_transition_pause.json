@@ -6,7 +6,7 @@
 		"de": "Übergang pausieren"
 	},
 	"titleFormatted": {
-		"en": "Pause transition [[name]]",
+		"en": "Pause transition [[namedd]] (or [[name]])",
 		"nl": "Pauzeer transitie [[name]]",
 		"de": "Übergang anhalten [[name]]"
 

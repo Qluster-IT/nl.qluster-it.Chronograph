@@ -6,7 +6,7 @@
 		"de": "Timer ist gestartet"
 	},
 	"titleFormatted": {
-		"en": "Timer [[name]] is started",
+		"en": "Timer [[namedd]] (or [[name]]) is started",
 		"nl": "Timer [[name]] is gestart",
 		"de": "Timer [[name]] ist gestartet"
 	},

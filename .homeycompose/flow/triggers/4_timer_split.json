@@ -6,7 +6,7 @@
 			"de": "Timer hat eine Dauer erreicht"
 		},
 		"titleFormatted": {
-			"en": "Timer [[name]] has reached a duration of [[time]] [[unit]]",
+			"en": "Timer [[namedd]] (or [[name]]) has reached a duration of [[time]] [[unit]]",
 			"nl": "Timer [[name]] heeft een looptijd van [[time]] [[unit]] bereikt",
 			"de": "Timer [[name]] hat eine Dauer von [[time]] [[unit]] erreicht"
 		},

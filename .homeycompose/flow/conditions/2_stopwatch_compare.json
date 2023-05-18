@@ -6,7 +6,7 @@
 		"de": "Stopwatch länger oder kürzer als"
 	},
 	"titleFormatted": {
-		"en": "Stopwatch [[name]] has a duration !{{longer|shorter}} than [[time]] [[unit]]",
+		"en": "Stopwatch [[namedd]] (or [[name]]) has a duration !{{longer|shorter}} than [[time]] [[unit]]",
 		"nl": "Stopwatch [[name]] heeft een looptijd !{{langer|korter}} dan [[time]] [[unit]]",
 		"de": "Stopwatch [[name]] hat eine Dauer !{{länger|kürzer}} als [[time]] [[unit]]"
 	},

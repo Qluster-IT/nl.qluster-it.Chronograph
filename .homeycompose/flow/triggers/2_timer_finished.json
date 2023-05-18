@@ -6,7 +6,7 @@
 		"de": "Timer ist abgelaufen"
 	},
 	"titleFormatted": {
-		"en": "Timer [[name]] is finished",
+		"en": "Timer [[namedd]] (or [[name]]) is finished",
 		"nl": "Timer [[name]] is afgelopen",
 		"de": "Timer [[name]] ist abgelaufen"
 	},

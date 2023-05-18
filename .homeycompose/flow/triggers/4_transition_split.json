@@ -6,7 +6,7 @@
 		"de": "Übergang hat einen Schritt"
 	},
 	"titleFormatted": {
-		"en": "Transition [[name]] has reached a step",
+		"en": "Transition [[namedd]] (or [[name]]) has reached a step",
 		"nl": "Transitie [[name]] heeft een stap bereikt",
 		"de": "Übergang [[name]] hat einen Schritt erreicht"
 	},

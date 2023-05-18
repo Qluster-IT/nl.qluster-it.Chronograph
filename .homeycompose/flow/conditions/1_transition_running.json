@@ -6,7 +6,7 @@
 		"de": "Übergang läuft oder nicht"
 	},
 	"titleFormatted": {
-		"en": "Transition [[name]] !{{is running|is not running}}",
+		"en": "Transition [[namedd]] (or [[name]]) !{{is running|is not running}}",
 		"nl": "Transitie [[name]] !{{loopt|loopt niet}}",
 		"de": "Übergang [[name]] !{{läuft|läuft nicht}}"
 	},

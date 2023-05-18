@@ -6,7 +6,7 @@
 		"de": "Timer läuft oder nicht"
 	},
 	"titleFormatted": {
-		"en": "Timer [[name]] !{{is running|is not running}}",
+		"en": "Timer [[namedd]] (or [[name]]) !{{is running|is not running}}",
 		"nl": "Timer [[name]] !{{loopt|loopt niet}}",
 		"de": "Timer [[name]] !{{läuft|läuft nicht}}"
 	},

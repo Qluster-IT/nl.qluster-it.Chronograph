@@ -7,7 +7,7 @@
 			"de": "Stoppuhr ist pausiert"
 		},
 		"titleFormatted": {
-			"en": "Stopwatch [[name]] is paused",
+			"en": "Stopwatch [[namedd]] (or [[name]]) is paused",
 			"nl": "Stopwatch [[name]] is gepauzeerd",
 			"de": "Stoppuhr [[name]] ist pausiert"
 		},
