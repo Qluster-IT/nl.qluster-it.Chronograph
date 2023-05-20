@@ -75,6 +75,7 @@ class Application extends Homey.App {
 
 		try {
 
+			Chronograph.homey = this.homey;
 			this.setRoundOfDurationsFlowcards();
 
 			this.log('Initializing cards.');
@@ -90,7 +91,6 @@ class Application extends Homey.App {
 			this._installLogEventHandler();
 			this._installEventHandlers();
 
-			Chronograph.homey = this.homey;
 			// Restore chronographs from settings after the application has started.
 			this.homey.setTimeout(async () => {
 
@@ -146,12 +146,15 @@ class Application extends Homey.App {
 		}
 	}
 
-
+	saveChronographs() {
+		this.homey.settings.set('chronographs', this.chronographs);
+	}
 
 
 
 	async _initializeChronographsFromFlowArguments() {
 		this.chronographs = {};
+		this.oldChronographs = this.homey.settings.get('chronographs');
 		for (const flowTypeId in this.homey.manifest.flow) {
 			if (Object.hasOwnProperty.call(this.homey.manifest.flow, flowTypeId)) {
 				const flowType = this.homey.manifest.flow[flowTypeId];
@@ -168,15 +171,15 @@ class Application extends Homey.App {
 
 								if (!this.chronographs[chronograph_type]) this.chronographs[chronograph_type] = [];
 								let l = this.chronographs[chronograph_type];
-								if(query) l = l.filter(x=>x.name.toLowerCase().indexOf(query.toLowerCase())>-1);
+								if (query) l = l.filter(x => x.name.toLowerCase().indexOf(query.toLowerCase()) > -1);
 								l = l.sort();
-								l = l .map(x => {
+								l = l.map(x => {
 									return {
 										name: x.name,
 										description: this.homey.__("existing")
 									}
 								});
-								if (query && this.chronographs[chronograph_type].find(x=>x.name==query)) l.unshift({ name: query, description: this.homey.__("new") });
+								if (query && !this.chronographs[chronograph_type].find(x => x.name == query)) l.unshift({ name: query, description: this.homey.__("new") });
 								return l;
 
 							});
@@ -194,22 +197,28 @@ class Application extends Homey.App {
 				}
 			}
 		}
+		delete this.oldChronographs;
 	}
 
 	async setArgumentNamesCard(card, type) {
 		let args = await card.getArgumentValues();
 		let names = [];
 		let nameArgs = args.filter(x => x.name);
-		if(nameArgs.length) names = names.concat(nameArgs.map(x => x.name));
+		if (nameArgs.length) names = names.concat(nameArgs.map(x => x.name));
 
 		let nameDdArgs = args.filter(x => x.namedd);
-		if(nameDdArgs.length) names = names.concat(nameDdArgs.map(x => x.namedd.name));
-		names = names.filter(x=>!(x.startsWith('[[') && x.endsWith(']]')));
+		if (nameDdArgs.length) names = names.concat(nameDdArgs.map(x => x.namedd.name));
+		names = names.filter(x => !(x.startsWith('[[') && x.endsWith(']]')));
 		//names.concat() = ;
 
 		let changed = false;
 		for (let i = 0; i < names.length; i++)
-			if (names[i] && this.chronographs[type].find(x=>x.name==names[i])) this.chronographs[type].push({name:names[i]}) & (changed = true);
+			if (names[i] && !this.chronographs[type].find(x => x.name == names[i])) {
+				let oldChronograph = this.oldChronographs && this.oldChronographs[type] ? this.oldChronographs[type].find(x => x.name == names[i]) : undefined;
+				let chrono = { name: names[i] };
+				if (oldChronograph) chrono.action = oldChronograph.action;
+				this.chronographs[type].push(chrono) & (changed = true);
+			}
 		return changed;
 	}
 	async setArgumentNames(card, flowcard, firstRun) {
@@ -220,8 +229,11 @@ class Application extends Homey.App {
 			let type = flowcard.id.split('_')[0];
 			if (firstRun) {
 				if (!this.chronographs[type]) this.chronographs[type] = [];
-			} else this.chronographs[type] = []
-			
+			} else {
+				this.oldChronographs = this.chronographs;
+				this.chronographs[type] = [];
+			}
+
 			let changed = false;
 			if (firstRun) changed = await this.setArgumentNamesCard(card, type);
 			else for (const obj of this.chronographsCards[type]) {
@@ -229,6 +241,7 @@ class Application extends Homey.App {
 				if (await this.setArgumentNamesCard(card, type)) changed = true;
 			}
 			if (changed) this.homey.settings.set('chronographs', this.chronographs);
+			if (!firstRun) delete this.oldChronographs;
 		} catch (error) {
 			this.homey.error('setArgumentNames error', error);
 		}
@@ -384,6 +397,17 @@ class Application extends Homey.App {
 					active[chronograph.getId()] = raw;
 				}
 				this.homey.settings.set('chronographs_active', active);
+
+				try {
+
+					let type = chronograph.getData('type').toLowerCase();
+					let chrono = Chronograph.homey.app.chronographs[type].find(x => x.name == name);
+					chrono.action = raw.now;
+					Chronograph.homey.app.saveChronographs();
+				} catch (error) {
+
+				}
+
 			} catch (error) {
 				this.homey.error('_installEventHandlers', event, 'error', error);
 			}

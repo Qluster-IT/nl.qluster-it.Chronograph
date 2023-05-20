@@ -1,7 +1,7 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "nl.fellownet.chronograph",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "name": {
@@ -1790,6 +1790,15 @@
         ],
         "tokens": [
           {
+            "name": "name",
+            "type": "string",
+            "title": {
+              "en": "Name",
+              "nl": "Naam",
+              "de": "Name"
+            }
+          },
+          {
             "name": "elapsed",
             "type": "number",
             "title": {
@@ -1897,6 +1906,15 @@
           }
         ],
         "tokens": [
+          {
+            "name": "name",
+            "type": "string",
+            "title": {
+              "en": "Name",
+              "nl": "Naam",
+              "de": "Name"
+            }
+          },
           {
             "name": "duration",
             "type": "number",
@@ -2071,6 +2089,15 @@
           }
         ],
         "tokens": [
+          {
+            "name": "name",
+            "type": "string",
+            "title": {
+              "en": "Name",
+              "nl": "Naam",
+              "de": "Name"
+            }
+          },
           {
             "name": "duration",
             "type": "number",
@@ -3827,8 +3854,7 @@
       ],
       "capabilitiesOptions": {
         "alarm_started": {
-          "preventTag": true,
-          "icon": "/assets/stop.svg"
+          "preventTag": true
         },
         "duration": {
           "preventTag": true
@@ -3949,7 +3975,7 @@
       "setable": true,
       "uiComponent": "button",
       "uiQuickAction": true,
-      "icon": "/assets/play.svg"
+      "icon": "/assets/pause.svg"
     },
     "button_startstop": {
       "id": "button_startstop",
@@ -3963,7 +3989,7 @@
       "setable": true,
       "uiComponent": "button",
       "uiQuickAction": true,
-      "icon": "/assets/stop.svg"
+      "icon": "/assets/play.svg"
     },
     "duration": {
       "id": "duration",

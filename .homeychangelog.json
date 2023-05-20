@@ -159,6 +159,9 @@
     "en": "New: Chronographs can now be created and selected within each flowcard. Just type a name, select it and press save. Now you can select it in any flows: No need to remember the names!"
   },  
   "2.0.3": {
-    "en": "Bugfixes: Issues with new testversion when creating Chronograph devices.\nImproved: Button icons."
+    "en": "Bugfixes: Issues with new testversion when creating Chronograph devices.\nImproved: Button icons. Also, in App Settings, chronographs now shows when it was last used. Get Duration cards now have a name tag."
+  },  
+  "2.0.4": {
+    "en": "Bugfixes: Issues with new testversion when creating Chronograph devices.\nImproved: Button icons. Also, in App Settings, chronographs now shows when it was last used. Get Duration cards now have a name tag."
   }
 }

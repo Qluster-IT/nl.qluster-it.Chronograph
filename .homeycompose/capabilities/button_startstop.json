@@ -10,5 +10,5 @@
 	"setable": true,
 	"uiComponent": "button",
 	"uiQuickAction": true,
-	"icon": "/assets/stop.svg"
+	"icon": "/assets/play.svg"
 }

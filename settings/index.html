@@ -24,7 +24,9 @@
 		<em v-else data-i18n="settings.no_active_timers">No active timers.</em>
 
 		<ol v-if="chronographsNames && chronographsNames.timer && chronographsNames.timer.length > 0">
-			<chronograph-name-item v-for="chronograph in chronographsNames.timer" v-bind:chronograph="chronograph" v-bind:key="chronograph"></chronograph-name-item>
+			<table>
+				<chronograph-name-item v-for="chronograph in chronographsNames.timer" v-bind:chronograph="chronograph" v-bind:key="chronograph"></chronograph-name-item>
+			</table>
 		</ol>
 		<em v-else data-i18n="settings.no_timers">No timers.</em>
 
@@ -35,7 +37,9 @@
 		<em v-else data-i18n="settings.no_active_stopwatches">No active stopwatches.</em>
 
 		<ol v-if="chronographsNames && chronographsNames.stopwatch && chronographsNames.stopwatch.length > 0">
-			<chronograph-name-item v-for="chronograph in chronographsNames.stopwatch" v-bind:chronograph="chronograph" v-bind:key="chronograph"></chronograph-name-item>
+			<table>
+				<chronograph-name-item v-for="chronograph in chronographsNames.stopwatch" v-bind:chronograph="chronograph" v-bind:key="chronograph"></chronograph-name-item>
+			</table>
 		</ol>
 		<em v-else data-i18n="settings.no_stopwatches">No stopwatches.</em>
 
@@ -44,9 +48,11 @@
 			<chronograph-item v-for="transition in transitions" v-bind:chronograph="transition" v-bind:key="transition.id"></chronograph-item>
 		</ol>
 		<em v-else data-i18n="settings.no_active_transitions">No active transitions.</em>
-		
+
 		<ol v-if="chronographsNames && chronographsNames.transition && chronographsNames.transition.length > 0">
-			<chronograph-name-item v-for="chronograph in chronographsNames.transition" v-bind:chronograph="chronograph" v-bind:key="chronograph"></chronograph-name-item>
+			<table>
+				<chronograph-name-item v-for="chronograph in chronographsNames.transition" v-bind:chronograph="chronograph" v-bind:key="chronograph"></chronograph-name-item>
+			</table>
 		</ol>
 		<em v-else data-i18n="settings.no_transitions">No transitions.</em>
 		<!-- <h1><img src="assets/chronographs.svg" /><span data-i18n="settings.chronographs">Chronographs</span></h1>
@@ -136,11 +142,10 @@
 			Vue.component('chronograph-name-item', {
 				props: ['chronograph'],
 				template:
-					'<li>'
-					+ '<span><strong>{{ chronograph }}</strong></span>'
-					+ '<br class="cb">'
-					+ '</li>'
-					
+					'<tr>'
+					+ '<td><strong>{{ chronograph.name }}</strong>&nbsp;</td><td>{{chronograph.action ? new Date(chronograph.action).toLocaleString() : \'\'}}</td>'
+					+ '</tr>'
+
 			});
 
 			var app = new Vue({
@@ -148,7 +153,7 @@
 				data: {
 					chronographs: [],
 					roundOfDurationsFlowcards: 5,
-					chronographsNames:{}
+					chronographsNames: {}
 				},
 				computed: {
 					timers: function () {
@@ -166,6 +171,11 @@
 				},
 				methods: {
 					refresh: function () {
+						Homey.get('chronographs', (err, val) => {
+							if (err) return Homey.alert(err);
+							this.chronographsNames = val;
+
+						});
 						return new Promise((resolve, reject) => {
 							Homey.api('GET', '/chronographs/', null, (err, body) => {
 								if (err) {
@@ -218,7 +228,7 @@
 								}
 							});
 							Homey.get('chronographs', (err, val) => {
-								if(err) return Homey.alert(err);
+								if (err) return Homey.alert(err);
 								this.chronographsNames = val;
 								//console.log('this.chronographsNames', this.chronographsNames);
 

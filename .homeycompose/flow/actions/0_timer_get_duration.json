@@ -39,6 +39,15 @@
 	],
 	"tokens": [
 		{
+			"name": "name",
+			"type": "string",
+			"title": {
+				"en": "Name",
+				"nl": "Naam",
+				"de": "Name"
+			}
+		},
+		{
 			"name": "duration",
 			"type": "number",
 			"title": {
