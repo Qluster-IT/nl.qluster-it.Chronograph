@@ -9,5 +9,6 @@
 	"getable": true,
 	"setable": true,
 	"uiComponent": "button",
-	"uiQuickAction": true
+	"uiQuickAction": true,
+	"icon": "/assets/play.svg"
 }

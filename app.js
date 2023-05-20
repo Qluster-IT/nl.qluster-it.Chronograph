@@ -168,15 +168,15 @@ class Application extends Homey.App {
 
 								if (!this.chronographs[chronograph_type]) this.chronographs[chronograph_type] = [];
 								let l = this.chronographs[chronograph_type];
-								if(query) l = l.filter(x=>x.toLowerCase().indexOf(query.toLowerCase())>-1);
+								if(query) l = l.filter(x=>x.name.toLowerCase().indexOf(query.toLowerCase())>-1);
 								l = l.sort();
 								l = l .map(x => {
 									return {
-										name: x,
+										name: x.name,
 										description: this.homey.__("existing")
 									}
 								});
-								if (query && this.chronographs[chronograph_type].indexOf(query) === -1) l.unshift({ name: query, description: this.homey.__("new") });
+								if (query && this.chronographs[chronograph_type].find(x=>x.name==query)) l.unshift({ name: query, description: this.homey.__("new") });
 								return l;
 
 							});
@@ -209,7 +209,7 @@ class Application extends Homey.App {
 
 		let changed = false;
 		for (let i = 0; i < names.length; i++)
-			if (names[i] && this.chronographs[type].indexOf(names[i]) === -1) this.chronographs[type].push(names[i]) & (changed = true);
+			if (names[i] && this.chronographs[type].find(x=>x.name==names[i])) this.chronographs[type].push({name:names[i]}) & (changed = true);
 		return changed;
 	}
 	async setArgumentNames(card, flowcard, firstRun) {

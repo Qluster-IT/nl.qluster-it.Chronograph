@@ -159,6 +159,6 @@
     "en": "New: Chronographs can now be created and selected within each flowcard. Just type a name, select it and press save. Now you can select it in any flows: No need to remember the names!"
   },  
   "2.0.3": {
-    "en": "Bugfixes: Issues with new testversion when creating Chronograph devices."
+    "en": "Bugfixes: Issues with new testversion when creating Chronograph devices.\nImproved: Button icons."
   }
 }

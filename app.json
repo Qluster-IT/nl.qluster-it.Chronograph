@@ -3827,7 +3827,8 @@
       ],
       "capabilitiesOptions": {
         "alarm_started": {
-          "preventTag": true
+          "preventTag": true,
+          "icon": "/assets/stop.svg"
         },
         "duration": {
           "preventTag": true
@@ -3947,7 +3948,8 @@
       "getable": true,
       "setable": true,
       "uiComponent": "button",
-      "uiQuickAction": true
+      "uiQuickAction": true,
+      "icon": "/assets/play.svg"
     },
     "button_startstop": {
       "id": "button_startstop",
@@ -3960,7 +3962,8 @@
       "getable": true,
       "setable": true,
       "uiComponent": "button",
-      "uiQuickAction": true
+      "uiQuickAction": true,
+      "icon": "/assets/stop.svg"
     },
     "duration": {
       "id": "duration",
