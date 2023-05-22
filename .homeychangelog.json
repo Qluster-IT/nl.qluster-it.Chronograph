@@ -169,5 +169,8 @@
   },
   "2.0.6": {
     "en": "Bugfixes: More than 10 Chronograph devices would create an loading error."
+  },
+  "2.0.7": {
+    "en": "Resolved: Devices unavailable after restart of app."
   }
 }
