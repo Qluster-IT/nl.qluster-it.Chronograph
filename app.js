@@ -400,12 +400,17 @@ class Application extends Homey.App {
 
 				try {
 
-					let type = chronograph.getData('type').toLowerCase();
-					let chrono = Chronograph.homey.app.chronographs[type].find(x => x.name == name);
+					let type = (chronograph.getData('type') || '').toLowerCase();
+					if(!type) {
+						type = chronograph.getId().split('_');
+						type = type[1];
+					}
+					let chrono = Chronograph.homey.app.chronographs[type].find(x => x.name == raw.name);
 					chrono.action = raw.now;
 					Chronograph.homey.app.saveChronographs();
 				} catch (error) {
 
+					this.homey.error('_installEventHandlers gettype', event, 'error', error);
 				}
 
 			} catch (error) {
