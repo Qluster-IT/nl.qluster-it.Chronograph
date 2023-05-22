@@ -178,5 +178,8 @@
   },
   "2.0.9": {
     "en": "Resolved: Timer splits gave an error."
+  },
+  "2.0.10": {
+    "en": "Resolved: Timer and Stopwatch splits gave an error."
   }
 }
