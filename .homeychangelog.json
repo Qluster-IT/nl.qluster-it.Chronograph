@@ -172,5 +172,8 @@
   },
   "2.0.7": {
     "en": "Resolved: Devices unavailable after restart of app."
+  },
+  "2.0.8": {
+    "en": "Resolved: Stopwatch splits gave an error."
   }
 }
