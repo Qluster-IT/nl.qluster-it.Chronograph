@@ -1,14 +1,14 @@
 {
 	"id": "transition_get_duration",
 	"title": {
-		"en": "Get the remaining duration of a transition",
-		"nl": "Get the remaining duration of a transition",
-		"de": "Get the remaining duration of a transition"
+		"en": "Get the duration of a transition",
+		"nl": "Get the duration of a transition",
+		"de": "Get the duration of a transition"
 	},
 	"titleFormatted": {
-		"en": "Get the remaining duration of transition [[namedd]] (or [[name]])",
-		"nl": "Krijg de resterende duur van transition [[namedd]] (of [[name]])",
-		"de": "Abfrage verbleibende Dauer von Übergang [[namedd]] (oder [[name]])"
+		"en": "Get the elapsed/remaining duration of transition [[namedd]] (or [[name]])",
+		"nl": "Krijg de verstreken/resterend duur van transition [[namedd]] (of [[name]])",
+		"de": "Abfrage abgelaufen/verbleibend Dauer von Übergang [[namedd]] (oder [[name]])"
 	},
 	"args": [
 		{

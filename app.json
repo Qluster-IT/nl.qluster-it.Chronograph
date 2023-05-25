@@ -1,7 +1,7 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "nl.fellownet.chronograph",
-  "version": "2.0.10",
+  "version": "2.0.12",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "name": {
@@ -1874,9 +1874,9 @@
           "de": "Get the duration of a timer"
         },
         "titleFormatted": {
-          "en": "Get the duration of timer [[namedd]] (or [[name]])",
-          "nl": "Krijg de duur van timer [[namedd]] (of [[name]])",
-          "de": "Abfrage der Timerlaufzeit [[namedd]] (oder [[name]])"
+          "en": "Get the elapsed/remaining duration of timer [[namedd]] (or [[name]])",
+          "nl": "Krijg de verstreken/resterend duur van timer [[namedd]] (of [[name]])",
+          "de": "Abfrage abgelaufen/verbleibend Timerlaufzeit [[namedd]] (oder [[name]])"
         },
         "args": [
           {
@@ -2052,14 +2052,14 @@
       {
         "id": "transition_get_duration",
         "title": {
-          "en": "Get the remaining duration of a transition",
-          "nl": "Get the remaining duration of a transition",
-          "de": "Get the remaining duration of a transition"
+          "en": "Get the duration of a transition",
+          "nl": "Get the duration of a transition",
+          "de": "Get the duration of a transition"
         },
         "titleFormatted": {
-          "en": "Get the remaining duration of transition [[namedd]] (or [[name]])",
-          "nl": "Krijg de resterende duur van transition [[namedd]] (of [[name]])",
-          "de": "Abfrage verbleibende Dauer von Übergang [[namedd]] (oder [[name]])"
+          "en": "Get the elapsed/remaining duration of transition [[namedd]] (or [[name]])",
+          "nl": "Krijg de verstreken/resterend duur van transition [[namedd]] (of [[name]])",
+          "de": "Abfrage abgelaufen/verbleibend Dauer von Übergang [[namedd]] (oder [[name]])"
         },
         "args": [
           {
