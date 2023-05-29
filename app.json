@@ -161,9 +161,9 @@
           "de": "Stoppuhr ist gestartet"
         },
         "titleFormatted": {
-          "en": "Stopwatch [[namedd]] (or [[name]]) is started",
-          "nl": "Stopwatch [[namedd]] (of [[name]]) is gestart",
-          "de": "Stoppuhr [[namedd]] (oder [[name]]) ist gestartet"
+          "en": "Stopwatch [[namedd]] / [[name]] is started",
+          "nl": "Stopwatch [[namedd]] / [[name]] is gestart",
+          "de": "Stoppuhr [[namedd]] / [[name]] ist gestartet"
         },
         "hint": {
           "en": "This card is activated when a stopwatch with the provided name is started.",
@@ -222,9 +222,9 @@
           "de": "Timer ist gestartet"
         },
         "titleFormatted": {
-          "en": "Timer [[namedd]] (or [[name]]) is started",
-          "nl": "Timer [[namedd]] (of [[name]]) is gestart",
-          "de": "Timer [[namedd]] (oder [[name]]) ist gestartet"
+          "en": "Timer [[namedd]] / [[name]] is started",
+          "nl": "Timer [[namedd]] / [[name]] is gestart",
+          "de": "Timer [[namedd]] / [[name]] ist gestartet"
         },
         "hint": {
           "en": "This card is activated when a timer with the provided name is started.",
@@ -293,9 +293,9 @@
           "de": "Übergang ist gestartet"
         },
         "titleFormatted": {
-          "en": "Transition [[namedd]] (or [[name]]) is started",
-          "nl": "Transitie [[namedd]] (of [[name]]) is gestart",
-          "de": "Übergang [[namedd]] (oder [[name]]) ist gestartet"
+          "en": "Transition [[namedd]] / [[name]] is started",
+          "nl": "Transitie [[namedd]] / [[name]] is gestart",
+          "de": "Übergang [[namedd]] / [[name]] ist gestartet"
         },
         "hint": {
           "en": "This card is activated when a transition with the provided name is started.",
@@ -364,9 +364,9 @@
           "de": "Timer ist abgelaufen"
         },
         "titleFormatted": {
-          "en": "Timer [[namedd]] (or [[name]]) is finished",
-          "nl": "Timer [[namedd]] (of [[name]]) is afgelopen",
-          "de": "Timer [[namedd]] (oder [[name]]) ist abgelaufen"
+          "en": "Timer [[namedd]] / [[name]] is finished",
+          "nl": "Timer [[namedd]] / [[name]] is afgelopen",
+          "de": "Timer [[namedd]] / [[name]] ist abgelaufen"
         },
         "hint": {
           "en": "This card is activated when a timer with the provided name is finished, not when a timer is prematurely stopped.",
@@ -425,9 +425,9 @@
           "de": "Übergang ist abgelaufen"
         },
         "titleFormatted": {
-          "en": "Transition [[namedd]] (or [[name]]) is finished",
-          "nl": "Transitie [[namedd]] (of [[name]]) is afgelopen",
-          "de": "Übergang [[namedd]] (oder [[name]]) ist abgelaufen"
+          "en": "Transition [[namedd]] / [[name]] is finished",
+          "nl": "Transitie [[namedd]] / [[name]] is afgelopen",
+          "de": "Übergang [[namedd]] / [[name]] ist abgelaufen"
         },
         "hint": {
           "en": "This card is activated when a transition with the provided name is finished, not when a transition is prematurely stopped.",
@@ -486,9 +486,9 @@
           "de": "Stoppuhr ist gestoppt"
         },
         "titleFormatted": {
-          "en": "Stopwatch [[namedd]] (or [[name]]) is stopped",
-          "nl": "Stopwatch [[namedd]] (of [[name]]) is gestopt",
-          "de": "Stoppuhr [[namedd]] (oder [[name]]) ist gestoppt"
+          "en": "Stopwatch [[namedd]] / [[name]] is stopped",
+          "nl": "Stopwatch [[namedd]] / [[name]] is gestopt",
+          "de": "Stoppuhr [[namedd]] / [[name]] ist gestoppt"
         },
         "hint": {
           "en": "This card is activated when a stopwatch with the provided name is stopped.",
@@ -557,9 +557,9 @@
           "de": "Timer ist gestoppt"
         },
         "titleFormatted": {
-          "en": "Timer [[namedd]] (or [[name]]) is stopped",
-          "nl": "Timer [[namedd]] (of [[name]]) is gestopt",
-          "de": "Timer [[namedd]] (oder [[name]]) ist gestoppt"
+          "en": "Timer [[namedd]] / [[name]] is stopped",
+          "nl": "Timer [[namedd]] / [[name]] is gestopt",
+          "de": "Timer [[namedd]] / [[name]] ist gestoppt"
         },
         "hint": {
           "en": "This card is activated when a timer with the provided name is prematurely stopped, not when a timer is finished.",
@@ -628,9 +628,9 @@
           "de": "Übergang ist gestoppt"
         },
         "titleFormatted": {
-          "en": "Transition [[namedd]] (or [[name]]) is stopped",
-          "nl": "Transitie [[namedd]] (of [[name]]) is gestopt",
-          "de": "Übergang [[namedd]] (oder [[name]]) ist gestoppt"
+          "en": "Transition [[namedd]] / [[name]] is stopped",
+          "nl": "Transitie [[namedd]] / [[name]] is gestopt",
+          "de": "Übergang [[namedd]] / [[name]] ist gestoppt"
         },
         "hint": {
           "en": "This card is activated when a transition with the provided name is prematurely stopped, not when a transition is finished.",
@@ -699,9 +699,9 @@
           "de": "Stoppuhr hat eine Dauer erreicht."
         },
         "titleFormatted": {
-          "en": "Stopwatch [[namedd]] (or [[name]]) has reached a duration of [[time]] [[unit]]",
-          "nl": "Stopwatch [[namedd]] (of [[name]]) heeft een looptijd van [[time]] [[unit]] bereikt",
-          "de": "Stoppuhr [[namedd]] (oder [[name]]) hat eine Dauer von [[time]] [[unit]] erreicht"
+          "en": "Stopwatch [[namedd]] / [[name]] has reached a duration of [[time]] [[unit]]",
+          "nl": "Stopwatch [[namedd]] / [[name]] heeft een looptijd van [[time]] [[unit]] bereikt",
+          "de": "Stoppuhr [[namedd]] / [[name]] hat eine Dauer von [[time]] [[unit]] erreicht"
         },
         "hint": {
           "en": "This card is activated when a stopwatch with the provided name has reached a specific duration.",
@@ -824,9 +824,9 @@
           "de": "Timer hat eine Dauer erreicht"
         },
         "titleFormatted": {
-          "en": "Timer [[namedd]] (or [[name]]) has reached a duration of [[time]] [[unit]]",
-          "nl": "Timer [[namedd]] (of [[name]]) heeft een looptijd van [[time]] [[unit]] bereikt",
-          "de": "Timer [[namedd]] (oder [[name]]) hat eine Dauer von [[time]] [[unit]] erreicht"
+          "en": "Timer [[namedd]] / [[name]] has reached a duration of [[time]] [[unit]]",
+          "nl": "Timer [[namedd]] / [[name]] heeft een looptijd van [[time]] [[unit]] bereikt",
+          "de": "Timer [[namedd]] / [[name]] hat eine Dauer von [[time]] [[unit]] erreicht"
         },
         "hint": {
           "en": "This card is activated when a timer with the provided name has reached a specific duration.",
@@ -949,9 +949,9 @@
           "de": "Übergang hat einen Schritt"
         },
         "titleFormatted": {
-          "en": "Transition [[namedd]] (or [[name]]) has reached a step",
-          "nl": "Transitie [[namedd]] (of [[name]]) heeft een stap bereikt",
-          "de": "Übergang [[namedd]] (oder [[name]]) hat einen Schritt erreicht"
+          "en": "Transition [[namedd]] / [[name]] has reached a step",
+          "nl": "Transitie [[namedd]] / [[name]] heeft een stap bereikt",
+          "de": "Übergang [[namedd]] / [[name]] hat einen Schritt erreicht"
         },
         "hint": {
           "en": "This card is activated when a transition with the provided name has reached a step.",
@@ -1050,9 +1050,9 @@
           "de": "Stoppuhr ist pausiert"
         },
         "titleFormatted": {
-          "en": "Stopwatch [[namedd]] (or [[name]]) is paused",
-          "nl": "Stopwatch [[namedd]] (of [[name]]) is gepauzeerd",
-          "de": "Stoppuhr [[namedd]] (oder [[name]]) ist pausiert"
+          "en": "Stopwatch [[namedd]] / [[name]] is paused",
+          "nl": "Stopwatch [[namedd]] / [[name]] is gepauzeerd",
+          "de": "Stoppuhr [[namedd]] / [[name]] ist pausiert"
         },
         "hint": {
           "en": "This card is activated when a stopwatch with the provided name is paused.",
@@ -1121,9 +1121,9 @@
           "de": "Timer ist pausiert"
         },
         "titleFormatted": {
-          "en": "Timer [[namedd]] (or [[name]]) is paused",
-          "nl": "Timer [[namedd]] (of [[name]]) is gepauzeerd",
-          "de": "Timer [[namedd]] (oder [[name]]) ist pausiert"
+          "en": "Timer [[namedd]] / [[name]] is paused",
+          "nl": "Timer [[namedd]] / [[name]] is gepauzeerd",
+          "de": "Timer [[namedd]] / [[name]] ist pausiert"
         },
         "hint": {
           "en": "This card is activated when a timer with the provided name is paused.",
@@ -1192,9 +1192,9 @@
           "de": "Übergang ist pausiert"
         },
         "titleFormatted": {
-          "en": "Transition [[namedd]] (or [[name]]) is paused",
-          "nl": "Transitie [[namedd]] (of [[name]]) is gepauzeerd",
-          "de": "Übergang [[namedd]] (oder [[name]]) ist pausiert"
+          "en": "Transition [[namedd]] / [[name]] is paused",
+          "nl": "Transitie [[namedd]] / [[name]] is gepauzeerd",
+          "de": "Übergang [[namedd]] / [[name]] ist pausiert"
         },
         "hint": {
           "en": "This card is activated when a transition with the provided name is paused.",
@@ -1265,9 +1265,9 @@
           "de": "Stopwatch läuft oder nicht"
         },
         "titleFormatted": {
-          "en": "Stopwatch [[namedd]] (or [[name]]) !{{is running|is not running}}",
-          "nl": "Stopwatch [[namedd]] (of [[name]]) !{{loopt|loopt niet}}",
-          "de": "Stopwatch [[namedd]] (oder [[name]]) !{{läuft|läuft nicht}}"
+          "en": "Stopwatch [[namedd]] / [[name]] !{{is running|is not running}}",
+          "nl": "Stopwatch [[namedd]] / [[name]] !{{loopt|loopt niet}}",
+          "de": "Stopwatch [[namedd]] / [[name]] !{{läuft|läuft nicht}}"
         },
         "hint": {
           "en": "Use this card to run or cancel a flow depending on the run state of the stopwatch with the provided name.",
@@ -1310,9 +1310,9 @@
           "de": "Timer läuft oder nicht"
         },
         "titleFormatted": {
-          "en": "Timer [[namedd]] (or [[name]]) !{{is running|is not running}}",
-          "nl": "Timer [[namedd]] (of [[name]]) !{{loopt|loopt niet}}",
-          "de": "Timer [[namedd]] (oder [[name]]) !{{läuft|läuft nicht}}"
+          "en": "Timer [[namedd]] / [[name]] !{{is running|is not running}}",
+          "nl": "Timer [[namedd]] / [[name]] !{{loopt|loopt niet}}",
+          "de": "Timer [[namedd]] / [[name]] !{{läuft|läuft nicht}}"
         },
         "hint": {
           "en": "Use this card to run or cancel a flow depending on the run state of the timer with the provided name.",
@@ -1355,9 +1355,9 @@
           "de": "Übergang läuft oder nicht"
         },
         "titleFormatted": {
-          "en": "Transition [[namedd]] (or [[name]]) !{{is running|is not running}}",
-          "nl": "Transitie [[namedd]] (of [[name]]) !{{loopt|loopt niet}}",
-          "de": "Übergang [[namedd]] (oder [[name]]) !{{läuft|läuft nicht}}"
+          "en": "Transition [[namedd]] / [[name]] !{{is running|is not running}}",
+          "nl": "Transitie [[namedd]] / [[name]] !{{loopt|loopt niet}}",
+          "de": "Übergang [[namedd]] / [[name]] !{{läuft|läuft nicht}}"
         },
         "hint": {
           "en": "Use this card to run or cancel a flow depending on the run state of the transition with the provided name.",
@@ -1400,9 +1400,9 @@
           "de": "Stopwatch länger oder kürzer als"
         },
         "titleFormatted": {
-          "en": "Stopwatch [[namedd]] (or [[name]]) has a duration !{{longer|shorter}} than [[time]] [[unit]]",
-          "nl": "Stopwatch [[namedd]] (of [[name]]) heeft een looptijd !{{langer|korter}} dan [[time]] [[unit]]",
-          "de": "Stopwatch [[namedd]] (oder [[name]]) hat eine Dauer !{{länger|kürzer}} als [[time]] [[unit]]"
+          "en": "Stopwatch [[namedd]] / [[name]] has a duration !{{longer|shorter}} than [[time]] [[unit]]",
+          "nl": "Stopwatch [[namedd]] / [[name]] heeft een looptijd !{{langer|korter}} dan [[time]] [[unit]]",
+          "de": "Stopwatch [[namedd]] / [[name]] hat eine Dauer !{{länger|kürzer}} als [[time]] [[unit]]"
         },
         "hint": {
           "en": "Use this card to run or cancel a flow depending on the duration of the stopwatch with the provided name.",
@@ -1499,9 +1499,9 @@
           "de": "Timer länger oder kurzer als"
         },
         "titleFormatted": {
-          "en": "Timer [[namedd]] (or [[name]]) has a duration !{{longer|shorter}} than [[time]] [[unit]]",
-          "nl": "Timer [[namedd]] (of [[name]]) heeft een looptijd !{{langer|korter}} dan [[time]] [[unit]]",
-          "de": "Timer [[namedd]] (oder [[name]]) hat eine Dauer !{{länger|kürzer}} als [[time]] [[unit]]"
+          "en": "Timer [[namedd]] / [[name]] has a duration !{{longer|shorter}} than [[time]] [[unit]]",
+          "nl": "Timer [[namedd]] / [[name]] heeft een looptijd !{{langer|korter}} dan [[time]] [[unit]]",
+          "de": "Timer [[namedd]] / [[name]] hat eine Dauer !{{länger|kürzer}} als [[time]] [[unit]]"
         },
         "hint": {
           "en": "Use this card to run or cancel a flow depending on the duration of the timer with the provided name.",
@@ -1598,9 +1598,9 @@
           "de": "Übergang länger oder kurzer als"
         },
         "titleFormatted": {
-          "en": "Transition [[namedd]] (or [[name]]) has a duration !{{longer|shorter}} than [[time]] [[unit]]",
-          "nl": "Transitie [[namedd]] (of [[name]]) heeft een looptijd !{{langer|korter}} dan [[time]] [[unit]]",
-          "de": "Übergang [[namedd]] (oder [[name]]) hat eine Dauer !{{länger|kürzer}} als [[time]] [[unit]]"
+          "en": "Transition [[namedd]] / [[name]] has a duration !{{longer|shorter}} than [[time]] [[unit]]",
+          "nl": "Transitie [[namedd]] / [[name]] heeft een looptijd !{{langer|korter}} dan [[time]] [[unit]]",
+          "de": "Übergang [[namedd]] / [[name]] hat eine Dauer !{{länger|kürzer}} als [[time]] [[unit]]"
         },
         "hint": {
           "en": "Use this card to run or cancel a flow depending on the duration of the transition with the provided name.",
@@ -1884,9 +1884,9 @@
           "de": "Get the duration of a timer"
         },
         "titleFormatted": {
-          "en": "Get the elapsed/remaining duration of timer [[namedd]] (or [[name]])",
-          "nl": "Krijg de verstreken/resterend duur van timer [[namedd]] (of [[name]])",
-          "de": "Abfrage abgelaufen/verbleibend Timerlaufzeit [[namedd]] (oder [[name]])"
+          "en": "Get the elapsed/remaining duration of timer [[namedd]] / [[name]]",
+          "nl": "Krijg de verstreken/resterend duur van timer [[namedd]] / [[name]]",
+          "de": "Abfrage abgelaufen/verbleibend Timerlaufzeit [[namedd]] / [[name]]"
         },
         "args": [
           {
@@ -2067,9 +2067,9 @@
           "de": "Get the duration of a transition"
         },
         "titleFormatted": {
-          "en": "Get the elapsed/remaining duration of transition [[namedd]] (or [[name]])",
-          "nl": "Krijg de verstreken/resterend duur van transition [[namedd]] (of [[name]])",
-          "de": "Abfrage abgelaufen/verbleibend Dauer von Übergang [[namedd]] (oder [[name]])"
+          "en": "Get the elapsed/remaining duration of transition [[namedd]] / [[name]]",
+          "nl": "Krijg de verstreken/resterend duur van transition [[namedd]] / [[name]]",
+          "de": "Abfrage abgelaufen/verbleibend Dauer von Übergang [[namedd]] / [[name]]"
         },
         "args": [
           {
@@ -2250,9 +2250,9 @@
           "de": "Stoppuhr starten oder ersetzen"
         },
         "titleFormatted": {
-          "en": "Start or replace stopwatch [[namedd]] (or [[name]])",
-          "nl": "Start of vervang stopwatch [[namedd]] (of [[name]])",
-          "de": "Stoppuhr starten oder ersetzen [[namedd]] (oder [[name]])"
+          "en": "Start or replace stopwatch [[namedd]] / [[name]]",
+          "nl": "Start of vervang stopwatch [[namedd]] / [[name]]",
+          "de": "Stoppuhr starten oder ersetzen [[namedd]] / [[name]]"
         },
         "hint": {
           "en": "Use this card to start a stopwatch with the provided name. If a stopwatch with the same name is already running, it is replaced.",
@@ -2296,9 +2296,9 @@
           "de": "Timer starten oder ersetzen"
         },
         "titleFormatted": {
-          "en": "Start or replace timer [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
-          "nl": "Start of vervang timer [[namedd]] (of [[name]]) met een looptijd van [[time]] [[unit]]",
-          "de": "Timer [[namedd]] (oder [[name]]) mit einer Dauer von [[time]] [[unit]] starten oder ersetzen"
+          "en": "Start or replace timer [[namedd]] / [[name]] with a duration of [[time]] [[unit]]",
+          "nl": "Start of vervang timer [[namedd]] / [[name]] met een looptijd van [[time]] [[unit]]",
+          "de": "Timer [[namedd]] / [[name]] mit einer Dauer von [[time]] [[unit]] starten oder ersetzen"
         },
         "hint": {
           "en": "Use this card to start a new timer with the provided name and duration. If a timer with the same name already exists, it is replaced.",
@@ -2395,9 +2395,9 @@
           "de": "Timer starten oder ersetzen"
         },
         "titleFormatted": {
-          "en": "Start or replace timer [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
-          "nl": "Start of vervang timer [[namedd]] (of [[name]]) met een looptijd van [[time]] [[unit]]",
-          "de": "Timer [[namedd]] (oder [[name]]) mit einer Dauer von [[time]] [[unit]] starten oder ersetzen"
+          "en": "Start or replace timer [[namedd]] / [[name]] with a duration of [[time]] [[unit]]",
+          "nl": "Start of vervang timer [[namedd]] / [[name]] met een looptijd van [[time]] [[unit]]",
+          "de": "Timer [[namedd]] / [[name]] mit einer Dauer von [[time]] [[unit]] starten oder ersetzen"
         },
         "hint": {
           "en": "Use this card to start a new timer with the provided name and duration. If a timer with the same name already exists, it is replaced.",
@@ -2492,9 +2492,9 @@
           "de": "Übergang starten oder ersetzen"
         },
         "titleFormatted": {
-          "en": "Start or replace transition [[namedd]] (or [[name]]) from [[from]] to [[to]] in [[steps]] steps during [[time]] [[unit]]",
-          "nl": "Start of vervang transitie [[namedd]] (of [[name]]) van [[from]] naar [[to]] in [[steps]] stappen gedurende [[time]] [[unit]]",
-          "de": "Übergang [[namedd]] (oder [[name]]) von [[from]] nach [[to]] in [[steps]] Schritten während [[time]] [[unit]] starten oder ersetzen"
+          "en": "Start or replace transition [[namedd]] / [[name]] from [[from]] to [[to]] in [[steps]] steps during [[time]] [[unit]]",
+          "nl": "Start of vervang transitie [[namedd]] / [[name]] van [[from]] naar [[to]] in [[steps]] stappen gedurende [[time]] [[unit]]",
+          "de": "Übergang [[namedd]] / [[name]] von [[from]] nach [[to]] in [[steps]] Schritten während [[time]] [[unit]] starten oder ersetzen"
         },
         "hint": {
           "en": "Use this card to start a new transition with the provided name, duration and steps. If a transition with the same name already exists, it is replaced.",
@@ -2622,9 +2622,9 @@
           "de": "Stoppuhr starten oder fortsetzen"
         },
         "titleFormatted": {
-          "en": "Start or resume stopwatch [[namedd]] (or [[name]])",
-          "nl": "Start of hervat stopwatch [[namedd]] (of [[name]])",
-          "de": "Stoppuhr starten oder fortsetzen [[namedd]] (oder [[name]])"
+          "en": "Start or resume stopwatch [[namedd]] / [[name]]",
+          "nl": "Start of hervat stopwatch [[namedd]] / [[name]]",
+          "de": "Stoppuhr starten oder fortsetzen [[namedd]] / [[name]]"
         },
         "hint": {
           "en": "Use this card to start a stopwatch with the provided name. If a stopwatch with the same name is already running, it is resumed.",
@@ -2668,9 +2668,9 @@
           "de": "Timer starten oder fortsetzen"
         },
         "titleFormatted": {
-          "en": "Start or resume timer [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
-          "nl": "Start of hervat timer [[namedd]] (of [[name]]) met een looptijd van [[time]] [[unit]]",
-          "de": "Timer [[namedd]] (oder [[name]]) mit einer Dauer von [[time]] [[unit]] starten oder fortsetzen"
+          "en": "Start or resume timer [[namedd]] / [[name]] with a duration of [[time]] [[unit]]",
+          "nl": "Start of hervat timer [[namedd]] / [[name]] met een looptijd van [[time]] [[unit]]",
+          "de": "Timer [[namedd]] / [[name]] mit einer Dauer von [[time]] [[unit]] starten oder fortsetzen"
         },
         "hint": {
           "en": "Use this card to start a new timer with the provided name and duration. If a timer with the same name already exists, it is resumed.",
@@ -2767,9 +2767,9 @@
           "de": "Timer starten oder fortsetzen"
         },
         "titleFormatted": {
-          "en": "Start or resume timer [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
-          "nl": "Start of hervat timer [[namedd]] (of [[name]]) met een looptijd van [[time]] [[unit]]",
-          "de": "Timer [[namedd]] (oder [[name]]) mit einer Dauer von [[time]] [[unit]] starten oder fortsetzen"
+          "en": "Start or resume timer [[namedd]] / [[name]] with a duration of [[time]] [[unit]]",
+          "nl": "Start of hervat timer [[namedd]] / [[name]] met een looptijd van [[time]] [[unit]]",
+          "de": "Timer [[namedd]] / [[name]] mit einer Dauer von [[time]] [[unit]] starten oder fortsetzen"
         },
         "hint": {
           "en": "Use this card to start a new timer with the provided name and duration. If a timer with the same name already exists, it is resumed.",
@@ -2864,9 +2864,9 @@
           "de": "Übergang starten oder fortsetzen"
         },
         "titleFormatted": {
-          "en": "Start or resume transition [[namedd]] (or [[name]]) from [[from]] to [[to]] in [[steps]] steps during [[time]] [[unit]]",
-          "nl": "Start of hervat transitie [[namedd]] (of [[name]]) van [[from]] naar [[to]] in [[steps]] stappen gedurende [[time]] [[unit]]",
-          "de": "Übergang [[namedd]] (oder [[name]]) von [[from]] nach [[to]] in [[steps]] Schritten während [[time]] [[unit]] starten oder fortsetzen"
+          "en": "Start or resume transition [[namedd]] / [[name]] from [[from]] to [[to]] in [[steps]] steps during [[time]] [[unit]]",
+          "nl": "Start of hervat transitie [[namedd]] / [[name]] van [[from]] naar [[to]] in [[steps]] stappen gedurende [[time]] [[unit]]",
+          "de": "Übergang [[namedd]] / [[name]] von [[from]] nach [[to]] in [[steps]] Schritten während [[time]] [[unit]] starten oder fortsetzen"
         },
         "hint": {
           "en": "Use this card to start a new transition with the provided name, duration and steps. If a transition with the same name already exists, it is replaced.",
@@ -2994,9 +2994,9 @@
           "de": "Pausiere Stoppuhr"
         },
         "titleFormatted": {
-          "en": "Pause stopwatch [[namedd]] (or [[name]])",
-          "nl": "Pauzeer stopwatch [[namedd]] (of [[name]])",
-          "de": "Pausiere Stoppuhr [[namedd]] (oder [[name]])"
+          "en": "Pause stopwatch [[namedd]] / [[name]]",
+          "nl": "Pauzeer stopwatch [[namedd]] / [[name]]",
+          "de": "Pausiere Stoppuhr [[namedd]] / [[name]]"
         },
         "hint": {
           "en": "Use this card to pause a stopwatch with the provided name.",
@@ -3039,9 +3039,9 @@
           "de": "Timer pausieren"
         },
         "titleFormatted": {
-          "en": "Pause timer [[namedd]] (or [[name]])",
-          "nl": "Pauzeer timer [[namedd]] (of [[name]])",
-          "de": "Timer anhalten [[namedd]] (oder [[name]])"
+          "en": "Pause timer [[namedd]] / [[name]]",
+          "nl": "Pauzeer timer [[namedd]] / [[name]]",
+          "de": "Timer anhalten [[namedd]] / [[name]]"
         },
         "hint": {
           "en": "Use this card to pause a timer with the provided name.",
@@ -3084,9 +3084,9 @@
           "de": "Übergang pausieren"
         },
         "titleFormatted": {
-          "en": "Pause transition [[namedd]] (or [[name]])",
-          "nl": "Pauzeer transitie [[namedd]] (of [[name]])",
-          "de": "Übergang anhalten [[namedd]] (oder [[name]])"
+          "en": "Pause transition [[namedd]] / [[name]]",
+          "nl": "Pauzeer transitie [[namedd]] / [[name]]",
+          "de": "Übergang anhalten [[namedd]] / [[name]]"
         },
         "hint": {
           "en": "Use this card to pause a transition with the provided name.",
@@ -3130,9 +3130,9 @@
           "de": "Stoppuhr einstellen"
         },
         "titleFormatted": {
-          "en": "Adjust stopwatch [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
-          "nl": "Pas stopwatch [[namedd]] (of [[name]]) aan met een looptijd van [[time]] [[unit]]",
-          "de": "Stellen Sie die Stoppuhr [[namedd]] (oder [[name]]) mit einer Dauer von [[time]] [[unit]] ein"
+          "en": "Adjust stopwatch [[namedd]] / [[name]] with a duration of [[time]] [[unit]]",
+          "nl": "Pas stopwatch [[namedd]] / [[name]] aan met een looptijd van [[time]] [[unit]]",
+          "de": "Stellen Sie die Stoppuhr [[namedd]] / [[name]] mit einer Dauer von [[time]] [[unit]] ein"
         },
         "hint": {
           "en": "Use this card to adjust the duration of the stopwatch with the provided name. Use a positive duration to extend the stopwatch, or a negative duration to shorten the stopwatch.",
@@ -3228,9 +3228,9 @@
           "de": "Stoppuhr einstellen"
         },
         "titleFormatted": {
-          "en": "Adjust stopwatch [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
-          "nl": "Pas stopwatch [[namedd]] (of [[name]]) aan met een looptijd van [[time]] [[unit]]",
-          "de": "Stellen Sie die Stoppuhr [[namedd]] (oder [[name]]) mit einer Dauer von [[time]] [[unit]] ein"
+          "en": "Adjust stopwatch [[namedd]] / [[name]] with a duration of [[time]] [[unit]]",
+          "nl": "Pas stopwatch [[namedd]] / [[name]] aan met een looptijd van [[time]] [[unit]]",
+          "de": "Stellen Sie die Stoppuhr [[namedd]] / [[name]] mit einer Dauer von [[time]] [[unit]] ein"
         },
         "hint": {
           "en": "Use this card to adjust the duration of the stopwatch with the provided name. Use a positive duration to extend the stopwatch, or a negative duration to shorten the stopwatch.",
@@ -3326,9 +3326,9 @@
           "de": "Timer justieren"
         },
         "titleFormatted": {
-          "en": "Adjust timer [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
-          "nl": "Pas timer [[namedd]] (of [[name]]) aan met een looptijd van [[time]] [[unit]]",
-          "de": "Timer [[namedd]] (oder [[name]]) mit einer Dauer von [[time]] [[unit]] einstellen"
+          "en": "Adjust timer [[namedd]] / [[name]] with a duration of [[time]] [[unit]]",
+          "nl": "Pas timer [[namedd]] / [[name]] aan met een looptijd van [[time]] [[unit]]",
+          "de": "Timer [[namedd]] / [[name]] mit einer Dauer von [[time]] [[unit]] einstellen"
         },
         "hint": {
           "en": "Use this card to adjust the duration of the timer with the provided name. Use a negative duration to extend the timer, or a positive duration to shorten the timer. One can't extend the duration, when the new duration will be longer than the timer's original duration. One can't shorten the duration, when the new duration will be lower than zero.",
@@ -3424,9 +3424,9 @@
           "de": "Timer justieren"
         },
         "titleFormatted": {
-          "en": "Adjust timer [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
-          "nl": "Pas timer [[namedd]] (of [[name]]) aan met een looptijd van [[time]] [[unit]]",
-          "de": "Timer [[namedd]] (oder [[name]]) mit einer Dauer von [[time]] [[unit]] einstellen"
+          "en": "Adjust timer [[namedd]] / [[name]] with a duration of [[time]] [[unit]]",
+          "nl": "Pas timer [[namedd]] / [[name]] aan met een looptijd van [[time]] [[unit]]",
+          "de": "Timer [[namedd]] / [[name]] mit einer Dauer von [[time]] [[unit]] einstellen"
         },
         "hint": {
           "en": "Use this card to adjust the duration of the timer with the provided name. Use a negative duration to extend the timer, or a positive duration to shorten the timer. One can't extend the duration, when the new duration will be longer than the timer's original duration. One can't shorten the duration, when the new duration will be lower than zero.",
@@ -3521,9 +3521,9 @@
           "de": "Übergang justieren"
         },
         "titleFormatted": {
-          "en": "Adjust transition [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
-          "nl": "Pas transitie [[namedd]] (of [[name]]) aan met een looptijd van [[time]] [[unit]]",
-          "de": "Übergang [[namedd]] (oder [[name]]) mit einer Dauer von [[time]] [[unit]] einstellen"
+          "en": "Adjust transition [[namedd]] / [[name]] with a duration of [[time]] [[unit]]",
+          "nl": "Pas transitie [[namedd]] / [[name]] aan met een looptijd van [[time]] [[unit]]",
+          "de": "Übergang [[namedd]] / [[name]] mit einer Dauer von [[time]] [[unit]] einstellen"
         },
         "hint": {
           "en": "Use this card to adjust the duration of the transition with the provided name. Use a negative duration to extend the transition, or a positive duration to shorten the transition. One can't extend the duration, when the new duration will be longer than the transition's original duration. One can't shorten the duration, when the new duration will be lower than zero.",
@@ -3618,9 +3618,9 @@
           "de": "Stoppe Stopuhr"
         },
         "titleFormatted": {
-          "en": "Stop stopwatch [[namedd]] (or [[name]])",
-          "nl": "Stop stopwatch [[namedd]] (of [[name]])",
-          "de": "Stoppe Stopuhren [[namedd]] (oder [[name]])"
+          "en": "Stop stopwatch [[namedd]] / [[name]]",
+          "nl": "Stop stopwatch [[namedd]] / [[name]]",
+          "de": "Stoppe Stopuhren [[namedd]] / [[name]]"
         },
         "hint": {
           "en": "Use this card to stop a stopwatch with the provided name.",
@@ -3663,9 +3663,9 @@
           "de": "Timer anhalten"
         },
         "titleFormatted": {
-          "en": "Stop timer [[namedd]] (or [[name]])",
-          "nl": "Stop timer [[namedd]] (of [[name]])",
-          "de": "Timer stoppen [[namedd]] (oder [[name]])"
+          "en": "Stop timer [[namedd]] / [[name]]",
+          "nl": "Stop timer [[namedd]] / [[name]]",
+          "de": "Timer stoppen [[namedd]] / [[name]]"
         },
         "hint": {
           "en": "Use this card to stop a timer with the provided name.",
@@ -3708,9 +3708,9 @@
           "de": "Übergang anhalten"
         },
         "titleFormatted": {
-          "en": "Stop transition [[namedd]] (or [[name]])",
-          "nl": "Stop transitie [[namedd]] (of [[name]])",
-          "de": "Übergang stoppen [[namedd]] (oder [[name]])"
+          "en": "Stop transition [[namedd]] / [[name]]",
+          "nl": "Stop transitie [[namedd]] / [[name]]",
+          "de": "Übergang stoppen [[namedd]] / [[name]]"
         },
         "hint": {
           "en": "Use this card to stop a transition with the provided name.",

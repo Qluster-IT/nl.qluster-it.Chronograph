@@ -7,14 +7,14 @@
 
 	},
 	"titleFormatted": {
-		"en": "Stop timer [[namedd]] (or [[name]])",
-		"nl": "Stop timer [[namedd]] (of [[name]])",
-		"de": "Timer stoppen [[namedd]] (oder [[name]])"
+		"en": "Stop timer [[namedd]] / [[name]]",
+		"nl": "Stop timer [[namedd]] / [[name]]",
+		"de": "Timer stoppen [[namedd]] / [[name]]"
 	},
 	"hint": {
-		"en": "Use this card to stop a timer with the provided name.",
-		"nl": "Gebruik dit kaartje om een timer te stoppen met de ingevoerde naam.",
-		"de": "Verwende diese Karte um einen Timer mit dem angegebenen Namen zu stoppen."
+		"en": "Use this card to stop a timer with the provided name.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.",
+		"nl": "Gebruik dit kaartje om een timer te stoppen met de ingevoerde naam.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.",
+		"de": "Verwende diese Karte um einen Timer mit dem angegebenen Namen zu stoppen.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind."
 
 	},
 	"args": [

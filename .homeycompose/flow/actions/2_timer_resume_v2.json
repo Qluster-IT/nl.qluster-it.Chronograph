@@ -6,14 +6,14 @@
 		"de": "Timer starten oder fortsetzen"
 	},
 	"titleFormatted": {
-		"en": "Start or resume timer [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
-		"nl": "Start of hervat timer [[namedd]] (of [[name]]) met een looptijd van [[time]] [[unit]]",
-		"de": "Timer [[namedd]] (oder [[name]]) mit einer Dauer von [[time]] [[unit]] starten oder fortsetzen"
+		"en": "Start or resume timer [[namedd]] / [[name]] with a duration of [[time]] [[unit]]",
+		"nl": "Start of hervat timer [[namedd]] / [[name]] met een looptijd van [[time]] [[unit]]",
+		"de": "Timer [[namedd]] / [[name]] mit einer Dauer von [[time]] [[unit]] starten oder fortsetzen"
 	},
 	"hint": {
-		"en": "Use this card to start a new timer with the provided name and duration. If a timer with the same name already exists, it is resumed.",
-		"nl": "Gebruik dit kaartje om een timer te starten met de ingevoerde naam en looptijd. Als er al een timer met dezelfde naam loopt dan wordt deze hervat.",
-		"de": "Verwende diese Karte um einen neuen Timer mit dem angegebenen Namen und der angegebenen Dauer zu starten. Wenn bereits ein Timer mit dem gleichen Namen vorhanden ist, wird er fortgesetzt."
+		"en": "Use this card to start a new timer with the provided name and duration. If a timer with the same name already exists, it is resumed.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.",
+		"nl": "Gebruik dit kaartje om een timer te starten met de ingevoerde naam en looptijd. Als er al een timer met dezelfde naam loopt dan wordt deze hervat.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.",
+		"de": "Verwende diese Karte um einen neuen Timer mit dem angegebenen Namen und der angegebenen Dauer zu starten. Wenn bereits ein Timer mit dem gleichen Namen vorhanden ist, wird er fortgesetzt.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind."
 	},
 	"args": [
 		{

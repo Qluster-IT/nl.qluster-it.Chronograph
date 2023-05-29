@@ -6,14 +6,14 @@
 		"de": "Timer ist gestoppt"
 	},
 	"titleFormatted": {
-		"en": "Timer [[namedd]] (or [[name]]) is stopped",
-		"nl": "Timer [[namedd]] (of [[name]]) is gestopt",
-		"de": "Timer [[namedd]] (oder [[name]]) ist gestoppt"
+		"en": "Timer [[namedd]] / [[name]] is stopped",
+		"nl": "Timer [[namedd]] / [[name]] is gestopt",
+		"de": "Timer [[namedd]] / [[name]] ist gestoppt"
 	},
 	"hint": {
-		"en": "This card is activated when a timer with the provided name is prematurely stopped, not when a timer is finished.",
-		"nl": "Dit kaartje wordt geactiveerd als een timer met de ingevoerde naam vroegtijdig is gestopt, niet als een timer is afgelopen.",
-		"de": "Diese Karte wird aktiviert wenn ein Timer mit dem angegebenen Namen vorzeitig gestoppt ist, nicht wenn ein Timer abgelaufen ist."
+		"en": "This card is activated when a timer with the provided name is prematurely stopped, not when a timer is finished.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.",
+		"nl": "Dit kaartje wordt geactiveerd als een timer met de ingevoerde naam vroegtijdig is gestopt, niet als een timer is afgelopen.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.",
+		"de": "Diese Karte wird aktiviert wenn ein Timer mit dem angegebenen Namen vorzeitig gestoppt ist, nicht wenn ein Timer abgelaufen ist.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind."
 	},
 	"args": [
 		{

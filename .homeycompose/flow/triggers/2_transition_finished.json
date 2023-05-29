@@ -6,14 +6,14 @@
 		"de": "Übergang ist abgelaufen"
 	},
 	"titleFormatted": {
-		"en": "Transition [[namedd]] (or [[name]]) is finished",
-		"nl": "Transitie [[namedd]] (of [[name]]) is afgelopen",
-		"de": "Übergang [[namedd]] (oder [[name]]) ist abgelaufen"
+		"en": "Transition [[namedd]] / [[name]] is finished",
+		"nl": "Transitie [[namedd]] / [[name]] is afgelopen",
+		"de": "Übergang [[namedd]] / [[name]] ist abgelaufen"
 	},
 	"hint": {
-		"en": "This card is activated when a transition with the provided name is finished, not when a transition is prematurely stopped.",
-		"nl": "Dit kaartje wordt geactiveerd als een transitie met de ingevoerde naam is afgelopen, niet als een transitie vroegtijdig is gestopt.",
-		"de": "Diese Karte wird aktiviert wenn ein Übergang mit dem angegebenen Namen abgelaufen ist, nicht wenn ein Übergang vorzeitig gestoppt ist."
+		"en": "This card is activated when a transition with the provided name is finished, not when a transition is prematurely stopped.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.",
+		"nl": "Dit kaartje wordt geactiveerd als een transitie met de ingevoerde naam is afgelopen, niet als een transitie vroegtijdig is gestopt.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.",
+		"de": "Diese Karte wird aktiviert wenn ein Übergang mit dem angegebenen Namen abgelaufen ist, nicht wenn ein Übergang vorzeitig gestoppt ist.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind."
 	},
 	"args": [
 		{

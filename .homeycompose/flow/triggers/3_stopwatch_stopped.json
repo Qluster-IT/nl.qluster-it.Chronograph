@@ -7,14 +7,14 @@
 			"de": "Stoppuhr ist gestoppt"
 		},
 		"titleFormatted": {
-			"en": "Stopwatch [[namedd]] (or [[name]]) is stopped",
-			"nl": "Stopwatch [[namedd]] (of [[name]]) is gestopt",
-			"de": "Stoppuhr [[namedd]] (oder [[name]]) ist gestoppt"
+			"en": "Stopwatch [[namedd]] / [[name]] is stopped",
+			"nl": "Stopwatch [[namedd]] / [[name]] is gestopt",
+			"de": "Stoppuhr [[namedd]] / [[name]] ist gestoppt"
 		},
 		"hint": {
-			"en": "This card is activated when a stopwatch with the provided name is stopped.",
-			"nl": "Dit kaartje wordt geactiveerd als een stopwatch met de ingevoerde naam is gestopt.",
-			"de": "Diese Karte wird aktiviert wenn eine Stoppuhr mit dem angegebenen Namen gestoppt ist."
+			"en": "This card is activated when a stopwatch with the provided name is stopped.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.",
+			"nl": "Dit kaartje wordt geactiveerd als een stopwatch met de ingevoerde naam is gestopt.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.",
+			"de": "Diese Karte wird aktiviert wenn eine Stoppuhr mit dem angegebenen Namen gestoppt ist.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind."
 		},
 		"args": [
 			{

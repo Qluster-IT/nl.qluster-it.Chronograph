@@ -6,14 +6,14 @@
 		"de": "Timer länger oder kurzer als"
 	},
 	"titleFormatted": {
-		"en": "Timer [[namedd]] (or [[name]]) has a duration !{{longer|shorter}} than [[time]] [[unit]]",
-		"nl": "Timer [[namedd]] (of [[name]]) heeft een looptijd !{{langer|korter}} dan [[time]] [[unit]]",
-		"de": "Timer [[namedd]] (oder [[name]]) hat eine Dauer !{{länger|kürzer}} als [[time]] [[unit]]"
+		"en": "Timer [[namedd]] / [[name]] has a duration !{{longer|shorter}} than [[time]] [[unit]]",
+		"nl": "Timer [[namedd]] / [[name]] heeft een looptijd !{{langer|korter}} dan [[time]] [[unit]]",
+		"de": "Timer [[namedd]] / [[name]] hat eine Dauer !{{länger|kürzer}} als [[time]] [[unit]]"
 	},
 	"hint": {
-		"en": "Use this card to run or cancel a flow depending on the duration of the timer with the provided name.",
-		"nl": "Gebruik dit kaartje om een flow wel of niet uit te voeren afhankelijk van de looptijd van de timer met de ingevoerde naam.",
-		"de": "Verwende diese Karte um einen Flow abhängig von der Dauer des Timers mit dem angegebenen Namen auszuführen oder abzubrechen."
+		"en": "Use this card to run or cancel a flow depending on the duration of the timer with the provided name.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.",
+		"nl": "Gebruik dit kaartje om een flow wel of niet uit te voeren afhankelijk van de looptijd van de timer met de ingevoerde naam.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.",
+		"de": "Verwende diese Karte um einen Flow abhängig von der Dauer des Timers mit dem angegebenen Namen auszuführen oder abzubrechen.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind."
 	},
 	"args": [
 		{

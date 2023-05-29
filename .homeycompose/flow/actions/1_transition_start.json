@@ -6,14 +6,14 @@
 		"de": "Übergang starten oder ersetzen"
 	},
 	"titleFormatted": {
-		"en": "Start or replace transition [[namedd]] (or [[name]]) from [[from]] to [[to]] in [[steps]] steps during [[time]] [[unit]]",
-		"nl": "Start of vervang transitie [[namedd]] (of [[name]]) van [[from]] naar [[to]] in [[steps]] stappen gedurende [[time]] [[unit]]",
-		"de": "Übergang [[namedd]] (oder [[name]]) von [[from]] nach [[to]] in [[steps]] Schritten während [[time]] [[unit]] starten oder ersetzen"
+		"en": "Start or replace transition [[namedd]] / [[name]] from [[from]] to [[to]] in [[steps]] steps during [[time]] [[unit]]",
+		"nl": "Start of vervang transitie [[namedd]] / [[name]] van [[from]] naar [[to]] in [[steps]] stappen gedurende [[time]] [[unit]]",
+		"de": "Übergang [[namedd]] / [[name]] von [[from]] nach [[to]] in [[steps]] Schritten während [[time]] [[unit]] starten oder ersetzen"
 	},
 	"hint": {
-		"en": "Use this card to start a new transition with the provided name, duration and steps. If a transition with the same name already exists, it is replaced.",
-		"nl": "Gebruik dit kaartje om een transitie te starten met de ingevoerde naam, looptijd en stappen. Als er al een transitie met dezelfde naam loopt dan wordt deze vervangen.",
-		"de": "Verwende diese Karte um einen neuen Ubergang mit dem angegebenen Namen, Dauer und Schritten zu starten. Wenn bereits ein Ubergang mit dem gleichen Namen vorhanden ist, wird er ersetzt."
+		"en": "Use this card to start a new transition with the provided name, duration and steps. If a transition with the same name already exists, it is replaced.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.",
+		"nl": "Gebruik dit kaartje om een transitie te starten met de ingevoerde naam, looptijd en stappen. Als er al een transitie met dezelfde naam loopt dan wordt deze vervangen.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.",
+		"de": "Verwende diese Karte um einen neuen Ubergang mit dem angegebenen Namen, Dauer und Schritten zu starten. Wenn bereits ein Ubergang mit dem gleichen Namen vorhanden ist, wird er ersetzt.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind."
 	},
 	"args": [
 		{

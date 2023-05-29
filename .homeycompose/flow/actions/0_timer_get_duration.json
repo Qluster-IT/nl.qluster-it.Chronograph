@@ -6,9 +6,14 @@
 		"de": "Get the duration of a timer"
 	},
 	"titleFormatted": {
-		"en": "Get the elapsed/remaining duration of timer [[namedd]] (or [[name]])",
-		"nl": "Krijg de verstreken/resterend duur van timer [[namedd]] (of [[name]])",
-		"de": "Abfrage abgelaufen/verbleibend Timerlaufzeit [[namedd]] (oder [[name]])"
+		"en": "Get the elapsed/remaining duration of timer [[namedd]] / [[name]]",
+		"nl": "Krijg de verstreken/resterend duur van timer [[namedd]] / [[name]]",
+		"de": "Abfrage abgelaufen/verbleibend Timerlaufzeit [[namedd]] / [[name]]"
+	},
+	"hint": {
+		"en": "You can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.",
+		"nl": "U kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.",
+		"de": "Sie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind."
 	},
 	"args": [
 		{

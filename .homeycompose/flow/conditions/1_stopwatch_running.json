@@ -6,14 +6,14 @@
 		"de": "Stopwatch läuft oder nicht"
 	},
 	"titleFormatted": {
-		"en": "Stopwatch [[namedd]] (or [[name]]) !{{is running|is not running}}",
-		"nl": "Stopwatch [[namedd]] (of [[name]]) !{{loopt|loopt niet}}",
-		"de": "Stopwatch [[namedd]] (oder [[name]]) !{{läuft|läuft nicht}}"
+		"en": "Stopwatch [[namedd]] / [[name]] !{{is running|is not running}}",
+		"nl": "Stopwatch [[namedd]] / [[name]] !{{loopt|loopt niet}}",
+		"de": "Stopwatch [[namedd]] / [[name]] !{{läuft|läuft nicht}}"
 	},
 	"hint": {
-		"en": "Use this card to run or cancel a flow depending on the run state of the stopwatch with the provided name.",
-		"nl": "Gebruik dit kaartje om een flow wel of niet uit te voeren afhankelijk van de loop status van de stopwatch met de ingevoerde naam.",
-		"de": "Verwende diese Karte um einen Flow abhängig vom Betriebsstatus der Stoppuhr mit dem angegebenen Namen auszuführen oder abzubrechen."
+		"en": "Use this card to run or cancel a flow depending on the run state of the stopwatch with the provided name.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.",
+		"nl": "Gebruik dit kaartje om een flow wel of niet uit te voeren afhankelijk van de loop status van de stopwatch met de ingevoerde naam.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.",
+		"de": "Verwende diese Karte um einen Flow abhängig vom Betriebsstatus der Stoppuhr mit dem angegebenen Namen auszuführen oder abzubrechen.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind."
 	},
 	"args": [
 		{

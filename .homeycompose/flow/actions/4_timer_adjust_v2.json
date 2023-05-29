@@ -6,14 +6,14 @@
 		"de": "Timer justieren"
 	},
 	"titleFormatted": {
-		"en": "Adjust timer [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
-		"nl": "Pas timer [[namedd]] (of [[name]]) aan met een looptijd van [[time]] [[unit]]",
-		"de": "Timer [[namedd]] (oder [[name]]) mit einer Dauer von [[time]] [[unit]] einstellen"
+		"en": "Adjust timer [[namedd]] / [[name]] with a duration of [[time]] [[unit]]",
+		"nl": "Pas timer [[namedd]] / [[name]] aan met een looptijd van [[time]] [[unit]]",
+		"de": "Timer [[namedd]] / [[name]] mit einer Dauer von [[time]] [[unit]] einstellen"
 	},
 	"hint": {
-		"en": "Use this card to adjust the duration of the timer with the provided name. Use a negative duration to extend the timer, or a positive duration to shorten the timer. One can't extend the duration, when the new duration will be longer than the timer's original duration. One can't shorten the duration, when the new duration will be lower than zero.",
-		"nl": "Gebruik dit kaartje om de looptijd van de timer met de ingevoerde naam aan te passen. Gebruik een negative looptijd om de timer te verlengen, of een positive looptijd om de timer te verkorten. Men kan de duur niet verlengen, wanneer de nieuwe duur langer zal zijn dan de oorspronkelijke duur van de timer. Men kan de looptijd niet verkorten, wanneer de nieuwe looptijd lager dan nul zal zijn.",
-		"de": "Verwende diese Karte um die Dauer des Timers mit dem angegebenen Namen anzupassen. Verwende eine negative Dauer um den Timer zu verlängern oder eine positive Dauer um den Timer zu verkürzen. Man kann die Dauer nicht verlängern, wenn die neue Dauer länger als die ursprüngliche Dauer des Timers sein wird. Man kann die Dauer nicht verkürzen, wenn die neue Dauer kleiner als Null sein wird."
+		"en": "Use this card to adjust the duration of the timer with the provided name. Use a negative duration to extend the timer, or a positive duration to shorten the timer. One can't extend the duration, when the new duration will be longer than the timer's original duration. One can't shorten the duration, when the new duration will be lower than zero.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.",
+		"nl": "Gebruik dit kaartje om de looptijd van de timer met de ingevoerde naam aan te passen. Gebruik een negative looptijd om de timer te verlengen, of een positive looptijd om de timer te verkorten. Men kan de duur niet verlengen, wanneer de nieuwe duur langer zal zijn dan de oorspronkelijke duur van de timer. Men kan de looptijd niet verkorten, wanneer de nieuwe looptijd lager dan nul zal zijn.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.",
+		"de": "Verwende diese Karte um die Dauer des Timers mit dem angegebenen Namen anzupassen. Verwende eine negative Dauer um den Timer zu verlängern oder eine positive Dauer um den Timer zu verkürzen. Man kann die Dauer nicht verlängern, wenn die neue Dauer länger als die ursprüngliche Dauer des Timers sein wird. Man kann die Dauer nicht verkürzen, wenn die neue Dauer kleiner als Null sein wird.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind."
 	},
 	"args": [
 		{

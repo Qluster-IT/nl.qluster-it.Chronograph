@@ -7,14 +7,14 @@
 			"de": "Stoppuhr hat eine Dauer erreicht."
 		},
 		"titleFormatted": {
-			"en": "Stopwatch [[namedd]] (or [[name]]) has reached a duration of [[time]] [[unit]]",
-			"nl": "Stopwatch [[namedd]] (of [[name]]) heeft een looptijd van [[time]] [[unit]] bereikt",
-			"de": "Stoppuhr [[namedd]] (oder [[name]]) hat eine Dauer von [[time]] [[unit]] erreicht"
+			"en": "Stopwatch [[namedd]] / [[name]] has reached a duration of [[time]] [[unit]]",
+			"nl": "Stopwatch [[namedd]] / [[name]] heeft een looptijd van [[time]] [[unit]] bereikt",
+			"de": "Stoppuhr [[namedd]] / [[name]] hat eine Dauer von [[time]] [[unit]] erreicht"
 		},
 		"hint": {
-			"en": "This card is activated when a stopwatch with the provided name has reached a specific duration.",
-			"nl": "Dit kaartje wordt geactiveerd als een stopwatch met de ingevoerde naam een bepaalde looptijd heeft bereikt.",
-			"de": "Diese Karte wird aktiviert wenn eine Stoppuhr mit dem angegebenen Namen eine bestimmte Dauer erreicht hat."
+			"en": "This card is activated when a stopwatch with the provided name has reached a specific duration.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.",
+			"nl": "Dit kaartje wordt geactiveerd als een stopwatch met de ingevoerde naam een bepaalde looptijd heeft bereikt.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.",
+			"de": "Diese Karte wird aktiviert wenn eine Stoppuhr mit dem angegebenen Namen eine bestimmte Dauer erreicht hat.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind."
 		},
 		"args": [
 			{

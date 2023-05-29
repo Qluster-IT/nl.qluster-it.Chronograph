@@ -7,14 +7,14 @@
 		"de": "Stoppuhr einstellen"
 	},
 	"titleFormatted": {
-		"en": "Adjust stopwatch [[namedd]] (or [[name]]) with a duration of [[time]] [[unit]]",
-		"nl": "Pas stopwatch [[namedd]] (of [[name]]) aan met een looptijd van [[time]] [[unit]]",
-		"de": "Stellen Sie die Stoppuhr [[namedd]] (oder [[name]]) mit einer Dauer von [[time]] [[unit]] ein"
+		"en": "Adjust stopwatch [[namedd]] / [[name]] with a duration of [[time]] [[unit]]",
+		"nl": "Pas stopwatch [[namedd]] / [[name]] aan met een looptijd van [[time]] [[unit]]",
+		"de": "Stellen Sie die Stoppuhr [[namedd]] / [[name]] mit einer Dauer von [[time]] [[unit]] ein"
 	},
 	"hint": {
-		"en": "Use this card to adjust the duration of the stopwatch with the provided name. Use a positive duration to extend the stopwatch, or a negative duration to shorten the stopwatch.",
-		"nl": "Gebruik dit kaartje om de looptijd van de stopwatch met de ingevoerde naam aan te passen. Gebruik een positive looptijd om de stopwatch te verlengen, of een negative looptijd om de stopwatch te verkorten.",
-		"de": "Verwende diese Karte um die Dauer der Stoppuhr mit dem angegebenen Namen anzupassen. Verwende eine positive Dauer um die Stoppuhr zu verlängern oder eine negative Dauer um die Stoppuhr zu verkürzen."
+		"en": "Use this card to adjust the duration of the stopwatch with the provided name. Use a positive duration to extend the stopwatch, or a negative duration to shorten the stopwatch.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.",
+		"nl": "Gebruik dit kaartje om de looptijd van de stopwatch met de ingevoerde naam aan te passen. Gebruik een positive looptijd om de stopwatch te verlengen, of een negative looptijd om de stopwatch te verkorten.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.",
+		"de": "Verwende diese Karte um die Dauer der Stoppuhr mit dem angegebenen Namen anzupassen. Verwende eine positive Dauer um die Stoppuhr zu verlängern oder eine negative Dauer um die Stoppuhr zu verkürzen.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind."
 	},
 	"args": [
 		{

@@ -7,15 +7,15 @@
 
 	},
 	"titleFormatted": {
-		"en": "Start or resume stopwatch [[namedd]] (or [[name]])",
-		"nl": "Start of hervat stopwatch [[namedd]] (of [[name]])",
-		"de": "Stoppuhr starten oder fortsetzen [[namedd]] (oder [[name]])"
+		"en": "Start or resume stopwatch [[namedd]] / [[name]]",
+		"nl": "Start of hervat stopwatch [[namedd]] / [[name]]",
+		"de": "Stoppuhr starten oder fortsetzen [[namedd]] / [[name]]"
 
 	},
 	"hint": {
-		"en": "Use this card to start a stopwatch with the provided name. If a stopwatch with the same name is already running, it is resumed.",
-		"nl": "Gebruik dit kaartje om een stopwatch te starten met de ingevoerde naam. Als er al een stopwatch met dezelfde naam loopt dan wordt deze hervat.",
-		"de": "Verwende diese Karte um eine Stoppuhr mit dem angegebenen Namen zu starten. Wenn bereits eine Stoppuhr mit dem gleichen Namen läuft, wird sie fortgesetzt."
+		"en": "Use this card to start a stopwatch with the provided name. If a stopwatch with the same name is already running, it is resumed.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.",
+		"nl": "Gebruik dit kaartje om een stopwatch te starten met de ingevoerde naam. Als er al een stopwatch met dezelfde naam loopt dan wordt deze hervat.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.",
+		"de": "Verwende diese Karte um eine Stoppuhr mit dem angegebenen Namen zu starten. Wenn bereits eine Stoppuhr mit dem gleichen Namen läuft, wird sie fortgesetzt.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind."
 
 	},
 	"args": [
