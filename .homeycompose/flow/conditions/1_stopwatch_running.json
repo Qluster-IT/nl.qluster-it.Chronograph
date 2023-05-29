@@ -39,7 +39,12 @@
 				"nl": "Naam",
 				"de": "Name"
 			},
-			"type": "text"
+			"type": "text",
+			"placeholder": {
+				"en": "Type a name",
+				"nl": "Type een naam",
+				"de": "Geben Sie einen Namen ein"
+			}
 		}
 	]
 }

@@ -1757,9 +1757,14 @@
           "de": "Get the elapsed duration of a stopwatch"
         },
         "titleFormatted": {
-          "en": "Get the elapsed duration of stopwatch [[namedd]] (or [[name]])",
-          "nl": "Krijg de verlopen duur van stopwatch [[namedd]] (of [[name]])",
-          "de": "Abfrage der verstrichenen Stoppuhrzeit [[namedd]] (oder [[name]])"
+          "en": "Get the elapsed duration of stopwatch [[namedd]] / [[name]]",
+          "nl": "Krijg de verlopen duur van stopwatch [[namedd]] / [[name]]",
+          "de": "Abfrage der verstrichenen Stoppuhrzeit [[namedd]] / [[name]]"
+        },
+        "hint": {
+          "en": "You can either select a name, or type and select it, or type a name in the name field.",
+          "nl": "U kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.",
+          "de": "Sie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben."
         },
         "args": [
           {
@@ -1785,7 +1790,12 @@
               "nl": "Naam",
               "de": "Name"
             },
-            "type": "text"
+            "type": "text",
+            "placeholder": {
+              "en": "Type a name",
+              "nl": "Type een naam",
+              "de": "Geben Sie einen Namen ein"
+            }
           }
         ],
         "tokens": [
