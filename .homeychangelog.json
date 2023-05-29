@@ -186,6 +186,9 @@
     "en": "Bugfixed: The setting for Round of numbers from the 'Get the Duration of [x]' flowcards. was not saved correctly."
   },
   "2.0.12": {
-    "en": "Imrpoved: Flow description for get elapsed/remaining flowcards."
+    "en": "Improved: Flow description for get elapsed/remaining flowcards."
+  },
+  "2.1.0": {
+    "en": "Improved: Flow descriptions, hints and argument descriptions."
   }
 }
