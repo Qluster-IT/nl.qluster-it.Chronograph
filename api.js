@@ -19,7 +19,7 @@ let getAllFn = (getter, args, callback) => {
 };
 
 let getOneFn = (getter, args, callback) => {
-	let entity = getter(args.params.id);
+	let entity = getter(args.id);
 	if (!entity) {
 		throw new Error('entity not found');
 		return;
@@ -43,7 +43,7 @@ let getOneFn = (getter, args, callback) => {
 };
 
 let putOneFn = (getter, args, callback) => {
-	let entity = getter(args.params.id);
+	let entity = getter(args.id);
 	if (!entity) {
 		throw new Error('entity not found');
 	}
@@ -78,7 +78,7 @@ let putOneFn = (getter, args, callback) => {
 };
 
 let deleteOneFn = (getter, args, callback) => {
-	let entity = getter(args.params.id);
+	let entity = getter(args.id);
 	if (!entity) {
 		throw new Error('entity not found');
 	}
