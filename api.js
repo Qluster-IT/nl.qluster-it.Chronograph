@@ -19,7 +19,7 @@ let getAllFn = (getter, args, callback) => {
 };
 
 let getOneFn = (getter, args, callback) => {
-	let entity = getter(args.id);
+	let entity = getter(args.params.id);
 	if (!entity) {
 		throw new Error('entity not found');
 		return;
@@ -43,7 +43,7 @@ let getOneFn = (getter, args, callback) => {
 };
 
 let putOneFn = (getter, args, callback) => {
-	let entity = getter(args.id);
+	let entity = getter(args.params.id);
 	if (!entity) {
 		throw new Error('entity not found');
 	}
@@ -78,7 +78,7 @@ let putOneFn = (getter, args, callback) => {
 };
 
 let deleteOneFn = (getter, args, callback) => {
-	let entity = getter(args.id);
+	let entity = getter(args.params.id);
 	if (!entity) {
 		throw new Error('entity not found');
 	}
@@ -93,7 +93,7 @@ module.exports = {
 		return a;
 	},
 	async getTimer({homey, params}) {
-		return getOneFn.call(null, Chronograph.get, params);
+		return getOneFn.call(null, Chronograph.get, {params});
 	},
 	async putTimer({homey, params, body}) {
 		return putOneFn.call(null, Chronograph.get, {params, body});
@@ -107,7 +107,7 @@ module.exports = {
 		return a;
 	},
 	async getStopwatch({homey, params}) {
-		return getOneFn.call(null, Chronograph.get, params);
+		return getOneFn.call(null, Chronograph.get, {params});
 	},
 	async putStopwatch({homey, params, body}) {
 		return putOneFn.call(null, Chronograph.get, {params, body});
@@ -121,7 +121,7 @@ module.exports = {
 		return a;
 	},
 	async getTransition({homey, params}) {
-		return getOneFn.call(null, Chronograph.get, params);
+		return getOneFn.call(null, Chronograph.get, {params});
 	},
 	async putTransition({homey, params, body}) {
 		return putOneFn.call(null, Chronograph.get, {params, body});
@@ -135,7 +135,7 @@ module.exports = {
 		return a;
 	},
 	async getChronograph({homey, params}) {
-		return getOneFn.call(null, Chronograph.get, params);
+		return getOneFn.call(null, Chronograph.get, {params});
 	},
 	async putChronograph({homey, params, body}) {
 		return putOneFn.call(null, Chronograph.get, {params, body});

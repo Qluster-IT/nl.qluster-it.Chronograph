@@ -192,6 +192,9 @@
     "en": "Improved: Flow descriptions, hints and argument descriptions."
   },
   "2.1.1": {
-    "en": "Resolved: the API had a bug because of migration to SDK3 which is now resolved."
+    "en": "Resolved: The API had a bug because of migration to SDK3 which is now resolved."
+  },
+  "2.1.2": {
+    "en": "Resolved: The API still had a bug because of migration to SDK3 which is now resolved."
   }
 }
