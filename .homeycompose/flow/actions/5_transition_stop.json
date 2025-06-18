@@ -12,9 +12,9 @@
 		"de": "Übergang stoppen [[namedd]] / [[name]]"
 	},
 	"hint": {
-		"en": "Use this card to stop a transition with the provided name.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.",
-		"nl": "Gebruik dit kaartje om een transitie te stoppen met de ingevoerde naam.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.",
-		"de": "Verwende diese Karte um einen Übergang mit dem angegebenen Namen zu stoppen.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind."
+		"en": "Use this card to stop a transition with the provided name.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
+		"nl": "Gebruik dit kaartje om een transitie te stoppen met de ingevoerde naam.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
+		"de": "Verwende diese Karte um einen Übergang mit dem angegebenen Namen zu stoppen.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows im Picker angezeigt."
 
 	},
 	"args": [

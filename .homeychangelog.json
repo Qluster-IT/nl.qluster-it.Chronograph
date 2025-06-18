@@ -202,5 +202,8 @@
   },
   "2.1.4": {
     "en": "Resolved: Changed an outdated reference in devices."
+  },
+  "2.1.5": {
+    "en": "Improved: Better hints on flowcards."
   }
 }

@@ -11,9 +11,9 @@
 		"de": "Übergang [[namedd]] / [[name]] von [[from]] nach [[to]] in [[steps]] Schritten während [[time]] [[unit]] starten oder fortsetzen"
 	},
 	"hint": {
-		"en": "Use this card to start a new transition with the provided name, duration and steps. If a transition with the same name already exists, it is replaced.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.",
-		"nl": "Gebruik dit kaartje om een transitie te starten met de ingevoerde naam, looptijd en stappen. Als er al een transitie met dezelfde naam loopt dan wordt deze vervangen.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.",
-		"de": "Verwende diese Karte um einen neuen Ubergang mit dem angegebenen Namen, Dauer und Schritten zu starten. Wenn bereits ein Ubergang mit dem gleichen Namen vorhanden ist, wird er ersetzt.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind."
+		"en": "Use this card to start a new transition with the provided name, duration and steps. If a transition with the same name already exists, it is replaced.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
+		"nl": "Gebruik dit kaartje om een transitie te starten met de ingevoerde naam, looptijd en stappen. Als er al een transitie met dezelfde naam loopt dan wordt deze vervangen.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
+		"de": "Verwende diese Karte um einen neuen Ubergang mit dem angegebenen Namen, Dauer und Schritten zu starten. Wenn bereits ein Ubergang mit dem gleichen Namen vorhanden ist, wird er ersetzt.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows im Picker angezeigt."
 	},
 	"args": [
 		{

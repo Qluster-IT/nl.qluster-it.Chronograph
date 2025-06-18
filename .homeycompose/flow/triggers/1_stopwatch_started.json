@@ -11,9 +11,9 @@
 		"de": "Stoppuhr [[namedd]] / [[name]] ist gestartet"
 	},
 	"hint": {
-		"en": "This card is activated when a stopwatch with the provided name is started.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.",
-		"nl": "Dit kaartje wordt geactiveerd als een stopwatch met de ingevoerde naam is gestart.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.",
-		"de": "Diese Karte wird aktiviert wenn eine Stoppuhr mit dem angegebenen Namen gestartet ist.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind."
+		"en": "This card is activated when a stopwatch with the provided name is started.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
+		"nl": "Dit kaartje wordt geactiveerd als een stopwatch met de ingevoerde naam is gestart.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
+		"de": "Diese Karte wird aktiviert wenn eine Stoppuhr mit dem angegebenen Namen gestartet ist.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows im Picker angezeigt."
 	},
 	"args": [
 		{
