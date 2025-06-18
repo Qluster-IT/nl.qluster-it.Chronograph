@@ -205,5 +205,8 @@
   },
   "2.1.5": {
     "en": "Improved: Better hints on flowcards."
+  },
+  "2.1.6": {
+    "en": "Resolved: Create a notification instead of a possible crash."
   }
 }
