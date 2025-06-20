@@ -443,7 +443,7 @@ class Application extends Homey.App {
 					splits
 						.filter(split => split.name == chronograph.getName())
 						.forEach(split => {
-							let reversedSplit = chronograph.getTargetDuration() - Utils.calculateDuration(split.time, split.unit);
+							let reversedSplit = chronograph.getTargetDuration() - Utils.calculateDuration(split.time, split.unit, true);
 							chronograph.addSplit(reversedSplit, 'milliseconds', split);
 						});
 				}

@@ -211,5 +211,8 @@
   },
   "2.1.7": {
     "en": "Resolved: Create a notification instead of a possible crash (contained a possible bug)."
+  },
+  "2.1.8": {
+    "en": "Resolved: More bugfixing based on errorlog."
   }
 }
