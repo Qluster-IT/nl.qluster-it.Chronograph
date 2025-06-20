@@ -217,5 +217,8 @@
   },
   "2.1.9": {
     "en": "Resolved: More bugfixing based on errorlog."
+  },
+  "2.1.10": {
+    "en": "Resolved: Start timer error on incorrect splits."
   }
 }
