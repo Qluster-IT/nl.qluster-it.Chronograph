@@ -1,66 +1,156 @@
 {
-	"id": "transition_finished",
-	"title": {
-		"en": "Transition is finished",
-		"nl": "Transitie is afgelopen",
-		"de": "Übergang ist abgelaufen"
-	},
-	"titleFormatted": {
-		"en": "Transition [[namedd]] / [[name]] is finished",
-		"nl": "Transitie [[namedd]] / [[name]] is afgelopen",
-		"de": "Übergang [[namedd]] / [[name]] ist abgelaufen"
-	},
-	"hint": {
-		"en": "This card is activated when a transition with the provided name is finished, not when a transition is prematurely stopped.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
-		"nl": "Dit kaartje wordt geactiveerd als een transitie met de ingevoerde naam is afgelopen, niet als een transitie vroegtijdig is gestopt.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
-		"de": "Diese Karte wird aktiviert wenn ein Übergang mit dem angegebenen Namen abgelaufen ist, nicht wenn ein Übergang vorzeitig gestoppt ist.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows im Picker angezeigt."
-	},
-	"args": [
-		{
-			"name": "namedd",
-			"required":false,
-			"type": "autocomplete",
-			"title": {
-				"en": "Pick",
-				"nl": "Kies",
-				"de": "Wählen"
-			},
-			"placeholder": {
-				"en": "Pick or type",
-				"nl": "Kies of type",
-				"de": "Wählen oder eingeben"
-			}
-		},
-		{
-			"name": "name",
-			"required":false,
-			"title": {
-				"en": "Name",
-				"nl": "Naam",
-				"de": "Name"
-			},
-			"type": "text",
-			"placeholder": {
-				"en": "Type a name",
-				"nl": "Type een naam",
-				"de": "Geben Sie einen Namen ein"
-			}
-		}
-	],
-	"tokens": [
-		{
-			"name": "name",
-			"type": "string",
-			"title": {
-				"en": "Name",
-				"nl": "Naam",
-				"de": "Name"
-			},
-			"example": {
-				"en": "bathroom",
-				"nl": "badkamer",
-				"de": "Badezimmer"
-			}
-		}
-	]
+  "id": "transition_finished",
+  "title": {
+    "en": "Transition is finished",
+    "nl": "Transitie is afgelopen",
+    "da": "Overgangen er færdig",
+    "de": "Übergang ist abgelaufen",
+    "es": "La transición ha terminado.",
+    "fr": "La transition est terminée.",
+    "it": "La transizione è completata",
+    "no": "Overgangen er ferdig",
+    "sv": "Övergången är klar",
+    "pl": "Przejście zostało zakończone",
+    "ru": "Переход завершен",
+    "ko": "전환이 완료되었습니다.",
+    "ar": "تم الانتقال بنجاح"
+  },
+  "titleFormatted": {
+    "en": "Transition [[namedd]] / [[name]] is finished",
+    "nl": "Transitie [[namedd]] / [[name]] is afgelopen",
+    "da": "Overgangen [[namedd]] / [[name]] er færdig",
+    "de": "Übergang [[namedd]] / [[name]] ist abgelaufen",
+    "es": "La transición [[namedd]] / [[name]] ha finalizado.",
+    "fr": "La transition [[namedd]] / [[name]] est terminée.",
+    "it": "La transizione [[namedd]] / [[name]] è terminata.",
+    "no": "Overgangen [[namedd]] / [[name]] er fullført",
+    "sv": "Övergång [[namedd]] / [[name]] är klar",
+    "pl": "Przejście [[namedd]] / [[name]] zostało zakończone",
+    "ru": "Переход [[namedd]] / [[name]] завершен",
+    "ko": "전환 [[namedd]] / [[name]]이(가) 완료되었습니다.",
+    "ar": "الانتقال [[namedd]] / [[name]] قد انتهى"
+  },
+  "hint": {
+    "en": "This card is activated when a transition with the provided name is finished, not when a transition is prematurely stopped.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
+    "nl": "Dit kaartje wordt geactiveerd als een transitie met de ingevoerde naam is afgelopen, niet als een transitie vroegtijdig is gestopt.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
+    "da": "Dette kort aktiveres, når en overgang med det angivne navn er afsluttet, ikke når en overgang stoppes for tidligt. Du kan enten vælge et navn, eller skrive og vælge det, eller skrive et navn i navnefeltet. Vælgeren har forrang, når begge er udfyldt. Navnet vil kun vises i vælgeren efter at have gemt den (aktiverede) flow.",
+    "de": "Diese Karte wird aktiviert wenn ein Übergang mit dem angegebenen Namen abgelaufen ist, nicht wenn ein Übergang vorzeitig gestoppt ist.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows im Picker angezeigt.",
+    "es": "Esta tarjeta se activa cuando una transición con el nombre proporcionado ha finalizado, no cuando una transición se detiene prematuramente. Puedes seleccionar un nombre, o escribirlo y seleccionarlo, o escribir un nombre en el campo de nombre. El Selector tiene prioridad cuando ambos están llenos. El nombre solo aparecerá en el selector después de guardar el flujo (habilitado).",
+    "fr": "Cette carte est activée lorsqu'une transition avec le nom fourni est terminée, et non lorsqu'une transition est arrêtée prématurément. Vous pouvez soit sélectionner un nom, soit le taper et le sélectionner, soit taper un nom dans le champ de nom. Le sélecteur est prioritaire lorsque les deux sont remplis. Le nom n'apparaîtra dans le sélecteur qu'après avoir enregistré le flux (activé).",
+    "it": "Questa scheda si attiva quando una transizione con il nome fornito è completata, non quando una transizione viene interrotta prematuramente. Puoi selezionare un nome, oppure digitarlo e selezionarlo, o digitare un nome nel campo del nome. Il selettore ha la precedenza quando entrambi i campi sono compilati. Il nome apparirà nel selettore solo dopo aver salvato il flusso (abilitato).",
+    "no": "Dette kortet aktiveres når en overgang med det angitte navnet er ferdig, ikke når en overgang stoppes for tidlig. Du kan enten velge et navn, eller skrive og velge det, eller skrive et navn i navnefeltet. Velgeren er ledende når begge er fylt ut. Navnet vil bare vises i velgeren etter at den (aktiverte) flyten er lagret.",
+    "sv": "Det här kortet aktiveras när en övergång med det angivna namnet är avslutad, inte när en övergång stoppas i förtid. Du kan antingen välja ett namn, eller skriva och välja det, eller skriva ett namn i namnfältet. Väljaren är ledande när båda är ifyllda. Namnet kommer bara att visas i väljaren efter att det (aktiverade) flödet har sparats.",
+    "pl": "Ta karta jest aktywowana, gdy zakończy się przejście o podanej nazwie, a nie gdy przejście zostanie przedwcześnie zatrzymane. Możesz wybrać nazwę, wpisać i wybrać ją, lub wpisać nazwę w polu nazwy. Picker ma pierwszeństwo, gdy oba pola są wypełnione. Nazwa pojawi się w pickerze dopiero po zapisaniu (włączonego) przepływu.",
+    "ru": "Эта карта активируется, когда переход с указанным именем завершен, а не когда переход преждевременно остановлен. Вы можете либо выбрать имя, либо ввести и выбрать его, либо ввести имя в поле имени. Если оба поля заполнены, приоритет имеет выбор из списка. Имя появится в списке только после сохранения (включенного) потока.",
+    "ko": "이 카드는 제공된 이름의 전환이 완료될 때 활성화되며, 전환이 조기에 중단될 때는 활성화되지 않습니다. 이름을 선택하거나 입력하여 선택할 수 있으며, 이름 필드에 직접 입력할 수도 있습니다. 둘 다 입력된 경우 선택기가 우선합니다. 이름은 (활성화된) 플로우를 저장한 후에만 선택기에 나타납니다.",
+    "ar": "يتم تفعيل هذه البطاقة عند انتهاء الانتقال بالاسم المقدم، وليس عند توقف الانتقال بشكل مبكر. يمكنك إما اختيار اسم، أو كتابته واختياره، أو كتابة اسم في حقل الاسم. يكون المُختار هو السائد عندما يتم ملء كلاهما. سيظهر الاسم في المُختار فقط بعد حفظ التدفق (المُمكّن)."
+  },
+  "args": [
+    {
+      "name": "namedd",
+      "required": false,
+      "type": "autocomplete",
+      "title": {
+        "en": "Pick",
+        "nl": "Kies",
+        "da": "Vælg",
+        "de": "Wählen",
+        "es": "Elegir",
+        "fr": "Choisir",
+        "it": "Scegliere",
+        "no": "Velg",
+        "sv": "Välj",
+        "pl": "Wybierz",
+        "ru": "Выбрать",
+        "ko": "선택하세요",
+        "ar": "اختر"
+      },
+      "placeholder": {
+        "en": "Pick or type",
+        "nl": "Kies of type",
+        "da": "Vælg eller skriv",
+        "de": "Wählen oder eingeben",
+        "es": "Elige o escribe",
+        "fr": "Choisissez ou tapez",
+        "it": "Scegli o digita",
+        "no": "Velg eller skriv inn",
+        "sv": "Välj eller skriv",
+        "pl": "Wybierz lub wpisz",
+        "ru": "Выберите или введите",
+        "ko": "선택하거나 입력하세요",
+        "ar": "اختر أو اكتب"
+      }
+    },
+    {
+      "name": "name",
+      "required": false,
+      "title": {
+        "en": "Name",
+        "nl": "Naam",
+        "da": "Navn",
+        "de": "Name",
+        "es": "Nombre",
+        "fr": "Nom",
+        "it": "Nome",
+        "no": "Navn",
+        "sv": "Namn",
+        "pl": "Nazwa",
+        "ru": "Имя",
+        "ko": "이름",
+        "ar": "الاسم"
+      },
+      "type": "text",
+      "placeholder": {
+        "en": "Type a name",
+        "nl": "Type een naam",
+        "da": "Indtast et navn",
+        "de": "Geben Sie einen Namen ein",
+        "es": "Escribe un nombre",
+        "fr": "Tapez un nom",
+        "it": "Digita un nome",
+        "no": "Skriv inn et navn",
+        "sv": "Skriv ett namn",
+        "pl": "Wpisz nazwę",
+        "ru": "Введите имя",
+        "ko": "이름을 입력하세요",
+        "ar": "اكتب اسمًا"
+      }
+    }
+  ],
+  "tokens": [
+    {
+      "name": "name",
+      "type": "string",
+      "title": {
+        "en": "Name",
+        "nl": "Naam",
+        "da": "Navn",
+        "de": "Name",
+        "es": "Nombre",
+        "fr": "Nom",
+        "it": "Nome",
+        "no": "Navn",
+        "sv": "Namn",
+        "pl": "Nazwa",
+        "ru": "Имя",
+        "ko": "이름",
+        "ar": "الاسم"
+      },
+      "example": {
+        "en": "bathroom",
+        "nl": "badkamer",
+        "da": "badeværelse",
+        "de": "Badezimmer",
+        "es": "baño",
+        "fr": "salle de bain",
+        "it": "bagno",
+        "no": "bad",
+        "sv": "badrum",
+        "pl": "łazienka",
+        "ru": "ванная комната",
+        "ko": "욕실",
+        "ar": "حمام"
+      }
+    }
+  ]
 }

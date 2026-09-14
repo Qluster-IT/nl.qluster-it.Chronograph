@@ -1,0 +1,29 @@
+{
+  "timer_not_running": "المؤقت __name__ غير متوقف.",
+  "stopwatch_not_running": "ساعة التوقف __name__ غير متوقفة.",
+  "transition_not_running": "الانتقال __name__ غير متوقف.",
+  "invalid_duration": "مدة غير صالحة.",
+  "invalid_transition": "انتقال غير صالح.",
+  "invalid_name": "اسم غير صالح.",
+  "name_required": "تحتاج إلى كتابة (واختيار) اسم أو إدخال اسم.",
+  "existing": "موجود",
+  "new": "جديد",
+  "settings": {
+    "timers": "المؤقتات",
+    "stopwatches": "ساعات التوقف",
+    "transitions": "الانتقالات",
+    "no_active_timers": "لا توجد مؤقتات نشطة.",
+    "no_active_stopwatches": "لا توجد ساعات توقف نشطة.",
+    "no_active_transitions": "لا توجد انتقالات نشطة.",
+    "no_timers": "لا توجد مؤقتات.",
+    "no_stopwatches": "لا توجد ساعات توقف.",
+    "no_transitions": "لا توجد انتقالات.",
+    "days_abbreviation": "ي",
+    "stop": "إيقاف",
+    "pause": "إيقاف مؤقت",
+    "resume": "استئناف",
+    "roundOfDurationsFlowcards": "تقريب الأرقام من بطاقات التدفق ‘احصل على مدة [x]’.",
+    "save": "حفظ",
+    "saved": "تم الحفظ."
+  }
+}

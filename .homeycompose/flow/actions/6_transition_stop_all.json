@@ -1,14 +1,33 @@
 {
-	"id": "transition_stop_all",
-	"title": {
-		"en": "Stop all transitions",
-		"nl": "Stop alle transities",
-		"de": "Alle Übergänge anhalten"
-
-	},
-	"hint": {
-		"en": "Use this card to stop all running transitions.",
-		"nl": "Gebruik dit kaartje om alle transities te stoppen.",
-		"de": "Verwende diese Karte um alle laufenden Übergange zu stoppen."
-	}
+  "id": "transition_stop_all",
+  "title": {
+    "en": "Stop all transitions",
+    "nl": "Stop alle transities",
+    "da": "Stop alle overgange",
+    "de": "Alle Übergänge anhalten",
+    "es": "Detener todas las transiciones",
+    "fr": "Arrêter toutes les transitions",
+    "it": "Ferma tutte le transizioni",
+    "no": "Stopp alle overganger",
+    "sv": "Stoppa alla övergångar",
+    "pl": "Zatrzymaj wszystkie przejścia",
+    "ru": "Остановить все переходы",
+    "ko": "모든 전환 중지",
+    "ar": "إيقاف جميع الانتقالات"
+  },
+  "hint": {
+    "en": "Use this card to stop all running transitions.",
+    "nl": "Gebruik dit kaartje om alle transities te stoppen.",
+    "da": "Brug dette kort til at stoppe alle igangværende overgange.",
+    "de": "Verwende diese Karte um alle laufenden Übergange zu stoppen.",
+    "es": "Usa esta tarjeta para detener todas las transiciones en curso.",
+    "fr": "Utilisez cette carte pour arrêter toutes les transitions en cours.",
+    "it": "Usa questa scheda per fermare tutte le transizioni in corso.",
+    "no": "Bruk dette kortet for å stoppe alle pågående overganger.",
+    "sv": "Använd det här kortet för att stoppa alla pågående övergångar.",
+    "pl": "Użyj tej karty, aby zatrzymać wszystkie trwające przejścia.",
+    "ru": "Используйте эту карточку, чтобы остановить все текущие переходы.",
+    "ko": "이 카드를 사용하여 모든 진행 중인 전환을 중지하세요.",
+    "ar": "استخدم هذه البطاقة لإيقاف جميع التحولات الجارية."
+  }
 }

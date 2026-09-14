@@ -1,14 +1,24 @@
 {
-	"id": "button_startstop",
-	"type": "boolean",
-	"title": {
-		"en": "Start / Stop",
-		"nl": "Starten / Stoppen",
-		"de": "Start / Stopp"
-	},
-	"getable": true,
-	"setable": true,
-	"uiComponent": "button",
-	"uiQuickAction": true,
-	"icon": "/assets/play.svg"
+  "id": "button_startstop",
+  "type": "boolean",
+  "title": {
+    "en": "Start / Stop",
+    "nl": "Starten / Stoppen",
+    "da": "Start / Stop",
+    "de": "Start / Stopp",
+    "es": "Iniciar / Detener",
+    "fr": "Démarrer / Arrêter",
+    "it": "Avvia / Ferma",
+    "no": "Start / Stopp",
+    "sv": "Starta / Stoppa",
+    "pl": "Start / Stop",
+    "ru": "Старт / Стоп",
+    "ko": "시작 / 정지",
+    "ar": "ابدأ / أوقف"
+  },
+  "getable": true,
+  "setable": true,
+  "uiComponent": "button",
+  "uiQuickAction": true,
+  "icon": "/assets/play.svg"
 }

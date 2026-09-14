@@ -1,51 +1,120 @@
 {
-	"id": "timer_pause",
-	"title": {
-		"en": "Pause timer",
-		"nl": "Pauzeer timer",
-		"de": "Timer pausieren"
-	},
-	"titleFormatted": {
-		"en": "Pause timer [[namedd]] / [[name]]",
-		"nl": "Pauzeer timer [[namedd]] / [[name]]",
-		"de": "Timer anhalten [[namedd]] / [[name]]"
-
-	},
-	"hint": {
-		"en": "Use this card to pause a timer with the provided name.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
-		"nl": "Gebruik dit kaartje om een timer te pauzeren met de ingevoerde naam.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
-		"de": "Verwende diese Karte um einen Timer mit dem angegebenen Namen anzuhalten.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows im Picker angezeigt."
-	},
-	"args": [
-		{
-			"name": "namedd",
-			"required":false,
-			"type": "autocomplete",
-			"title": {
-				"en": "Pick",
-				"nl": "Kies",
-				"de": "Wählen"
-			},
-			"placeholder": {
-				"en": "Pick or type",
-				"nl": "Kies of type",
-				"de": "Wählen oder eingeben"
-			}
-		},
-		{
-			"name": "name",
-			"required":false,
-			"title": {
-				"en": "Name",
-				"nl": "Naam",
-				"de": "Name"
-			},
-			"type": "text",
-			"placeholder": {
-				"en": "Type a name",
-				"nl": "Type een naam",
-				"de": "Geben Sie einen Namen ein"
-			}
-		}
-	]
+  "id": "timer_pause",
+  "title": {
+    "en": "Pause timer",
+    "nl": "Pauzeer timer",
+    "da": "Pause timeren",
+    "de": "Timer pausieren",
+    "es": "Pausar temporizador",
+    "fr": "Mettre le minuteur en pause",
+    "it": "Metti in pausa il timer",
+    "no": "Sett timer på pause",
+    "sv": "Pausa timer",
+    "pl": "Wstrzymaj minutnik",
+    "ru": "Пауза таймера",
+    "ko": "타이머 일시정지",
+    "ar": "إيقاف المؤقت مؤقتًا"
+  },
+  "titleFormatted": {
+    "en": "Pause timer [[namedd]] / [[name]]",
+    "nl": "Pauzeer timer [[namedd]] / [[name]]",
+    "da": "Pause timer [[namedd]] / [[name]]",
+    "de": "Timer anhalten [[namedd]] / [[name]]",
+    "es": "Pausar temporizador [[namedd]] / [[name]]",
+    "fr": "Mettre en pause le minuteur [[namedd]] / [[name]]",
+    "it": "Metti in pausa il timer [[namedd]] / [[name]]",
+    "no": "Pause tidtaker [[namedd]] / [[name]]",
+    "sv": "Pausa timer [[namedd]] / [[name]]",
+    "pl": "Wstrzymaj timer [[namedd]] / [[name]]",
+    "ru": "Приостановить таймер [[namedd]] / [[name]]",
+    "ko": "타이머 [[namedd]] / [[name]] 일시 중지",
+    "ar": "إيقاف مؤقت [[namedd]] / [[name]] مؤقتًا"
+  },
+  "hint": {
+    "en": "Use this card to pause a timer with the provided name.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
+    "nl": "Gebruik dit kaartje om een timer te pauzeren met de ingevoerde naam.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
+    "da": "Brug dette kort til at sætte en timer på pause med det angivne navn. Du kan enten vælge et navn, skrive og vælge det, eller skrive et navn i navnefeltet. Vælgeren har forrang, når begge er udfyldt. Navnet vil først dukke op i vælgeren efter at have gemt den (aktiverede) flow.",
+    "de": "Verwende diese Karte um einen Timer mit dem angegebenen Namen anzuhalten.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows im Picker angezeigt.",
+    "es": "Usa esta tarjeta para pausar un temporizador con el nombre proporcionado. Puedes seleccionar un nombre, escribirlo y seleccionarlo, o escribir un nombre en el campo de nombre. El Selector tiene prioridad cuando ambos están llenos. El nombre solo aparecerá en el selector después de guardar el flujo (habilitado).",
+    "fr": "Utilisez cette carte pour mettre en pause un minuteur avec le nom fourni. Vous pouvez soit sélectionner un nom, soit le taper et le sélectionner, soit taper un nom dans le champ de nom. Le sélecteur est prioritaire lorsque les deux sont remplis. Le nom n'apparaîtra dans le sélecteur qu'après avoir enregistré le flux (activé).",
+    "it": "Usa questa scheda per mettere in pausa un timer con il nome fornito. Puoi selezionare un nome, oppure digitarlo e selezionarlo, o digitare un nome nel campo del nome. Il selettore ha la precedenza quando entrambi sono compilati. Il nome apparirà nel selettore solo dopo aver salvato il flusso (abilitato).",
+    "no": "Bruk dette kortet for å sette en timer på pause med det angitte navnet. Du kan enten velge et navn, eller skrive og velge det, eller skrive et navn i navnefeltet. Velgeren er ledende når begge er fylt ut. Navnet vil bare vises i velgeren etter at den (aktiverte) flyten er lagret.",
+    "sv": "Använd det här kortet för att pausa en timer med det angivna namnet. Du kan antingen välja ett namn, skriva och välja det, eller skriva ett namn i namnfältet. Väljaren har företräde när båda är ifyllda. Namnet kommer bara att visas i väljaren efter att du har sparat det (aktiverade) flödet.",
+    "pl": "Użyj tej karty, aby wstrzymać timer o podanej nazwie. Możesz wybrać nazwę, wpisać i wybrać ją, lub wpisać nazwę w polu nazwy. Picker ma pierwszeństwo, gdy oba pola są wypełnione. Nazwa pojawi się w pickerze dopiero po zapisaniu (włączonego) przepływu.",
+    "ru": "Используйте эту карточку, чтобы приостановить таймер с указанным именем. Вы можете либо выбрать имя, либо ввести и выбрать его, либо ввести имя в поле для имени. Если оба поля заполнены, приоритет имеет выбор из списка. Имя появится в списке только после сохранения (включенного) потока.",
+    "ko": "이 카드를 사용하여 제공된 이름의 타이머를 일시 중지하세요.  \n이름을 선택하거나 입력 후 선택할 수 있으며, 이름 필드에 직접 입력할 수도 있습니다.  \n이름 선택기가 두 필드가 모두 채워졌을 때 우선합니다.  \n이름은 (활성화된) 플로우를 저장한 후에만 선택기에 나타납니다.",
+    "ar": "استخدم هذه البطاقة لإيقاف مؤقت مؤقتًا باستخدام الاسم المقدم. يمكنك إما اختيار اسم، أو كتابته وتحديده، أو كتابة اسم في حقل الاسم. يكون المُختار هو السائد عندما يتم ملء كلاهما. سيظهر الاسم في المُختار فقط بعد حفظ التدفق (المُمكّن)."
+  },
+  "args": [
+    {
+      "name": "namedd",
+      "required": false,
+      "type": "autocomplete",
+      "title": {
+        "en": "Pick",
+        "nl": "Kies",
+        "da": "Vælg",
+        "de": "Wählen",
+        "es": "Elegir",
+        "fr": "Choisir",
+        "it": "Scegliere",
+        "no": "Velg",
+        "sv": "Välj",
+        "pl": "Wybierz",
+        "ru": "Выбрать",
+        "ko": "선택하세요",
+        "ar": "اختر"
+      },
+      "placeholder": {
+        "en": "Pick or type",
+        "nl": "Kies of type",
+        "da": "Vælg eller skriv",
+        "de": "Wählen oder eingeben",
+        "es": "Elige o escribe",
+        "fr": "Choisissez ou tapez",
+        "it": "Scegli o digita",
+        "no": "Velg eller skriv inn",
+        "sv": "Välj eller skriv",
+        "pl": "Wybierz lub wpisz",
+        "ru": "Выберите или введите",
+        "ko": "선택하거나 입력하세요",
+        "ar": "اختر أو اكتب"
+      }
+    },
+    {
+      "name": "name",
+      "required": false,
+      "title": {
+        "en": "Name",
+        "nl": "Naam",
+        "da": "Navn",
+        "de": "Name",
+        "es": "Nombre",
+        "fr": "Nom",
+        "it": "Nome",
+        "no": "Navn",
+        "sv": "Namn",
+        "pl": "Nazwa",
+        "ru": "Имя",
+        "ko": "이름",
+        "ar": "الاسم"
+      },
+      "type": "text",
+      "placeholder": {
+        "en": "Type a name",
+        "nl": "Type een naam",
+        "da": "Indtast et navn",
+        "de": "Geben Sie einen Namen ein",
+        "es": "Escribe un nombre",
+        "fr": "Tapez un nom",
+        "it": "Digita un nome",
+        "no": "Skriv inn et navn",
+        "sv": "Skriv ett namn",
+        "pl": "Wpisz nazwę",
+        "ru": "Введите имя",
+        "ko": "이름을 입력하세요",
+        "ar": "اكتب اسمًا"
+      }
+    }
+  ]
 }

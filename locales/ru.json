@@ -1,0 +1,29 @@
+{
+  "timer_not_running": "Таймер __name__ не запущен.",
+  "stopwatch_not_running": "Секундомер __name__ не запущен.",
+  "transition_not_running": "Переход __name__ не запущен.",
+  "invalid_duration": "Неверная продолжительность.",
+  "invalid_transition": "Неверный переход.",
+  "invalid_name": "Неверное имя.",
+  "name_required": "Вам нужно (ввести и) выбрать имя или введите имя.",
+  "existing": "Существующий",
+  "new": "Новый",
+  "settings": {
+    "timers": "Таймеры",
+    "stopwatches": "Секундомеры",
+    "transitions": "Переходы",
+    "no_active_timers": "Нет активных таймеров.",
+    "no_active_stopwatches": "Нет активных секундомеров.",
+    "no_active_transitions": "Нет активных переходов.",
+    "no_timers": "Нет таймеров.",
+    "no_stopwatches": "Нет секундомеров.",
+    "no_transitions": "Нет переходов.",
+    "days_abbreviation": "д",
+    "stop": "Остановить",
+    "pause": "Пауза",
+    "resume": "Возобновить",
+    "roundOfDurationsFlowcards": "Проход чисел из карточек действия 'Получить продолжительность [x]'.",
+    "save": "Сохранить",
+    "saved": "Сохранено."
+  }
+}

@@ -1,106 +1,235 @@
 {
-	"id": "timer_start",
-	"deprecated": true,
-	"title": {
-		"en": "Start or replace timer",
-		"nl": "Start of vervang timer",
-		"de": "Timer starten oder ersetzen"
-	},
-	"titleFormatted": {
-		"en": "Start or replace timer [[namedd]] / [[name]] with a duration of [[time]] [[unit]]",
-		"nl": "Start of vervang timer [[namedd]] / [[name]] met een looptijd van [[time]] [[unit]]",
-		"de": "Timer [[namedd]] / [[name]] mit einer Dauer von [[time]] [[unit]] starten oder ersetzen"
-	},
-	"hint": {
-		"en": "Use this card to start a new timer with the provided name and duration. If a timer with the same name already exists, it is replaced.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
-		"nl": "Gebruik dit kaartje om een timer te starten met de ingevoerde naam en looptijd. Als er al een timer met dezelfde naam loopt dan wordt deze vervangen.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
-		"de": "Verwende diese Karte um einen neuen Timer mit dem angegebenen Namen und der angegebenen Dauer zu starten. Wenn bereits ein Timer mit dem gleichen Namen vorhanden ist, wird er ersetzt.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows im Picker angezeigt."
-	},
-	"args": [
-		{
-			"name": "namedd",
-			"required":false,
-			"type": "autocomplete",
-			"title": {
-				"en": "Pick",
-				"nl": "Kies",
-				"de": "Wählen"
-			},
-			"placeholder": {
-				"en": "Pick or type",
-				"nl": "Kies of type",
-				"de": "Wählen oder eingeben"
-			}
-		},
-		{
-			"name": "name",
-			"required":false,
-			"title": {
-				"en": "Name",
-				"nl": "Naam",
-				"de": "Name"
-			},
-			"type": "text",
-			"placeholder": {
-				"en": "Type a name",
-				"nl": "Type een naam",
-				"de": "Geben Sie einen Namen ein"
-			}
-		},
-		{
-			"name": "time",
-			"title": {
-				"en": "Duration",
-				"nl": "Looptijd",
-				"de": "Dauer"
-			},
-			"min": 0,
-			"step": 0.01,
-			"type": "number"
-		},
-		{
-			"name": "unit",
-			"title": {
-				"en": "Unit",
-				"nl": "Eenheid",
-				"de": "Einheit"
-			},
-			"type": "dropdown",
-			"values": [
-				{
-					"id": "seconds",
-					"label": {
-						"en": "seconds",
-						"nl": "seconden",
-						"de": "Sekunden"
-					}
-				},
-				{
-					"id": "minutes",
-					"label": {
-						"en": "minutes",
-						"nl": "minuten",
-						"de": "Minuten"
-					}
-				},
-				{
-					"id": "hours",
-					"label": {
-						"en": "hours",
-						"nl": "uren",
-						"de": "Stunden"
-					}
-				},
-				{
-					"id": "days",
-					"label": {
-						"en": "days",
-						"nl": "dagen",
-						"de": "Tage"
-
-					}
-				}
-			]
-		}
-	]
+  "id": "timer_start",
+  "deprecated": true,
+  "title": {
+    "en": "Start or replace timer",
+    "nl": "Start of vervang timer",
+    "da": "Start eller erstat timer",
+    "de": "Timer starten oder ersetzen",
+    "es": "Iniciar o reemplazar temporizador",
+    "fr": "Démarrer ou remplacer le minuteur",
+    "it": "Avvia o sostituisci il timer",
+    "no": "Start eller erstatt timer",
+    "sv": "Starta eller ersätt timer",
+    "pl": "Uruchom lub zastąp minutnik",
+    "ru": "Запустить или заменить таймер",
+    "ko": "타이머 시작 또는 교체",
+    "ar": "ابدأ أو استبدل المؤقت"
+  },
+  "titleFormatted": {
+    "en": "Start or replace timer [[namedd]] / [[name]] with a duration of [[time]] [[unit]]",
+    "nl": "Start of vervang timer [[namedd]] / [[name]] met een looptijd van [[time]] [[unit]]",
+    "da": "Start eller erstat timer [[namedd]] / [[name]] med en varighed på [[time]] [[unit]]",
+    "de": "Timer [[namedd]] / [[name]] mit einer Dauer von [[time]] [[unit]] starten oder ersetzen",
+    "es": "Iniciar o reemplazar el temporizador [[namedd]] / [[name]] con una duración de [[time]] [[unit]]",
+    "fr": "Démarrer ou remplacer le minuteur [[namedd]] / [[name]] avec une durée de [[time]] [[unit]]",
+    "it": "Avvia o sostituisci il timer [[namedd]] / [[name]] con una durata di [[time]] [[unit]]",
+    "no": "Start eller erstatt timer [[namedd]] / [[name]] med en varighet på [[time]] [[unit]]",
+    "sv": "Starta eller ersätt timer [[namedd]] / [[name]] med en varaktighet på [[time]] [[unit]]",
+    "pl": "Uruchom lub zastąp timer [[namedd]] / [[name]] z czasem trwania [[time]] [[unit]]",
+    "ru": "Запустить или заменить таймер [[namedd]] / [[name]] с длительностью [[time]] [[unit]]",
+    "ko": "타이머 [[namedd]] / [[name]]을(를) [[time]] [[unit]] 동안 시작하거나 교체하세요.",
+    "ar": "ابدأ أو استبدل المؤقت [[namedd]] / [[name]] بمدة [[time]] [[unit]]"
+  },
+  "hint": {
+    "en": "Use this card to start a new timer with the provided name and duration. If a timer with the same name already exists, it is replaced.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
+    "nl": "Gebruik dit kaartje om een timer te starten met de ingevoerde naam en looptijd. Als er al een timer met dezelfde naam loopt dan wordt deze vervangen.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
+    "da": "Brug dette kort til at starte en ny timer med det angivne navn og varighed. Hvis der allerede findes en timer med samme navn, bliver den erstattet. Du kan enten vælge et navn, skrive og vælge det, eller skrive et navn i navnefeltet. Vælgeren har forrang, når begge er udfyldt. Navnet vil først dukke op i vælgeren efter at have gemt den (aktiverede) flow.",
+    "de": "Verwende diese Karte um einen neuen Timer mit dem angegebenen Namen und der angegebenen Dauer zu starten. Wenn bereits ein Timer mit dem gleichen Namen vorhanden ist, wird er ersetzt.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows im Picker angezeigt.",
+    "es": "Usa esta tarjeta para iniciar un nuevo temporizador con el nombre y la duración proporcionados. Si ya existe un temporizador con el mismo nombre, será reemplazado. Puedes seleccionar un nombre, escribirlo y seleccionarlo, o escribir un nombre en el campo de nombre. El Selector tiene prioridad cuando ambos están llenos. El nombre solo aparecerá en el selector después de guardar el flujo (habilitado).",
+    "fr": "Utilisez cette carte pour démarrer un nouveau minuteur avec le nom et la durée fournis. Si un minuteur portant le même nom existe déjà, il sera remplacé.  \nVous pouvez soit sélectionner un nom, soit le taper et le sélectionner, soit taper un nom dans le champ de nom.  \nLe sélecteur est prioritaire lorsque les deux sont remplis.  \nLe nom n'apparaîtra dans le sélecteur qu'après avoir enregistré le flux (activé).",
+    "it": "Usa questa scheda per avviare un nuovo timer con il nome e la durata forniti. Se esiste già un timer con lo stesso nome, verrà sostituito. Puoi selezionare un nome, oppure digitarlo e selezionarlo, o digitare un nome nel campo del nome. Il selettore ha la precedenza quando entrambi sono compilati. Il nome apparirà nel selettore solo dopo aver salvato il flusso (abilitato).",
+    "no": "Bruk dette kortet for å starte en ny timer med det angitte navnet og varigheten. Hvis en timer med samme navn allerede finnes, blir den erstattet. Du kan enten velge et navn, skrive og velge det, eller skrive et navn i navnefeltet. Velgeren er ledende når begge er fylt ut. Navnet vil bare vises i velgeren etter at den (aktiverte) flyten er lagret.",
+    "sv": "Använd det här kortet för att starta en ny timer med det angivna namnet och varaktigheten. Om en timer med samma namn redan finns, ersätts den. Du kan antingen välja ett namn, eller skriva och välja det, eller skriva ett namn i namnfältet. Väljaren är ledande när båda är ifyllda. Namnet kommer bara att visas i väljaren efter att du sparat det (aktiverade) flödet.",
+    "pl": "Użyj tej karty, aby rozpocząć nowy timer z podaną nazwą i czasem trwania. Jeśli timer o tej samej nazwie już istnieje, zostanie zastąpiony. Możesz wybrać nazwę, wpisać i wybrać ją, lub wpisać nazwę w polu nazwy. Picker ma pierwszeństwo, gdy oba pola są wypełnione. Nazwa pojawi się w pickerze dopiero po zapisaniu (włączonego) przepływu.",
+    "ru": "Используйте эту карточку, чтобы запустить новый таймер с указанным именем и продолжительностью. Если таймер с таким же именем уже существует, он будет заменен. Вы можете выбрать имя, ввести и выбрать его, или ввести имя в поле для имени. Если оба поля заполнены, приоритет имеет выбор из списка. Имя появится в списке только после сохранения (включенного) потока.",
+    "ko": "이 카드를 사용하여 제공된 이름과 지속 시간으로 새 타이머를 시작하세요. 동일한 이름의 타이머가 이미 존재하는 경우, 그것은 대체됩니다. 이름을 선택하거나 입력하여 선택하거나 이름 필드에 이름을 입력할 수 있습니다. 둘 다 입력된 경우 선택기가 우선합니다. 이름은 (활성화된) 플로우를 저장한 후에만 선택기에 나타납니다.",
+    "ar": "استخدم هذه البطاقة لبدء مؤقت جديد بالاسم والمدة المقدمة. إذا كان هناك مؤقت بنفس الاسم موجود بالفعل، فسيتم استبداله. يمكنك إما اختيار اسم، أو كتابته وتحديده، أو كتابة اسم في حقل الاسم. يكون المُختار هو السائد عندما يتم ملء كلاهما. سيظهر الاسم في المُختار فقط بعد حفظ التدفق (المُمكّن)."
+  },
+  "args": [
+    {
+      "name": "namedd",
+      "required": false,
+      "type": "autocomplete",
+      "title": {
+        "en": "Pick",
+        "nl": "Kies",
+        "da": "Vælg",
+        "de": "Wählen",
+        "es": "Elegir",
+        "fr": "Choisir",
+        "it": "Scegliere",
+        "no": "Velg",
+        "sv": "Välj",
+        "pl": "Wybierz",
+        "ru": "Выбрать",
+        "ko": "선택하세요",
+        "ar": "اختر"
+      },
+      "placeholder": {
+        "en": "Pick or type",
+        "nl": "Kies of type",
+        "da": "Vælg eller skriv",
+        "de": "Wählen oder eingeben",
+        "es": "Elige o escribe",
+        "fr": "Choisissez ou tapez",
+        "it": "Scegli o digita",
+        "no": "Velg eller skriv inn",
+        "sv": "Välj eller skriv",
+        "pl": "Wybierz lub wpisz",
+        "ru": "Выберите или введите",
+        "ko": "선택하거나 입력하세요",
+        "ar": "اختر أو اكتب"
+      }
+    },
+    {
+      "name": "name",
+      "required": false,
+      "title": {
+        "en": "Name",
+        "nl": "Naam",
+        "da": "Navn",
+        "de": "Name",
+        "es": "Nombre",
+        "fr": "Nom",
+        "it": "Nome",
+        "no": "Navn",
+        "sv": "Namn",
+        "pl": "Nazwa",
+        "ru": "Имя",
+        "ko": "이름",
+        "ar": "الاسم"
+      },
+      "type": "text",
+      "placeholder": {
+        "en": "Type a name",
+        "nl": "Type een naam",
+        "da": "Indtast et navn",
+        "de": "Geben Sie einen Namen ein",
+        "es": "Escribe un nombre",
+        "fr": "Tapez un nom",
+        "it": "Digita un nome",
+        "no": "Skriv inn et navn",
+        "sv": "Skriv ett namn",
+        "pl": "Wpisz nazwę",
+        "ru": "Введите имя",
+        "ko": "이름을 입력하세요",
+        "ar": "اكتب اسمًا"
+      }
+    },
+    {
+      "name": "time",
+      "title": {
+        "en": "Duration",
+        "nl": "Looptijd",
+        "da": "Varighed",
+        "de": "Dauer",
+        "es": "Duración",
+        "fr": "Durée",
+        "it": "Durata",
+        "no": "Varighet",
+        "sv": "Varaktighet",
+        "pl": "Czas trwania",
+        "ru": "Продолжительность",
+        "ko": "지속 시간",
+        "ar": "المدة الزمنية"
+      },
+      "min": 0,
+      "step": 0.01,
+      "type": "number"
+    },
+    {
+      "name": "unit",
+      "title": {
+        "en": "Unit",
+        "nl": "Eenheid",
+        "da": "Enhed",
+        "de": "Einheit",
+        "es": "Unidad",
+        "fr": "Unité",
+        "it": "Unità",
+        "no": "Enhet",
+        "sv": "Enhet",
+        "pl": "Jednostka",
+        "ru": "Единица",
+        "ko": "단위",
+        "ar": "وحدة"
+      },
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "seconds",
+          "label": {
+            "en": "seconds",
+            "nl": "seconden",
+            "da": "sekunder",
+            "de": "Sekunden",
+            "es": "segundos",
+            "fr": "secondes",
+            "it": "secondi",
+            "no": "sekunder",
+            "sv": "sekunder",
+            "pl": "sekundy",
+            "ru": "секунды",
+            "ko": "초",
+            "ar": "ثوانٍ"
+          }
+        },
+        {
+          "id": "minutes",
+          "label": {
+            "en": "minutes",
+            "nl": "minuten",
+            "da": "minutter",
+            "de": "Minuten",
+            "es": "minutos",
+            "fr": "minutes",
+            "it": "minuti",
+            "no": "minutter",
+            "sv": "minuter",
+            "pl": "minuty",
+            "ru": "минуты",
+            "ko": "분",
+            "ar": "دقائق"
+          }
+        },
+        {
+          "id": "hours",
+          "label": {
+            "en": "hours",
+            "nl": "uren",
+            "da": "timer",
+            "de": "Stunden",
+            "es": "horas",
+            "fr": "heures",
+            "it": "ore",
+            "no": "timer",
+            "sv": "timmar",
+            "pl": "godziny",
+            "ru": "часы",
+            "ko": "시간",
+            "ar": "ساعات"
+          }
+        },
+        {
+          "id": "days",
+          "label": {
+            "en": "days",
+            "nl": "dagen",
+            "da": "dage",
+            "de": "Tage",
+            "es": "días",
+            "fr": "jours",
+            "it": "giorni",
+            "no": "dager",
+            "sv": "dagar",
+            "pl": "dni",
+            "ru": "дни",
+            "ko": "일",
+            "ar": "أيام"
+          }
+        }
+      ]
+    }
+  ]
 }

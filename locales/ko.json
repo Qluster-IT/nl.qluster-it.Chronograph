@@ -1,0 +1,29 @@
+{
+  "timer_not_running": "타이머 __name__이(가) 실행 중이 아닙니다.",
+  "stopwatch_not_running": "스톱워치 __name__이(가) 실행 중이 아닙니다.",
+  "transition_not_running": "전환 __name__이(가) 실행 중이 아닙니다.",
+  "invalid_duration": "유효하지 않은 기간입니다.",
+  "invalid_transition": "유효하지 않은 전환입니다.",
+  "invalid_name": "유효하지 않은 이름입니다.",
+  "name_required": "이름을 입력하거나 선택해야 합니다.",
+  "existing": "기존의",
+  "new": "새로운",
+  "settings": {
+    "timers": "타이머",
+    "stopwatches": "스톱워치",
+    "transitions": "전환",
+    "no_active_timers": "활성화된 타이머가 없습니다.",
+    "no_active_stopwatches": "활성화된 스톱워치가 없습니다.",
+    "no_active_transitions": "활성화된 전환이 없습니다.",
+    "no_timers": "타이머가 없습니다.",
+    "no_stopwatches": "스톱워치가 없습니다.",
+    "no_transitions": "전환이 없습니다.",
+    "days_abbreviation": "일",
+    "stop": "정지",
+    "pause": "일시 정지",
+    "resume": "다시 시작",
+    "roundOfDurationsFlowcards": "'[x]의 지속 시간 가져오기' 플로우카드의 숫자 반올림.",
+    "save": "저장",
+    "saved": "저장되었습니다."
+  }
+}

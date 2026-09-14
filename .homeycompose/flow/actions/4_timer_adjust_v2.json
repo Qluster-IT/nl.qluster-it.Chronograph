@@ -1,102 +1,232 @@
 {
-	"id": "timer_adjust_v2",
-	"title": {
-		"en": "Adjust timer",
-		"nl": "Pas timer aan",
-		"de": "Timer justieren"
-	},
-	"titleFormatted": {
-		"en": "Adjust timer [[namedd]] / [[name]] with a duration of [[time]] [[unit]]",
-		"nl": "Pas timer [[namedd]] / [[name]] aan met een looptijd van [[time]] [[unit]]",
-		"de": "Timer [[namedd]] / [[name]] mit einer Dauer von [[time]] [[unit]] einstellen"
-	},
-	"hint": {
-		"en": "Use this card to adjust the duration of the timer with the provided name. Use a negative duration to extend the timer, or a positive duration to shorten the timer. One can't extend the duration, when the new duration will be longer than the timer's original duration. One can't shorten the duration, when the new duration will be lower than zero.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
-		"nl": "Gebruik dit kaartje om de looptijd van de timer met de ingevoerde naam aan te passen. Gebruik een negative looptijd om de timer te verlengen, of een positive looptijd om de timer te verkorten. Men kan de duur niet verlengen, wanneer de nieuwe duur langer zal zijn dan de oorspronkelijke duur van de timer. Men kan de looptijd niet verkorten, wanneer de nieuwe looptijd lager dan nul zal zijn.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
-		"de": "Verwende diese Karte um die Dauer des Timers mit dem angegebenen Namen anzupassen. Verwende eine negative Dauer um den Timer zu verlängern oder eine positive Dauer um den Timer zu verkürzen. Man kann die Dauer nicht verlängern, wenn die neue Dauer länger als die ursprüngliche Dauer des Timers sein wird. Man kann die Dauer nicht verkürzen, wenn die neue Dauer kleiner als Null sein wird.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows im Picker angezeigt."
-	},
-	"args": [
-		{
-			"name": "namedd",
-			"required":false,
-			"type": "autocomplete",
-			"title": {
-				"en": "Pick",
-				"nl": "Kies",
-				"de": "Wählen"
-			},
-			"placeholder": {
-				"en": "Pick or type",
-				"nl": "Kies of type",
-				"de": "Wählen oder eingeben"
-			}
-		},
-		{
-			"name": "name",
-			"required":false,
-			"title": {
-				"en": "Name",
-				"nl": "Naam",
-				"de": "Name"
-			},
-			"type": "text",
-			"placeholder": {
-				"en": "Type a name",
-				"nl": "Type een naam",
-				"de": "Geben Sie einen Namen ein"
-			}
-		},
-		{
-			"name": "time",
-			"title": {
-				"en": "Adjustment",
-				"nl": "Wijziging",
-				"de": "Anpassung"
-			},
-			"type": "text"
-		},
-		{
-			"name": "unit",
-			"title": {
-				"en": "Unit",
-				"nl": "Eenheid",
-				"de": "Einheit"
-			},
-			"type": "dropdown",
-			"values": [
-				{
-					"id": "seconds",
-					"label": {
-						"en": "seconds",
-						"nl": "seconden",
-						"de": "Sekunden"
-					}
-				},
-				{
-					"id": "minutes",
-					"label": {
-						"en": "minutes",
-						"nl": "minuten",
-						"de": "Minuten"
-					}
-				},
-				{
-					"id": "hours",
-					"label": {
-						"en": "hours",
-						"nl": "uren",
-						"de": "Stunden"
-					}
-				},
-				{
-					"id": "days",
-					"label": {
-						"en": "days",
-						"nl": "dagen",
-						"de": "Tage"
-					}
-				}
-			]
-		}
-	]
+  "id": "timer_adjust_v2",
+  "title": {
+    "en": "Adjust timer",
+    "nl": "Pas timer aan",
+    "da": "Juster timer",
+    "de": "Timer justieren",
+    "es": "Ajustar temporizador",
+    "fr": "Ajuster le minuteur",
+    "it": "Regola timer",
+    "no": "Juster tidtaker",
+    "sv": "Justera timer",
+    "pl": "Dostosuj minutnik",
+    "ru": "Настроить таймер",
+    "ko": "타이머 조정",
+    "ar": "ضبط المؤقت"
+  },
+  "titleFormatted": {
+    "en": "Adjust timer [[namedd]] / [[name]] with a duration of [[time]] [[unit]]",
+    "nl": "Pas timer [[namedd]] / [[name]] aan met een looptijd van [[time]] [[unit]]",
+    "da": "Juster timer [[namedd]] / [[name]] med en varighed på [[time]] [[unit]]",
+    "de": "Timer [[namedd]] / [[name]] mit einer Dauer von [[time]] [[unit]] einstellen",
+    "es": "Ajustar el temporizador [[namedd]] / [[name]] con una duración de [[time]] [[unit]]",
+    "fr": "Ajustez le minuteur [[namedd]] / [[name]] avec une durée de [[time]] [[unit]]",
+    "it": "Regola il timer [[namedd]] / [[name]] con una durata di [[time]] [[unit]]",
+    "no": "Juster timer [[namedd]] / [[name]] med en varighet på [[time]] [[unit]]",
+    "sv": "Justera timer [[namedd]] / [[name]] med en varaktighet på [[time]] [[unit]]",
+    "pl": "Dostosuj timer [[namedd]] / [[name]] z czasem trwania [[time]] [[unit]]",
+    "ru": "Отрегулируйте таймер [[namedd]] / [[name]] с продолжительностью [[time]] [[unit]]",
+    "ko": "타이머 [[namedd]] / [[name]]의 지속 시간을 [[time]] [[unit]]로 조정하세요.",
+    "ar": "اضبط المؤقت [[namedd]] / [[name]] لمدة [[time]] [[unit]]"
+  },
+  "hint": {
+    "en": "Use this card to adjust the duration of the timer with the provided name. Use a negative duration to extend the timer, or a positive duration to shorten the timer. One can't extend the duration, when the new duration will be longer than the timer's original duration. One can't shorten the duration, when the new duration will be lower than zero.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
+    "nl": "Gebruik dit kaartje om de looptijd van de timer met de ingevoerde naam aan te passen. Gebruik een negative looptijd om de timer te verlengen, of een positive looptijd om de timer te verkorten. Men kan de duur niet verlengen, wanneer de nieuwe duur langer zal zijn dan de oorspronkelijke duur van de timer. Men kan de looptijd niet verkorten, wanneer de nieuwe looptijd lager dan nul zal zijn.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
+    "da": "Brug dette kort til at justere varigheden af timeren med det angivne navn. Brug en negativ varighed for at forlænge timeren, eller en positiv varighed for at forkorte timeren. Man kan ikke forlænge varigheden, hvis den nye varighed vil være længere end timerens oprindelige varighed. Man kan ikke forkorte varigheden, hvis den nye varighed vil være mindre end nul. Du kan enten vælge et navn, eller skrive og vælge det, eller skrive et navn i navnefeltet. Vælgeren har forrang, når begge er udfyldt. Navnet vil kun vises i vælgeren efter at have gemt den (aktiverede) flow.",
+    "de": "Verwende diese Karte um die Dauer des Timers mit dem angegebenen Namen anzupassen. Verwende eine negative Dauer um den Timer zu verlängern oder eine positive Dauer um den Timer zu verkürzen. Man kann die Dauer nicht verlängern, wenn die neue Dauer länger als die ursprüngliche Dauer des Timers sein wird. Man kann die Dauer nicht verkürzen, wenn die neue Dauer kleiner als Null sein wird.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows im Picker angezeigt.",
+    "es": "Usa esta tarjeta para ajustar la duración del temporizador con el nombre proporcionado. Usa una duración negativa para extender el temporizador, o una duración positiva para acortarlo. No se puede extender la duración si la nueva duración será más larga que la duración original del temporizador. No se puede acortar la duración si la nueva duración será menor que cero. \n\nPuedes seleccionar un nombre, o escribirlo y seleccionarlo, o escribir un nombre en el campo de nombre. El Selector tiene prioridad cuando ambos están llenos. El nombre solo aparecerá en el selector después de guardar el flujo (habilitado).",
+    "fr": "Utilisez cette carte pour ajuster la durée du minuteur avec le nom fourni. Utilisez une durée négative pour prolonger le minuteur, ou une durée positive pour le raccourcir. On ne peut pas prolonger la durée si la nouvelle durée dépasse la durée originale du minuteur. On ne peut pas raccourcir la durée si la nouvelle durée est inférieure à zéro. Vous pouvez soit sélectionner un nom, soit le taper et le sélectionner, soit taper un nom dans le champ de nom. Le sélecteur est prioritaire lorsque les deux sont remplis. Le nom n'apparaîtra dans le sélecteur qu'après avoir enregistré le flux (activé).",
+    "it": "Usa questa scheda per regolare la durata del timer con il nome fornito. Usa una durata negativa per estendere il timer o una durata positiva per accorciarlo. Non è possibile estendere la durata se la nuova durata sarà più lunga della durata originale del timer. Non è possibile accorciare la durata se la nuova durata sarà inferiore a zero. Puoi selezionare un nome, oppure digitarlo e selezionarlo, o digitare un nome nel campo del nome. Il selettore ha la precedenza quando entrambi sono compilati. Il nome apparirà nel selettore solo dopo aver salvato il flusso (abilitato).",
+    "no": "Bruk dette kortet for å justere varigheten på timeren med det angitte navnet. Bruk en negativ varighet for å forlenge timeren, eller en positiv varighet for å forkorte timeren. Man kan ikke forlenge varigheten hvis den nye varigheten blir lengre enn timerens opprinnelige varighet. Man kan ikke forkorte varigheten hvis den nye varigheten blir lavere enn null. Du kan enten velge et navn, eller skrive og velge det, eller skrive et navn i navnefeltet. Velgeren er ledende når begge er fylt ut. Navnet vil bare vises i velgeren etter at den (aktiverte) flyten er lagret.",
+    "sv": "Använd detta kort för att justera varaktigheten på timern med det angivna namnet. Använd en negativ varaktighet för att förlänga timern, eller en positiv varaktighet för att förkorta timern. Man kan inte förlänga varaktigheten om den nya varaktigheten blir längre än timerens ursprungliga varaktighet. Man kan inte förkorta varaktigheten om den nya varaktigheten blir mindre än noll. \nDu kan antingen välja ett namn, eller skriva och välja det, eller skriva ett namn i namnfältet. \nVäljaren är ledande när båda är ifyllda. \nNamnet kommer endast att visas i väljaren efter att du har sparat det (aktiverade) flödet.",
+    "pl": "Użyj tej karty, aby dostosować czas trwania timera o podanej nazwie. Użyj ujemnego czasu trwania, aby wydłużyć timer, lub dodatniego, aby go skrócić. Nie można wydłużyć czasu trwania, jeśli nowy czas będzie dłuższy niż oryginalny czas timera. Nie można skrócić czasu trwania, jeśli nowy czas będzie krótszy niż zero. Możesz wybrać nazwę, wpisać i wybrać ją, lub wpisać nazwę w polu nazwy. Picker ma pierwszeństwo, gdy oba pola są wypełnione. Nazwa pojawi się w pickerze dopiero po zapisaniu (włączonego) flow.",
+    "ru": "Используйте эту карточку, чтобы изменить продолжительность таймера с указанным именем. Используйте отрицательную продолжительность, чтобы продлить таймер, или положительную, чтобы сократить его. Нельзя продлить продолжительность, если новая продолжительность будет больше исходной продолжительности таймера. Нельзя сократить продолжительность, если новая продолжительность будет меньше нуля. Вы можете либо выбрать имя, либо ввести и выбрать его, либо ввести имя в поле имени. Выбор из списка имеет приоритет, если оба поля заполнены. Имя появится в списке только после сохранения (включенного) потока.",
+    "ko": "이 카드를 사용하여 제공된 이름의 타이머 지속 시간을 조정하세요. 음수 지속 시간을 사용하여 타이머를 연장하거나, 양수 지속 시간을 사용하여 타이머를 단축할 수 있습니다. 새로운 지속 시간이 타이머의 원래 지속 시간보다 길어질 경우에는 지속 시간을 연장할 수 없습니다. 새로운 지속 시간이 0보다 낮아질 경우에는 지속 시간을 단축할 수 없습니다. 이름을 선택하거나 입력하여 선택할 수 있으며, 이름 필드에 이름을 입력할 수도 있습니다. 둘 다 입력된 경우에는 선택기가 우선합니다. 이름은 (활성화된) 플로우를 저장한 후에만 선택기에 나타납니다.",
+    "ar": "استخدم هذه البطاقة لضبط مدة المؤقت بالاسم المقدم. استخدم مدة سلبية لتمديد المؤقت، أو مدة إيجابية لتقصير المؤقت. لا يمكن تمديد المدة إذا كانت المدة الجديدة ستكون أطول من المدة الأصلية للمؤقت. لا يمكن تقصير المدة إذا كانت المدة الجديدة ستكون أقل من الصفر.\n\nيمكنك إما اختيار اسم، أو كتابته وتحديده، أو كتابة اسم في حقل الاسم. يكون المُختار هو السائد عندما يتم ملء كلاهما.\n\nسيظهر الاسم في المُختار فقط بعد حفظ التدفق (المُمكّن)."
+  },
+  "args": [
+    {
+      "name": "namedd",
+      "required": false,
+      "type": "autocomplete",
+      "title": {
+        "en": "Pick",
+        "nl": "Kies",
+        "da": "Vælg",
+        "de": "Wählen",
+        "es": "Elegir",
+        "fr": "Choisir",
+        "it": "Scegliere",
+        "no": "Velg",
+        "sv": "Välj",
+        "pl": "Wybierz",
+        "ru": "Выбрать",
+        "ko": "선택하세요",
+        "ar": "اختر"
+      },
+      "placeholder": {
+        "en": "Pick or type",
+        "nl": "Kies of type",
+        "da": "Vælg eller skriv",
+        "de": "Wählen oder eingeben",
+        "es": "Elige o escribe",
+        "fr": "Choisissez ou tapez",
+        "it": "Scegli o digita",
+        "no": "Velg eller skriv inn",
+        "sv": "Välj eller skriv",
+        "pl": "Wybierz lub wpisz",
+        "ru": "Выберите или введите",
+        "ko": "선택하거나 입력하세요",
+        "ar": "اختر أو اكتب"
+      }
+    },
+    {
+      "name": "name",
+      "required": false,
+      "title": {
+        "en": "Name",
+        "nl": "Naam",
+        "da": "Navn",
+        "de": "Name",
+        "es": "Nombre",
+        "fr": "Nom",
+        "it": "Nome",
+        "no": "Navn",
+        "sv": "Namn",
+        "pl": "Nazwa",
+        "ru": "Имя",
+        "ko": "이름",
+        "ar": "الاسم"
+      },
+      "type": "text",
+      "placeholder": {
+        "en": "Type a name",
+        "nl": "Type een naam",
+        "da": "Indtast et navn",
+        "de": "Geben Sie einen Namen ein",
+        "es": "Escribe un nombre",
+        "fr": "Tapez un nom",
+        "it": "Digita un nome",
+        "no": "Skriv inn et navn",
+        "sv": "Skriv ett namn",
+        "pl": "Wpisz nazwę",
+        "ru": "Введите имя",
+        "ko": "이름을 입력하세요",
+        "ar": "اكتب اسمًا"
+      }
+    },
+    {
+      "name": "time",
+      "title": {
+        "en": "Adjustment",
+        "nl": "Wijziging",
+        "da": "Justering",
+        "de": "Anpassung",
+        "es": "Ajuste",
+        "fr": "Ajustement",
+        "it": "Regolazione",
+        "no": "Justering",
+        "sv": "Justering",
+        "pl": "Dostosowanie",
+        "ru": "Корректировка",
+        "ko": "조정",
+        "ar": "تعديل"
+      },
+      "type": "text"
+    },
+    {
+      "name": "unit",
+      "title": {
+        "en": "Unit",
+        "nl": "Eenheid",
+        "da": "Enhed",
+        "de": "Einheit",
+        "es": "Unidad",
+        "fr": "Unité",
+        "it": "Unità",
+        "no": "Enhet",
+        "sv": "Enhet",
+        "pl": "Jednostka",
+        "ru": "Единица",
+        "ko": "단위",
+        "ar": "وحدة"
+      },
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "seconds",
+          "label": {
+            "en": "seconds",
+            "nl": "seconden",
+            "da": "sekunder",
+            "de": "Sekunden",
+            "es": "segundos",
+            "fr": "secondes",
+            "it": "secondi",
+            "no": "sekunder",
+            "sv": "sekunder",
+            "pl": "sekundy",
+            "ru": "секунды",
+            "ko": "초",
+            "ar": "ثواني"
+          }
+        },
+        {
+          "id": "minutes",
+          "label": {
+            "en": "minutes",
+            "nl": "minuten",
+            "da": "minutter",
+            "de": "Minuten",
+            "es": "minutos",
+            "fr": "minutes",
+            "it": "minuti",
+            "no": "minutter",
+            "sv": "minuter",
+            "pl": "minuty",
+            "ru": "минуты",
+            "ko": "분",
+            "ar": "دقائق"
+          }
+        },
+        {
+          "id": "hours",
+          "label": {
+            "en": "hours",
+            "nl": "uren",
+            "da": "timer",
+            "de": "Stunden",
+            "es": "horas",
+            "fr": "heures",
+            "it": "ore",
+            "no": "timer",
+            "sv": "timmar",
+            "pl": "godziny",
+            "ru": "часы",
+            "ko": "시간",
+            "ar": "ساعات"
+          }
+        },
+        {
+          "id": "days",
+          "label": {
+            "en": "days",
+            "nl": "dagen",
+            "da": "dage",
+            "de": "Tage",
+            "es": "días",
+            "fr": "jours",
+            "it": "giorni",
+            "no": "dager",
+            "sv": "dagar",
+            "pl": "dni",
+            "ru": "дни",
+            "ko": "일",
+            "ar": "أيام"
+          }
+        }
+      ]
+    }
+  ]
 }

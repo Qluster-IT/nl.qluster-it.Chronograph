@@ -1,0 +1,29 @@
+{
+  "timer_not_running": "El temporizador __name__ no está en funcionamiento.",
+  "stopwatch_not_running": "El cronómetro __name__ no está en funcionamiento.",
+  "transition_not_running": "La transición __name__ no está en funcionamiento.",
+  "invalid_duration": "Duración inválida.",
+  "invalid_transition": "Transición inválida.",
+  "invalid_name": "Nombre inválido.",
+  "name_required": "Necesitas escribir y elegir un nombre o ingresar un nombre.",
+  "existing": "Existente",
+  "new": "Nuevo",
+  "settings": {
+    "timers": "Temporizadores",
+    "stopwatches": "Cronómetros",
+    "transitions": "Transiciones",
+    "no_active_timers": "No hay temporizadores activos.",
+    "no_active_stopwatches": "No hay cronómetros activos.",
+    "no_active_transitions": "No hay transiciones activas.",
+    "no_timers": "No hay temporizadores.",
+    "no_stopwatches": "No hay cronómetros.",
+    "no_transitions": "No hay transiciones.",
+    "days_abbreviation": "d",
+    "stop": "Detener",
+    "pause": "Pausar",
+    "resume": "Reanudar",
+    "roundOfDurationsFlowcards": "Ronda de números de las tarjetas de flujo 'Obtener la duración de [x]'.",
+    "save": "Guardar",
+    "saved": "Guardado."
+  }
+}

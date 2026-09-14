@@ -1,0 +1,29 @@
+{
+  "timer_not_running": "Timeren __name__ kører ikke.",
+  "stopwatch_not_running": "Stopuret __name__ kører ikke.",
+  "transition_not_running": "Overgangen __name__ kører ikke.",
+  "invalid_duration": "Ugyldig varighed.",
+  "invalid_transition": "Ugyldig overgang.",
+  "invalid_name": "Ugyldigt navn.",
+  "name_required": "Du skal (skrive og) vælge et navn eller indtaste et navn.",
+  "existing": "Eksisterende",
+  "new": "Ny",
+  "settings": {
+    "timers": "Timere",
+    "stopwatches": "Stopure",
+    "transitions": "Overgange",
+    "no_active_timers": "Ingen aktive timere.",
+    "no_active_stopwatches": "Ingen aktive stopure.",
+    "no_active_transitions": "Ingen aktive overgange.",
+    "no_timers": "Ingen timere.",
+    "no_stopwatches": "Ingen stopure.",
+    "no_transitions": "Ingen overgange.",
+    "days_abbreviation": "d",
+    "stop": "Stop",
+    "pause": "Pause",
+    "resume": "Genoptag",
+    "roundOfDurationsFlowcards": "Runde af numre fra 'Få varigheden af [x]' flowcards.",
+    "save": "Gem",
+    "saved": "Gemt."
+  }
+}

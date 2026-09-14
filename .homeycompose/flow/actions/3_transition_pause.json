@@ -1,51 +1,120 @@
 {
-	"id": "transition_pause",
-	"title": {
-		"en": "Pause transition",
-		"nl": "Pauzeer transitie",
-		"de": "Übergang pausieren"
-	},
-	"titleFormatted": {
-		"en": "Pause transition [[namedd]] / [[name]]",
-		"nl": "Pauzeer transitie [[namedd]] / [[name]]",
-		"de": "Übergang anhalten [[namedd]] / [[name]]"
-
-	},
-	"hint": {
-		"en": "Use this card to pause a transition with the provided name.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
-		"nl": "Gebruik dit kaartje om een transitie te pauzeren met de ingevoerde naam.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
-		"de": "Verwende diese Karte um einen Übergang mit dem angegebenen Namen anzuhalten.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows im Picker angezeigt."
-	},
-	"args": [
-		{
-			"name": "namedd",
-			"required":false,
-			"type": "autocomplete",
-			"title": {
-				"en": "Pick",
-				"nl": "Kies",
-				"de": "Wählen"
-			},
-			"placeholder": {
-				"en": "Pick or type",
-				"nl": "Kies of type",
-				"de": "Wählen oder eingeben"
-			}
-		},
-		{
-			"name": "name",
-			"required":false,
-			"title": {
-				"en": "Name",
-				"nl": "Naam",
-				"de": "Name"
-			},
-			"type": "text",
-			"placeholder": {
-				"en": "Type a name",
-				"nl": "Type een naam",
-				"de": "Geben Sie einen Namen ein"
-			}
-		}
-	]
+  "id": "transition_pause",
+  "title": {
+    "en": "Pause transition",
+    "nl": "Pauzeer transitie",
+    "da": "Pause overgang",
+    "de": "Übergang pausieren",
+    "es": "Pausar transición",
+    "fr": "Mettre en pause la transition",
+    "it": "Metti in pausa la transizione",
+    "no": "Pause overgang",
+    "sv": "Pausa övergång",
+    "pl": "Wstrzymaj przejście",
+    "ru": "Приостановить переход",
+    "ko": "전환 일시 중지",
+    "ar": "إيقاف الانتقال مؤقتًا"
+  },
+  "titleFormatted": {
+    "en": "Pause transition [[namedd]] / [[name]]",
+    "nl": "Pauzeer transitie [[namedd]] / [[name]]",
+    "da": "Pause overgang [[namedd]] / [[name]]",
+    "de": "Übergang anhalten [[namedd]] / [[name]]",
+    "es": "Pausar transición [[namedd]] / [[name]]",
+    "fr": "Mettre en pause la transition [[namedd]] / [[name]]",
+    "it": "Metti in pausa la transizione [[namedd]] / [[name]]",
+    "no": "Pause overgang [[namedd]] / [[name]]",
+    "sv": "Pausa övergång [[namedd]] / [[name]]",
+    "pl": "Wstrzymaj przejście [[namedd]] / [[name]]",
+    "ru": "Приостановить переход [[namedd]] / [[name]]",
+    "ko": "전환 일시 중지 [[namedd]] / [[name]]",
+    "ar": "إيقاف الانتقال مؤقتًا [[namedd]] / [[name]]"
+  },
+  "hint": {
+    "en": "Use this card to pause a transition with the provided name.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
+    "nl": "Gebruik dit kaartje om een transitie te pauzeren met de ingevoerde naam.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
+    "da": "Brug dette kort til at sætte en overgang på pause med det angivne navn. Du kan enten vælge et navn, skrive og vælge det, eller skrive et navn i navnefeltet. Vælgeren har forrang, når begge er udfyldt. Navnet vil kun vises i vælgeren efter at have gemt den (aktiverede) flow.",
+    "de": "Verwende diese Karte um einen Übergang mit dem angegebenen Namen anzuhalten.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows im Picker angezeigt.",
+    "es": "Usa esta tarjeta para pausar una transición con el nombre proporcionado. Puedes seleccionar un nombre, o escribirlo y seleccionarlo, o escribir un nombre en el campo de nombre. El Selector tiene prioridad cuando ambos están llenos. El nombre solo aparecerá en el selector después de guardar el flujo (habilitado).",
+    "fr": "Utilisez cette carte pour mettre en pause une transition avec le nom fourni. Vous pouvez soit sélectionner un nom, soit le taper et le sélectionner, ou taper un nom dans le champ de nom. Le sélecteur est prioritaire lorsque les deux sont remplis. Le nom n'apparaîtra dans le sélecteur qu'après avoir enregistré le flux (activé).",
+    "it": "Usa questa scheda per mettere in pausa una transizione con il nome fornito. Puoi selezionare un nome, oppure digitarlo e selezionarlo, o digitare un nome nel campo del nome. Il Selettore ha la precedenza quando entrambi sono compilati. Il nome apparirà nel selettore solo dopo aver salvato il flusso (abilitato).",
+    "no": "Bruk dette kortet for å pause en overgang med det angitte navnet. Du kan enten velge et navn, eller skrive og velge det, eller skrive et navn i navnefeltet. Velgeren er ledende når begge er fylt ut. Navnet vil bare vises i velgeren etter at den (aktiverte) flyten er lagret.",
+    "sv": "Använd det här kortet för att pausa en övergång med det angivna namnet. Du kan antingen välja ett namn, eller skriva och välja det, eller skriva ett namn i namnfältet. Väljaren har företräde när båda är ifyllda. Namnet kommer bara att visas i väljaren efter att det (aktiverade) flödet har sparats.",
+    "pl": "Użyj tej karty, aby wstrzymać przejście o podanej nazwie. Możesz wybrać nazwę z listy, wpisać i wybrać ją, lub wpisać nazwę w polu nazwy. Lista wyboru ma pierwszeństwo, gdy oba pola są wypełnione. Nazwa pojawi się na liście wyboru dopiero po zapisaniu (włączonego) przepływu.",
+    "ru": "Используйте эту карточку, чтобы приостановить переход с указанным именем. Вы можете выбрать имя, ввести и выбрать его, или ввести имя в поле для имени. Приоритет имеет выбор из списка, если оба поля заполнены. Имя появится в списке только после сохранения (включенного) потока.",
+    "ko": "이 카드를 사용하여 제공된 이름으로 전환을 일시 중지할 수 있습니다. 이름을 선택하거나 입력하여 선택하거나 이름 필드에 입력할 수 있습니다. 둘 다 입력된 경우 선택기가 우선합니다. 이름은 (활성화된) 흐름을 저장한 후에만 선택기에 나타납니다.",
+    "ar": "استخدم هذه البطاقة لإيقاف انتقال مؤقتًا باستخدام الاسم المقدم. يمكنك إما اختيار اسم، أو كتابته وتحديده، أو كتابة اسم في حقل الاسم. يكون المُختار هو السائد عندما يتم ملء كلاهما. سيظهر الاسم في المُختار فقط بعد حفظ التدفق (المُمكّن)."
+  },
+  "args": [
+    {
+      "name": "namedd",
+      "required": false,
+      "type": "autocomplete",
+      "title": {
+        "en": "Pick",
+        "nl": "Kies",
+        "da": "Vælg",
+        "de": "Wählen",
+        "es": "Elegir",
+        "fr": "Choisir",
+        "it": "Scegliere",
+        "no": "Velg",
+        "sv": "Välj",
+        "pl": "Wybierz",
+        "ru": "Выбрать",
+        "ko": "선택하세요",
+        "ar": "اختر"
+      },
+      "placeholder": {
+        "en": "Pick or type",
+        "nl": "Kies of type",
+        "da": "Vælg eller skriv",
+        "de": "Wählen oder eingeben",
+        "es": "Elige o escribe",
+        "fr": "Choisissez ou tapez",
+        "it": "Scegli o digita",
+        "no": "Velg eller skriv inn",
+        "sv": "Välj eller skriv",
+        "pl": "Wybierz lub wpisz",
+        "ru": "Выберите или введите",
+        "ko": "선택하거나 입력하세요",
+        "ar": "اختر أو اكتب"
+      }
+    },
+    {
+      "name": "name",
+      "required": false,
+      "title": {
+        "en": "Name",
+        "nl": "Naam",
+        "da": "Navn",
+        "de": "Name",
+        "es": "Nombre",
+        "fr": "Nom",
+        "it": "Nome",
+        "no": "Navn",
+        "sv": "Namn",
+        "pl": "Nazwa",
+        "ru": "Имя",
+        "ko": "이름",
+        "ar": "الاسم"
+      },
+      "type": "text",
+      "placeholder": {
+        "en": "Type a name",
+        "nl": "Type een naam",
+        "da": "Indtast et navn",
+        "de": "Geben Sie einen Namen ein",
+        "es": "Escribe un nombre",
+        "fr": "Tapez un nom",
+        "it": "Digita un nome",
+        "no": "Skriv inn et navn",
+        "sv": "Skriv ett namn",
+        "pl": "Wpisz nazwę",
+        "ru": "Введите имя",
+        "ko": "이름을 입력하세요",
+        "ar": "اكتب اسمًا"
+      }
+    }
+  ]
 }

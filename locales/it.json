@@ -1,0 +1,29 @@
+{
+  "timer_not_running": "Il timer __nome__ non è in esecuzione.",
+  "stopwatch_not_running": "Il cronometro __nome__ non è in esecuzione.",
+  "transition_not_running": "La transizione __nome__ non è in esecuzione.",
+  "invalid_duration": "Durata non valida.",
+  "invalid_transition": "Transizione non valida.",
+  "invalid_name": "Nome non valido.",
+  "name_required": "Devi digitare e selezionare un nome o inserirne uno.",
+  "existing": "Esistente",
+  "new": "Nuovo",
+  "settings": {
+    "timers": "Timer",
+    "stopwatches": "Cronometri",
+    "transitions": "Transizioni",
+    "no_active_timers": "Nessun timer attivo.",
+    "no_active_stopwatches": "Nessun cronometro attivo.",
+    "no_active_transitions": "Nessuna transizione attiva.",
+    "no_timers": "Nessun timer.",
+    "no_stopwatches": "Nessun cronometro.",
+    "no_transitions": "Nessuna transizione.",
+    "days_abbreviation": "g",
+    "stop": "Ferma",
+    "pause": "Pausa",
+    "resume": "Riprendi",
+    "roundOfDurationsFlowcards": "Arrotondamento dei numeri dalle schede 'Ottieni la durata di [x]'.",
+    "save": "Salva",
+    "saved": "Salvato."
+  }
+}

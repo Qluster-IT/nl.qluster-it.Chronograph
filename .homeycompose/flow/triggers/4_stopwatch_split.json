@@ -1,126 +1,275 @@
-
-	{
-		"id": "stopwatch_split",
-		"title": {
-			"en": "Stopwatch reached a duration",
-			"nl": "Stopwatch heeft looptijd bereikt",
-			"de": "Stoppuhr hat eine Dauer erreicht."
-		},
-		"titleFormatted": {
-			"en": "Stopwatch [[namedd]] / [[name]] has reached a duration of [[time]] [[unit]]",
-			"nl": "Stopwatch [[namedd]] / [[name]] heeft een looptijd van [[time]] [[unit]] bereikt",
-			"de": "Stoppuhr [[namedd]] / [[name]] hat eine Dauer von [[time]] [[unit]] erreicht"
-		},
-		"hint": {
-			"en": "This card is activated when a stopwatch with the provided name has reached a specific duration.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
-			"nl": "Dit kaartje wordt geactiveerd als een stopwatch met de ingevoerde naam een bepaalde looptijd heeft bereikt.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
-			"de": "Diese Karte wird aktiviert wenn eine Stoppuhr mit dem angegebenen Namen eine bestimmte Dauer erreicht hat.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows im Picker angezeigt."
-		},
-		"args": [
-			{
-				"name": "namedd",
-				"required":false,
-				"type": "autocomplete",
-				"title": {
-					"en": "Pick",
-					"nl": "Kies",
-					"de": "Wählen"
-				},
-				"placeholder": {
-					"en": "Pick or type",
-					"nl": "Kies of type",
-					"de": "Wählen oder eingeben"
-				}
-			},
-			{
-				"name": "name",
-				"required":false,
-				"title": {
-					"en": "Name",
-					"nl": "Naam",
-					"de": "Name"
-				},
-				"type": "text"
-			},
-			{
-				"name": "time",
-				"title": {
-					"en": "Duration",
-					"nl": "Looptijd",
-					"de": "Dauer"
-				},
-				"type": "number",
-				"min": 0,
-				"step": 0.01
-			},
-			{
-				"name": "unit",
-				"title": {
-					"en": "Unit",
-					"nl": "Eenheid",
-					"de": "Einheit"
-				},
-				"type": "dropdown",
-				"values": [
-					{
-						"id": "seconds",
-						"label": {
-							"en": "seconds",
-							"nl": "seconden",
-							"de": "Sekunden"
-						}
-					},
-					{
-						"id": "minutes",
-						"label": {
-							"en": "minutes",
-							"nl": "minuten",
-							"de": "Minuten"
-						}
-					},
-					{
-						"id": "hours",
-						"label": {
-							"en": "hours",
-							"nl": "uren",
-							"de": "Stunden"
-						}
-					},
-					{
-						"id": "days",
-						"label": {
-							"en": "days",
-							"nl": "dagen",
-							"de": "Tage"
-						}
-					}
-				]
-			}
-		],
-		"tokens": [
-			{
-				"name": "name",
-				"type": "string",
-				"title": {
-					"en": "Name",
-					"nl": "Naam",
-					"de": "Name"
-				},
-				"example": {
-					"en": "bathroom",
-					"nl": "badkamer",
-					"de": "Badezimmer"
-				}
-			},
-			{
-				"name": "seconds",
-				"type": "number",
-				"title": {
-					"en": "Duration (s)",
-					"nl": "Looptijd (s)",
-					"de": "Dauer (s)"
-				},
-				"example": 60
-			}
-		]
-	}
+{
+  "id": "stopwatch_split",
+  "title": {
+    "en": "Stopwatch reached a duration",
+    "nl": "Stopwatch heeft looptijd bereikt",
+    "da": "Stopuret nåede en varighed",
+    "de": "Stoppuhr hat eine Dauer erreicht.",
+    "es": "El cronómetro alcanzó una duración",
+    "fr": "Le chronomètre a atteint une durée",
+    "it": "Il cronometro ha raggiunto una durata",
+    "no": "Stoppeklokken nådde en varighet",
+    "sv": "Stoppuret nådde en varaktighet",
+    "pl": "Stoper osiągnął czas trwania",
+    "ru": "Секундомер достиг продолжительности",
+    "ko": "스톱워치가 지속 시간에 도달했습니다.",
+    "ar": "وصلت مدة ساعة الإيقاف"
+  },
+  "titleFormatted": {
+    "en": "Stopwatch [[namedd]] / [[name]] has reached a duration of [[time]] [[unit]]",
+    "nl": "Stopwatch [[namedd]] / [[name]] heeft een looptijd van [[time]] [[unit]] bereikt",
+    "da": "Stopur [[namedd]] / [[name]] har nået en varighed på [[time]] [[unit]]",
+    "de": "Stoppuhr [[namedd]] / [[name]] hat eine Dauer von [[time]] [[unit]] erreicht",
+    "es": "El cronómetro [[namedd]] / [[name]] ha alcanzado una duración de [[time]] [[unit]]",
+    "fr": "Le chronomètre [[namedd]] / [[name]] a atteint une durée de [[time]] [[unit]]",
+    "it": "Il cronometro [[namedd]] / [[name]] ha raggiunto una durata di [[time]] [[unit]]",
+    "no": "Stoppeklokke [[namedd]] / [[name]] har nådd en varighet på [[time]] [[unit]]",
+    "sv": "Stoppuret [[namedd]] / [[name]] har nått en varaktighet av [[time]] [[unit]]",
+    "pl": "Stoper [[namedd]] / [[name]] osiągnął czas trwania [[time]] [[unit]]",
+    "ru": "Секундомер [[namedd]] / [[name]] достиг продолжительности [[time]] [[unit]]",
+    "ko": "스톱워치 [[namedd]] / [[name]]이(가) [[time]] [[unit]]의 시간을 기록했습니다.",
+    "ar": "ساعة الإيقاف [[namedd]] / [[name]] وصلت إلى مدة [[time]] [[unit]]"
+  },
+  "hint": {
+    "en": "This card is activated when a stopwatch with the provided name has reached a specific duration.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
+    "nl": "Dit kaartje wordt geactiveerd als een stopwatch met de ingevoerde naam een bepaalde looptijd heeft bereikt.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
+    "da": "Dette kort aktiveres, når et stopur med det angivne navn har nået en bestemt varighed. Du kan enten vælge et navn, skrive og vælge det, eller skrive et navn i navnefeltet. Vælgeren har forrang, når begge er udfyldt. Navnet vil kun vises i vælgeren efter at have gemt den (aktiverede) flow.",
+    "de": "Diese Karte wird aktiviert wenn eine Stoppuhr mit dem angegebenen Namen eine bestimmte Dauer erreicht hat.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows im Picker angezeigt.",
+    "es": "Esta tarjeta se activa cuando un cronómetro con el nombre proporcionado ha alcanzado una duración específica. Puedes seleccionar un nombre, escribirlo y seleccionarlo, o escribir un nombre en el campo de nombre. El Selector tiene prioridad cuando ambos están llenos. El nombre solo aparecerá en el selector después de guardar el flujo (habilitado).",
+    "fr": "Cette carte s'active lorsqu'un chronomètre portant le nom fourni a atteint une durée spécifique.  \nVous pouvez soit sélectionner un nom, soit le taper et le sélectionner, ou taper un nom dans le champ de nom.  \nLe sélecteur est prioritaire lorsque les deux sont remplis.  \nLe nom n'apparaîtra dans le sélecteur qu'après avoir enregistré le flux (activé).",
+    "it": "Questa scheda si attiva quando un cronometro con il nome fornito ha raggiunto una durata specifica. Puoi selezionare un nome, oppure digitarlo e selezionarlo, o digitare un nome nel campo del nome. Il selettore ha la precedenza quando entrambi i campi sono compilati. Il nome apparirà nel selettore solo dopo aver salvato il flusso (abilitato).",
+    "no": "Dette kortet aktiveres når en stoppeklokke med det angitte navnet har nådd en spesifikk varighet. Du kan enten velge et navn, eller skrive og velge det, eller skrive et navn i navnefeltet. Velgeren er ledende når begge er fylt ut. Navnet vil bare vises i velgeren etter at den (aktiverte) flyten er lagret.",
+    "sv": "Detta kort aktiveras när en stoppklocka med det angivna namnet har nått en specifik varaktighet. Du kan antingen välja ett namn, skriva och välja det, eller skriva ett namn i namnfältet. Väljaren är ledande när båda är ifyllda. Namnet kommer endast att visas i väljaren efter att det (aktiverade) flödet har sparats.",
+    "pl": "Ta karta jest aktywowana, gdy stoper o podanej nazwie osiągnie określony czas trwania. Możesz wybrać nazwę z listy, wpisać i wybrać ją, lub wpisać nazwę w polu nazwy. Gdy oba pola są wypełnione, priorytet ma lista wyboru. Nazwa pojawi się na liście wyboru dopiero po zapisaniu (włączonego) przepływu.",
+    "ru": "Эта карта активируется, когда секундомер с указанным именем достигает определенной продолжительности. Вы можете либо выбрать имя, либо ввести и выбрать его, либо ввести имя в поле для имени. Если оба поля заполнены, приоритет имеет выбор из списка. Имя появится в списке выбора только после сохранения (включенного) потока.",
+    "ko": "제공된 이름의 스톱워치가 특정 시간에 도달했을 때 이 카드가 활성화됩니다.  \n이름을 선택하거나 입력하여 선택할 수 있으며, 이름 필드에 이름을 입력할 수도 있습니다.  \n이름과 필드가 모두 채워져 있을 때는 선택기가 우선합니다.  \n이름은 (활성화된) 플로우를 저장한 후에만 선택기에 나타납니다.",
+    "ar": "يتم تفعيل هذه البطاقة عندما يصل المؤقت بالاسم المحدد إلى مدة معينة. يمكنك إما اختيار اسم، أو كتابته وتحديده، أو كتابة اسم في حقل الاسم. يكون المُختار هو السائد عندما يتم ملء كلا الحقلين. سيظهر الاسم في المُختار فقط بعد حفظ التدفق (المُمكّن)."
+  },
+  "args": [
+    {
+      "name": "namedd",
+      "required": false,
+      "type": "autocomplete",
+      "title": {
+        "en": "Pick",
+        "nl": "Kies",
+        "da": "Vælg",
+        "de": "Wählen",
+        "es": "Elegir",
+        "fr": "Choisir",
+        "it": "Scegliere",
+        "no": "Velg",
+        "sv": "Välj",
+        "pl": "Wybierz",
+        "ru": "Выбрать",
+        "ko": "선택하세요",
+        "ar": "اختر"
+      },
+      "placeholder": {
+        "en": "Pick or type",
+        "nl": "Kies of type",
+        "da": "Vælg eller skriv",
+        "de": "Wählen oder eingeben",
+        "es": "Elige o escribe",
+        "fr": "Choisissez ou tapez",
+        "it": "Scegli o digita",
+        "no": "Velg eller skriv inn",
+        "sv": "Välj eller skriv",
+        "pl": "Wybierz lub wpisz",
+        "ru": "Выберите или введите текст",
+        "ko": "선택하거나 입력하세요",
+        "ar": "اختر أو اكتب"
+      }
+    },
+    {
+      "name": "name",
+      "required": false,
+      "title": {
+        "en": "Name",
+        "nl": "Naam",
+        "da": "Navn",
+        "de": "Name",
+        "es": "Nombre",
+        "fr": "Nom",
+        "it": "Nome",
+        "no": "Navn",
+        "sv": "Namn",
+        "pl": "Nazwa",
+        "ru": "Имя",
+        "ko": "이름",
+        "ar": "الاسم"
+      },
+      "type": "text"
+    },
+    {
+      "name": "time",
+      "title": {
+        "en": "Duration",
+        "nl": "Looptijd",
+        "da": "Varighed",
+        "de": "Dauer",
+        "es": "Duración",
+        "fr": "Durée",
+        "it": "Durata",
+        "no": "Varighet",
+        "sv": "Varaktighet",
+        "pl": "Czas trwania",
+        "ru": "Продолжительность",
+        "ko": "지속 시간",
+        "ar": "المدة الزمنية"
+      },
+      "type": "number",
+      "min": 0,
+      "step": 0.01
+    },
+    {
+      "name": "unit",
+      "title": {
+        "en": "Unit",
+        "nl": "Eenheid",
+        "da": "Enhed",
+        "de": "Einheit",
+        "es": "Unidad",
+        "fr": "Unité",
+        "it": "Unità",
+        "no": "Enhet",
+        "sv": "Enhet",
+        "pl": "Jednostka",
+        "ru": "Единица",
+        "ko": "단위",
+        "ar": "وحدة"
+      },
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "seconds",
+          "label": {
+            "en": "seconds",
+            "nl": "seconden",
+            "da": "sekunder",
+            "de": "Sekunden",
+            "es": "segundos",
+            "fr": "secondes",
+            "it": "secondi",
+            "no": "sekunder",
+            "sv": "sekunder",
+            "pl": "sekundy",
+            "ru": "секунды",
+            "ko": "초",
+            "ar": "ثواني"
+          }
+        },
+        {
+          "id": "minutes",
+          "label": {
+            "en": "minutes",
+            "nl": "minuten",
+            "da": "minutter",
+            "de": "Minuten",
+            "es": "minutos",
+            "fr": "minutes",
+            "it": "minuti",
+            "no": "minutter",
+            "sv": "minuter",
+            "pl": "minuty",
+            "ru": "минуты",
+            "ko": "분",
+            "ar": "دقائق"
+          }
+        },
+        {
+          "id": "hours",
+          "label": {
+            "en": "hours",
+            "nl": "uren",
+            "da": "timer",
+            "de": "Stunden",
+            "es": "horas",
+            "fr": "heures",
+            "it": "ore",
+            "no": "timer",
+            "sv": "timmar",
+            "pl": "godziny",
+            "ru": "часы",
+            "ko": "시간",
+            "ar": "ساعات"
+          }
+        },
+        {
+          "id": "days",
+          "label": {
+            "en": "days",
+            "nl": "dagen",
+            "da": "dage",
+            "de": "Tage",
+            "es": "días",
+            "fr": "jours",
+            "it": "giorni",
+            "no": "dager",
+            "sv": "dagar",
+            "pl": "dni",
+            "ru": "дни",
+            "ko": "일",
+            "ar": "أيام"
+          }
+        }
+      ]
+    }
+  ],
+  "tokens": [
+    {
+      "name": "name",
+      "type": "string",
+      "title": {
+        "en": "Name",
+        "nl": "Naam",
+        "da": "Navn",
+        "de": "Name",
+        "es": "Nombre",
+        "fr": "Nom",
+        "it": "Nome",
+        "no": "Navn",
+        "sv": "Namn",
+        "pl": "Nazwa",
+        "ru": "Имя",
+        "ko": "이름",
+        "ar": "الاسم"
+      },
+      "example": {
+        "en": "bathroom",
+        "nl": "badkamer",
+        "da": "badeværelse",
+        "de": "Badezimmer",
+        "es": "baño",
+        "fr": "salle de bain",
+        "it": "bagno",
+        "no": "bad",
+        "sv": "badrum",
+        "pl": "łazienka",
+        "ru": "ванная комната",
+        "ko": "욕실",
+        "ar": "حمام"
+      }
+    },
+    {
+      "name": "seconds",
+      "type": "number",
+      "title": {
+        "en": "Duration (s)",
+        "nl": "Looptijd (s)",
+        "da": "Varighed (s)",
+        "de": "Dauer (s)",
+        "es": "Duración (s)",
+        "fr": "Durée (s)",
+        "it": "Durata (s)",
+        "no": "Varighet (s)",
+        "sv": "Varaktighet (s)",
+        "pl": "Czas trwania (s)",
+        "ru": "Продолжительность (с)",
+        "ko": "지속 시간 (초)",
+        "ar": "المدة (ث)"
+      },
+      "example": 60
+    }
+  ]
+}

@@ -1,14 +1,33 @@
 {
-	"id": "timer_stop_all",
-	"title": {
-		"en": "Stop all timers",
-		"nl": "Stop alle timers",
-		"de": "Alle Timer anhalten"
-
-	},
-	"hint": {
-		"en": "Use this card to stop all running timers.",
-		"nl": "Gebruik dit kaartje om alle timers te stoppen.",
-		"de": "Verwende diese Karte um alle laufenden Timer zu stoppen."
-	}
+  "id": "timer_stop_all",
+  "title": {
+    "en": "Stop all timers",
+    "nl": "Stop alle timers",
+    "da": "Stop alle timere",
+    "de": "Alle Timer anhalten",
+    "es": "Detener todos los temporizadores",
+    "fr": "Arrêter tous les minuteurs",
+    "it": "Ferma tutti i timer",
+    "no": "Stopp alle tidtakere",
+    "sv": "Stoppa alla timers",
+    "pl": "Zatrzymaj wszystkie timery",
+    "ru": "Остановить все таймеры",
+    "ko": "모든 타이머 중지",
+    "ar": "إيقاف جميع المؤقتات"
+  },
+  "hint": {
+    "en": "Use this card to stop all running timers.",
+    "nl": "Gebruik dit kaartje om alle timers te stoppen.",
+    "da": "Brug dette kort til at stoppe alle igangværende timere.",
+    "de": "Verwende diese Karte um alle laufenden Timer zu stoppen.",
+    "es": "Usa esta tarjeta para detener todos los temporizadores en marcha.",
+    "fr": "Utilisez cette carte pour arrêter tous les minuteurs en cours.",
+    "it": "Usa questa scheda per fermare tutti i timer in corso.",
+    "no": "Bruk dette kortet for å stoppe alle aktive tidtakere.",
+    "sv": "Använd det här kortet för att stoppa alla aktiva timers.",
+    "pl": "Użyj tej karty, aby zatrzymać wszystkie działające timery.",
+    "ru": "Используйте эту карточку, чтобы остановить все запущенные таймеры.",
+    "ko": "이 카드를 사용하여 실행 중인 모든 타이머를 중지하세요.",
+    "ar": "استخدم هذه البطاقة لإيقاف جميع المؤقتات الجارية."
+  }
 }

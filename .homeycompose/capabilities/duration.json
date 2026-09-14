@@ -1,18 +1,37 @@
 {
-	"id": "duration",
-	"type": "number",
-	"title": {
-			"en": "Duration",
-			"nl": "Looptijd",
-			"de": "Dauer"
-
-	},
-	"units": {
-			"en": "seconds",
-			"nl": "seconden",
-			"de": "Sekunden"
-	},
-	"getable": true,
-	"setable": false,
-	"icon": "assets/duration.svg"
+  "id": "duration",
+  "type": "number",
+  "title": {
+    "en": "Duration",
+    "nl": "Looptijd",
+    "da": "Varighed",
+    "de": "Dauer",
+    "es": "Duración",
+    "fr": "Durée",
+    "it": "Durata",
+    "no": "Varighet",
+    "sv": "Varaktighet",
+    "pl": "Czas trwania",
+    "ru": "Продолжительность",
+    "ko": "지속 시간",
+    "ar": "المدة الزمنية"
+  },
+  "units": {
+    "en": "seconds",
+    "nl": "seconden",
+    "da": "sekunder",
+    "de": "Sekunden",
+    "es": "segundos",
+    "fr": "secondes",
+    "it": "secondi",
+    "no": "sekunder",
+    "sv": "sekunder",
+    "pl": "sekundy",
+    "ru": "секунды",
+    "ko": "초",
+    "ar": "ثوانٍ"
+  },
+  "getable": true,
+  "setable": false,
+  "icon": "assets/duration.svg"
 }

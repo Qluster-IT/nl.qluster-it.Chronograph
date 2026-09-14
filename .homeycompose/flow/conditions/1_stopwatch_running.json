@@ -1,50 +1,120 @@
 {
-	"id": "stopwatch_running",
-	"title": {
-		"en": "Stopwatch is running or not",
-		"nl": "Stopwatch loopt wel of niet",
-		"de": "Stopwatch läuft oder nicht"
-	},
-	"titleFormatted": {
-		"en": "Stopwatch [[namedd]] / [[name]] !{{is running|is not running}}",
-		"nl": "Stopwatch [[namedd]] / [[name]] !{{loopt|loopt niet}}",
-		"de": "Stopwatch [[namedd]] / [[name]] !{{läuft|läuft nicht}}"
-	},
-	"hint": {
-		"en": "Use this card to run or cancel a flow depending on the run state of the stopwatch with the provided name.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
-		"nl": "Gebruik dit kaartje om een flow wel of niet uit te voeren afhankelijk van de loop status van de stopwatch met de ingevoerde naam.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
-		"de": "Verwende diese Karte um einen Flow abhängig vom Betriebsstatus der Stoppuhr mit dem angegebenen Namen auszuführen oder abzubrechen.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows im Picker angezeigt."
-	},
-	"args": [
-		{
-			"name": "namedd",
-			"required":false,
-			"type": "autocomplete",
-			"title": {
-				"en": "Pick",
-				"nl": "Kies",
-				"de": "Wählen"
-			},
-			"placeholder": {
-				"en": "Pick or type",
-				"nl": "Kies of type",
-				"de": "Wählen oder eingeben"
-			}
-		},
-		{
-			"name": "name",
-			"required":false,
-			"title": {
-				"en": "Name",
-				"nl": "Naam",
-				"de": "Name"
-			},
-			"type": "text",
-			"placeholder": {
-				"en": "Type a name",
-				"nl": "Type een naam",
-				"de": "Geben Sie einen Namen ein"
-			}
-		}
-	]
+  "id": "stopwatch_running",
+  "title": {
+    "en": "Stopwatch is running or not",
+    "nl": "Stopwatch loopt wel of niet",
+    "da": "Stopuret kører eller ej",
+    "de": "Stopwatch läuft oder nicht",
+    "es": "El cronómetro está en marcha o no",
+    "fr": "Le chronomètre est-il en marche ou non ?",
+    "it": "Il cronometro è in funzione o no?",
+    "no": "Stoppeklokken går eller ikke",
+    "sv": "Tidtagaruret är igång eller inte",
+    "pl": "Stoper jest włączony czy nie?",
+    "ru": "Секундомер работает или нет?",
+    "ko": "스톱워치가 작동 중인가요?",
+    "ar": "هل المؤقت يعمل أم لا؟"
+  },
+  "titleFormatted": {
+    "en": "Stopwatch [[namedd]] / [[name]] !{{is running|is not running}}",
+    "nl": "Stopwatch [[namedd]] / [[name]] !{{loopt|loopt niet}}",
+    "da": "Stopur [[namedd]] / [[name]] !{{kører|kører ikke}}",
+    "de": "Stopwatch [[namedd]] / [[name]] !{{läuft|läuft nicht}}",
+    "es": "Cronómetro [[namedd]] / [[name]] !{{está en marcha|no está en marcha}}",
+    "fr": "Chronomètre [[namedd]] / [[name]] !{{est en cours|n'est pas en cours}}",
+    "it": "Cronometro [[namedd]] / [[name]] !{{è in funzione|non è in funzione}}",
+    "no": "Stoppeklokke [[namedd]] / [[name]] !{{kjører|kjører ikke}}",
+    "sv": "Stoppur [[namedd]] / [[name]] !{{körs|körs inte}}",
+    "pl": "Stoper [[namedd]] / [[name]] !{{działa|nie działa}}",
+    "ru": "Секундомер [[namedd]] / [[name]] !{{работает|не работает}}",
+    "ko": "스톱워치 [[namedd]] / [[name]] !{{작동 중|작동 중이 아님}}",
+    "ar": "ساعة الإيقاف [[namedd]] / [[name]] !{{تعمل|لا تعمل}}"
+  },
+  "hint": {
+    "en": "Use this card to run or cancel a flow depending on the run state of the stopwatch with the provided name.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
+    "nl": "Gebruik dit kaartje om een flow wel of niet uit te voeren afhankelijk van de loop status van de stopwatch met de ingevoerde naam.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
+    "da": "Brug dette kort til at køre eller annullere en flow afhængigt af stopurets kørselstilstand med det angivne navn. Du kan enten vælge et navn, skrive og vælge det, eller skrive et navn i navnefeltet. Vælgeren har forrang, når begge felter er udfyldt. Navnet vil kun vises i vælgeren efter at have gemt det (aktiverede) flow.",
+    "de": "Verwende diese Karte um einen Flow abhängig vom Betriebsstatus der Stoppuhr mit dem angegebenen Namen auszuführen oder abzubrechen.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows im Picker angezeigt.",
+    "es": "Usa esta tarjeta para ejecutar o cancelar un flujo dependiendo del estado de ejecución del cronómetro con el nombre proporcionado. Puedes seleccionar un nombre, o escribirlo y seleccionarlo, o escribir un nombre en el campo de nombre. El Selector tiene prioridad cuando ambos están llenos. El nombre solo aparecerá en el selector después de guardar el flujo (habilitado).",
+    "fr": "Utilisez cette carte pour lancer ou annuler un flux en fonction de l'état d'exécution du chronomètre avec le nom fourni. Vous pouvez soit sélectionner un nom, soit le taper et le sélectionner, soit taper un nom dans le champ de nom. Le sélecteur est prioritaire lorsque les deux sont remplis. Le nom n'apparaîtra dans le sélecteur qu'après avoir enregistré le flux (activé).",
+    "it": "Usa questa scheda per avviare o annullare un flusso a seconda dello stato di esecuzione del cronometro con il nome fornito. Puoi selezionare un nome, oppure digitarlo e selezionarlo, o digitare un nome nel campo del nome. Il selettore ha la precedenza quando entrambi i campi sono compilati. Il nome apparirà nel selettore solo dopo aver salvato il flusso (abilitato).",
+    "no": "Bruk dette kortet for å kjøre eller avbryte en flyt avhengig av stoppeklokkens kjøretid med det angitte navnet. Du kan enten velge et navn, eller skrive og velge det, eller skrive et navn i navnefeltet. Velgeren er ledende når begge er fylt ut. Navnet vil bare vises i velgeren etter at den (aktiverte) flyten er lagret.",
+    "sv": "Använd det här kortet för att köra eller avbryta ett flöde beroende på stoppurets körstatus med det angivna namnet. Du kan antingen välja ett namn, eller skriva och välja det, eller skriva ett namn i namnfältet. Väljaren är ledande när båda är ifyllda. Namnet kommer bara att visas i väljaren efter att det (aktiverade) flödet har sparats.",
+    "pl": "Użyj tej karty, aby uruchomić lub anulować przepływ w zależności od stanu działania stopera o podanej nazwie. Możesz wybrać nazwę, wpisać i wybrać ją, lub wpisać nazwę w polu nazwy. Wybór z listy ma pierwszeństwo, gdy oba pola są wypełnione. Nazwa pojawi się na liście dopiero po zapisaniu (włączonego) przepływu.",
+    "ru": "Используйте эту карточку, чтобы запустить или отменить поток в зависимости от состояния секундомера с указанным именем. Вы можете выбрать имя, ввести и выбрать его, или ввести имя в поле для имени. Если оба поля заполнены, приоритет имеет выбор из списка. Имя появится в списке только после сохранения (включенного) потока.",
+    "ko": "이 카드를 사용하여 제공된 이름의 스톱워치 실행 상태에 따라 흐름을 실행하거나 취소할 수 있습니다. 이름을 선택하거나 입력하여 선택하거나 이름 필드에 입력할 수 있습니다. 둘 다 입력된 경우 선택기가 우선합니다. 이름은 (활성화된) 흐름을 저장한 후에만 선택기에 나타납니다.",
+    "ar": "استخدم هذه البطاقة لتشغيل أو إلغاء تدفق بناءً على حالة تشغيل ساعة الإيقاف بالاسم المقدم. يمكنك إما اختيار اسم، أو كتابته وتحديده، أو كتابة اسم في حقل الاسم. يكون المُختار هو السائد عندما يتم ملء كلاهما. سيظهر الاسم في المُختار فقط بعد حفظ التدفق (المُمكّن)."
+  },
+  "args": [
+    {
+      "name": "namedd",
+      "required": false,
+      "type": "autocomplete",
+      "title": {
+        "en": "Pick",
+        "nl": "Kies",
+        "da": "Vælg",
+        "de": "Wählen",
+        "es": "Elegir",
+        "fr": "Choisir",
+        "it": "Scegliere",
+        "no": "Velg",
+        "sv": "Välj",
+        "pl": "Wybierz",
+        "ru": "Выбрать",
+        "ko": "선택하세요",
+        "ar": "اختر"
+      },
+      "placeholder": {
+        "en": "Pick or type",
+        "nl": "Kies of type",
+        "da": "Vælg eller skriv",
+        "de": "Wählen oder eingeben",
+        "es": "Elige o escribe",
+        "fr": "Choisissez ou tapez",
+        "it": "Scegli o digita",
+        "no": "Velg eller skriv inn",
+        "sv": "Välj eller skriv",
+        "pl": "Wybierz lub wpisz",
+        "ru": "Выберите или введите",
+        "ko": "선택하거나 입력하세요",
+        "ar": "اختر أو اكتب"
+      }
+    },
+    {
+      "name": "name",
+      "required": false,
+      "title": {
+        "en": "Name",
+        "nl": "Naam",
+        "da": "Navn",
+        "de": "Name",
+        "es": "Nombre",
+        "fr": "Nom",
+        "it": "Nome",
+        "no": "Navn",
+        "sv": "Namn",
+        "pl": "Nazwa",
+        "ru": "Имя",
+        "ko": "이름",
+        "ar": "الاسم"
+      },
+      "type": "text",
+      "placeholder": {
+        "en": "Type a name",
+        "nl": "Type een naam",
+        "da": "Indtast et navn",
+        "de": "Geben Sie einen Namen ein",
+        "es": "Escribe un nombre",
+        "fr": "Tapez un nom",
+        "it": "Digita un nome",
+        "no": "Skriv inn et navn",
+        "sv": "Skriv ett namn",
+        "pl": "Wpisz nazwę",
+        "ru": "Введите имя",
+        "ko": "이름을 입력하세요",
+        "ar": "اكتب اسمًا"
+      }
+    }
+  ]
 }

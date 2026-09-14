@@ -1,0 +1,29 @@
+{
+  "timer_not_running": "Timeren __name__ kjører ikke.",
+  "stopwatch_not_running": "Stoppeklokken __name__ kjører ikke.",
+  "transition_not_running": "Overgangen __name__ kjører ikke.",
+  "invalid_duration": "Ugyldig varighet.",
+  "invalid_transition": "Ugyldig overgang.",
+  "invalid_name": "Ugyldig navn.",
+  "name_required": "Du må (skrive og) velge et navn eller angi et navn.",
+  "existing": "Eksisterende",
+  "new": "Ny",
+  "settings": {
+    "timers": "Tidsmålere",
+    "stopwatches": "Stoppeklokker",
+    "transitions": "Overganger",
+    "no_active_timers": "Ingen aktive tidsmålere.",
+    "no_active_stopwatches": "Ingen aktive stoppeklokker.",
+    "no_active_transitions": "Ingen aktive overganger.",
+    "no_timers": "Ingen tidsmålere.",
+    "no_stopwatches": "Ingen stoppeklokker.",
+    "no_transitions": "Ingen overganger.",
+    "days_abbreviation": "d",
+    "stop": "Stopp",
+    "pause": "Pause",
+    "resume": "Gjenoppta",
+    "roundOfDurationsFlowcards": "Runde av tall fra 'Få varigheten av [x]' flytkort.",
+    "save": "Lagre",
+    "saved": "Lagret."
+  }
+}

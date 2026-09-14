@@ -1,52 +1,87 @@
 {
-	"id": "timer",
-	"name": {
-		"en": "Timer",
-		"nl": "Timer",
-		"de": "Timer"
-	},
-	"images": {
-		"large": "{{driverAssetsPath}}/images/large.png",
-		"small": "{{driverAssetsPath}}/images/small.png"
-	},
-	"class": "sensor",
-	"capabilities": [ "alarm_started", "duration", "button_pause", "button_startstop" ],
-	"capabilitiesOptions": {
-		"alarm_started": {
-			"preventTag": true
-		},
-		"duration": {
-			"preventTag": true
-		},
-		"button.pause": {
-			"title": {
-				"en": "Pause / Resume",
-				"nl": "Pauzeren / Hervatten",
-				"de": "Pause / Fortsetzen"
-			}
-		},
-		"button.stop": {
-			"title": {
-				"en": "Stop",
-				"nl": "Stoppen",
-				"de": "Stopp"
-			}
-		}
-	},
-	"pair": [
-		{
-			"id": "list_devices",
-			"template": "list_devices",
-			"navigation": {
-				"next": "add_devices"
-			},
-			"options": {
-				"singular": true
-			}
-		},
-		{
-			"id": "add_devices",
-			"template": "add_devices"
-		}
-	]
+  "id": "timer",
+  "name": {
+    "en": "Timer",
+    "nl": "Timer",
+    "da": "Timer",
+    "de": "Timer",
+    "es": "Temporizador",
+    "fr": "Minuteur",
+    "it": "Timer",
+    "no": "Timer",
+    "sv": "Timer",
+    "pl": "Stoper",
+    "ru": "Таймер",
+    "ko": "타이머",
+    "ar": "مؤقت"
+  },
+  "images": {
+    "large": "{{driverAssetsPath}}/images/large.png",
+    "small": "{{driverAssetsPath}}/images/small.png"
+  },
+  "class": "sensor",
+  "capabilities": [
+    "alarm_started",
+    "duration",
+    "button_pause",
+    "button_startstop"
+  ],
+  "capabilitiesOptions": {
+    "alarm_started": {
+      "preventTag": true
+    },
+    "duration": {
+      "preventTag": true
+    },
+    "button.pause": {
+      "title": {
+        "en": "Pause / Resume",
+        "nl": "Pauzeren / Hervatten",
+        "da": "Pause / Genoptag",
+        "de": "Pause / Fortsetzen",
+        "es": "Pausar / Reanudar",
+        "fr": "Pause / Reprendre",
+        "it": "Pausa / Riprendi",
+        "no": "Pause / Fortsett",
+        "sv": "Pausa / Återuppta",
+        "pl": "Wstrzymaj / Wznów",
+        "ru": "Пауза / Возобновить",
+        "ko": "일시 중지 / 다시 시작",
+        "ar": "إيقاف مؤقت / استئناف"
+      }
+    },
+    "button.stop": {
+      "title": {
+        "en": "Stop",
+        "nl": "Stoppen",
+        "da": "Stop",
+        "de": "Stopp",
+        "es": "Detener",
+        "fr": "Arrêter",
+        "it": "Ferma",
+        "no": "Stopp",
+        "sv": "Stoppa",
+        "pl": "Zatrzymaj",
+        "ru": "Стоп",
+        "ko": "중지",
+        "ar": "توقف"
+      }
+    }
+  },
+  "pair": [
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      },
+      "options": {
+        "singular": true
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ]
 }

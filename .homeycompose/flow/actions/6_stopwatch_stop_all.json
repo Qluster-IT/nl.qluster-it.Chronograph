@@ -1,13 +1,33 @@
 {
-	"id": "stopwatch_stop_all",
-	"title": {
-		"en": "Stop all stopwatches",
-		"nl": "Stop alle stopwatches",
-		"de": "Stoppe alle Stoppuhren"
-	},
-	"hint": {
-		"en": "Use this card to stop all stopwatches.",
-		"nl": "Gebruik dit kaartje om alle stopwatches te stoppen.",
-		"de": "Verwende diese Karte um alle Stoppuhren zu stoppen."
-	}
+  "id": "stopwatch_stop_all",
+  "title": {
+    "en": "Stop all stopwatches",
+    "nl": "Stop alle stopwatches",
+    "da": "Stop alle stopure",
+    "de": "Stoppe alle Stoppuhren",
+    "es": "Detener todos los cronómetros",
+    "fr": "Arrêter tous les chronomètres",
+    "it": "Ferma tutti i cronometri",
+    "no": "Stopp alle stoppeklokker",
+    "sv": "Stoppa alla tidtagarur",
+    "pl": "Zatrzymaj wszystkie stopery",
+    "ru": "Остановить все секундомеры",
+    "ko": "모든 스톱워치 중지",
+    "ar": "إيقاف جميع الساعات التوقيفية"
+  },
+  "hint": {
+    "en": "Use this card to stop all stopwatches.",
+    "nl": "Gebruik dit kaartje om alle stopwatches te stoppen.",
+    "da": "Brug dette kort til at stoppe alle stopure.",
+    "de": "Verwende diese Karte um alle Stoppuhren zu stoppen.",
+    "es": "Usa esta tarjeta para detener todos los cronómetros.",
+    "fr": "Utilisez cette carte pour arrêter tous les chronomètres.",
+    "it": "Usa questa scheda per fermare tutti i cronometri.",
+    "no": "Bruk dette kortet for å stoppe alle stoppeklokker.",
+    "sv": "Använd det här kortet för att stoppa alla tidtagarur.",
+    "pl": "Użyj tej karty, aby zatrzymać wszystkie stopery.",
+    "ru": "Используйте эту карточку, чтобы остановить все секундомеры.",
+    "ko": "이 카드를 사용하여 모든 스톱워치를 정지하세요.",
+    "ar": "استخدم هذه البطاقة لإيقاف جميع الساعات التوقيفية."
+  }
 }

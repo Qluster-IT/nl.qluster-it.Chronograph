@@ -1,15 +1,37 @@
 {
   "id": "nl.fellownet.chronograph",
-  "version": "2.1.10",
+  "version": "2.2.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "name": {
-    "en": "Chronograph"
+    "en": "Chronograph",
+    "nl": "Chronograaf",
+    "da": "Chronograf",
+    "de": "Chronograph",
+    "es": "Cronógrafo",
+    "fr": "Chronographe",
+    "it": "Cronografo",
+    "no": "Kronograf",
+    "sv": "Chronograph",
+    "pl": "Chronograf",
+    "ru": "Хронограф",
+    "ko": "크로노그래프",
+    "ar": "كرونوغراف"
   },
   "description": {
     "en": "Adds precise timer, stopwatch and transition functionality to Homey.",
     "nl": "Voegt accurate timer, stopwatch en transitie functionaliteit toe aan Homey.",
-    "de": "Fügt Homey präzise Timer, Stoppuhrfunktionen und Übergänge hinzu."
+    "da": "Tilføjer præcis timer, stopur og overgangsfunktionalitet til Homey.",
+    "de": "Fügt Homey präzise Timer, Stoppuhrfunktionen und Übergänge hinzu.",
+    "es": "Agrega funcionalidad precisa de temporizador, cronómetro y transición a Homey.",
+    "fr": "Ajoute des fonctionnalités de minuterie précise, de chronomètre et de transition à Homey.",
+    "it": "Aggiunge funzionalità di timer preciso, cronometro e transizione a Homey.",
+    "no": "Legger til presis timer, stoppeklokke og overgangsfunksjonalitet til Homey.",
+    "sv": "Lägger till exakt timer, stoppur och övergångsfunktionalitet till Homey.",
+    "pl": "Dodaje precyzyjny timer, stoper i funkcję przejścia do Homey.",
+    "ru": "Добавляет точный таймер, секундомер и функции перехода в Homey.",
+    "ko": "Homey에 정밀 타이머, 스톱워치 및 전환 기능을 추가합니다.",
+    "ar": "يضيف مؤقتًا دقيقًا، ساعة توقيت ووظيفة انتقال إلى Homey."
   },
   "brandColor": "#5583C3",
   "category": [

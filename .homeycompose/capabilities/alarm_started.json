@@ -1,13 +1,23 @@
 {
-	"id": "alarm_started",
-	"type": "boolean",
-	"title": {
-			"en": "Started",
-			"nl": "Gestart",
-			"de": "Gestartet"
-	},
-	"getable": true,
-	"setable": false,
-	"uiComponent": "sensor",
-	"icon": "assets/alarm_started.svg"
+  "id": "alarm_started",
+  "type": "boolean",
+  "title": {
+    "en": "Started",
+    "nl": "Gestart",
+    "da": "Startet",
+    "de": "Gestartet",
+    "es": "Iniciado",
+    "fr": "Commencé",
+    "it": "Iniziato",
+    "no": "Startet",
+    "sv": "Startad",
+    "pl": "Rozpoczęto",
+    "ru": "Начато",
+    "ko": "시작됨",
+    "ar": "بدأ"
+  },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "assets/alarm_started.svg"
 }

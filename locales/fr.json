@@ -1,0 +1,29 @@
+{
+  "timer_not_running": "Le minuteur __name__ ne fonctionne pas.",
+  "stopwatch_not_running": "Le chronomètre __name__ ne fonctionne pas.",
+  "transition_not_running": "La transition __name__ ne fonctionne pas.",
+  "invalid_duration": "Durée invalide.",
+  "invalid_transition": "Transition invalide.",
+  "invalid_name": "Nom invalide.",
+  "name_required": "Vous devez (taper et) choisir un nom ou entrer un nom.",
+  "existing": "Existant",
+  "new": "Nouveau",
+  "settings": {
+    "timers": "Minuteurs",
+    "stopwatches": "Chronomètres",
+    "transitions": "Transitions",
+    "no_active_timers": "Pas de minuteurs actifs.",
+    "no_active_stopwatches": "Pas de chronomètres actifs.",
+    "no_active_transitions": "Pas de transitions actives.",
+    "no_timers": "Pas de minuteurs.",
+    "no_stopwatches": "Pas de chronomètres.",
+    "no_transitions": "Pas de transitions.",
+    "days_abbreviation": "j",
+    "stop": "Arrêter",
+    "pause": "Pause",
+    "resume": "Reprendre",
+    "roundOfDurationsFlowcards": "Arrondi des chiffres des cartes de flux 'Obtenir la durée de [x]'.",
+    "save": "Enregistrer",
+    "saved": "Enregistré."
+  }
+}

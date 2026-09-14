@@ -1,76 +1,176 @@
 {
-	"id": "timer_stopped",
-	"title": {
-		"en": "Timer is stopped",
-		"nl": "Timer is gestopt",
-		"de": "Timer ist gestoppt"
-	},
-	"titleFormatted": {
-		"en": "Timer [[namedd]] / [[name]] is stopped",
-		"nl": "Timer [[namedd]] / [[name]] is gestopt",
-		"de": "Timer [[namedd]] / [[name]] ist gestoppt"
-	},
-	"hint": {
-		"en": "This card is activated when a timer with the provided name is prematurely stopped, not when a timer is finished.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
-		"nl": "Dit kaartje wordt geactiveerd als een timer met de ingevoerde naam vroegtijdig is gestopt, niet als een timer is afgelopen.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
-		"de": "Diese Karte wird aktiviert wenn ein Timer mit dem angegebenen Namen vorzeitig gestoppt ist, nicht wenn ein Timer abgelaufen ist.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows im Picker angezeigt."
-	},
-	"args": [
-		{
-			"name": "namedd",
-			"required":false,
-			"type": "autocomplete",
-			"title": {
-				"en": "Pick",
-				"nl": "Kies",
-				"de": "Wählen"
-			},
-			"placeholder": {
-				"en": "Pick or type",
-				"nl": "Kies of type",
-				"de": "Wählen oder eingeben"
-			}
-		},
-		{
-			"name": "name",
-			"required":false,
-			"title": {
-				"en": "Name",
-				"nl": "Naam",
-				"de": "Name"
-			},
-			"type": "text",
-			"placeholder": {
-				"en": "Type a name",
-				"nl": "Type een naam",
-				"de": "Geben Sie einen Namen ein"
-			}
-		}
-	],
-	"tokens": [
-		{
-			"name": "name",
-			"type": "string",
-			"title": {
-				"en": "Name",
-				"nl": "Naam",
-				"de": "Name"
-			},
-			"example": {
-				"en": "bathroom",
-				"nl": "badkamer",
-				"de": "Badezimmer"
-			}
-		},
-		{
-			"name": "seconds",
-			"type": "number",
-			"title": {
-				"en": "Duration (s)",
-				"nl": "Looptijd (s)",
-				"de": "Dauer (s)"
-			},
-			"example": 60
-		}
-	]
+  "id": "timer_stopped",
+  "title": {
+    "en": "Timer is stopped",
+    "nl": "Timer is gestopt",
+    "da": "Timeren er stoppet",
+    "de": "Timer ist gestoppt",
+    "es": "El temporizador está detenido",
+    "fr": "Le minuteur est arrêté",
+    "it": "Il timer è fermo",
+    "no": "Tidsuret er stoppet",
+    "sv": "Timer är stoppad",
+    "pl": "Timer został zatrzymany",
+    "ru": "Таймер остановлен",
+    "ko": "타이머가 중지되었습니다.",
+    "ar": "تم إيقاف المؤقت"
+  },
+  "titleFormatted": {
+    "en": "Timer [[namedd]] / [[name]] is stopped",
+    "nl": "Timer [[namedd]] / [[name]] is gestopt",
+    "da": "Timer [[namedd]] / [[name]] er stoppet",
+    "de": "Timer [[namedd]] / [[name]] ist gestoppt",
+    "es": "El temporizador [[namedd]] / [[name]] está detenido.",
+    "fr": "Le minuteur [[namedd]] / [[name]] est arrêté.",
+    "it": "Il timer [[namedd]] / [[name]] è fermo",
+    "no": "Tidsur [[namedd]] / [[name]] er stoppet",
+    "sv": "Timer [[namedd]] / [[name]] är stoppad",
+    "pl": "Timer [[namedd]] / [[name]] został zatrzymany",
+    "ru": "Таймер [[namedd]] / [[name]] остановлен",
+    "ko": "타이머 [[namedd]] / [[name]]이(가) 중지되었습니다.",
+    "ar": "المؤقت [[namedd]] / [[name]] متوقف"
+  },
+  "hint": {
+    "en": "This card is activated when a timer with the provided name is prematurely stopped, not when a timer is finished.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
+    "nl": "Dit kaartje wordt geactiveerd als een timer met de ingevoerde naam vroegtijdig is gestopt, niet als een timer is afgelopen.\nU kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
+    "da": "Dette kort aktiveres, når en timer med det angivne navn stoppes for tidligt, ikke når en timer er færdig. Du kan enten vælge et navn, skrive og vælge det, eller skrive et navn i navnefeltet. Vælgeren har forrang, når begge er udfyldt. Navnet vil kun vises i vælgeren efter at have gemt den (aktiverede) flow.",
+    "de": "Diese Karte wird aktiviert wenn ein Timer mit dem angegebenen Namen vorzeitig gestoppt ist, nicht wenn ein Timer abgelaufen ist.\nSie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows im Picker angezeigt.",
+    "es": "Esta tarjeta se activa cuando un temporizador con el nombre proporcionado se detiene prematuramente, no cuando un temporizador termina. Puedes seleccionar un nombre, escribirlo y seleccionarlo, o escribir un nombre en el campo de nombre. El Selector tiene prioridad cuando ambos están llenos. El nombre solo aparecerá en el selector después de guardar el flujo (habilitado).",
+    "fr": "Cette carte est activée lorsqu'un minuteur portant le nom fourni est arrêté prématurément, et non lorsque le minuteur est terminé. Vous pouvez soit sélectionner un nom, soit le taper et le sélectionner, soit taper un nom dans le champ de nom. Le sélecteur est prioritaire lorsque les deux sont remplis. Le nom n'apparaîtra dans le sélecteur qu'après avoir enregistré le flux (activé).",
+    "it": "Questa scheda si attiva quando un timer con il nome fornito viene interrotto prematuramente, non quando un timer è terminato. Puoi selezionare un nome, oppure digitarlo e selezionarlo, o digitare un nome nel campo del nome. Il selettore ha la precedenza quando entrambi i campi sono compilati. Il nome apparirà nel selettore solo dopo aver salvato il flusso (abilitato).",
+    "no": "Dette kortet aktiveres når en timer med det angitte navnet stoppes for tidlig, ikke når en timer er ferdig. Du kan enten velge et navn, eller skrive og velge det, eller skrive et navn i navnefeltet. Velgeren er ledende når begge er fylt ut. Navnet vil bare vises i velgeren etter at den (aktiverte) flyten er lagret.",
+    "sv": "Detta kort aktiveras när en timer med det angivna namnet stoppas i förtid, inte när en timer är klar. Du kan antingen välja ett namn, skriva och välja det, eller skriva ett namn i namnfältet. Väljaren är ledande när båda är ifyllda. Namnet kommer endast att visas i väljaren efter att det (aktiverade) flödet har sparats.",
+    "pl": "Ta karta jest aktywowana, gdy timer o podanej nazwie zostanie przedwcześnie zatrzymany, a nie gdy timer się zakończy. Możesz wybrać nazwę, wpisać i wybrać ją, lub wpisać nazwę w polu nazwy. Picker ma pierwszeństwo, gdy oba pola są wypełnione. Nazwa pojawi się w pickerze dopiero po zapisaniu (włączonego) przepływu.",
+    "ru": "Эта карта активируется, когда таймер с указанным именем преждевременно остановлен, а не когда таймер завершен. Вы можете либо выбрать имя, либо ввести и выбрать его, либо ввести имя в поле для имени. Если оба поля заполнены, приоритет имеет выбор из списка. Имя появится в списке только после сохранения (включенного) потока.",
+    "ko": "이 카드는 제공된 이름의 타이머가 조기 중지될 때 활성화되며, 타이머가 완료될 때는 아닙니다.  \n이름을 선택하거나 입력하여 선택할 수 있으며, 이름 필드에 이름을 입력할 수도 있습니다.  \n둘 다 입력된 경우 선택기가 우선합니다.  \n이름은 (활성화된) 플로우를 저장한 후에만 선택기에 나타납니다.",
+    "ar": "يتم تفعيل هذه البطاقة عندما يتم إيقاف مؤقت بالاسم المحدد قبل الأوان، وليس عندما ينتهي المؤقت. يمكنك إما اختيار اسم، أو كتابته وتحديده، أو كتابة اسم في حقل الاسم. يكون المُختار هو السائد عندما يتم ملء كلاهما. سيظهر الاسم في المُختار فقط بعد حفظ التدفق (المُمكّن)."
+  },
+  "args": [
+    {
+      "name": "namedd",
+      "required": false,
+      "type": "autocomplete",
+      "title": {
+        "en": "Pick",
+        "nl": "Kies",
+        "da": "Vælg",
+        "de": "Wählen",
+        "es": "Elegir",
+        "fr": "Choisir",
+        "it": "Scegliere",
+        "no": "Velg",
+        "sv": "Välj",
+        "pl": "Wybierz",
+        "ru": "Выбрать",
+        "ko": "선택하세요",
+        "ar": "اختر"
+      },
+      "placeholder": {
+        "en": "Pick or type",
+        "nl": "Kies of type",
+        "da": "Vælg eller skriv",
+        "de": "Wählen oder eingeben",
+        "es": "Elige o escribe",
+        "fr": "Choisissez ou tapez",
+        "it": "Scegli o digita",
+        "no": "Velg eller skriv inn",
+        "sv": "Välj eller skriv",
+        "pl": "Wybierz lub wpisz",
+        "ru": "Выберите или введите",
+        "ko": "선택하거나 입력하세요",
+        "ar": "اختر أو اكتب"
+      }
+    },
+    {
+      "name": "name",
+      "required": false,
+      "title": {
+        "en": "Name",
+        "nl": "Naam",
+        "da": "Navn",
+        "de": "Name",
+        "es": "Nombre",
+        "fr": "Nom",
+        "it": "Nome",
+        "no": "Navn",
+        "sv": "Namn",
+        "pl": "Nazwa",
+        "ru": "Имя",
+        "ko": "이름",
+        "ar": "الاسم"
+      },
+      "type": "text",
+      "placeholder": {
+        "en": "Type a name",
+        "nl": "Type een naam",
+        "da": "Indtast et navn",
+        "de": "Geben Sie einen Namen ein",
+        "es": "Escribe un nombre",
+        "fr": "Tapez un nom",
+        "it": "Digita un nome",
+        "no": "Skriv inn et navn",
+        "sv": "Skriv ett namn",
+        "pl": "Wpisz nazwę",
+        "ru": "Введите имя",
+        "ko": "이름을 입력하세요",
+        "ar": "اكتب اسمًا"
+      }
+    }
+  ],
+  "tokens": [
+    {
+      "name": "name",
+      "type": "string",
+      "title": {
+        "en": "Name",
+        "nl": "Naam",
+        "da": "Navn",
+        "de": "Name",
+        "es": "Nombre",
+        "fr": "Nom",
+        "it": "Nome",
+        "no": "Navn",
+        "sv": "Namn",
+        "pl": "Nazwa",
+        "ru": "Имя",
+        "ko": "이름",
+        "ar": "الاسم"
+      },
+      "example": {
+        "en": "bathroom",
+        "nl": "badkamer",
+        "da": "badeværelse",
+        "de": "Badezimmer",
+        "es": "baño",
+        "fr": "salle de bain",
+        "it": "bagno",
+        "no": "bad",
+        "sv": "badrum",
+        "pl": "łazienka",
+        "ru": "ванная комната",
+        "ko": "욕실",
+        "ar": "الحمام"
+      }
+    },
+    {
+      "name": "seconds",
+      "type": "number",
+      "title": {
+        "en": "Duration (s)",
+        "nl": "Looptijd (s)",
+        "da": "Varighed (s)",
+        "de": "Dauer (s)",
+        "es": "Duración (s)",
+        "fr": "Durée (s)",
+        "it": "Durata (s)",
+        "no": "Varighet (s)",
+        "sv": "Varaktighet (s)",
+        "pl": "Czas trwania (s)",
+        "ru": "Продолжительность (с)",
+        "ko": "지속 시간 (초)",
+        "ar": "المدة (ث)"
+      },
+      "example": 60
+    }
+  ]
 }

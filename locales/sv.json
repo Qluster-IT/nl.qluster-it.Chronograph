@@ -1,0 +1,29 @@
+{
+  "timer_not_running": "Timer __name__ körs inte.",
+  "stopwatch_not_running": "Stoppuret __name__ körs inte.",
+  "transition_not_running": "Övergången __name__ körs inte.",
+  "invalid_duration": "Ogiltig varaktighet.",
+  "invalid_transition": "Ogiltig övergång.",
+  "invalid_name": "Ogiltigt namn.",
+  "name_required": "Du behöver (skriva och) välja ett namn eller ange ett namn.",
+  "existing": "Befintlig",
+  "new": "Ny",
+  "settings": {
+    "timers": "Timers",
+    "stopwatches": "Stoppur",
+    "transitions": "Övergångar",
+    "no_active_timers": "Inga aktiva timers.",
+    "no_active_stopwatches": "Inga aktiva stoppur.",
+    "no_active_transitions": "Inga aktiva övergångar.",
+    "no_timers": "Inga timers.",
+    "no_stopwatches": "Inga stoppur.",
+    "no_transitions": "Inga övergångar.",
+    "days_abbreviation": "d",
+    "stop": "Stoppa",
+    "pause": "Paus",
+    "resume": "Återuppta",
+    "roundOfDurationsFlowcards": "Omgång av nummer från 'Hämta varaktigheten av [x]' flödeskorten.",
+    "save": "Spara",
+    "saved": "Sparad."
+  }
+}

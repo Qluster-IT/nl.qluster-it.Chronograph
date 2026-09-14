@@ -1,0 +1,29 @@
+{
+  "timer_not_running": "Timer __name__ nie jest uruchomiony.",
+  "stopwatch_not_running": "Stoper __name__ nie jest uruchomiony.",
+  "transition_not_running": "Przejście __name__ nie jest uruchomione.",
+  "invalid_duration": "Nieprawidłowy czas trwania.",
+  "invalid_transition": "Nieprawidłowe przejście.",
+  "invalid_name": "Nieprawidłowa nazwa.",
+  "name_required": "Musisz wpisać i wybrać nazwę lub wprowadzić nazwę.",
+  "existing": "Istniejący",
+  "new": "Nowy",
+  "settings": {
+    "timers": "Timery",
+    "stopwatches": "Stopery",
+    "transitions": "Przejścia",
+    "no_active_timers": "Brak aktywnych timerów.",
+    "no_active_stopwatches": "Brak aktywnych stoperów.",
+    "no_active_transitions": "Brak aktywnych przejść.",
+    "no_timers": "Brak timerów.",
+    "no_stopwatches": "Brak stoperów.",
+    "no_transitions": "Brak przejść.",
+    "days_abbreviation": "d",
+    "stop": "Stop",
+    "pause": "Pauza",
+    "resume": "Wznów",
+    "roundOfDurationsFlowcards": "Zaokrąglenie liczb z kart przepływu 'Pobierz czas trwania [x]'.",
+    "save": "Zapisz",
+    "saved": "Zapisano."
+  }
+}

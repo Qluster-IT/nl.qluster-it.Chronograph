@@ -1,14 +1,24 @@
 {
-	"id": "button_pause",
-	"type": "boolean",
-	"title": {
-		"en": "Pause / Resume",
-		"nl": "Pauzeren / Hervatten",
-		"de": "Pause / Fortsetzen"
-	},
-	"getable": true,
-	"setable": true,
-	"uiComponent": "button",
-	"uiQuickAction": true,
-	"icon": "/assets/pause.svg"
+  "id": "button_pause",
+  "type": "boolean",
+  "title": {
+    "en": "Pause / Resume",
+    "nl": "Pauzeren / Hervatten",
+    "da": "Pause / Genoptag",
+    "de": "Pause / Fortsetzen",
+    "es": "Pausar / Reanudar",
+    "fr": "Pause / Reprendre",
+    "it": "Pausa / Riprendi",
+    "no": "Pause / Fortsett",
+    "sv": "Pausa / Återuppta",
+    "pl": "Wstrzymaj / Wznów",
+    "ru": "Пауза / Возобновить",
+    "ko": "일시 중지 / 다시 시작",
+    "ar": "إيقاف مؤقت / استئناف"
+  },
+  "getable": true,
+  "setable": true,
+  "uiComponent": "button",
+  "uiQuickAction": true,
+  "icon": "/assets/pause.svg"
 }
