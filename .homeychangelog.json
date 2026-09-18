@@ -1064,7 +1064,7 @@
     "ko": "해결됨: 잘못된 구간에서 타이머 시작 오류.",
     "ar": "تم الحل: خطأ في بدء المؤقت بسبب تقسيمات غير صحيحة."
   },
-  "2.2.0": {
+  "2.2.1": {
     "en": "Translated: Translated into all supported languages.",
     "nl": "Vertaald: Vertaald in alle ondersteunde talen.",
     "da": "Oversat: Oversat til alle understøttede sprog.",
@@ -1074,8 +1074,8 @@
     "it": "Tradotto: Tradotto in tutte le lingue supportate.",
     "no": "Oversatt: Oversatt til alle støttede språk.",
     "sv": "Översatt: Översatt till alla stödda språk.",
-    "pl": "Przetłumaczono: Przetłumaczono na wszystkie obsługiwane języki.",
-    "ru": "Переведено: Переведено на все поддерживаемые языки.",
+    "pl": "Przetłumaczone: Przetłumaczone na wszystkie obsługiwane języki.",
+    "ru": "Переведено на все поддерживаемые языки.",
     "ko": "번역됨: 모든 지원 언어로 번역되었습니다.",
     "ar": "مترجم: مترجم إلى جميع اللغات المدعومة."
   }
