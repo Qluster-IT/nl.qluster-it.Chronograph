@@ -1,7 +1,7 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "nl.fellownet.chronograph",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "name": {
@@ -2810,6 +2810,152 @@
     ],
     "conditions": [
       {
+        "id": "delay_passed",
+        "title": {
+          "en": "A delay has passed",
+          "nl": "Vertraging is verstreken",
+          "da": "En forsinkelse er passeret",
+          "de": "Verzögerung ist vergangen",
+          "es": "Ha pasado un retraso",
+          "fr": "Un délai est passé",
+          "it": "È passato un ritardo",
+          "no": "En forsinkelse har passert",
+          "sv": "En fördröjning har passerat",
+          "pl": "Opóźnienie minęło",
+          "ru": "Задержка прошла",
+          "ko": "지연이 지나갔습니다.",
+          "ar": "لقد مرّ التأخير"
+        },
+        "titleFormatted": {
+          "en": "A delay of [[time]] [[unit]] has passed",
+          "nl": "Vertraging van [[time]] [[unit]] is verstreken",
+          "da": "Der er gået en forsinkelse på [[time]] [[unit]]",
+          "de": "Verzögerung von [[time]] [[unit]] ist vergangen",
+          "es": "Ha pasado un retraso de [[time]] [[unit]]",
+          "fr": "Un délai de [[time]] [[unit]] s'est écoulé.",
+          "it": "È trascorso un ritardo di [[time]] [[unit]]",
+          "no": "En forsinkelse på [[time]] [[unit]] har passert",
+          "sv": "En fördröjning på [[time]] [[unit]] har passerat",
+          "pl": "Minęło opóźnienie o [[time]] [[unit]]",
+          "ru": "Прошло [[time]] [[unit]] задержки",
+          "ko": "[[time]][[unit]]의 지연이 발생했습니다.",
+          "ar": "لقد مر تأخير قدره [[time]] [[unit]]"
+        },
+        "hint": {
+          "en": "Use this card to delay executing the then flow cards by max. 89 seconds.",
+          "nl": "Gebruik dit kaartje om de Dan flow kaartjes vertraagd uit te voeren door max. 89 seconden.",
+          "da": "Brug dette kort til at forsinke udførelsen af de efterfølgende flow-kort med maks. 89 sekunder.",
+          "de": "Verwenden Sie diese Karte, um die Dann-Flow-Karten um maximal 89 Sekunden zu verzögern.",
+          "es": "Usa esta tarjeta para retrasar la ejecución de las tarjetas de flujo \"entonces\" por un máximo de 89 segundos.",
+          "fr": "Utilisez cette carte pour retarder l'exécution des cartes de flux \"alors\" de maximum 89 secondes.",
+          "it": "Usa questa scheda per ritardare l'esecuzione delle schede di flusso \"then\" per un massimo di 89 secondi.",
+          "no": "Bruk dette kortet for å utsette utførelsen av deretter flytkortene med maks. 89 sekunder.",
+          "sv": "Använd det här kortet för att fördröja utförandet av \"då\"-flödeskorten med max. 89 sekunder.",
+          "pl": "Użyj tej karty, aby opóźnić wykonanie kart przepływu \"then\" o maksymalnie 89 sekund.",
+          "ru": "Используйте эту карточку, чтобы отложить выполнение последующих карточек потока на максимум 89 секунд.",
+          "ko": "이 카드를 사용하여 '그 다음' 흐름 카드를 최대 89초까지 지연시킬 수 있습니다.",
+          "ar": "استخدم هذه البطاقة لتأخير تنفيذ بطاقات التدفق \"ثم\" بحد أقصى 89 ثانية."
+        },
+        "args": [
+          {
+            "name": "time",
+            "title": {
+              "en": "Duration",
+              "nl": "Looptijd",
+              "da": "Varighed",
+              "de": "Dauer",
+              "es": "Duración",
+              "fr": "Durée",
+              "it": "Durata",
+              "no": "Varighet",
+              "sv": "Varaktighet",
+              "pl": "Czas trwania",
+              "ru": "Продолжительность",
+              "ko": "지속 시간",
+              "ar": "المدة الزمنية"
+            },
+            "type": "number",
+            "min": 0,
+            "step": 0.01
+          },
+          {
+            "name": "unit",
+            "title": {
+              "en": "Unit",
+              "nl": "Eenheid",
+              "da": "Enhed",
+              "de": "Einheit",
+              "es": "Unidad",
+              "fr": "Unité",
+              "it": "Unità",
+              "no": "Enhet",
+              "sv": "Enhet",
+              "pl": "Jednostka",
+              "ru": "Единица",
+              "ko": "단위",
+              "ar": "وحدة"
+            },
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "milliseconds",
+                "label": {
+                  "en": "milliseconds",
+                  "nl": "milliseconden",
+                  "da": "millisekunder",
+                  "de": "Millisekunden",
+                  "es": "milisegundos",
+                  "fr": "millisecondes",
+                  "it": "millisecondi",
+                  "no": "millisekunder",
+                  "sv": "millisekunder",
+                  "pl": "milisekundy",
+                  "ru": "миллисекунды",
+                  "ko": "밀리초",
+                  "ar": "ميلي ثانية"
+                }
+              },
+              {
+                "id": "seconds",
+                "label": {
+                  "en": "seconds",
+                  "nl": "seconden",
+                  "da": "sekunder",
+                  "de": "Sekunden",
+                  "es": "segundos",
+                  "fr": "secondes",
+                  "it": "secondi",
+                  "no": "sekunder",
+                  "sv": "sekunder",
+                  "pl": "sekundy",
+                  "ru": "секунды",
+                  "ko": "초",
+                  "ar": "ثواني"
+                }
+              },
+              {
+                "id": "minutes",
+                "label": {
+                  "en": "minutes",
+                  "nl": "minuten",
+                  "da": "minutter",
+                  "de": "Minuten",
+                  "es": "minutos",
+                  "fr": "minutes",
+                  "it": "minuti",
+                  "no": "minutter",
+                  "sv": "minuter",
+                  "pl": "minuty",
+                  "ru": "минуты",
+                  "ko": "분",
+                  "ar": "دقائق"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
         "id": "stopwatch_running",
         "title": {
           "en": "Stopwatch is running or not",
@@ -3865,134 +4011,6 @@
                   "ru": "дни",
                   "ko": "일",
                   "ar": "أيام"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "id": "delay_passed",
-        "title": {
-          "en": "A delay has passed",
-          "nl": "Vertraging is verstreken",
-          "da": "En forsinkelse er passeret",
-          "de": "Verzögerung ist vergangen",
-          "es": "Ha pasado un retraso",
-          "fr": "Un délai est passé",
-          "it": "È passato un ritardo",
-          "no": "En forsinkelse har passert",
-          "sv": "En fördröjning har passerat",
-          "pl": "Opóźnienie minęło",
-          "ru": "Задержка прошла",
-          "ko": "지연이 지나갔습니다.",
-          "ar": "لقد مرّ التأخير"
-        },
-        "titleFormatted": {
-          "en": "A delay of [[time]] [[unit]] has passed",
-          "nl": "Vertraging van [[time]] [[unit]] is verstreken",
-          "da": "Der er gået en forsinkelse på [[time]] [[unit]]",
-          "de": "Verzögerung von [[time]] [[unit]] ist vergangen",
-          "es": "Ha pasado un retraso de [[time]] [[unit]]",
-          "fr": "Un délai de [[time]] [[unit]] s'est écoulé.",
-          "it": "È trascorso un ritardo di [[time]] [[unit]]",
-          "no": "En forsinkelse på [[time]] [[unit]] har passert",
-          "sv": "En fördröjning på [[time]] [[unit]] har passerat",
-          "pl": "Minęło opóźnienie o [[time]] [[unit]]",
-          "ru": "Прошло [[time]] [[unit]] задержки",
-          "ko": "[[time]][[unit]]의 지연이 발생했습니다.",
-          "ar": "لقد مر تأخير قدره [[time]] [[unit]]"
-        },
-        "hint": {
-          "en": "Use this card to delay executing the then flow cards by max. 89 seconds.",
-          "nl": "Gebruik dit kaartje om de Dan flow kaartjes vertraagd uit te voeren door max. 89 seconden.",
-          "da": "Brug dette kort til at forsinke udførelsen af de efterfølgende flow-kort med maks. 89 sekunder.",
-          "de": "Verwenden Sie diese Karte, um die Dann-Flow-Karten um maximal 89 Sekunden zu verzögern.",
-          "es": "Usa esta tarjeta para retrasar la ejecución de las tarjetas de flujo \"entonces\" por un máximo de 89 segundos.",
-          "fr": "Utilisez cette carte pour retarder l'exécution des cartes de flux \"alors\" de maximum 89 secondes.",
-          "it": "Usa questa scheda per ritardare l'esecuzione delle schede di flusso \"then\" per un massimo di 89 secondi.",
-          "no": "Bruk dette kortet for å utsette utførelsen av deretter flytkortene med maks. 89 sekunder.",
-          "sv": "Använd det här kortet för att fördröja utförandet av \"då\"-flödeskorten med max. 89 sekunder.",
-          "pl": "Użyj tej karty, aby opóźnić wykonanie kart przepływu \"then\" o maksymalnie 89 sekund.",
-          "ru": "Используйте эту карточку, чтобы отложить выполнение последующих карточек потока на максимум 89 секунд.",
-          "ko": "이 카드를 사용하여 '그 다음' 흐름 카드를 최대 89초까지 지연시킬 수 있습니다.",
-          "ar": "استخدم هذه البطاقة لتأخير تنفيذ بطاقات التدفق \"ثم\" بحد أقصى 89 ثانية."
-        },
-        "args": [
-          {
-            "name": "time",
-            "title": {
-              "en": "Duration",
-              "nl": "Looptijd",
-              "da": "Varighed",
-              "de": "Dauer",
-              "es": "Duración",
-              "fr": "Durée",
-              "it": "Durata",
-              "no": "Varighet",
-              "sv": "Varaktighet",
-              "pl": "Czas trwania",
-              "ru": "Продолжительность",
-              "ko": "지속 시간",
-              "ar": "المدة الزمنية"
-            },
-            "type": "number",
-            "min": 0,
-            "step": 0.01
-          },
-          {
-            "name": "unit",
-            "title": {
-              "en": "Unit",
-              "nl": "Eenheid",
-              "da": "Enhed",
-              "de": "Einheit",
-              "es": "Unidad",
-              "fr": "Unité",
-              "it": "Unità",
-              "no": "Enhet",
-              "sv": "Enhet",
-              "pl": "Jednostka",
-              "ru": "Единица",
-              "ko": "단위",
-              "ar": "وحدة"
-            },
-            "type": "dropdown",
-            "values": [
-              {
-                "id": "seconds",
-                "label": {
-                  "en": "seconds",
-                  "nl": "seconden",
-                  "da": "sekunder",
-                  "de": "Sekunden",
-                  "es": "segundos",
-                  "fr": "secondes",
-                  "it": "secondi",
-                  "no": "sekunder",
-                  "sv": "sekunder",
-                  "pl": "sekundy",
-                  "ru": "секунды",
-                  "ko": "초",
-                  "ar": "ثواني"
-                }
-              },
-              {
-                "id": "minutes",
-                "label": {
-                  "en": "minutes",
-                  "nl": "minuten",
-                  "da": "minutter",
-                  "de": "Minuten",
-                  "es": "minutos",
-                  "fr": "minutes",
-                  "it": "minuti",
-                  "no": "minutter",
-                  "sv": "minuter",
-                  "pl": "minuty",
-                  "ru": "минуты",
-                  "ko": "분",
-                  "ar": "دقائق"
                 }
               }
             ]

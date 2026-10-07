@@ -1093,5 +1093,20 @@
     "ru": "Переведено на все поддерживаемые языки.",
     "ko": "번역됨: 모든 지원 언어로 번역되었습니다.",
     "ar": "مترجم: مترجم إلى جميع اللغات المدعومة."
+  },
+  "2.2.3": {
+    "en": "Improved: The And-delay flowcard now also has milliseconds.",
+    "nl": "Verbeterd: De En-vertraging flowkaart heeft nu ook milliseconden.",
+    "da": "Forbedret: And-delay flowkortet har nu også millisekunder.",
+    "de": "Verbessert: Die And-Verzögerungskarte hat jetzt auch Millisekunden.",
+    "es": "Mejorado: La tarjeta de flujo And-delay ahora también tiene milisegundos.",
+    "fr": "Amélioré : La carte de flux And-delay dispose désormais de millisecondes.",
+    "it": "Migliorato: La scheda di flusso And-delay ora include anche i millisecondi.",
+    "no": "Forbedret: And-delay flytkortet har nå også millisekunder.",
+    "sv": "Förbättrad: Flödeskortet \"Och-fördröjning\" har nu även millisekunder.",
+    "pl": "Ulepszono: Karta przepływu And-delay ma teraz również milisekundy.",
+    "ru": "Улучшено: Карточка задержки \"И\" теперь также поддерживает миллисекунды.",
+    "ko": "개선됨: And-delay 플로우카드에 이제 밀리초도 포함됩니다.",
+    "ar": "تم التحسين: بطاقة التدفق And-delay تحتوي الآن أيضًا على ميلي ثانية."
   }
 }

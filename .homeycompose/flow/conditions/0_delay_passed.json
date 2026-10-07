@@ -87,6 +87,24 @@
       "type": "dropdown",
       "values": [
         {
+          "id": "milliseconds",
+          "label": {
+            "en": "milliseconds",
+            "nl": "milliseconden",
+            "da": "millisekunder",
+            "de": "Millisekunden",
+            "es": "milisegundos",
+            "fr": "millisecondes",
+            "it": "millisecondi",
+            "no": "millisekunder",
+            "sv": "millisekunder",
+            "pl": "milisekundy",
+            "ru": "миллисекунды",
+            "ko": "밀리초",
+            "ar": "ميلي ثانية"
+          }
+        },
+        {
           "id": "seconds",
           "label": {
             "en": "seconds",
