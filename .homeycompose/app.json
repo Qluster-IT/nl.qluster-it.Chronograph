@@ -1,6 +1,6 @@
 {
   "id": "nl.fellownet.chronograph",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "name": {
@@ -63,9 +63,9 @@
       "sanduhr"
     ]
   },
-  "source": "https://bitbucket.org/QlusterIT/nl.qluster-it.chronograph/",
+  "source": "https://github.com/Qluster-IT/nl.qluster-it.Chronograph/",
   "bugs": {
-    "url": "https://bitbucket.org/QlusterIT/nl.qluster-it.chronograph/issues"
+    "url": "https://github.com/Qluster-IT/nl.qluster-it.Chronograph/issues"
   },
   "homeyCommunityTopicId": 18214,
   "permissions": [],
