@@ -5,20 +5,20 @@
 			"id": "chronograph",
 			"type": "autocomplete",
 			"title": { "en": "Stopwatch", "nl": "Stopwatch" },
-			"hint": { "en": "Choose a configured stopwatch", "nl": "Kies een ingestelde stopwatch" }
+			"hint": {"en":"Choose a configured stopwatch","nl":"Kies een ingestelde stopwatch","da":"Vælg en konfigureret stopur.","de":"Wähle einen eingerichteten Stoppuhr aus.","es":"Elige un cronómetro configurado.","fr":"Choisissez un chronomètre configuré.","it":"Seleziona un cronometro configurato.","no":"Velg en konfigurert stoppeklokke.","sv":"Välj ett konfigurerat stoppur.","pl":"Wybierz skonfigurowany stoper.","ru":"Выберите настроенный объект «секундомер».","ko":"설정된 스톱워치를 선택하세요.","ar":"اختر ساعة الإيقاف مُعدًا مسبقًا."}
 		},
 		{
 			"id": "alternativeName",
 			"type": "text",
 			"title": { "en": "Alternative name", "nl": "Alternatieve naam" },
-			"hint": { "en": "Optionally show a shorter name in the widget", "nl": "Toon desgewenst een kortere naam in de widget" },
+			"hint": {"en":"Optionally show a shorter name in the widget","nl":"Toon desgewenst een kortere naam in de widget","da":"Vis eventuelt et kortere navn i widgetten.","de":"Zeigt optional einen kürzeren Namen im Widget an.","es":"Muestra opcionalmente un nombre más corto en el widget.","fr":"Affiche éventuellement un nom plus court dans le widget.","it":"Mostra facoltativamente un nome più breve nel widget.","no":"Vis eventuelt et kortere navn i widgeten.","sv":"Visa valfritt ett kortare namn i widgeten.","pl":"Opcjonalnie wyświetl krótszą nazwę w widżecie.","ru":"При необходимости отображает в виджете короткое имя.","ko":"위젯에 더 짧은 이름을 표시할 수 있습니다.","ar":"اعرض اسمًا أقصر في الأداة عند الحاجة."},
 			"value": ""
 		},
 		{
 			"id": "layout",
 			"type": "dropdown",
 			"title": { "en": "Layout", "nl": "Indeling" },
-			"hint": { "en": "Choose how compact or spacious the widget looks", "nl": "Kies hoe compact of ruim de widget wordt weergegeven" },
+			"hint": {"en":"Choose how compact or spacious the widget looks","nl":"Kies hoe compact of ruim de widget wordt weergegeven","da":"Vælg, hvor kompakt eller rummelig widgetten skal være.","de":"Lege fest, wie kompakt oder großzügig das Widget dargestellt wird.","es":"Elige si el widget se muestra de forma compacta o espaciosa.","fr":"Choisissez une présentation compacte ou plus spacieuse du widget.","it":"Scegli se visualizzare il widget in modo compatto o più ampio.","no":"Velg hvor kompakt eller romslig widgeten skal vises.","sv":"Välj hur kompakt eller rymlig widgeten ska visas.","pl":"Wybierz kompaktowy lub bardziej przestronny układ widżetu.","ru":"Выберите компактный или более просторный виджет.","ko":"위젯을 간결하거나 넉넉한 레이아웃으로 표시합니다.","ar":"اختر تخطيطًا مضغوطًا أو واسعًا للأداة."},
 			"value": "normal",
 			"values": [
 				{ "id": "compact", "title": { "en": "Compact", "nl": "Compact" } },
@@ -30,7 +30,7 @@
 			"id": "inactiveColor",
 			"type": "dropdown",
 			"title": { "en": "Color when inactive", "nl": "Kleur bij inactief" },
-			"hint": { "en": "Background color when the stopwatch is stopped; None keeps the normal background", "nl": "Achtergrondkleur wanneer de stopwatch gestopt is; Geen behoudt de normale achtergrond" },
+			"hint": {"en":"Background color when the stopwatch is stopped; None keeps the normal background","nl":"Achtergrondkleur wanneer de stopwatch gestopt is; Geen behoudt de normale achtergrond","da":"Baggrundsfarve, når stopur er stoppet; vælg Ingen for normal baggrund.","de":"Hintergrundfarbe, wenn der Stoppuhr gestoppt ist; „Keine“ behält den normalen Hintergrund bei.","es":"Color de fondo cuando el cronómetro está detenido; elige Ninguno para mantener el fondo normal.","fr":"Couleur d’arrière-plan lorsque le chronomètre est arrêté ; choisissez Aucun pour conserver l’arrière-plan normal.","it":"Colore di sfondo quando il cronometro è fermo; scegli Nessuno per mantenere lo sfondo normale.","no":"Bakgrunnsfarge når stoppeklokke er stoppet; velg Ingen for normal bakgrunn.","sv":"Bakgrundsfärg när stoppur har stoppats; välj Ingen för vanlig bakgrund.","pl":"Kolor tła, gdy stoper jest zatrzymany; wybierz Brak, aby zachować zwykłe tło.","ru":"Цвет фона, когда объект «секундомер» остановлен; выберите «Нет», чтобы оставить обычный фон.","ko":"스톱워치가 중지되었을 때의 배경색입니다. 기본 배경을 사용하려면 없음을 선택하세요.","ar":"لون الخلفية عندما يكون ساعة الإيقاف متوقفًا؛ اختر «بدون» للاحتفاظ بالخلفية العادية."},
 			"value": "none",
 			"values": [
 				{ "id": "none", "title": { "en": "None", "nl": "Geen" } },
@@ -52,7 +52,7 @@
 			"id": "pausedColor",
 			"type": "dropdown",
 			"title": { "en": "Color when paused", "nl": "Kleur bij pauze" },
-			"hint": { "en": "Background color while the stopwatch is paused; None keeps the normal background", "nl": "Achtergrondkleur wanneer de stopwatch gepauzeerd is; Geen behoudt de normale achtergrond" },
+			"hint": {"en":"Background color while the stopwatch is paused; None keeps the normal background","nl":"Achtergrondkleur wanneer de stopwatch gepauzeerd is; Geen behoudt de normale achtergrond","da":"Baggrundsfarve, når stopur er sat på pause; vælg Ingen for normal baggrund.","de":"Hintergrundfarbe, wenn der Stoppuhr pausiert ist; „Keine“ behält den normalen Hintergrund bei.","es":"Color de fondo cuando el cronómetro está en pausa; elige Ninguno para mantener el fondo normal.","fr":"Couleur d’arrière-plan lorsque le chronomètre est en pause ; choisissez Aucun pour conserver l’arrière-plan normal.","it":"Colore di sfondo quando il cronometro è in pausa; scegli Nessuno per mantenere lo sfondo normale.","no":"Bakgrunnsfarge når stoppeklokke er satt på pause; velg Ingen for normal bakgrunn.","sv":"Bakgrundsfärg när stoppur är pausad; välj Ingen för vanlig bakgrund.","pl":"Kolor tła, gdy stoper jest wstrzymany; wybierz Brak, aby zachować zwykłe tło.","ru":"Цвет фона, когда объект «секундомер» на паузе; выберите «Нет», чтобы оставить обычный фон.","ko":"스톱워치가 일시 정지되었을 때의 배경색입니다. 기본 배경을 사용하려면 없음을 선택하세요.","ar":"لون الخلفية عندما يكون ساعة الإيقاف متوقفًا مؤقتًا؛ اختر «بدون» للاحتفاظ بالخلفية العادية."},
 			"value": "none",
 			"values": [
 				{ "id": "none", "title": { "en": "None", "nl": "Geen" } },
@@ -74,7 +74,7 @@
 			"id": "runningColor",
 			"type": "dropdown",
 			"title": { "en": "Color when active", "nl": "Kleur bij actief" },
-			"hint": { "en": "Background color while the stopwatch is running; None keeps the normal background", "nl": "Achtergrondkleur wanneer de stopwatch loopt; Geen behoudt de normale achtergrond" },
+			"hint": {"en":"Background color while the stopwatch is running; None keeps the normal background","nl":"Achtergrondkleur wanneer de stopwatch loopt; Geen behoudt de normale achtergrond","da":"Baggrundsfarve, når stopur kører; vælg Ingen for normal baggrund.","de":"Hintergrundfarbe, während der Stoppuhr läuft; „Keine“ behält den normalen Hintergrund bei.","es":"Color de fondo mientras el cronómetro está en marcha; elige Ninguno para mantener el fondo normal.","fr":"Couleur d’arrière-plan lorsque le chronomètre est en cours ; choisissez Aucun pour conserver l’arrière-plan normal.","it":"Colore di sfondo mentre il cronometro è in esecuzione; scegli Nessuno per mantenere lo sfondo normale.","no":"Bakgrunnsfarge mens stoppeklokke kjører; velg Ingen for normal bakgrunn.","sv":"Bakgrundsfärg medan stoppur körs; välj Ingen för vanlig bakgrund.","pl":"Kolor tła podczas działania stoper; wybierz Brak, aby zachować zwykłe tło.","ru":"Цвет фона во время работы объекта «секундомер»; выберите «Нет», чтобы оставить обычный фон.","ko":"스톱워치가 실행 중일 때의 배경색입니다. 기본 배경을 사용하려면 없음을 선택하세요.","ar":"لون الخلفية أثناء تشغيل ساعة الإيقاف؛ اختر «بدون» للاحتفاظ بالخلفية العادية."},
 			"value": "none",
 			"values": [
 				{ "id": "none", "title": { "en": "None", "nl": "Geen" } },
@@ -96,7 +96,7 @@
 			"id": "playColor",
 			"type": "dropdown",
 			"title": { "en": "Play button color", "nl": "Kleur van de afspeelknop" },
-			"hint": { "en": "Choose the color of the Start and Resume buttons", "nl": "Kies de kleur van de Start- en Hervatten-knoppen" },
+			"hint": {"en":"Choose the color of the Start and Resume buttons","nl":"Kies de kleur van de Start- en Hervatten-knoppen","da":"Vælg farven på Start- og Genoptag-knapperne.","de":"Lege die Farbe der Start- und Fortsetzen-Schaltflächen fest.","es":"Elige el color de los botones Iniciar y Reanudar.","fr":"Choisissez la couleur des boutons Démarrer et Reprendre.","it":"Scegli il colore dei pulsanti Avvia e Riprendi.","no":"Velg fargen på Start- og Fortsett-knappene.","sv":"Välj färg på Starta- och Återuppta-knapparna.","pl":"Wybierz kolor przycisków Start i Wznów.","ru":"Выберите цвет кнопок «Старт» и «Продолжить».","ko":"시작 및 재개 버튼의 색상을 선택하세요.","ar":"اختر لون زري البدء والاستئناف."},
 			"value": "blue",
 			"values": [
 				{ "id": "blue", "title": { "en": "Blue", "nl": "Blauw" } },
@@ -117,7 +117,7 @@
 			"id": "pauseColor",
 			"type": "dropdown",
 			"title": { "en": "Pause button color", "nl": "Kleur van de pauzeknop" },
-			"hint": { "en": "Choose the color of the Pause button", "nl": "Kies de kleur van de Pauze-knop" },
+			"hint": {"en":"Choose the color of the Pause button","nl":"Kies de kleur van de Pauze-knop","da":"Vælg farven på Pause-knappen.","de":"Lege die Farbe der Pause-Schaltfläche fest.","es":"Elige el color del botón Pausar.","fr":"Choisissez la couleur du bouton Pause.","it":"Scegli il colore del pulsante Pausa.","no":"Velg fargen på Pause-knappen.","sv":"Välj färg på Paus-knappen.","pl":"Wybierz kolor przycisku Wstrzymaj.","ru":"Выберите цвет кнопки «Пауза».","ko":"일시 정지 버튼의 색상을 선택하세요.","ar":"اختر لون زر الإيقاف المؤقت."},
 			"value": "blue",
 			"values": [
 				{ "id": "blue", "title": { "en": "Blue", "nl": "Blauw" } },
@@ -138,7 +138,7 @@
 			"id": "stopColor",
 			"type": "dropdown",
 			"title": { "en": "Stop button color", "nl": "Kleur van de stopknop" },
-			"hint": { "en": "Choose the color of the Stop button", "nl": "Kies de kleur van de Stop-knop" },
+			"hint": {"en":"Choose the color of the Stop button","nl":"Kies de kleur van de Stop-knop","da":"Vælg farven på Stop-knappen.","de":"Lege die Farbe der Stopp-Schaltfläche fest.","es":"Elige el color del botón Detener.","fr":"Choisissez la couleur du bouton Arrêter.","it":"Scegli il colore del pulsante Stop.","no":"Velg fargen på Stopp-knappen.","sv":"Välj färg på Stopp-knappen.","pl":"Wybierz kolor przycisku Zatrzymaj.","ru":"Выберите цвет кнопки «Стоп».","ko":"중지 버튼의 색상을 선택하세요.","ar":"اختر لون زر الإيقاف."},
 			"value": "red",
 			"values": [
 				{ "id": "blue", "title": { "en": "Blue", "nl": "Blauw" } },
@@ -159,7 +159,7 @@
 			"id": "showMilliseconds",
 			"type": "checkbox",
 			"title": { "en": "Show milliseconds", "nl": "Toon milliseconden" },
-			"hint": { "en": "Include milliseconds in the displayed stopwatch value", "nl": "Toon milliseconden bij de stopwatchwaarde" },
+			"hint": {"en":"Include milliseconds in the displayed stopwatch value","nl":"Toon milliseconden bij de stopwatchwaarde","da":"Vis millisekunder i værdien for stopur.","de":"Millisekunden im angezeigten Wert für Stoppuhr anzeigen.","es":"Muestra los milisegundos en el valor del cronómetro.","fr":"Affiche les millisecondes dans la valeur du chronomètre.","it":"Mostra i millisecondi nel valore del cronometro.","no":"Vis millisekunder i verdien for stoppeklokke.","sv":"Visa millisekunder i värdet för stoppur.","pl":"Wyświetlaj milisekundy w wartości stoper.","ru":"Показывать миллисекунды в значении «секундомер».","ko":"스톱워치 값에 밀리초를 표시합니다.","ar":"اعرض أجزاء الثانية في قيمة ساعة الإيقاف."},
 			"value": false
 		}
 	],

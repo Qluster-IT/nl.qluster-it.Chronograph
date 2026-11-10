@@ -5,20 +5,20 @@
 			"id": "chronograph",
 			"type": "autocomplete",
 			"title": { "en": "Transition", "nl": "Transitie" },
-			"hint": { "en": "Choose a configured transition", "nl": "Kies een ingestelde transitie" }
+			"hint": {"en":"Choose a configured transition","nl":"Kies een ingestelde transitie","da":"Vælg en konfigureret overgang.","de":"Wähle einen eingerichteten Übergang aus.","es":"Elige un transición configurado.","fr":"Choisissez un transition configuré.","it":"Seleziona un transizione configurato.","no":"Velg en konfigurert overgang.","sv":"Välj ett konfigurerat övergång.","pl":"Wybierz skonfigurowany przejście.","ru":"Выберите настроенный объект «переход».","ko":"설정된 전환를 선택하세요.","ar":"اختر الانتقال مُعدًا مسبقًا."}
 		},
 		{
 			"id": "alternativeName",
 			"type": "text",
 			"title": { "en": "Alternative name", "nl": "Alternatieve naam" },
-			"hint": { "en": "Optionally show a shorter name in the widget", "nl": "Toon desgewenst een kortere naam in de widget" },
+			"hint": {"en":"Optionally show a shorter name in the widget","nl":"Toon desgewenst een kortere naam in de widget","da":"Vis eventuelt et kortere navn i widgetten.","de":"Zeigt optional einen kürzeren Namen im Widget an.","es":"Muestra opcionalmente un nombre más corto en el widget.","fr":"Affiche éventuellement un nom plus court dans le widget.","it":"Mostra facoltativamente un nome più breve nel widget.","no":"Vis eventuelt et kortere navn i widgeten.","sv":"Visa valfritt ett kortare namn i widgeten.","pl":"Opcjonalnie wyświetl krótszą nazwę w widżecie.","ru":"При необходимости отображает в виджете короткое имя.","ko":"위젯에 더 짧은 이름을 표시할 수 있습니다.","ar":"اعرض اسمًا أقصر في الأداة عند الحاجة."},
 			"value": ""
 		},
 		{
 			"id": "layout",
 			"type": "dropdown",
 			"title": { "en": "Layout", "nl": "Indeling" },
-			"hint": { "en": "Choose how compact or spacious the widget looks", "nl": "Kies hoe compact of ruim de widget wordt weergegeven" },
+			"hint": {"en":"Choose how compact or spacious the widget looks","nl":"Kies hoe compact of ruim de widget wordt weergegeven","da":"Vælg, hvor kompakt eller rummelig widgetten skal være.","de":"Lege fest, wie kompakt oder großzügig das Widget dargestellt wird.","es":"Elige si el widget se muestra de forma compacta o espaciosa.","fr":"Choisissez une présentation compacte ou plus spacieuse du widget.","it":"Scegli se visualizzare il widget in modo compatto o più ampio.","no":"Velg hvor kompakt eller romslig widgeten skal vises.","sv":"Välj hur kompakt eller rymlig widgeten ska visas.","pl":"Wybierz kompaktowy lub bardziej przestronny układ widżetu.","ru":"Выберите компактный или более просторный виджет.","ko":"위젯을 간결하거나 넉넉한 레이아웃으로 표시합니다.","ar":"اختر تخطيطًا مضغوطًا أو واسعًا للأداة."},
 			"value": "normal",
 			"values": [
 				{ "id": "compact", "title": { "en": "Compact", "nl": "Compact" } },
@@ -30,7 +30,7 @@
 			"id": "inactiveColor",
 			"type": "dropdown",
 			"title": { "en": "Color when inactive", "nl": "Kleur bij inactief" },
-			"hint": { "en": "Background color when the transition is stopped; None keeps the normal background", "nl": "Achtergrondkleur wanneer de transitie gestopt is; Geen behoudt de normale achtergrond" },
+			"hint": {"en":"Background color when the transition is stopped; None keeps the normal background","nl":"Achtergrondkleur wanneer de transitie gestopt is; Geen behoudt de normale achtergrond","da":"Baggrundsfarve, når overgang er stoppet; vælg Ingen for normal baggrund.","de":"Hintergrundfarbe, wenn der Übergang gestoppt ist; „Keine“ behält den normalen Hintergrund bei.","es":"Color de fondo cuando el transición está detenido; elige Ninguno para mantener el fondo normal.","fr":"Couleur d’arrière-plan lorsque le transition est arrêté ; choisissez Aucun pour conserver l’arrière-plan normal.","it":"Colore di sfondo quando il transizione è fermo; scegli Nessuno per mantenere lo sfondo normale.","no":"Bakgrunnsfarge når overgang er stoppet; velg Ingen for normal bakgrunn.","sv":"Bakgrundsfärg när övergång har stoppats; välj Ingen för vanlig bakgrund.","pl":"Kolor tła, gdy przejście jest zatrzymany; wybierz Brak, aby zachować zwykłe tło.","ru":"Цвет фона, когда объект «переход» остановлен; выберите «Нет», чтобы оставить обычный фон.","ko":"전환가 중지되었을 때의 배경색입니다. 기본 배경을 사용하려면 없음을 선택하세요.","ar":"لون الخلفية عندما يكون الانتقال متوقفًا؛ اختر «بدون» للاحتفاظ بالخلفية العادية."},
 			"value": "none",
 			"values": [
 				{ "id": "none", "title": { "en": "None", "nl": "Geen" } },
@@ -52,7 +52,7 @@
 			"id": "pausedColor",
 			"type": "dropdown",
 			"title": { "en": "Color when paused", "nl": "Kleur bij pauze" },
-			"hint": { "en": "Background color while the transition is paused; None keeps the normal background", "nl": "Achtergrondkleur wanneer de transitie gepauzeerd is; Geen behoudt de normale achtergrond" },
+			"hint": {"en":"Background color while the transition is paused; None keeps the normal background","nl":"Achtergrondkleur wanneer de transitie gepauzeerd is; Geen behoudt de normale achtergrond","da":"Baggrundsfarve, når overgang er sat på pause; vælg Ingen for normal baggrund.","de":"Hintergrundfarbe, wenn der Übergang pausiert ist; „Keine“ behält den normalen Hintergrund bei.","es":"Color de fondo cuando el transición está en pausa; elige Ninguno para mantener el fondo normal.","fr":"Couleur d’arrière-plan lorsque le transition est en pause ; choisissez Aucun pour conserver l’arrière-plan normal.","it":"Colore di sfondo quando il transizione è in pausa; scegli Nessuno per mantenere lo sfondo normale.","no":"Bakgrunnsfarge når overgang er satt på pause; velg Ingen for normal bakgrunn.","sv":"Bakgrundsfärg när övergång är pausad; välj Ingen för vanlig bakgrund.","pl":"Kolor tła, gdy przejście jest wstrzymany; wybierz Brak, aby zachować zwykłe tło.","ru":"Цвет фона, когда объект «переход» на паузе; выберите «Нет», чтобы оставить обычный фон.","ko":"전환가 일시 정지되었을 때의 배경색입니다. 기본 배경을 사용하려면 없음을 선택하세요.","ar":"لون الخلفية عندما يكون الانتقال متوقفًا مؤقتًا؛ اختر «بدون» للاحتفاظ بالخلفية العادية."},
 			"value": "none",
 			"values": [
 				{ "id": "none", "title": { "en": "None", "nl": "Geen" } },
@@ -74,7 +74,7 @@
 			"id": "runningColor",
 			"type": "dropdown",
 			"title": { "en": "Color when active", "nl": "Kleur bij actief" },
-			"hint": { "en": "Background color while the transition is running; None keeps the normal background", "nl": "Achtergrondkleur wanneer de transitie loopt; Geen behoudt de normale achtergrond" },
+			"hint": {"en":"Background color while the transition is running; None keeps the normal background","nl":"Achtergrondkleur wanneer de transitie loopt; Geen behoudt de normale achtergrond","da":"Baggrundsfarve, når overgang kører; vælg Ingen for normal baggrund.","de":"Hintergrundfarbe, während der Übergang läuft; „Keine“ behält den normalen Hintergrund bei.","es":"Color de fondo mientras el transición está en marcha; elige Ninguno para mantener el fondo normal.","fr":"Couleur d’arrière-plan lorsque le transition est en cours ; choisissez Aucun pour conserver l’arrière-plan normal.","it":"Colore di sfondo mentre il transizione è in esecuzione; scegli Nessuno per mantenere lo sfondo normale.","no":"Bakgrunnsfarge mens overgang kjører; velg Ingen for normal bakgrunn.","sv":"Bakgrundsfärg medan övergång körs; välj Ingen för vanlig bakgrund.","pl":"Kolor tła podczas działania przejście; wybierz Brak, aby zachować zwykłe tło.","ru":"Цвет фона во время работы объекта «переход»; выберите «Нет», чтобы оставить обычный фон.","ko":"전환가 실행 중일 때의 배경색입니다. 기본 배경을 사용하려면 없음을 선택하세요.","ar":"لون الخلفية أثناء تشغيل الانتقال؛ اختر «بدون» للاحتفاظ بالخلفية العادية."},
 			"value": "none",
 			"values": [
 				{ "id": "none", "title": { "en": "None", "nl": "Geen" } },
@@ -96,7 +96,7 @@
 			"id": "playColor",
 			"type": "dropdown",
 			"title": { "en": "Play button color", "nl": "Kleur van de afspeelknop" },
-			"hint": { "en": "Choose the color of the Start and Resume buttons", "nl": "Kies de kleur van de Start- en Hervatten-knoppen" },
+			"hint": {"en":"Choose the color of the Start and Resume buttons","nl":"Kies de kleur van de Start- en Hervatten-knoppen","da":"Vælg farven på Start- og Genoptag-knapperne.","de":"Lege die Farbe der Start- und Fortsetzen-Schaltflächen fest.","es":"Elige el color de los botones Iniciar y Reanudar.","fr":"Choisissez la couleur des boutons Démarrer et Reprendre.","it":"Scegli il colore dei pulsanti Avvia e Riprendi.","no":"Velg fargen på Start- og Fortsett-knappene.","sv":"Välj färg på Starta- och Återuppta-knapparna.","pl":"Wybierz kolor przycisków Start i Wznów.","ru":"Выберите цвет кнопок «Старт» и «Продолжить».","ko":"시작 및 재개 버튼의 색상을 선택하세요.","ar":"اختر لون زري البدء والاستئناف."},
 			"value": "blue",
 			"values": [
 				{ "id": "blue", "title": { "en": "Blue", "nl": "Blauw" } },
@@ -117,7 +117,7 @@
 			"id": "pauseColor",
 			"type": "dropdown",
 			"title": { "en": "Pause button color", "nl": "Kleur van de pauzeknop" },
-			"hint": { "en": "Choose the color of the Pause button", "nl": "Kies de kleur van de Pauze-knop" },
+			"hint": {"en":"Choose the color of the Pause button","nl":"Kies de kleur van de Pauze-knop","da":"Vælg farven på Pause-knappen.","de":"Lege die Farbe der Pause-Schaltfläche fest.","es":"Elige el color del botón Pausar.","fr":"Choisissez la couleur du bouton Pause.","it":"Scegli il colore del pulsante Pausa.","no":"Velg fargen på Pause-knappen.","sv":"Välj färg på Paus-knappen.","pl":"Wybierz kolor przycisku Wstrzymaj.","ru":"Выберите цвет кнопки «Пауза».","ko":"일시 정지 버튼의 색상을 선택하세요.","ar":"اختر لون زر الإيقاف المؤقت."},
 			"value": "blue",
 			"values": [
 				{ "id": "blue", "title": { "en": "Blue", "nl": "Blauw" } },
@@ -138,7 +138,7 @@
 			"id": "stopColor",
 			"type": "dropdown",
 			"title": { "en": "Stop button color", "nl": "Kleur van de stopknop" },
-			"hint": { "en": "Choose the color of the Stop button", "nl": "Kies de kleur van de Stop-knop" },
+			"hint": {"en":"Choose the color of the Stop button","nl":"Kies de kleur van de Stop-knop","da":"Vælg farven på Stop-knappen.","de":"Lege die Farbe der Stopp-Schaltfläche fest.","es":"Elige el color del botón Detener.","fr":"Choisissez la couleur du bouton Arrêter.","it":"Scegli il colore del pulsante Stop.","no":"Velg fargen på Stopp-knappen.","sv":"Välj färg på Stopp-knappen.","pl":"Wybierz kolor przycisku Zatrzymaj.","ru":"Выберите цвет кнопки «Стоп».","ko":"중지 버튼의 색상을 선택하세요.","ar":"اختر لون زر الإيقاف."},
 			"value": "red",
 			"values": [
 				{ "id": "blue", "title": { "en": "Blue", "nl": "Blauw" } },
@@ -159,14 +159,14 @@
 			"id": "showMilliseconds",
 			"type": "checkbox",
 			"title": { "en": "Show milliseconds", "nl": "Toon milliseconden" },
-			"hint": { "en": "Include milliseconds in the displayed transition value", "nl": "Toon milliseconden bij de transitie-waarde" },
+			"hint": {"en":"Include milliseconds in the displayed transition value","nl":"Toon milliseconden bij de transitie-waarde","da":"Vis millisekunder i værdien for overgang.","de":"Millisekunden im angezeigten Wert für Übergang anzeigen.","es":"Muestra los milisegundos en el valor del transición.","fr":"Affiche les millisecondes dans la valeur du transition.","it":"Mostra i millisecondi nel valore del transizione.","no":"Vis millisekunder i verdien for overgang.","sv":"Visa millisekunder i värdet för övergång.","pl":"Wyświetlaj milisekundy w wartości przejście.","ru":"Показывать миллисекунды в значении «переход».","ko":"전환 값에 밀리초를 표시합니다.","ar":"اعرض أجزاء الثانية في قيمة الانتقال."},
 			"value": false
 		},
 		{
 			"id": "defaultDuration",
 			"type": "number",
 			"title": { "en": "Default duration", "nl": "Standaardduur" },
-			"hint": { "en": "Pre-fill this duration when starting the transition; leave empty for no default", "nl": "Vul deze duur vooraf in bij het starten van de transitie; laat leeg voor geen standaardwaarde" },
+			"hint": {"en":"Pre-fill this duration when starting the transition; leave empty for no default","nl":"Vul deze duur vooraf in bij het starten van de transitie; laat leeg voor geen standaardwaarde","da":"Udfyld varigheden på forhånd, når overgang startes; lad feltet stå tomt for ingen standardværdi.","de":"Füllt diese Dauer beim Starten von Übergang voraus; leer lassen, wenn kein Standardwert gewünscht ist.","es":"Rellena esta duración al iniciar el transición; déjalo vacío para no usar un valor predeterminado.","fr":"Préremplit cette durée au démarrage du transition ; laissez vide pour ne pas définir de valeur par défaut.","it":"Precompila questa durata all’avvio del transizione; lascia vuoto per non impostare un valore predefinito.","no":"Fyll inn varigheten når overgang startes; la feltet stå tomt for ingen standardverdi.","sv":"Förifyll varaktigheten när övergång startas; lämna tomt för inget standardvärde.","pl":"Wstępnie wypełnia czas przy uruchamianiu przejście; pozostaw puste, aby nie ustawiać wartości domyślnej.","ru":"Подставлять эту длительность при запуске объекта «переход»; оставьте поле пустым, чтобы не задавать значение по умолчанию.","ko":"전환 시작 시 이 시간을 미리 입력합니다. 기본값을 사용하지 않으려면 비워 두세요.","ar":"املأ هذه المدة مسبقًا عند بدء الانتقال؛ اترك الحقل فارغًا لعدم تعيين قيمة افتراضية."},
 			"value": null,
 			"min": 0.001
 		},
@@ -174,7 +174,7 @@
 			"id": "defaultDurationUnit",
 			"type": "dropdown",
 			"title": { "en": "Default duration unit", "nl": "Standaardeenheid voor duur" },
-			"hint": { "en": "Unit used for the default duration", "nl": "Eenheid voor de standaardduur" },
+			"hint": {"en":"Unit used for the default duration","nl":"Eenheid voor de standaardduur","da":"Enhed for standardvarigheden.","de":"Einheit für die Standarddauer.","es":"Unidad de la duración predeterminada.","fr":"Unité utilisée pour la durée par défaut.","it":"Unità della durata predefinita.","no":"Enhet for standardvarigheten.","sv":"Enhet för standardvaraktigheten.","pl":"Jednostka domyślnego czasu trwania.","ru":"Единица измерения длительности по умолчанию.","ko":"기본 시간의 단위입니다.","ar":"وحدة المدة الافتراضية."},
 			"value": "minutes",
 			"values": [
 				{ "id": "milliseconds", "title": { "en": "Milliseconds", "nl": "Milliseconden" } },
@@ -188,21 +188,21 @@
 			"id": "defaultTransitionFrom",
 			"type": "number",
 			"title": { "en": "Default transition start value", "nl": "Standaard beginwaarde transitie" },
-			"hint": { "en": "Pre-fill the transition's starting value; leave empty for no default", "nl": "Vul de beginwaarde van de transitie vooraf in; laat leeg voor geen standaardwaarde" },
+			"hint": {"en":"Pre-fill the transition's starting value; leave empty for no default","nl":"Vul de beginwaarde van de transitie vooraf in; laat leeg voor geen standaardwaarde","da":"Udfyld overgangens startværdi på forhånd; lad feltet stå tomt for ingen standardværdi.","de":"Füllt den Startwert des Übergangs voraus; leer lassen, wenn kein Standardwert gewünscht ist.","es":"Rellena el valor inicial de la transición; déjalo vacío para no usar un valor predeterminado.","fr":"Préremplit la valeur de départ de la transition ; laissez vide pour ne pas définir de valeur par défaut.","it":"Precompila il valore iniziale della transizione; lascia vuoto per non impostare un valore predefinito.","no":"Fyll inn overgangens startverdi; la feltet stå tomt for ingen standardverdi.","sv":"Förifyll övergångens startvärde; lämna tomt för inget standardvärde.","pl":"Wstępnie wypełnia wartość początkową przejścia; pozostaw puste, aby nie ustawiać wartości domyślnej.","ru":"Подставлять начальное значение перехода; оставьте поле пустым, чтобы не задавать значение по умолчанию.","ko":"전환 시작 값을 미리 입력합니다. 기본값을 사용하지 않으려면 비워 두세요.","ar":"املأ قيمة بداية الانتقال مسبقًا؛ اترك الحقل فارغًا لعدم تعيين قيمة افتراضية."},
 			"value": null
 		},
 		{
 			"id": "defaultTransitionTo",
 			"type": "number",
 			"title": { "en": "Default transition end value", "nl": "Standaard eindwaarde transitie" },
-			"hint": { "en": "Pre-fill the transition's ending value; leave empty for no default", "nl": "Vul de eindwaarde van de transitie vooraf in; laat leeg voor geen standaardwaarde" },
+			"hint": {"en":"Pre-fill the transition's ending value; leave empty for no default","nl":"Vul de eindwaarde van de transitie vooraf in; laat leeg voor geen standaardwaarde","da":"Udfyld overgangens slutværdi på forhånd; lad feltet stå tomt for ingen standardværdi.","de":"Füllt den Endwert des Übergangs voraus; leer lassen, wenn kein Standardwert gewünscht ist.","es":"Rellena el valor final de la transición; déjalo vacío para no usar un valor predeterminado.","fr":"Préremplit la valeur de fin de la transition ; laissez vide pour ne pas définir de valeur par défaut.","it":"Precompila il valore finale della transizione; lascia vuoto per non impostare un valore predefinito.","no":"Fyll inn overgangens sluttverdi; la feltet stå tomt for ingen standardverdi.","sv":"Förifyll övergångens slutvärde; lämna tomt för inget standardvärde.","pl":"Wstępnie wypełnia wartość końcową przejścia; pozostaw puste, aby nie ustawiać wartości domyślnej.","ru":"Подставлять конечное значение перехода; оставьте поле пустым, чтобы не задавать значение по умолчанию.","ko":"전환 종료 값을 미리 입력합니다. 기본값을 사용하지 않으려면 비워 두세요.","ar":"املأ قيمة نهاية الانتقال مسبقًا؛ اترك الحقل فارغًا لعدم تعيين قيمة افتراضية."},
 			"value": null
 		},
 		{
 			"id": "defaultTransitionSteps",
 			"type": "number",
 			"title": { "en": "Default transition steps", "nl": "Standaardstappen transitie" },
-			"hint": { "en": "Pre-fill the number of transition steps (minimum 2); leave empty for no default", "nl": "Vul het aantal transitiestappen vooraf in (minimaal 2); laat leeg voor geen standaardwaarde" },
+			"hint": {"en":"Pre-fill the number of transition steps (minimum 2); leave empty for no default","nl":"Vul het aantal transitiestappen vooraf in (minimaal 2); laat leeg voor geen standaardwaarde","da":"Udfyld antallet af overgangstrin på forhånd (mindst 2); lad feltet stå tomt for ingen standardværdi.","de":"Füllt die Anzahl der Übergangsschritte voraus (mindestens 2); leer lassen, wenn kein Standardwert gewünscht ist.","es":"Rellena el número de pasos de la transición (mínimo 2); déjalo vacío para no usar un valor predeterminado.","fr":"Préremplit le nombre d’étapes de la transition (minimum 2) ; laissez vide pour ne pas définir de valeur par défaut.","it":"Precompila il numero di passaggi della transizione (minimo 2); lascia vuoto per non impostare un valore predefinito.","no":"Fyll inn antall overgangstrinn (minst 2); la feltet stå tomt for ingen standardverdi.","sv":"Förifyll antalet övergångssteg (minst 2); lämna tomt för inget standardvärde.","pl":"Wstępnie wypełnia liczbę kroków przejścia (minimum 2); pozostaw puste, aby nie ustawiać wartości domyślnej.","ru":"Подставлять количество шагов перехода (минимум 2); оставьте поле пустым, чтобы не задавать значение по умолчанию.","ko":"전환 단계를 미리 입력합니다(최소 2). 기본값을 사용하지 않으려면 비워 두세요.","ar":"املأ عدد خطوات الانتقال مسبقًا (الحد الأدنى 2)؛ اترك الحقل فارغًا لعدم تعيين قيمة افتراضية."},
 			"value": null,
 			"min": 2
 		},
@@ -210,7 +210,7 @@
 			"id": "preferSavedValues",
 			"type": "checkbox",
 			"title": { "en": "Prefer saved Flow values", "nl": "Geef voorkeur aan opgeslagen Flow-waarden" },
-			"hint": { "en": "Use values saved from the transition's Flow start card instead of widget defaults when available", "nl": "Gebruik opgeslagen waarden van de Flow-startkaart in plaats van widgetstandaarden, indien beschikbaar" },
+			"hint": {"en":"Use values saved from the transition's Flow start card instead of widget defaults when available","nl":"Gebruik opgeslagen waarden van de Flow-startkaart in plaats van widgetstandaarden, indien beschikbaar","da":"Brug om muligt værdier fra Flow-startkortet i stedet for widgettens standardværdier.","de":"Verwendet verfügbare Werte der Flow-Startkarte anstelle der Widget-Standardwerte.","es":"Usa los valores guardados en la tarjeta de inicio del Flow en lugar de los valores predeterminados del widget, si están disponibles.","fr":"Utilise les valeurs enregistrées dans la carte de démarrage du Flow à la place des valeurs par défaut du widget, si elles sont disponibles.","it":"Usa, se disponibili, i valori salvati nella scheda di avvio del Flow invece dei valori predefiniti del widget.","no":"Bruk om mulig verdier fra Flow-startkortet i stedet for widgetens standardverdier.","sv":"Använd tillgängliga värden från Flow-startkortet i stället för widgetens standardvärden.","pl":"Jeśli są dostępne, używaj wartości zapisanych na karcie startowej Flow zamiast wartości domyślnych widżetu.","ru":"Если доступны, использовать значения из карты запуска Flow вместо настроек виджета.","ko":"사용 가능한 경우 위젯 기본값 대신 Flow 시작 카드에 저장된 값을 사용합니다.","ar":"استخدم القيم المحفوظة في بطاقة بدء Flow بدلًا من القيم الافتراضية للأداة عند توفرها."},
 			"value": false
 		}
 	],
