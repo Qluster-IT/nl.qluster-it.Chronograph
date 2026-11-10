@@ -1124,7 +1124,7 @@
     "ko": "소스 코드와 문제를 Bitbucket에서 GitHub로 변경했습니다.",
     "ar": "تم تغيير الشيفرة المصدرية والمشكلات من Bitbucket إلى GitHub."
   },
-  "2.3.0": {
+  "2.3.1": {
     "en": "Added customizable timer, stopwatch and transition dashboard widgets with controls and Flow/API defaults.\nClarified that the timer split Flow card uses remaining duration.\nAdded a Flow card for elapsed timer duration.",
     "nl": "Aanpasbare dashboardwidgets toegevoegd voor timers, stopwatches en transities, met bediening en Flow/API-standaardwaarden.\nVerduidelijkt dat de timer-splitflowkaart de resterende duur gebruikt.\nEen flowkaart voor de verstreken timerduur toegevoegd.",
     "da": "Tilføjet tilpasselige dashboard-widgets til timere, stopure og overgange med betjening og standardværdier fra Flow/API.\nPræciseret, at timerens split-flowkort bruger den resterende tid.\nTilføjet et flowkort for timerens forløbne tid.",
