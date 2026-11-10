@@ -64,6 +64,17 @@ const TransitionPaused = require('./lib/transition/triggers/transition_paused.js
  * @typedef {Object} ChronographConfiguration
  * @property {string} name User-configured chronograph name.
  * @property {number} [action] Timestamp in milliseconds of the last chronograph event.
+ * @property {ChronographStartValues} [flowValues] Values used by the most recent Flow start.
+ */
+
+/**
+ * Resolved start values retained for use as widget defaults.
+ * @typedef {Object} ChronographStartValues
+ * @property {number} [time] Resolved duration value.
+ * @property {string} [unit] Duration unit.
+ * @property {number} [from] Transition starting value.
+ * @property {number} [to] Transition ending value.
+ * @property {number} [steps] Transition step count.
  */
 
 /**
@@ -312,7 +323,10 @@ class Application extends Homey.App {
 				let oldChronograph = this.oldChronographs && this.oldChronographs[type] ? this.oldChronographs[type].find(x => x.name == names[i]) : undefined;
 				/** @type {ChronographConfiguration} */
 				let chrono = { name: names[i] };
-				if (oldChronograph) chrono.action = oldChronograph.action;
+				if (oldChronograph) {
+					chrono.action = oldChronograph.action;
+					chrono.flowValues = oldChronograph.flowValues;
+				}
 				this.chronographs[type].push(chrono) & (changed = true);
 			}
 		return changed;
@@ -503,6 +517,11 @@ class Application extends Homey.App {
 					active[chronograph.getId()] = raw;
 				}
 				this.homey.settings.set('chronographs_active', active);
+				if (event === 'started' && chronograph.getData('flowValues')) {
+					this.homey.api.realtime('chronograph_event_multi', [raw]).catch(error => {
+						this.homey.error('Unable to notify widgets of updated Flow start values', error);
+					});
+				}
 
 				try {
 

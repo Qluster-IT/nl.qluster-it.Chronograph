@@ -183,13 +183,6 @@
 				{ "id": "hours", "title": { "en": "Hours", "nl": "Uren" } },
 				{ "id": "days", "title": { "en": "Days", "nl": "Dagen" } }
 			]
-		},
-		{
-			"id": "preferSavedValues",
-			"type": "checkbox",
-			"title": { "en": "Prefer saved Flow values", "nl": "Geef voorkeur aan opgeslagen Flow-waarden" },
-			"hint": {"en":"Use values saved from the timer's Flow start card instead of widget defaults when available","nl":"Gebruik opgeslagen waarden van de Flow-startkaart in plaats van widgetstandaarden, indien beschikbaar","da":"Brug om muligt værdier fra Flow-startkortet i stedet for widgettens standardværdier.","de":"Verwendet verfügbare Werte der Flow-Startkarte anstelle der Widget-Standardwerte.","es":"Usa los valores guardados en la tarjeta de inicio del Flow en lugar de los valores predeterminados del widget, si están disponibles.","fr":"Utilise les valeurs enregistrées dans la carte de démarrage du Flow à la place des valeurs par défaut du widget, si elles sont disponibles.","it":"Usa, se disponibili, i valori salvati nella scheda di avvio del Flow invece dei valori predefiniti del widget.","no":"Bruk om mulig verdier fra Flow-startkortet i stedet for widgetens standardverdier.","sv":"Använd tillgängliga värden från Flow-startkortet i stället för widgetens standardvärden.","pl":"Jeśli są dostępne, używaj wartości zapisanych na karcie startowej Flow zamiast wartości domyślnych widżetu.","ru":"Если доступны, использовать значения из карты запуска Flow вместо настроек виджета.","ko":"사용 가능한 경우 위젯 기본값 대신 Flow 시작 카드에 저장된 값을 사용합니다.","ar":"استخدم القيم المحفوظة في بطاقة بدء Flow بدلًا من القيم الافتراضية للأداة عند توفرها."},
-			"value": false
 		}
 	],
 	"api": {
