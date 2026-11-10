@@ -1,0 +1,120 @@
+{
+  "id": "transition_resume_existing",
+  "title": {
+    "en": "Resume transition",
+    "nl": "Hervat transitie",
+    "da": "Genoptag overgangen",
+    "de": "Übergang fortsetzen",
+    "es": "Reanudar transición",
+    "fr": "Reprendre la transition",
+    "it": "Riprendi la transizione",
+    "no": "Gjenoppta overgangen",
+    "sv": "Återuppta övergången",
+    "pl": "Wznów przejście",
+    "ru": "Возобновить переход",
+    "ko": "전환 재개",
+    "ar": "استئناف الانتقال"
+  },
+  "titleFormatted": {
+    "en": "Resume transition [[namedd]] / [[name]]",
+    "nl": "Hervat transitie [[namedd]] / [[name]]",
+    "da": "Genoptag overgangen [[namedd]] / [[name]]",
+    "de": "Übergang fortsetzen [[namedd]] / [[name]]",
+    "es": "Reanudar transición [[namedd]] / [[name]]",
+    "fr": "Reprendre la transition [[namedd]] / [[name]]",
+    "it": "Riprendi la transizione [[namedd]] / [[name]]",
+    "no": "Gjenoppta overgangen [[namedd]] / [[name]]",
+    "sv": "Återuppta övergången [[namedd]] / [[name]]",
+    "pl": "Wznów przejście [[namedd]] / [[name]]",
+    "ru": "Возобновить переход [[namedd]] / [[name]]",
+    "ko": "전환 재개 [[namedd]] / [[name]]",
+    "ar": "استئناف الانتقال [[namedd]] / [[name]]"
+  },
+  "hint": {
+    "en": "Resumes an existing paused transition with the selected name. It does not create a new one. If no matching transition exists, the action reports an error.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
+    "nl": "Hervat de bestaande gepauzeerde transitie met de gekozen naam. Er wordt geen nieuwe gestart. Als er geen transitie met die naam bestaat, geeft de actie een fout.\nJe kunt een naam kiezen, een naam typen en selecteren, of een naam in het naamveld typen.\nDe kiezer heeft voorrang als beide zijn ingevuld.\nDe naam verschijnt pas in de kiezer nadat de ingeschakelde Flow is opgeslagen.",
+    "da": "Genoptager den eksisterende overgang med det valgte navn, hvis den er sat på pause. Der startes ikke en ny. Hvis ingen overgang med navnet findes, giver handlingen en fejl.\nDu kan v?lge et navn, skrive og v?lge det eller skrive et navn i navnefeltet.\nV?lgeren har forrang, hvis begge felter er udfyldt.\nNavnet vises f?rst i v?lgeren, n?r det aktiverede Flow er gemt.",
+    "de": "Setzt den vorhandenen pausierten Übergang mit dem ausgewählten Namen fort. Es wird kein neuer gestartet. Wenn kein passender ?bergang vorhanden ist, meldet die Aktion einen Fehler.\nDu kannst einen Namen ausw?hlen, ihn eingeben und ausw?hlen oder einen Namen in das Namensfeld eingeben.\nDie Auswahl hat Vorrang, wenn beide Felder ausgef?llt sind.\nDer Name erscheint erst nach dem Speichern des aktivierten Flows in der Auswahl.",
+    "es": "Reanuda el transición existente en pausa con el nombre seleccionado. No inicia uno nuevo. Si no existe ningún transici?n con ese nombre, la acción informa de un error.\nPuedes seleccionar un nombre, escribirlo y seleccionarlo, o escribir un nombre en el campo de nombre.\nEl selector tiene prioridad si ambos campos est?n rellenados.\nEl nombre aparecer? en el selector solo despu?s de guardar el Flow habilitado.",
+    "fr": "Reprend la transition existante en pause portant le nom sélectionné. Aucun nouveau n’est démarré. Si aucune transition correspondante n’existe, l’action signale une erreur.\nVous pouvez s?lectionner un nom, le saisir puis le s?lectionner, ou saisir un nom dans le champ de nom.\nLe s?lecteur est prioritaire lorsque les deux champs sont remplis.\nLe nom n?appara?tra dans le s?lecteur qu?apr?s l?enregistrement du Flow activ?.",
+    "it": "Riprende la transizione esistente in pausa con il nome selezionato. Non ne avvia uno nuovo. Se non esiste una transizione con quel nome, l’azione segnala un errore.\nPuoi selezionare un nome, digitarlo e selezionarlo oppure scrivere un nome nel campo nome.\nIl selettore ha la precedenza se entrambi i campi sono compilati.\nIl nome apparir? nel selettore solo dopo aver salvato il Flow abilitato.",
+    "no": "Gjenopptar den eksisterende overgang med det valgte navnet hvis den er satt på pause. En ny startes ikke. Hvis ingen overgang med navnet finnes, rapporterer handlingen en feil.\nDu kan velge et navn, skrive det og velge det, eller skrive et navn i navnefeltet.\nVelgeren har forrang n?r begge feltene er fylt ut.\nNavnet vises f?rst i velgeren etter at den aktiverte Flowen er lagret.",
+    "sv": "Återupptar det befintliga pausade övergång med det valda namnet. Inget nytt startas. Om inget ?verg?ng med det namnet finns rapporterar åtgärden ett fel.\nDu kan v?lja ett namn, skriva och v?lja det, eller skriva ett namn i namnf?ltet.\nV?ljaren har f?retr?de n?r b?da f?lten ?r ifyllda.\nNamnet visas f?rst i v?ljaren n?r det aktiverade Flowet har sparats.",
+    "pl": "Wznawia istniejący wstrzymany przejście o wybranej nazwie. Nie uruchamia nowego. Jeśli nie istnieje przej?cie o tej nazwie, akcja zgłosi błąd.\nMo?esz wybra? nazw?, wpisa? j? i wybra? albo wpisa? nazw? w polu nazwy.\nWyb?r z listy ma pierwsze?stwo, gdy oba pola s? wype?nione.\nNazwa pojawi si? na li?cie dopiero po zapisaniu w??czonego Flow.",
+    "ru": "Возобновляет существующий приостановленный объект «переход» с выбранным именем. Новый объект не запускается. Если объект «???????» с таким именем не найден, действие выдаст ошибку.\n?? ?????? ??????? ???, ?????? ? ??????? ??? ??? ?????? ??? ? ???? ?????.\n???? ????????? ??? ????, ????? ? ?????? ????? ?????????.\n??? ???????? ? ?????? ?????? ????? ?????????? ??????????? Flow.",
+    "ko": "선택한 이름의 기존 일시 정지된 전환를 재개합니다. 새로 시작하지 않습니다. 해당 이름의 ??가 없으면 작업에서 오류를 보고합니다.\n??? ?????, ??? ? ?????, ?? ??? ?? ??? ? ????.\n? ??? ?? ??? ?? ??? ?? ?????.\n???? Flow? ???? ??? ???? ?????.",
+    "ar": "يستأنف الانتقال الموجود والمتوقف مؤقتًا بالاسم المحدد، ولا يبدأ واحدًا جديدًا. إذا لم يوجد ?????? بهذا الاسم، فسيُبلغ الإجراء عن خطأ.\n????? ?????? ???? ?? ?????? ?? ???????? ?? ????? ??? ?? ??? ?????.\n???? ???????? ???????? ?? ??????? ??? ??? ???????.\n?? ???? ????? ?? ??????? ??? ??? ??? Flow ???????."
+  },
+  "args": [
+    {
+      "name": "namedd",
+      "required": false,
+      "type": "autocomplete",
+      "title": {
+        "en": "Pick",
+        "nl": "Kies",
+        "da": "Vælg",
+        "de": "Wählen",
+        "es": "Elegir",
+        "fr": "Choisir",
+        "it": "Scegliere",
+        "no": "Velg",
+        "sv": "Välj",
+        "pl": "Wybierz",
+        "ru": "Выбрать",
+        "ko": "선택하세요",
+        "ar": "اختر"
+      },
+      "placeholder": {
+        "en": "Pick or type",
+        "nl": "Kies of type",
+        "da": "Vælg eller skriv",
+        "de": "Wählen oder eingeben",
+        "es": "Elige o escribe",
+        "fr": "Choisissez ou tapez",
+        "it": "Scegli o digita",
+        "no": "Velg eller skriv inn",
+        "sv": "Välj eller skriv",
+        "pl": "Wybierz lub wpisz",
+        "ru": "Выберите или введите",
+        "ko": "선택하거나 입력하세요",
+        "ar": "اختر أو اكتب"
+      }
+    },
+    {
+      "name": "name",
+      "required": false,
+      "title": {
+        "en": "Name",
+        "nl": "Naam",
+        "da": "Navn",
+        "de": "Name",
+        "es": "Nombre",
+        "fr": "Nom",
+        "it": "Nome",
+        "no": "Navn",
+        "sv": "Namn",
+        "pl": "Nazwa",
+        "ru": "Имя",
+        "ko": "이름",
+        "ar": "الاسم"
+      },
+      "type": "text",
+      "placeholder": {
+        "en": "Type a name",
+        "nl": "Type een naam",
+        "da": "Indtast et navn",
+        "de": "Geben Sie einen Namen ein",
+        "es": "Escribe un nombre",
+        "fr": "Tapez un nom",
+        "it": "Digita un nome",
+        "no": "Skriv inn et navn",
+        "sv": "Skriv ett namn",
+        "pl": "Wpisz nazwę",
+        "ru": "Введите имя",
+        "ko": "이름을 입력하세요",
+        "ar": "اكتب اسمًا"
+      }
+    }
+  ]
+}

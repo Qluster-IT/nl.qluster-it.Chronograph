@@ -4295,1109 +4295,6 @@
     ],
     "actions": [
       {
-        "id": "stopwatch_get_duration",
-        "title": {
-          "en": "Get the elapsed duration of a stopwatch",
-          "nl": "Get the elapsed duration of a stopwatch",
-          "da": "Få den forløbne tid på et stopur",
-          "de": "Get the elapsed duration of a stopwatch",
-          "es": "Obtén la duración transcurrida de un cronómetro",
-          "fr": "Obtenez la durée écoulée d'un chronomètre",
-          "it": "Ottieni la durata trascorsa di un cronometro",
-          "no": "Få den forløpte tiden til en stoppeklokke",
-          "sv": "Få den förflutna tiden för en stoppklocka",
-          "pl": "Uzyskaj upływający czas stopera",
-          "ru": "Получить прошедшее время секундомера",
-          "ko": "스톱워치의 경과 시간을 확인하세요.",
-          "ar": "احصل على المدة المنقضية للساعة التوقيفية"
-        },
-        "titleFormatted": {
-          "en": "Get the elapsed duration of stopwatch [[namedd]] / [[name]]",
-          "nl": "Krijg de verlopen duur van stopwatch [[namedd]] / [[name]]",
-          "da": "Få den forløbne tid for stopuret [[namedd]] / [[name]]",
-          "de": "Abfrage der verstrichenen Stoppuhrzeit [[namedd]] / [[name]]",
-          "es": "Obtén la duración transcurrida del cronómetro [[namedd]] / [[name]]",
-          "fr": "Obtenez la durée écoulée du chronomètre [[namedd]] / [[name]]",
-          "it": "Ottieni la durata trascorsa del cronometro [[namedd]] / [[name]]",
-          "no": "Få den forløpte tiden til stoppeklokke [[namedd]] / [[name]]",
-          "sv": "Hämta den förflutna tiden för stoppuret [[namedd]] / [[name]]",
-          "pl": "Uzyskaj upływający czas stopera [[namedd]] / [[name]]",
-          "ru": "Получить прошедшее время секундомера [[namedd]] / [[name]]",
-          "ko": "스톱워치 [[namedd]] / [[name]]의 경과 시간을 확인하세요.",
-          "ar": "احصل على المدة المنقضية للساعة [[namedd]] / [[name]]"
-        },
-        "hint": {
-          "en": "You can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
-          "nl": "U kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
-          "da": "Du kan enten vælge et navn, eller skrive og vælge det, eller skrive et navn i navnefeltet. Picker'en har forrang, når begge er udfyldt. Navnet vil først dukke op i picker'en efter at have gemt den (aktiverede) flow.",
-          "de": "Sie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows im Picker angezeigt.",
-          "es": "Puedes seleccionar un nombre, escribirlo y seleccionarlo, o escribir un nombre en el campo de nombre. El Selector tiene prioridad cuando ambos están llenos. El nombre solo aparecerá en el selector después de guardar el flujo (habilitado).",
-          "fr": "Vous pouvez soit sélectionner un nom, soit le taper et le sélectionner, soit taper un nom dans le champ de nom. Le sélecteur est prioritaire lorsque les deux sont remplis. Le nom n'apparaîtra dans le sélecteur qu'après avoir enregistré le flux (activé).",
-          "it": "Puoi selezionare un nome, oppure digitarlo e selezionarlo, o digitare un nome nel campo del nome. Il Selettore ha la precedenza quando entrambi sono compilati. Il nome apparirà nel selettore solo dopo aver salvato il flusso (abilitato).",
-          "no": "Du kan enten velge et navn, eller skrive og velge det, eller skrive et navn i navnefeltet. Velgeren er ledende når begge er fylt ut. Navnet vil bare vises i velgeren etter at den (aktiverte) flyten er lagret.",
-          "sv": "Du kan antingen välja ett namn, skriva och välja det, eller skriva ett namn i namnfältet. Väljaren är ledande när båda är ifyllda. Namnet kommer bara att visas i väljaren efter att du sparat det (aktiverade) flödet.",
-          "pl": "Możesz wybrać nazwę, wpisać i wybrać ją, lub wpisać nazwę w polu nazwy. Picker ma pierwszeństwo, gdy oba pola są wypełnione. Nazwa pojawi się w pickerze dopiero po zapisaniu (włączonego) przepływu.",
-          "ru": "Вы можете либо выбрать имя, либо ввести и выбрать его, либо ввести имя в поле для имени. Если оба поля заполнены, приоритет имеет выбор из списка. Имя появится в списке только после сохранения (включенного) потока.",
-          "ko": "이름을 선택하거나 입력하여 선택할 수 있으며, 이름 필드에 이름을 입력할 수도 있습니다. 둘 다 입력된 경우에는 선택기가 우선합니다. 이름은 (활성화된) 플로우를 저장한 후에만 선택기에 나타납니다.",
-          "ar": "يمكنك إما اختيار اسم، أو كتابته واختياره، أو كتابة اسم في حقل الاسم. يكون المُختار هو السائد عندما يتم ملء كلاهما. سيظهر الاسم في المُختار فقط بعد حفظ التدفق (المُمكّن)."
-        },
-        "args": [
-          {
-            "name": "namedd",
-            "required": false,
-            "type": "autocomplete",
-            "title": {
-              "en": "Pick",
-              "nl": "Kies",
-              "da": "Vælg",
-              "de": "Wählen",
-              "es": "Elegir",
-              "fr": "Choisir",
-              "it": "Scegliere",
-              "no": "Velg",
-              "sv": "Välj",
-              "pl": "Wybierz",
-              "ru": "Выбрать",
-              "ko": "선택",
-              "ar": "اختر"
-            },
-            "placeholder": {
-              "en": "Pick or type",
-              "nl": "Kies of type",
-              "da": "Vælg eller skriv",
-              "de": "Wählen oder eingeben",
-              "es": "Elige o escribe",
-              "fr": "Choisissez ou tapez",
-              "it": "Scegli o digita",
-              "no": "Velg eller skriv inn",
-              "sv": "Välj eller skriv",
-              "pl": "Wybierz lub wpisz",
-              "ru": "Выберите или введите текст",
-              "ko": "선택하거나 입력하세요",
-              "ar": "اختر أو اكتب"
-            }
-          },
-          {
-            "name": "name",
-            "required": false,
-            "title": {
-              "en": "Name",
-              "nl": "Naam",
-              "da": "Navn",
-              "de": "Name",
-              "es": "Nombre",
-              "fr": "Nom",
-              "it": "Nome",
-              "no": "Navn",
-              "sv": "Namn",
-              "pl": "Nazwa",
-              "ru": "Имя",
-              "ko": "이름",
-              "ar": "الاسم"
-            },
-            "type": "text",
-            "placeholder": {
-              "en": "Type a name",
-              "nl": "Type een naam",
-              "da": "Indtast et navn",
-              "de": "Geben Sie einen Namen ein",
-              "es": "Escribe un nombre",
-              "fr": "Tapez un nom",
-              "it": "Digita un nome",
-              "no": "Skriv inn et navn",
-              "sv": "Skriv ett namn",
-              "pl": "Wpisz nazwę",
-              "ru": "Введите имя",
-              "ko": "이름을 입력하세요",
-              "ar": "اكتب اسمًا"
-            }
-          }
-        ],
-        "tokens": [
-          {
-            "name": "name",
-            "type": "string",
-            "title": {
-              "en": "Name",
-              "nl": "Naam",
-              "da": "Navn",
-              "de": "Name",
-              "es": "Nombre",
-              "fr": "Nom",
-              "it": "Nome",
-              "no": "Navn",
-              "sv": "Namn",
-              "pl": "Nazwa",
-              "ru": "Имя",
-              "ko": "이름",
-              "ar": "الاسم"
-            }
-          },
-          {
-            "name": "elapsed",
-            "type": "number",
-            "title": {
-              "en": "Elapsed in Milliseconds",
-              "nl": "Verlopen in milliseconden",
-              "da": "Forløbet i millisekunder",
-              "de": "Verstrichen in Millisekunden",
-              "es": "Transcurrido en milisegundos",
-              "fr": "Écoulé en millisecondes",
-              "it": "Trascorso in millisecondi",
-              "no": "Forløpt i millisekunder",
-              "sv": "Förfluten tid i millisekunder",
-              "pl": "Upłynęło w milisekundach",
-              "ru": "Прошло в миллисекундах",
-              "ko": "밀리초 경과",
-              "ar": "الوقت المنقضي بالمللي ثانية"
-            }
-          },
-          {
-            "name": "elapsedInSeconds",
-            "type": "number",
-            "title": {
-              "en": "Elapsed in Seconds",
-              "nl": "Verlopen in seconden",
-              "da": "Forløbet i sekunder",
-              "de": "Verstrichen in Sekunden",
-              "es": "Transcurrido en segundos",
-              "fr": "Écoulé en secondes",
-              "it": "Trascorso in Secondi",
-              "no": "Forløpt i sekunder",
-              "sv": "Förfluten tid i sekunder",
-              "pl": "Upłynęło w sekundach",
-              "ru": "Прошло в секундах",
-              "ko": "경과 시간 (초)",
-              "ar": "الوقت المنقضي بالثواني"
-            }
-          },
-          {
-            "name": "elapsedInMinutes",
-            "type": "number",
-            "title": {
-              "en": "Elapsed in Minutes",
-              "nl": "Verlopen in minuten",
-              "da": "Forløbet i minutter",
-              "de": "Verstrichen in Minuten",
-              "es": "Transcurrido en minutos",
-              "fr": "Écoulé en minutes",
-              "it": "Trascorso in minuti",
-              "no": "Forløpt i minutter",
-              "sv": "Förfluten tid i minuter",
-              "pl": "Upłynęło w minutach",
-              "ru": "Прошло в минутах",
-              "ko": "경과 시간 (분)",
-              "ar": "الوقت المنقضي بالدقائق"
-            }
-          },
-          {
-            "name": "elapsedInHours",
-            "type": "number",
-            "title": {
-              "en": "Elapsed in Hours",
-              "nl": "Verlopen in uren",
-              "da": "Forløbet i timer",
-              "de": "Verstrichen in Stunden",
-              "es": "Transcurrido en horas",
-              "fr": "Écoulé en heures",
-              "it": "Trascorso in ore",
-              "no": "Forløpt i timer",
-              "sv": "Förfluten tid i timmar",
-              "pl": "Upłynęło w godzinach",
-              "ru": "Прошло в часах",
-              "ko": "경과 시간 (시간 단위)",
-              "ar": "منقضية بالساعات"
-            }
-          },
-          {
-            "name": "elapsedTimeInMinutes",
-            "type": "string",
-            "title": {
-              "en": "Elapsed in Minutes",
-              "nl": "Verlopen in minuten",
-              "da": "Forløbet i minutter",
-              "de": "Verstrichen in Minuten",
-              "es": "Transcurrido en minutos",
-              "fr": "Écoulé en minutes",
-              "it": "Trascorso in minuti",
-              "no": "Forløpt i minutter",
-              "sv": "Förfluten tid i minuter",
-              "pl": "Upłynęło w minutach",
-              "ru": "Прошло в минутах",
-              "ko": "경과 시간 (분)",
-              "ar": "الوقت المنقضي بالدقائق"
-            },
-            "example": "mm:ss"
-          },
-          {
-            "name": "elapsedTimeInHours",
-            "type": "string",
-            "title": {
-              "en": "Elapsed in Hours",
-              "nl": "Verlopen in uren",
-              "da": "Forløbet i timer",
-              "de": "Verstrichen in Stunden",
-              "es": "Transcurrido en horas",
-              "fr": "Écoulé en heures",
-              "it": "Trascorso in ore",
-              "no": "Forløpt i timer",
-              "sv": "Förfluten tid i timmar",
-              "pl": "Upłynęło w godzinach",
-              "ru": "Прошло в часах",
-              "ko": "경과 시간 (시간 단위)",
-              "ar": "الوقت المنقضي بالساعات"
-            },
-            "example": "HH:mm:ss"
-          },
-          {
-            "name": "elapsedTimeInHoursShort",
-            "type": "string",
-            "title": {
-              "en": "Elapsed in Hours (short)",
-              "nl": "Verlopen in uren (kort)",
-              "da": "Forløbet i timer (kort)",
-              "de": "Verstrichen in Stunden (kurz)",
-              "es": "Transcurrido en horas (corto)",
-              "fr": "Écoulé en heures (court)",
-              "it": "Trascorso in Ore (breve)",
-              "no": "Forløpt i timer (kort)",
-              "sv": "Förfluten tid i timmar (kort)",
-              "pl": "Upłynęło w godzinach (krótko)",
-              "ru": "Прошло часов (кратко)",
-              "ko": "경과 시간 (단축)",
-              "ar": "الوقت المنقضي بالساعات (قصير)"
-            },
-            "example": "HH:mm"
-          }
-        ]
-      },
-      {
-        "id": "timer_get_duration",
-        "title": {
-          "en": "Get the duration of a timer",
-          "nl": "Get the duration of a timer",
-          "da": "Få varigheden af en timer",
-          "de": "Get the duration of a timer",
-          "es": "Obtén la duración de un temporizador",
-          "fr": "Obtenez la durée d'un minuteur",
-          "it": "Ottieni la durata di un timer",
-          "no": "Få varigheten til en timer",
-          "sv": "Hämta varaktigheten för en timer",
-          "pl": "Uzyskaj czas trwania timera",
-          "ru": "Получить продолжительность таймера",
-          "ko": "타이머의 지속 시간 확인하기",
-          "ar": "احصل على مدة المؤقت"
-        },
-        "titleFormatted": {
-          "en": "Get the elapsed/remaining duration of timer [[namedd]] / [[name]]",
-          "nl": "Krijg de verstreken/resterend duur van timer [[namedd]] / [[name]]",
-          "da": "Få den forløbne/tilbageværende tid for timeren [[namedd]] / [[name]]",
-          "de": "Abfrage abgelaufen/verbleibend Timerlaufzeit [[namedd]] / [[name]]",
-          "es": "Obtén la duración transcurrida/restante del temporizador [[namedd]] / [[name]]",
-          "fr": "Obtenez la durée écoulée/restante du minuteur [[namedd]] / [[name]]",
-          "it": "Ottieni la durata trascorsa/rimanente del timer [[namedd]] / [[name]]",
-          "no": "Få den forløpte/gjenstående varigheten til timeren [[namedd]] / [[name]]",
-          "sv": "Hämta den förflutna/återstående tiden för timer [[namedd]] / [[name]]",
-          "pl": "Uzyskaj upływający/pozostały czas timera [[namedd]] / [[name]]",
-          "ru": "Получите прошедшую/оставшуюся продолжительность таймера [[namedd]] / [[name]]",
-          "ko": "타이머 [[namedd]] / [[name]]의 경과/남은 시간을 확인하세요.",
-          "ar": "احصل على المدة المنقضية/المتبقية للمؤقت [[namedd]] / [[name]]"
-        },
-        "hint": {
-          "en": "You can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
-          "nl": "U kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
-          "da": "Du kan enten vælge et navn, eller skrive og vælge det, eller skrive et navn i navnefeltet. Picker'en har forrang, når begge er udfyldt. Navnet vil først dukke op i picker'en efter at have gemt den (aktiverede) flow.",
-          "de": "Sie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows im Picker angezeigt.",
-          "es": "Puedes seleccionar un nombre, o escribirlo y seleccionarlo, o escribir un nombre en el campo de nombre. El Selector tiene prioridad cuando ambos están llenos. El nombre solo aparecerá en el selector después de guardar el flujo (habilitado).",
-          "fr": "Vous pouvez soit sélectionner un nom, soit le taper et le sélectionner, soit taper un nom dans le champ de nom. Le sélecteur est prioritaire lorsque les deux sont remplis. Le nom n'apparaîtra dans le sélecteur qu'après avoir enregistré le flux (activé).",
-          "it": "Puoi selezionare un nome, oppure digitarlo e selezionarlo, o digitare un nome nel campo del nome. Il Selettore ha la precedenza quando entrambi sono compilati. Il nome apparirà nel selettore solo dopo aver salvato il flusso (abilitato).",
-          "no": "Du kan enten velge et navn, eller skrive og velge det, eller skrive et navn i navnefeltet. Velgeren er ledende når begge er fylt ut. Navnet vil bare vises i velgeren etter at den (aktiverte) flyten er lagret.",
-          "sv": "Du kan antingen välja ett namn, skriva och välja det, eller skriva ett namn i namnfältet. Väljaren är ledande när båda är ifyllda. Namnet kommer bara att visas i väljaren efter att du har sparat det (aktiverade) flödet.",
-          "pl": "Możesz wybrać nazwę, wpisać i wybrać ją, lub wpisać nazwę w polu nazwy. Gdy oba pola są wypełnione, priorytet ma Picker. Nazwa pojawi się w Pickerze dopiero po zapisaniu (włączonego) przepływu.",
-          "ru": "Вы можете либо выбрать имя, либо ввести и выбрать его, либо ввести имя в поле для имени. Если оба поля заполнены, приоритет имеет выбор из списка. Имя появится в списке только после сохранения (включенного) потока.",
-          "ko": "이름을 선택하거나 입력하여 선택할 수 있으며, 이름 필드에 이름을 입력할 수도 있습니다. 둘 다 입력된 경우에는 선택기가 우선합니다. 이름은 (활성화된) 플로우를 저장한 후에만 선택기에 나타납니다.",
-          "ar": "يمكنك إما اختيار اسم، أو كتابته واختياره، أو كتابة اسم في حقل الاسم. يكون المُختار هو السائد عندما يتم ملء كلاهما. سيظهر الاسم في المُختار فقط بعد حفظ التدفق (المُمكّن)."
-        },
-        "args": [
-          {
-            "name": "namedd",
-            "required": false,
-            "type": "autocomplete",
-            "title": {
-              "en": "Pick",
-              "nl": "Kies",
-              "da": "Vælg",
-              "de": "Wählen",
-              "es": "Elegir",
-              "fr": "Choisir",
-              "it": "Scegliere",
-              "no": "Velg",
-              "sv": "Välj",
-              "pl": "Wybierz",
-              "ru": "Выбрать",
-              "ko": "선택하세요",
-              "ar": "اختر"
-            },
-            "placeholder": {
-              "en": "Pick or type",
-              "nl": "Kies of type",
-              "da": "Vælg eller skriv",
-              "de": "Wählen oder eingeben",
-              "es": "Elige o escribe",
-              "fr": "Choisissez ou tapez",
-              "it": "Scegli o digita",
-              "no": "Velg eller skriv inn",
-              "sv": "Välj eller skriv",
-              "pl": "Wybierz lub wpisz",
-              "ru": "Выберите или введите текст",
-              "ko": "선택하거나 입력하세요",
-              "ar": "اختر أو اكتب"
-            }
-          },
-          {
-            "name": "name",
-            "required": false,
-            "title": {
-              "en": "Name",
-              "nl": "Naam",
-              "da": "Navn",
-              "de": "Name",
-              "es": "Nombre",
-              "fr": "Nom",
-              "it": "Nome",
-              "no": "Navn",
-              "sv": "Namn",
-              "pl": "Nazwa",
-              "ru": "Имя",
-              "ko": "이름",
-              "ar": "الاسم"
-            },
-            "type": "text",
-            "placeholder": {
-              "en": "Type a name",
-              "nl": "Type een naam",
-              "da": "Indtast et navn",
-              "de": "Geben Sie einen Namen ein",
-              "es": "Escribe un nombre",
-              "fr": "Tapez un nom",
-              "it": "Digita un nome",
-              "no": "Skriv inn et navn",
-              "sv": "Skriv ett namn",
-              "pl": "Wpisz nazwę",
-              "ru": "Введите имя",
-              "ko": "이름을 입력하세요",
-              "ar": "اكتب اسمًا"
-            }
-          }
-        ],
-        "tokens": [
-          {
-            "name": "name",
-            "type": "string",
-            "title": {
-              "en": "Name",
-              "nl": "Naam",
-              "da": "Navn",
-              "de": "Name",
-              "es": "Nombre",
-              "fr": "Nom",
-              "it": "Nome",
-              "no": "Navn",
-              "sv": "Namn",
-              "pl": "Nazwa",
-              "ru": "Имя",
-              "ko": "이름",
-              "ar": "الاسم"
-            }
-          },
-          {
-            "name": "duration",
-            "type": "number",
-            "title": {
-              "en": "Duration in Milliseconds",
-              "nl": "Duur in milliseconden",
-              "da": "Varighed i millisekunder",
-              "de": "Dauer in Millisekunden",
-              "es": "Duración en milisegundos",
-              "fr": "Durée en millisecondes",
-              "it": "Durata in millisecondi",
-              "no": "Varighet i millisekunder",
-              "sv": "Varaktighet i millisekunder",
-              "pl": "Czas trwania w milisekundach",
-              "ru": "Продолжительность в миллисекундах",
-              "ko": "밀리초 단위의 지속 시간",
-              "ar": "المدة الزمنية بالمللي ثانية"
-            }
-          },
-          {
-            "name": "durationInSeconds",
-            "type": "number",
-            "title": {
-              "en": "Duration in Seconds",
-              "nl": "Duur in seconden",
-              "da": "Varighed i sekunder",
-              "de": "Dauer in Sekunden",
-              "es": "Duración en segundos",
-              "fr": "Durée en secondes",
-              "it": "Durata in secondi",
-              "no": "Varighet i sekunder",
-              "sv": "Varaktighet i sekunder",
-              "pl": "Czas trwania w sekundach",
-              "ru": "Продолжительность в секундах",
-              "ko": "초 단위 지속 시간",
-              "ar": "المدة بالثواني"
-            }
-          },
-          {
-            "name": "durationInMinutes",
-            "type": "number",
-            "title": {
-              "en": "Duration in Minutes",
-              "nl": "Duur in minuten",
-              "da": "Varighed i minutter",
-              "de": "Dauer in Minuten",
-              "es": "Duración en minutos",
-              "fr": "Durée en minutes",
-              "it": "Durata in minuti",
-              "no": "Varighet i minutter",
-              "sv": "Varaktighet i minuter",
-              "pl": "Czas trwania w minutach",
-              "ru": "Продолжительность в минутах",
-              "ko": "분 단위 지속 시간",
-              "ar": "المدة بالدقائق"
-            }
-          },
-          {
-            "name": "durationInHours",
-            "type": "number",
-            "title": {
-              "en": "Duration in Hours",
-              "nl": "Duur in uren",
-              "da": "Varighed i timer",
-              "de": "Dauer in Stunden",
-              "es": "Duración en horas",
-              "fr": "Durée en heures",
-              "it": "Durata in ore",
-              "no": "Varighet i timer",
-              "sv": "Varaktighet i timmar",
-              "pl": "Czas trwania w godzinach",
-              "ru": "Продолжительность в часах",
-              "ko": "시간(시간 단위)",
-              "ar": "المدة بالساعات"
-            }
-          },
-          {
-            "name": "durationTimeInMinutes",
-            "type": "string",
-            "title": {
-              "en": "Duration in Minutes",
-              "nl": "Duur in minuten",
-              "da": "Varighed i minutter",
-              "de": "Dauer in Minuten",
-              "es": "Duración en minutos",
-              "fr": "Durée en minutes",
-              "it": "Durata in minuti",
-              "no": "Varighet i minutter",
-              "sv": "Varaktighet i minuter",
-              "pl": "Czas trwania w minutach",
-              "ru": "Продолжительность в минутах",
-              "ko": "분 단위 지속 시간",
-              "ar": "المدة بالدقائق"
-            },
-            "example": "mm:ss"
-          },
-          {
-            "name": "durationTimeInHours",
-            "type": "string",
-            "title": {
-              "en": "Duration in Hours",
-              "nl": "Duur in uren",
-              "da": "Varighed i timer",
-              "de": "Dauer in Stunden",
-              "es": "Duración en horas",
-              "fr": "Durée en heures",
-              "it": "Durata in ore",
-              "no": "Varighet i timer",
-              "sv": "Varaktighet i timmar",
-              "pl": "Czas trwania w godzinach",
-              "ru": "Продолжительность в часах",
-              "ko": "시간(시간 단위)",
-              "ar": "المدة بالساعات"
-            },
-            "example": "HH:mm:ss"
-          },
-          {
-            "name": "durationTimeInHoursShort",
-            "type": "string",
-            "title": {
-              "en": "Duration in Hours (short)",
-              "nl": "Duur in uren (kort)",
-              "da": "Varighed i timer (kort)",
-              "de": "Dauer in Stunden (kurz)",
-              "es": "Duración en horas (corto)",
-              "fr": "Durée en heures (court)",
-              "it": "Durata in ore (breve)",
-              "no": "Varighet i timer (kort)",
-              "sv": "Varaktighet i timmar (kort)",
-              "pl": "Czas trwania w godzinach (krótko)",
-              "ru": "Длительность в часах (кратко)",
-              "ko": "시간 (단기)",
-              "ar": "المدة بالساعات (قصير)"
-            },
-            "example": "HH:mm"
-          },
-          {
-            "name": "elapsed",
-            "type": "number",
-            "title": {
-              "en": "Elapsed in Milliseconds",
-              "nl": "Verlopen in milliseconden",
-              "da": "Forløbet i millisekunder",
-              "de": "Verstrichen in Millisekunden",
-              "es": "Transcurrido en milisegundos",
-              "fr": "Écoulé en millisecondes",
-              "it": "Trascorso in millisecondi",
-              "no": "Forløpt i millisekunder",
-              "sv": "Förfluten tid i millisekunder",
-              "pl": "Upłynęło w milisekundach",
-              "ru": "Прошло в миллисекундах",
-              "ko": "경과 시간 (밀리초)",
-              "ar": "الوقت المنقضي بالمللي ثانية"
-            }
-          },
-          {
-            "name": "elapsedInSeconds",
-            "type": "number",
-            "title": {
-              "en": "Elapsed in Seconds",
-              "nl": "Verlopen in seconden",
-              "da": "Forløbet i sekunder",
-              "de": "Verstrichen in Sekunden",
-              "es": "Transcurrido en segundos",
-              "fr": "Écoulé en secondes",
-              "it": "Trascorso in secondi",
-              "no": "Forløpt i sekunder",
-              "sv": "Förfluten tid i sekunder",
-              "pl": "Upłynęło w sekundach",
-              "ru": "Прошло секунд",
-              "ko": "경과 시간 (초)",
-              "ar": "الوقت المنقضي بالثواني"
-            }
-          },
-          {
-            "name": "elapsedInMinutes",
-            "type": "number",
-            "title": {
-              "en": "Elapsed in Minutes",
-              "nl": "Verlopen in minuten",
-              "da": "Forløbet i minutter",
-              "de": "Verstrichen in Minuten",
-              "es": "Transcurrido en minutos",
-              "fr": "Écoulé en minutes",
-              "it": "Trascorso in Minuti",
-              "no": "Forløpt i minutter",
-              "sv": "Förfluten tid i minuter",
-              "pl": "Upłynęło w minutach",
-              "ru": "Прошло в минутах",
-              "ko": "경과 시간 (분)",
-              "ar": "الوقت المنقضي بالدقائق"
-            }
-          },
-          {
-            "name": "elapsedInHours",
-            "type": "number",
-            "title": {
-              "en": "Elapsed in Hours",
-              "nl": "Verlopen in uren",
-              "da": "Forløbet i timer",
-              "de": "Verstrichen in Stunden",
-              "es": "Transcurrido en horas",
-              "fr": "Écoulé en heures",
-              "it": "Trascorso in ore",
-              "no": "Forløpt i timer",
-              "sv": "Förfluten tid i timmar",
-              "pl": "Upłynęło w godzinach",
-              "ru": "Прошло в часах",
-              "ko": "경과 시간 (시간 단위)",
-              "ar": "الوقت المنقضي بالساعات"
-            }
-          },
-          {
-            "name": "elapsedTimeInMinutes",
-            "type": "string",
-            "title": {
-              "en": "Elapsed in Minutes",
-              "nl": "Verlopen in minuten",
-              "da": "Forløbet i minutter",
-              "de": "Verstrichen in Minuten",
-              "es": "Transcurrido en minutos",
-              "fr": "Écoulé en minutes",
-              "it": "Trascorso in Minuti",
-              "no": "Forløpt i minutter",
-              "sv": "Förfluten tid i minuter",
-              "pl": "Upłynęło w minutach",
-              "ru": "Прошло минут",
-              "ko": "경과 시간 (분)",
-              "ar": "الوقت المنقضي بالدقائق"
-            },
-            "example": "mm:ss"
-          },
-          {
-            "name": "elapsedTimeInHours",
-            "type": "string",
-            "title": {
-              "en": "Elapsed in Hours",
-              "nl": "Verlopen in uren",
-              "da": "Forløbet i timer",
-              "de": "Verstrichen in Stunden",
-              "es": "Transcurrido en horas",
-              "fr": "Écoulé en heures",
-              "it": "Trascorso in ore",
-              "no": "Forløpt i timer",
-              "sv": "Förfluten tid i timmar",
-              "pl": "Upłynęło w godzinach",
-              "ru": "Прошло в часах",
-              "ko": "경과 시간 (시간 단위)",
-              "ar": "الوقت المنقضي بالساعات"
-            },
-            "example": "HH:mm:ss"
-          },
-          {
-            "name": "elapsedTimeInHoursShort",
-            "type": "string",
-            "title": {
-              "en": "Elapsed in Hours (short)",
-              "nl": "Verlopen in uren (kort)",
-              "da": "Forløbet i timer (kort)",
-              "de": "Verstrichen in Stunden (kurz)",
-              "es": "Transcurrido en horas (corto)",
-              "fr": "Écoulé en heures (court)",
-              "it": "Trascorso in ore (breve)",
-              "no": "Forløpt i timer (kort)",
-              "sv": "Förfluten tid i timmar (kort)",
-              "pl": "Upłynęło w godz. (krótko)",
-              "ru": "Прошло часов (кратко)",
-              "ko": "경과 시간 (단축)",
-              "ar": "الوقت المنقضي بالساعات (قصير)"
-            },
-            "example": "HH:mm"
-          }
-        ]
-      },
-      {
-        "id": "transition_get_duration",
-        "title": {
-          "en": "Get the duration of a transition",
-          "nl": "Get the duration of a transition",
-          "da": "Få varigheden af en overgang",
-          "de": "Get the duration of a transition",
-          "es": "Obtén la duración de una transición",
-          "fr": "Obtenez la durée d'une transition",
-          "it": "Ottieni la durata di una transizione",
-          "no": "Få varigheten av en overgang",
-          "sv": "Få varaktigheten av en övergång",
-          "pl": "Uzyskaj czas trwania przejścia",
-          "ru": "Получите продолжительность перехода",
-          "ko": "전환의 지속 시간 확인하기",
-          "ar": "احصل على مدة الانتقال"
-        },
-        "titleFormatted": {
-          "en": "Get the elapsed/remaining duration of transition [[namedd]] / [[name]]",
-          "nl": "Krijg de verstreken/resterend duur van transition [[namedd]] / [[name]]",
-          "da": "Få den forløbne/tilbageværende varighed af overgangen [[namedd]] / [[name]]",
-          "de": "Abfrage abgelaufen/verbleibend Dauer von Übergang [[namedd]] / [[name]]",
-          "es": "Obtén la duración transcurrida/restante de la transición [[namedd]] / [[name]]",
-          "fr": "Obtenez la durée écoulée/restante de la transition [[namedd]] / [[name]]",
-          "it": "Ottieni la durata trascorsa/rimanente della transizione [[namedd]] / [[name]]",
-          "no": "Få den forløpte/gjenstående varigheten av overgangen [[namedd]] / [[name]]",
-          "sv": "Hämta den förflutna/återstående tiden för övergång [[namedd]] / [[name]]",
-          "pl": "Uzyskaj upływający/pozostały czas trwania przejścia [[namedd]] / [[name]]",
-          "ru": "Получите прошедшую/оставшуюся длительность перехода [[namedd]] / [[name]]",
-          "ko": "전환 [[namedd]] / [[name]]의 경과/남은 시간을 확인하세요.",
-          "ar": "احصل على المدة المنقضية/المتبقية للانتقال [[namedd]] / [[name]]"
-        },
-        "hint": {
-          "en": "You can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
-          "nl": "U kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
-          "da": "Du kan enten vælge et navn, eller skrive og vælge det, eller skrive et navn i navnefeltet. Picker'en har forrang, når begge er udfyldt. Navnet vil først dukke op i picker'en efter at have gemt den (aktiverede) flow.",
-          "de": "Sie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows im Picker angezeigt.",
-          "es": "Puedes seleccionar un nombre, o escribirlo y seleccionarlo, o escribir un nombre en el campo de nombre. El Selector tiene prioridad cuando ambos están llenos. El nombre solo aparecerá en el selector después de guardar el flujo (habilitado).",
-          "fr": "Vous pouvez soit sélectionner un nom, soit le taper et le sélectionner, soit taper un nom dans le champ de nom. Le sélecteur est prioritaire lorsque les deux sont remplis. Le nom n'apparaîtra dans le sélecteur qu'après avoir enregistré le flux (activé).",
-          "it": "Puoi selezionare un nome, oppure digitarlo e selezionarlo, o digitare un nome nel campo del nome. Il Picker ha la precedenza quando entrambi sono compilati. Il nome apparirà nel Picker solo dopo aver salvato il flusso (abilitato).",
-          "no": "Du kan enten velge et navn, eller skrive og velge det, eller skrive et navn i navnefeltet. Velgeren er ledende når begge er fylt ut. Navnet vil bare vises i velgeren etter at den (aktiverte) flyten er lagret.",
-          "sv": "Du kan antingen välja ett namn, skriva och välja det, eller skriva ett namn i namnfältet. Väljaren är ledande när båda är ifyllda. Namnet kommer bara att visas i väljaren efter att du har sparat det (aktiverade) flödet.",
-          "pl": "Możesz wybrać nazwę, wpisać i wybrać ją, lub wpisać nazwę w polu nazwy. Gdy oba pola są wypełnione, priorytet ma Picker. Nazwa pojawi się w Pickerze dopiero po zapisaniu (włączonego) przepływu.",
-          "ru": "Вы можете либо выбрать имя, либо ввести и выбрать его, либо ввести имя в поле для имени. Если оба поля заполнены, приоритет имеет выбор из списка. Имя появится в списке только после сохранения (включенного) потока.",
-          "ko": "이름을 선택하거나 입력하여 선택할 수 있으며, 이름 필드에 이름을 입력할 수도 있습니다. 둘 다 입력된 경우 선택기가 우선합니다. 이름은 (활성화된) 플로우를 저장한 후에만 선택기에 나타납니다.",
-          "ar": "يمكنك إما اختيار اسم، أو كتابته واختياره، أو كتابة اسم في حقل الاسم. يكون المُختار هو السائد عندما يتم ملء كلاهما. سيظهر الاسم في المُختار فقط بعد حفظ التدفق (المُمكّن)."
-        },
-        "args": [
-          {
-            "name": "namedd",
-            "required": false,
-            "type": "autocomplete",
-            "title": {
-              "en": "Pick",
-              "nl": "Kies",
-              "da": "Vælg",
-              "de": "Wählen",
-              "es": "Elegir",
-              "fr": "Choisir",
-              "it": "Scegliere",
-              "no": "Velg",
-              "sv": "Välj",
-              "pl": "Wybierz",
-              "ru": "Выбрать",
-              "ko": "선택하세요",
-              "ar": "اختر"
-            },
-            "placeholder": {
-              "en": "Pick or type",
-              "nl": "Kies of type",
-              "da": "Vælg eller skriv",
-              "de": "Wählen oder eingeben",
-              "es": "Elige o escribe",
-              "fr": "Choisissez ou tapez",
-              "it": "Scegli o digita",
-              "no": "Velg eller skriv inn",
-              "sv": "Välj eller skriv",
-              "pl": "Wybierz lub wpisz",
-              "ru": "Выберите или введите текст",
-              "ko": "선택하거나 입력하세요",
-              "ar": "اختر أو اكتب"
-            }
-          },
-          {
-            "name": "name",
-            "required": false,
-            "title": {
-              "en": "Name",
-              "nl": "Naam",
-              "da": "Navn",
-              "de": "Name",
-              "es": "Nombre",
-              "fr": "Nom",
-              "it": "Nome",
-              "no": "Navn",
-              "sv": "Namn",
-              "pl": "Nazwa",
-              "ru": "Имя",
-              "ko": "이름",
-              "ar": "الاسم"
-            },
-            "type": "text",
-            "placeholder": {
-              "en": "Type a name",
-              "nl": "Type een naam",
-              "da": "Indtast et navn",
-              "de": "Geben Sie einen Namen ein",
-              "es": "Escribe un nombre",
-              "fr": "Tapez un nom",
-              "it": "Digita un nome",
-              "no": "Skriv inn et navn",
-              "sv": "Skriv ett namn",
-              "pl": "Wpisz nazwę",
-              "ru": "Введите имя",
-              "ko": "이름을 입력하세요",
-              "ar": "اكتب اسمًا"
-            }
-          }
-        ],
-        "tokens": [
-          {
-            "name": "name",
-            "type": "string",
-            "title": {
-              "en": "Name",
-              "nl": "Naam",
-              "da": "Navn",
-              "de": "Name",
-              "es": "Nombre",
-              "fr": "Nom",
-              "it": "Nome",
-              "no": "Navn",
-              "sv": "Namn",
-              "pl": "Nazwa",
-              "ru": "Имя",
-              "ko": "이름",
-              "ar": "الاسم"
-            }
-          },
-          {
-            "name": "duration",
-            "type": "number",
-            "title": {
-              "en": "Duration in Milliseconds",
-              "nl": "Duur in milliseconden",
-              "da": "Varighed i millisekunder",
-              "de": "Dauer in Millisekunden",
-              "es": "Duración en milisegundos",
-              "fr": "Durée en millisecondes",
-              "it": "Durata in millisecondi",
-              "no": "Varighet i millisekunder",
-              "sv": "Varaktighet i millisekunder",
-              "pl": "Czas trwania w milisekundach",
-              "ru": "Продолжительность в миллисекундах",
-              "ko": "밀리초 단위의 지속 시간",
-              "ar": "المدة الزمنية بالمللي ثانية"
-            }
-          },
-          {
-            "name": "durationInSeconds",
-            "type": "number",
-            "title": {
-              "en": "Duration in Seconds",
-              "nl": "Duur in seconden",
-              "da": "Varighed i sekunder",
-              "de": "Dauer in Sekunden",
-              "es": "Duración en segundos",
-              "fr": "Durée en secondes",
-              "it": "Durata in secondi",
-              "no": "Varighet i sekunder",
-              "sv": "Varaktighet i sekunder",
-              "pl": "Czas trwania w sekundach",
-              "ru": "Продолжительность в секундах",
-              "ko": "초 단위 지속 시간",
-              "ar": "المدة بالثواني"
-            }
-          },
-          {
-            "name": "durationInMinutes",
-            "type": "number",
-            "title": {
-              "en": "Duration in Minutes",
-              "nl": "Duur in minuten",
-              "da": "Varighed i minutter",
-              "de": "Dauer in Minuten",
-              "es": "Duración en minutos",
-              "fr": "Durée en minutes",
-              "it": "Durata in minuti",
-              "no": "Varighet i minutter",
-              "sv": "Varaktighet i minuter",
-              "pl": "Czas trwania w minutach",
-              "ru": "Продолжительность в минутах",
-              "ko": "분 단위 지속 시간",
-              "ar": "المدة بالدقائق"
-            }
-          },
-          {
-            "name": "durationInHours",
-            "type": "number",
-            "title": {
-              "en": "Duration in Hours",
-              "nl": "Duur in uren",
-              "da": "Varighed i timer",
-              "de": "Dauer in Stunden",
-              "es": "Duración en horas",
-              "fr": "Durée en heures",
-              "it": "Durata in ore",
-              "no": "Varighet i timer",
-              "sv": "Varaktighet i timmar",
-              "pl": "Czas trwania w godzinach",
-              "ru": "Продолжительность в часах",
-              "ko": "시간 단위 지속 시간",
-              "ar": "المدة بالساعات"
-            }
-          },
-          {
-            "name": "durationTimeInMinutes",
-            "type": "string",
-            "title": {
-              "en": "Duration in Minutes",
-              "nl": "Duur in minuten",
-              "da": "Varighed i minutter",
-              "de": "Dauer in Minuten",
-              "es": "Duración en minutos",
-              "fr": "Durée en minutes",
-              "it": "Durata in minuti",
-              "no": "Varighet i minutter",
-              "sv": "Varaktighet i minuter",
-              "pl": "Czas trwania w minutach",
-              "ru": "Продолжительность в минутах",
-              "ko": "분 단위 지속 시간",
-              "ar": "المدة بالدقائق"
-            },
-            "example": "mm:ss"
-          },
-          {
-            "name": "durationTimeInHours",
-            "type": "string",
-            "title": {
-              "en": "Duration in Hours",
-              "nl": "Duur in uren",
-              "da": "Varighed i timer",
-              "de": "Dauer in Stunden",
-              "es": "Duración en horas",
-              "fr": "Durée en heures",
-              "it": "Durata in ore",
-              "no": "Varighet i timer",
-              "sv": "Varaktighet i timmar",
-              "pl": "Czas trwania w godzinach",
-              "ru": "Продолжительность в часах",
-              "ko": "시간(시간 단위)",
-              "ar": "المدة بالساعات"
-            },
-            "example": "HH:mm:ss"
-          },
-          {
-            "name": "durationTimeInHoursShort",
-            "type": "string",
-            "title": {
-              "en": "Duration in Hours (short)",
-              "nl": "Duur in uren (kort)",
-              "da": "Varighed i timer (kort)",
-              "de": "Dauer in Stunden (kurz)",
-              "es": "Duración en horas (corto)",
-              "fr": "Durée en heures (court)",
-              "it": "Durata in ore (breve)",
-              "no": "Varighet i timer (kort)",
-              "sv": "Varaktighet i timmar (kort)",
-              "pl": "Czas trwania w godzinach (krótko)",
-              "ru": "Длительность в часах (кратко)",
-              "ko": "시간 (단축)",
-              "ar": "المدة بالساعات (قصير)"
-            },
-            "example": "HH:mm"
-          },
-          {
-            "name": "elapsed",
-            "type": "number",
-            "title": {
-              "en": "Elapsed in Milliseconds",
-              "nl": "Verlopen in milliseconden",
-              "da": "Forløbet i millisekunder",
-              "de": "Verstrichen in Millisekunden",
-              "es": "Transcurrido en milisegundos",
-              "fr": "Écoulé en millisecondes",
-              "it": "Trascorso in millisecondi",
-              "no": "Forløpt i millisekunder",
-              "sv": "Förfluten tid i millisekunder",
-              "pl": "Upłynęło w milisekundach",
-              "ru": "Прошло в миллисекундах",
-              "ko": "경과 시간(밀리초)",
-              "ar": "الوقت المنقضي بالمللي ثانية"
-            }
-          },
-          {
-            "name": "elapsedInSeconds",
-            "type": "number",
-            "title": {
-              "en": "Elapsed in Seconds",
-              "nl": "Verlopen in seconden",
-              "da": "Forløbet i sekunder",
-              "de": "Verstrichen in Sekunden",
-              "es": "Transcurrido en segundos",
-              "fr": "Écoulé en secondes",
-              "it": "Trascorso in Secondi",
-              "no": "Forløpt i sekunder",
-              "sv": "Förfluten tid i sekunder",
-              "pl": "Upłynęło w sekundach",
-              "ru": "Прошло в секундах",
-              "ko": "경과 시간 (초)",
-              "ar": "الوقت المنقضي بالثواني"
-            }
-          },
-          {
-            "name": "elapsedInMinutes",
-            "type": "number",
-            "title": {
-              "en": "Elapsed in Minutes",
-              "nl": "Verlopen in minuten",
-              "da": "Forløbet i minutter",
-              "de": "Verstrichen in Minuten",
-              "es": "Transcurrido en minutos",
-              "fr": "Écoulé en minutes",
-              "it": "Trascorso in minuti",
-              "no": "Forløpt i minutter",
-              "sv": "Förfluten tid i minuter",
-              "pl": "Upłynęło w minutach",
-              "ru": "Прошло в минутах",
-              "ko": "경과 시간 (분)",
-              "ar": "الوقت المنقضي بالدقائق"
-            }
-          },
-          {
-            "name": "elapsedInHours",
-            "type": "number",
-            "title": {
-              "en": "Elapsed in Hours",
-              "nl": "Verlopen in uren",
-              "da": "Forløbet i timer",
-              "de": "Verstrichen in Stunden",
-              "es": "Transcurrido en horas",
-              "fr": "Écoulé en heures",
-              "it": "Trascorso in ore",
-              "no": "Forløpt i timer",
-              "sv": "Förfluten tid i timmar",
-              "pl": "Upłynęło w godzinach",
-              "ru": "Прошло в часах",
-              "ko": "경과 시간 (시간 단위)",
-              "ar": "الوقت المنقضي بالساعات"
-            }
-          },
-          {
-            "name": "elapsedTimeInMinutes",
-            "type": "string",
-            "title": {
-              "en": "Elapsed in Minutes",
-              "nl": "Verlopen in minuten",
-              "da": "Forløbet i minutter",
-              "de": "Verstrichen in Minuten",
-              "es": "Transcurrido en minutos",
-              "fr": "Écoulé en minutes",
-              "it": "Trascorso in minuti",
-              "no": "Forløpt i minutter",
-              "sv": "Förfluten tid i minuter",
-              "pl": "Upłynęło w minutach",
-              "ru": "Прошло минут",
-              "ko": "경과 시간 (분)",
-              "ar": "الوقت المنقضي بالدقائق"
-            },
-            "example": "mm:ss"
-          },
-          {
-            "name": "elapsedTimeInHours",
-            "type": "string",
-            "title": {
-              "en": "Elapsed in Hours",
-              "nl": "Verlopen in uren",
-              "da": "Forløbet i timer",
-              "de": "Verstrichen in Stunden",
-              "es": "Transcurrido en horas",
-              "fr": "Écoulé en heures",
-              "it": "Trascorso in ore",
-              "no": "Forløpt i timer",
-              "sv": "Förfluten tid i timmar",
-              "pl": "Upłynęło w godzinach",
-              "ru": "Прошло в часах",
-              "ko": "경과 시간 (시간 단위)",
-              "ar": "الوقت المنقضي بالساعات"
-            },
-            "example": "HH:mm:ss"
-          },
-          {
-            "name": "elapsedTimeInHoursShort",
-            "type": "string",
-            "title": {
-              "en": "Elapsed in Hours (short)",
-              "nl": "Verlopen in uren (kort)",
-              "da": "Forløbet i timer (kort)",
-              "de": "Verstrichen in Stunden (kurz)",
-              "es": "Transcurrido en horas (corto)",
-              "fr": "Écoulé en heures (court)",
-              "it": "Trascorso in Ore (breve)",
-              "no": "Forløpt i timer (kort)",
-              "sv": "Förfluten tid i timmar (kort)",
-              "pl": "Upłynęło w godzinach (krótko)",
-              "ru": "Прошло часов (кратко)",
-              "ko": "경과 시간 (단축)",
-              "ar": "الوقت المنقضي بالساعات (قصير)"
-            },
-            "example": "HH:mm"
-          }
-        ]
-      },
-      {
         "id": "stopwatch_start",
         "title": {
           "en": "Start or replace stopwatch",
@@ -6280,6 +5177,366 @@
         ]
       },
       {
+        "id": "stopwatch_resume_existing",
+        "title": {
+          "en": "Resume stopwatch",
+          "nl": "Hervat stopwatch",
+          "da": "Genoptag stopuret",
+          "de": "Stoppuhr fortsetzen",
+          "es": "Reanudar cronómetro",
+          "fr": "Reprendre le chronomètre",
+          "it": "Riprendi il cronometro",
+          "no": "Gjenoppta stoppeklokken",
+          "sv": "Återuppta stoppuret",
+          "pl": "Wznów stoper",
+          "ru": "Возобновить секундомер",
+          "ko": "스톱워치 재개",
+          "ar": "استئناف ساعة الإيقاف"
+        },
+        "titleFormatted": {
+          "en": "Resume stopwatch [[namedd]] / [[name]]",
+          "nl": "Hervat stopwatch [[namedd]] / [[name]]",
+          "da": "Genoptag stopuret [[namedd]] / [[name]]",
+          "de": "Stoppuhr fortsetzen [[namedd]] / [[name]]",
+          "es": "Reanudar cronómetro [[namedd]] / [[name]]",
+          "fr": "Reprendre le chronomètre [[namedd]] / [[name]]",
+          "it": "Riprendi il cronometro [[namedd]] / [[name]]",
+          "no": "Gjenoppta stoppeklokken [[namedd]] / [[name]]",
+          "sv": "Återuppta stoppuret [[namedd]] / [[name]]",
+          "pl": "Wznów stoper [[namedd]] / [[name]]",
+          "ru": "Возобновить секундомер [[namedd]] / [[name]]",
+          "ko": "스톱워치 재개 [[namedd]] / [[name]]",
+          "ar": "استئناف ساعة الإيقاف [[namedd]] / [[name]]"
+        },
+        "hint": {
+          "en": "Resumes an existing paused stopwatch with the selected name. It does not create a new one. If no matching stopwatch exists, the action reports an error.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
+          "nl": "Hervat de bestaande gepauzeerde stopwatch met de gekozen naam. Er wordt geen nieuwe gestart. Als er geen stopwatch met die naam bestaat, geeft de actie een fout.\nJe kunt een naam kiezen, een naam typen en selecteren, of een naam in het naamveld typen.\nDe kiezer heeft voorrang als beide zijn ingevuld.\nDe naam verschijnt pas in de kiezer nadat de ingeschakelde Flow is opgeslagen.",
+          "da": "Genoptager den eksisterende stopur med det valgte navn, hvis den er sat på pause. Der startes ikke en ny. Hvis ingen stopur med navnet findes, giver handlingen en fejl.\nDu kan v?lge et navn, skrive og v?lge det eller skrive et navn i navnefeltet.\nV?lgeren har forrang, hvis begge felter er udfyldt.\nNavnet vises f?rst i v?lgeren, n?r det aktiverede Flow er gemt.",
+          "de": "Setzt die vorhandene pausierte Stoppuhr mit dem ausgewählten Namen fort. Es wird keine neue gestartet. Wenn keine passende Stoppuhr vorhanden ist, meldet die Aktion einen Fehler.\nDu kannst einen Namen ausw?hlen, ihn eingeben und ausw?hlen oder einen Namen in das Namensfeld eingeben.\nDie Auswahl hat Vorrang, wenn beide Felder ausgef?llt sind.\nDer Name erscheint erst nach dem Speichern des aktivierten Flows in der Auswahl.",
+          "es": "Reanuda el cronómetro existente en pausa con el nombre seleccionado. No inicia uno nuevo. Si no existe ningún cron?metro con ese nombre, la acción informa de un error.\nPuedes seleccionar un nombre, escribirlo y seleccionarlo, o escribir un nombre en el campo de nombre.\nEl selector tiene prioridad si ambos campos est?n rellenados.\nEl nombre aparecer? en el selector solo despu?s de guardar el Flow habilitado.",
+          "fr": "Reprend le chronomètre existant en pause portant le nom sélectionné. Aucun nouveau n’est démarré. Si aucun chronom?tre correspondant n’existe, l’action signale une erreur.\nVous pouvez s?lectionner un nom, le saisir puis le s?lectionner, ou saisir un nom dans le champ de nom.\nLe s?lecteur est prioritaire lorsque les deux champs sont remplis.\nLe nom n?appara?tra dans le s?lecteur qu?apr?s l?enregistrement du Flow activ?.",
+          "it": "Riprende il cronometro esistente in pausa con il nome selezionato. Non ne avvia uno nuovo. Se non esiste un cronometro con quel nome, l’azione segnala un errore.\nPuoi selezionare un nome, digitarlo e selezionarlo oppure scrivere un nome nel campo nome.\nIl selettore ha la precedenza se entrambi i campi sono compilati.\nIl nome apparir? nel selettore solo dopo aver salvato il Flow abilitato.",
+          "no": "Gjenopptar den eksisterende stoppeklokke med det valgte navnet hvis den er satt på pause. En ny startes ikke. Hvis ingen stoppeklokke med navnet finnes, rapporterer handlingen en feil.\nDu kan velge et navn, skrive det og velge det, eller skrive et navn i navnefeltet.\nVelgeren har forrang n?r begge feltene er fylt ut.\nNavnet vises f?rst i velgeren etter at den aktiverte Flowen er lagret.",
+          "sv": "Återupptar det befintliga pausade stoppur med det valda namnet. Inget nytt startas. Om inget stoppur med det namnet finns rapporterar åtgärden ett fel.\nDu kan v?lja ett namn, skriva och v?lja det, eller skriva ett namn i namnf?ltet.\nV?ljaren har f?retr?de n?r b?da f?lten ?r ifyllda.\nNamnet visas f?rst i v?ljaren n?r det aktiverade Flowet har sparats.",
+          "pl": "Wznawia istniejący wstrzymany stoper o wybranej nazwie. Nie uruchamia nowego. Jeśli nie istnieje stoper o tej nazwie, akcja zgłosi błąd.\nMo?esz wybra? nazw?, wpisa? j? i wybra? albo wpisa? nazw? w polu nazwy.\nWyb?r z listy ma pierwsze?stwo, gdy oba pola s? wype?nione.\nNazwa pojawi si? na li?cie dopiero po zapisaniu w??czonego Flow.",
+          "ru": "Возобновляет существующий приостановленный объект «секундомер» с выбранным именем. Новый объект не запускается. Если объект «??????????» с таким именем не найден, действие выдаст ошибку.\n?? ?????? ??????? ???, ?????? ? ??????? ??? ??? ?????? ??? ? ???? ?????.\n???? ????????? ??? ????, ????? ? ?????? ????? ?????????.\n??? ???????? ? ?????? ?????? ????? ?????????? ??????????? Flow.",
+          "ko": "선택한 이름의 기존 일시 정지된 스톱워치를 재개합니다. 새로 시작하지 않습니다. 해당 이름의 ????가 없으면 작업에서 오류를 보고합니다.\n??? ?????, ??? ? ?????, ?? ??? ?? ??? ? ????.\n? ??? ?? ??? ?? ??? ?? ?????.\n???? Flow? ???? ??? ???? ?????.",
+          "ar": "يستأنف ساعة الإيقاف الموجود والمتوقف مؤقتًا بالاسم المحدد، ولا يبدأ واحدًا جديدًا. إذا لم يوجد ???? ????? بهذا الاسم، فسيُبلغ الإجراء عن خطأ.\n????? ?????? ???? ?? ?????? ?? ???????? ?? ????? ??? ?? ??? ?????.\n???? ???????? ???????? ?? ??????? ??? ??? ???????.\n?? ???? ????? ?? ??????? ??? ??? ??? Flow ???????."
+        },
+        "args": [
+          {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "da": "Vælg",
+              "de": "Wählen",
+              "es": "Elegir",
+              "fr": "Choisir",
+              "it": "Scegliere",
+              "no": "Velg",
+              "sv": "Välj",
+              "pl": "Wybierz",
+              "ru": "Выбрать",
+              "ko": "선택하세요",
+              "ar": "اختر"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "da": "Vælg eller skriv",
+              "de": "Wählen oder eingeben",
+              "es": "Elige o escribe",
+              "fr": "Choisissez ou tapez",
+              "it": "Scegli o digita",
+              "no": "Velg eller skriv inn",
+              "sv": "Välj eller skriv",
+              "pl": "Wybierz lub wpisz",
+              "ru": "Выберите или введите",
+              "ko": "선택하거나 입력하세요",
+              "ar": "اختر أو اكتب"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "title": {
+              "en": "Name",
+              "nl": "Naam",
+              "da": "Navn",
+              "de": "Name",
+              "es": "Nombre",
+              "fr": "Nom",
+              "it": "Nome",
+              "no": "Navn",
+              "sv": "Namn",
+              "pl": "Nazwa",
+              "ru": "Имя",
+              "ko": "이름",
+              "ar": "الاسم"
+            },
+            "type": "text",
+            "placeholder": {
+              "en": "Type a name",
+              "nl": "Type een naam",
+              "da": "Indtast et navn",
+              "de": "Geben Sie einen Namen ein",
+              "es": "Escribe un nombre",
+              "fr": "Tapez un nom",
+              "it": "Digita un nome",
+              "no": "Skriv inn et navn",
+              "sv": "Skriv ett namn",
+              "pl": "Wpisz nazwę",
+              "ru": "Введите имя",
+              "ko": "이름을 입력하세요",
+              "ar": "اكتب اسمًا"
+            }
+          }
+        ]
+      },
+      {
+        "id": "timer_resume_existing",
+        "title": {
+          "en": "Resume timer",
+          "nl": "Hervat timer",
+          "da": "Genoptag timeren",
+          "de": "Timer fortsetzen",
+          "es": "Reanudar temporizador",
+          "fr": "Reprendre le minuteur",
+          "it": "Riprendi il timer",
+          "no": "Gjenoppta timeren",
+          "sv": "Återuppta timern",
+          "pl": "Wznów timer",
+          "ru": "Возобновить таймер",
+          "ko": "타이머 재개",
+          "ar": "استئناف المؤقت"
+        },
+        "titleFormatted": {
+          "en": "Resume timer [[namedd]] / [[name]]",
+          "nl": "Hervat timer [[namedd]] / [[name]]",
+          "da": "Genoptag timeren [[namedd]] / [[name]]",
+          "de": "Timer fortsetzen [[namedd]] / [[name]]",
+          "es": "Reanudar temporizador [[namedd]] / [[name]]",
+          "fr": "Reprendre le minuteur [[namedd]] / [[name]]",
+          "it": "Riprendi il timer [[namedd]] / [[name]]",
+          "no": "Gjenoppta timeren [[namedd]] / [[name]]",
+          "sv": "Återuppta timern [[namedd]] / [[name]]",
+          "pl": "Wznów timer [[namedd]] / [[name]]",
+          "ru": "Возобновить таймер [[namedd]] / [[name]]",
+          "ko": "타이머 재개 [[namedd]] / [[name]]",
+          "ar": "استئناف المؤقت [[namedd]] / [[name]]"
+        },
+        "hint": {
+          "en": "Resumes an existing paused timer with the selected name. It does not create a new one. If no matching timer exists, the action reports an error.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
+          "nl": "Hervat de bestaande gepauzeerde timer met de gekozen naam. Er wordt geen nieuwe gestart. Als er geen timer met die naam bestaat, geeft de actie een fout.\nJe kunt een naam kiezen, een naam typen en selecteren, of een naam in het naamveld typen.\nDe kiezer heeft voorrang als beide zijn ingevuld.\nDe naam verschijnt pas in de kiezer nadat de ingeschakelde Flow is opgeslagen.",
+          "da": "Genoptager den eksisterende timer med det valgte navn, hvis den er sat på pause. Der startes ikke en ny. Hvis ingen timer med navnet findes, giver handlingen en fejl.\nDu kan v?lge et navn, skrive og v?lge det eller skrive et navn i navnefeltet.\nV?lgeren har forrang, hvis begge felter er udfyldt.\nNavnet vises f?rst i v?lgeren, n?r det aktiverede Flow er gemt.",
+          "de": "Setzt den vorhandenen pausierten Timer mit dem ausgewählten Namen fort. Es wird kein neuer gestartet. Wenn kein passender Timer vorhanden ist, meldet die Aktion einen Fehler.\nDu kannst einen Namen ausw?hlen, ihn eingeben und ausw?hlen oder einen Namen in das Namensfeld eingeben.\nDie Auswahl hat Vorrang, wenn beide Felder ausgef?llt sind.\nDer Name erscheint erst nach dem Speichern des aktivierten Flows in der Auswahl.",
+          "es": "Reanuda el temporizador existente en pausa con el nombre seleccionado. No inicia uno nuevo. Si no existe ningún temporizador con ese nombre, la acción informa de un error.\nPuedes seleccionar un nombre, escribirlo y seleccionarlo, o escribir un nombre en el campo de nombre.\nEl selector tiene prioridad si ambos campos est?n rellenados.\nEl nombre aparecer? en el selector solo despu?s de guardar el Flow habilitado.",
+          "fr": "Reprend le minuteur existant en pause portant le nom sélectionné. Aucun nouveau n’est démarré. Si aucun minuteur correspondant n’existe, l’action signale une erreur.\nVous pouvez s?lectionner un nom, le saisir puis le s?lectionner, ou saisir un nom dans le champ de nom.\nLe s?lecteur est prioritaire lorsque les deux champs sont remplis.\nLe nom n?appara?tra dans le s?lecteur qu?apr?s l?enregistrement du Flow activ?.",
+          "it": "Riprende il timer esistente in pausa con il nome selezionato. Non ne avvia uno nuovo. Se non esiste un timer con quel nome, l’azione segnala un errore.\nPuoi selezionare un nome, digitarlo e selezionarlo oppure scrivere un nome nel campo nome.\nIl selettore ha la precedenza se entrambi i campi sono compilati.\nIl nome apparir? nel selettore solo dopo aver salvato il Flow abilitato.",
+          "no": "Gjenopptar den eksisterende timer med det valgte navnet hvis den er satt på pause. En ny startes ikke. Hvis ingen timer med navnet finnes, rapporterer handlingen en feil.\nDu kan velge et navn, skrive det og velge det, eller skrive et navn i navnefeltet.\nVelgeren har forrang n?r begge feltene er fylt ut.\nNavnet vises f?rst i velgeren etter at den aktiverte Flowen er lagret.",
+          "sv": "Återupptar det befintliga pausade timer med det valda namnet. Inget nytt startas. Om inget timer med det namnet finns rapporterar åtgärden ett fel.\nDu kan v?lja ett namn, skriva och v?lja det, eller skriva ett namn i namnf?ltet.\nV?ljaren har f?retr?de n?r b?da f?lten ?r ifyllda.\nNamnet visas f?rst i v?ljaren n?r det aktiverade Flowet har sparats.",
+          "pl": "Wznawia istniejący wstrzymany timer o wybranej nazwie. Nie uruchamia nowego. Jeśli nie istnieje timer o tej nazwie, akcja zgłosi błąd.\nMo?esz wybra? nazw?, wpisa? j? i wybra? albo wpisa? nazw? w polu nazwy.\nWyb?r z listy ma pierwsze?stwo, gdy oba pola s? wype?nione.\nNazwa pojawi si? na li?cie dopiero po zapisaniu w??czonego Flow.",
+          "ru": "Возобновляет существующий приостановленный объект «таймер» с выбранным именем. Новый объект не запускается. Если объект «??????» с таким именем не найден, действие выдаст ошибку.\n?? ?????? ??????? ???, ?????? ? ??????? ??? ??? ?????? ??? ? ???? ?????.\n???? ????????? ??? ????, ????? ? ?????? ????? ?????????.\n??? ???????? ? ?????? ?????? ????? ?????????? ??????????? Flow.",
+          "ko": "선택한 이름의 기존 일시 정지된 타이머를 재개합니다. 새로 시작하지 않습니다. 해당 이름의 ???가 없으면 작업에서 오류를 보고합니다.\n??? ?????, ??? ? ?????, ?? ??? ?? ??? ? ????.\n? ??? ?? ??? ?? ??? ?? ?????.\n???? Flow? ???? ??? ???? ?????.",
+          "ar": "يستأنف المؤقت الموجود والمتوقف مؤقتًا بالاسم المحدد، ولا يبدأ واحدًا جديدًا. إذا لم يوجد ???? بهذا الاسم، فسيُبلغ الإجراء عن خطأ.\n????? ?????? ???? ?? ?????? ?? ???????? ?? ????? ??? ?? ??? ?????.\n???? ???????? ???????? ?? ??????? ??? ??? ???????.\n?? ???? ????? ?? ??????? ??? ??? ??? Flow ???????."
+        },
+        "args": [
+          {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "da": "Vælg",
+              "de": "Wählen",
+              "es": "Elegir",
+              "fr": "Choisir",
+              "it": "Scegliere",
+              "no": "Velg",
+              "sv": "Välj",
+              "pl": "Wybierz",
+              "ru": "Выбрать",
+              "ko": "선택하세요",
+              "ar": "اختر"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "da": "Vælg eller skriv",
+              "de": "Wählen oder eingeben",
+              "es": "Elige o escribe",
+              "fr": "Choisissez ou tapez",
+              "it": "Scegli o digita",
+              "no": "Velg eller skriv inn",
+              "sv": "Välj eller skriv",
+              "pl": "Wybierz lub wpisz",
+              "ru": "Выберите или введите",
+              "ko": "선택하거나 입력하세요",
+              "ar": "اختر أو اكتب"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "title": {
+              "en": "Name",
+              "nl": "Naam",
+              "da": "Navn",
+              "de": "Name",
+              "es": "Nombre",
+              "fr": "Nom",
+              "it": "Nome",
+              "no": "Navn",
+              "sv": "Namn",
+              "pl": "Nazwa",
+              "ru": "Имя",
+              "ko": "이름",
+              "ar": "الاسم"
+            },
+            "type": "text",
+            "placeholder": {
+              "en": "Type a name",
+              "nl": "Type een naam",
+              "da": "Indtast et navn",
+              "de": "Geben Sie einen Namen ein",
+              "es": "Escribe un nombre",
+              "fr": "Tapez un nom",
+              "it": "Digita un nome",
+              "no": "Skriv inn et navn",
+              "sv": "Skriv ett namn",
+              "pl": "Wpisz nazwę",
+              "ru": "Введите имя",
+              "ko": "이름을 입력하세요",
+              "ar": "اكتب اسمًا"
+            }
+          }
+        ]
+      },
+      {
+        "id": "transition_resume_existing",
+        "title": {
+          "en": "Resume transition",
+          "nl": "Hervat transitie",
+          "da": "Genoptag overgangen",
+          "de": "Übergang fortsetzen",
+          "es": "Reanudar transición",
+          "fr": "Reprendre la transition",
+          "it": "Riprendi la transizione",
+          "no": "Gjenoppta overgangen",
+          "sv": "Återuppta övergången",
+          "pl": "Wznów przejście",
+          "ru": "Возобновить переход",
+          "ko": "전환 재개",
+          "ar": "استئناف الانتقال"
+        },
+        "titleFormatted": {
+          "en": "Resume transition [[namedd]] / [[name]]",
+          "nl": "Hervat transitie [[namedd]] / [[name]]",
+          "da": "Genoptag overgangen [[namedd]] / [[name]]",
+          "de": "Übergang fortsetzen [[namedd]] / [[name]]",
+          "es": "Reanudar transición [[namedd]] / [[name]]",
+          "fr": "Reprendre la transition [[namedd]] / [[name]]",
+          "it": "Riprendi la transizione [[namedd]] / [[name]]",
+          "no": "Gjenoppta overgangen [[namedd]] / [[name]]",
+          "sv": "Återuppta övergången [[namedd]] / [[name]]",
+          "pl": "Wznów przejście [[namedd]] / [[name]]",
+          "ru": "Возобновить переход [[namedd]] / [[name]]",
+          "ko": "전환 재개 [[namedd]] / [[name]]",
+          "ar": "استئناف الانتقال [[namedd]] / [[name]]"
+        },
+        "hint": {
+          "en": "Resumes an existing paused transition with the selected name. It does not create a new one. If no matching transition exists, the action reports an error.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
+          "nl": "Hervat de bestaande gepauzeerde transitie met de gekozen naam. Er wordt geen nieuwe gestart. Als er geen transitie met die naam bestaat, geeft de actie een fout.\nJe kunt een naam kiezen, een naam typen en selecteren, of een naam in het naamveld typen.\nDe kiezer heeft voorrang als beide zijn ingevuld.\nDe naam verschijnt pas in de kiezer nadat de ingeschakelde Flow is opgeslagen.",
+          "da": "Genoptager den eksisterende overgang med det valgte navn, hvis den er sat på pause. Der startes ikke en ny. Hvis ingen overgang med navnet findes, giver handlingen en fejl.\nDu kan v?lge et navn, skrive og v?lge det eller skrive et navn i navnefeltet.\nV?lgeren har forrang, hvis begge felter er udfyldt.\nNavnet vises f?rst i v?lgeren, n?r det aktiverede Flow er gemt.",
+          "de": "Setzt den vorhandenen pausierten Übergang mit dem ausgewählten Namen fort. Es wird kein neuer gestartet. Wenn kein passender ?bergang vorhanden ist, meldet die Aktion einen Fehler.\nDu kannst einen Namen ausw?hlen, ihn eingeben und ausw?hlen oder einen Namen in das Namensfeld eingeben.\nDie Auswahl hat Vorrang, wenn beide Felder ausgef?llt sind.\nDer Name erscheint erst nach dem Speichern des aktivierten Flows in der Auswahl.",
+          "es": "Reanuda el transición existente en pausa con el nombre seleccionado. No inicia uno nuevo. Si no existe ningún transici?n con ese nombre, la acción informa de un error.\nPuedes seleccionar un nombre, escribirlo y seleccionarlo, o escribir un nombre en el campo de nombre.\nEl selector tiene prioridad si ambos campos est?n rellenados.\nEl nombre aparecer? en el selector solo despu?s de guardar el Flow habilitado.",
+          "fr": "Reprend la transition existante en pause portant le nom sélectionné. Aucun nouveau n’est démarré. Si aucune transition correspondante n’existe, l’action signale une erreur.\nVous pouvez s?lectionner un nom, le saisir puis le s?lectionner, ou saisir un nom dans le champ de nom.\nLe s?lecteur est prioritaire lorsque les deux champs sont remplis.\nLe nom n?appara?tra dans le s?lecteur qu?apr?s l?enregistrement du Flow activ?.",
+          "it": "Riprende la transizione esistente in pausa con il nome selezionato. Non ne avvia uno nuovo. Se non esiste una transizione con quel nome, l’azione segnala un errore.\nPuoi selezionare un nome, digitarlo e selezionarlo oppure scrivere un nome nel campo nome.\nIl selettore ha la precedenza se entrambi i campi sono compilati.\nIl nome apparir? nel selettore solo dopo aver salvato il Flow abilitato.",
+          "no": "Gjenopptar den eksisterende overgang med det valgte navnet hvis den er satt på pause. En ny startes ikke. Hvis ingen overgang med navnet finnes, rapporterer handlingen en feil.\nDu kan velge et navn, skrive det og velge det, eller skrive et navn i navnefeltet.\nVelgeren har forrang n?r begge feltene er fylt ut.\nNavnet vises f?rst i velgeren etter at den aktiverte Flowen er lagret.",
+          "sv": "Återupptar det befintliga pausade övergång med det valda namnet. Inget nytt startas. Om inget ?verg?ng med det namnet finns rapporterar åtgärden ett fel.\nDu kan v?lja ett namn, skriva och v?lja det, eller skriva ett namn i namnf?ltet.\nV?ljaren har f?retr?de n?r b?da f?lten ?r ifyllda.\nNamnet visas f?rst i v?ljaren n?r det aktiverade Flowet har sparats.",
+          "pl": "Wznawia istniejący wstrzymany przejście o wybranej nazwie. Nie uruchamia nowego. Jeśli nie istnieje przej?cie o tej nazwie, akcja zgłosi błąd.\nMo?esz wybra? nazw?, wpisa? j? i wybra? albo wpisa? nazw? w polu nazwy.\nWyb?r z listy ma pierwsze?stwo, gdy oba pola s? wype?nione.\nNazwa pojawi si? na li?cie dopiero po zapisaniu w??czonego Flow.",
+          "ru": "Возобновляет существующий приостановленный объект «переход» с выбранным именем. Новый объект не запускается. Если объект «???????» с таким именем не найден, действие выдаст ошибку.\n?? ?????? ??????? ???, ?????? ? ??????? ??? ??? ?????? ??? ? ???? ?????.\n???? ????????? ??? ????, ????? ? ?????? ????? ?????????.\n??? ???????? ? ?????? ?????? ????? ?????????? ??????????? Flow.",
+          "ko": "선택한 이름의 기존 일시 정지된 전환를 재개합니다. 새로 시작하지 않습니다. 해당 이름의 ??가 없으면 작업에서 오류를 보고합니다.\n??? ?????, ??? ? ?????, ?? ??? ?? ??? ? ????.\n? ??? ?? ??? ?? ??? ?? ?????.\n???? Flow? ???? ??? ???? ?????.",
+          "ar": "يستأنف الانتقال الموجود والمتوقف مؤقتًا بالاسم المحدد، ولا يبدأ واحدًا جديدًا. إذا لم يوجد ?????? بهذا الاسم، فسيُبلغ الإجراء عن خطأ.\n????? ?????? ???? ?? ?????? ?? ???????? ?? ????? ??? ?? ??? ?????.\n???? ???????? ???????? ?? ??????? ??? ??? ???????.\n?? ???? ????? ?? ??????? ??? ??? ??? Flow ???????."
+        },
+        "args": [
+          {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "da": "Vælg",
+              "de": "Wählen",
+              "es": "Elegir",
+              "fr": "Choisir",
+              "it": "Scegliere",
+              "no": "Velg",
+              "sv": "Välj",
+              "pl": "Wybierz",
+              "ru": "Выбрать",
+              "ko": "선택하세요",
+              "ar": "اختر"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "da": "Vælg eller skriv",
+              "de": "Wählen oder eingeben",
+              "es": "Elige o escribe",
+              "fr": "Choisissez ou tapez",
+              "it": "Scegli o digita",
+              "no": "Velg eller skriv inn",
+              "sv": "Välj eller skriv",
+              "pl": "Wybierz lub wpisz",
+              "ru": "Выберите или введите",
+              "ko": "선택하거나 입력하세요",
+              "ar": "اختر أو اكتب"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "title": {
+              "en": "Name",
+              "nl": "Naam",
+              "da": "Navn",
+              "de": "Name",
+              "es": "Nombre",
+              "fr": "Nom",
+              "it": "Nome",
+              "no": "Navn",
+              "sv": "Namn",
+              "pl": "Nazwa",
+              "ru": "Имя",
+              "ko": "이름",
+              "ar": "الاسم"
+            },
+            "type": "text",
+            "placeholder": {
+              "en": "Type a name",
+              "nl": "Type een naam",
+              "da": "Indtast et navn",
+              "de": "Geben Sie einen Namen ein",
+              "es": "Escribe un nombre",
+              "fr": "Tapez un nom",
+              "it": "Digita un nome",
+              "no": "Skriv inn et navn",
+              "sv": "Skriv ett namn",
+              "pl": "Wpisz nazwę",
+              "ru": "Введите имя",
+              "ko": "이름을 입력하세요",
+              "ar": "اكتب اسمًا"
+            }
+          }
+        ]
+      },
+      {
         "id": "stopwatch_resume",
         "title": {
           "en": "Start or resume stopwatch",
@@ -6358,126 +5615,6 @@
               "sv": "Välj eller skriv",
               "pl": "Wybierz lub wpisz",
               "ru": "Выберите или введите текст",
-              "ko": "선택하거나 입력하세요",
-              "ar": "اختر أو اكتب"
-            }
-          },
-          {
-            "name": "name",
-            "required": false,
-            "title": {
-              "en": "Name",
-              "nl": "Naam",
-              "da": "Navn",
-              "de": "Name",
-              "es": "Nombre",
-              "fr": "Nom",
-              "it": "Nome",
-              "no": "Navn",
-              "sv": "Namn",
-              "pl": "Nazwa",
-              "ru": "Имя",
-              "ko": "이름",
-              "ar": "الاسم"
-            },
-            "type": "text",
-            "placeholder": {
-              "en": "Type a name",
-              "nl": "Type een naam",
-              "da": "Indtast et navn",
-              "de": "Geben Sie einen Namen ein",
-              "es": "Escribe un nombre",
-              "fr": "Tapez un nom",
-              "it": "Digita un nome",
-              "no": "Skriv inn et navn",
-              "sv": "Skriv ett namn",
-              "pl": "Wpisz nazwę",
-              "ru": "Введите имя",
-              "ko": "이름을 입력하세요",
-              "ar": "اكتب اسمًا"
-            }
-          }
-        ]
-      },
-      {
-        "id": "stopwatch_resume_existing",
-        "title": {
-          "en": "Resume stopwatch",
-          "nl": "Hervat stopwatch",
-          "da": "Genoptag stopuret",
-          "de": "Stoppuhr fortsetzen",
-          "es": "Reanudar cronómetro",
-          "fr": "Reprendre le chronomètre",
-          "it": "Riprendi il cronometro",
-          "no": "Gjenoppta stoppeklokken",
-          "sv": "Återuppta stoppuret",
-          "pl": "Wznów stoper",
-          "ru": "Возобновить секундомер",
-          "ko": "스톱워치 재개",
-          "ar": "استئناف ساعة الإيقاف"
-        },
-        "titleFormatted": {
-          "en": "Resume stopwatch [[namedd]] / [[name]]",
-          "nl": "Hervat stopwatch [[namedd]] / [[name]]",
-          "da": "Genoptag stopuret [[namedd]] / [[name]]",
-          "de": "Stoppuhr fortsetzen [[namedd]] / [[name]]",
-          "es": "Reanudar cronómetro [[namedd]] / [[name]]",
-          "fr": "Reprendre le chronomètre [[namedd]] / [[name]]",
-          "it": "Riprendi il cronometro [[namedd]] / [[name]]",
-          "no": "Gjenoppta stoppeklokken [[namedd]] / [[name]]",
-          "sv": "Återuppta stoppuret [[namedd]] / [[name]]",
-          "pl": "Wznów stoper [[namedd]] / [[name]]",
-          "ru": "Возобновить секундомер [[namedd]] / [[name]]",
-          "ko": "스톱워치 재개 [[namedd]] / [[name]]",
-          "ar": "استئناف ساعة الإيقاف [[namedd]] / [[name]]"
-        },
-        "hint": {
-          "en": "Resumes an existing paused stopwatch with the selected name. It does not create a new one. If no matching {noun} exists, the action reports an error.",
-          "nl": "Hervat de bestaande gepauzeerde stopwatch met de gekozen naam. Er wordt geen nieuwe gestart. Als er geen {noun} met die naam bestaat, geeft de actie een fout.",
-          "da": "Genoptager den eksisterende stopur med det valgte navn, hvis den er sat på pause. Der startes ikke en ny. Hvis ingen {noun} med navnet findes, giver handlingen en fejl.",
-          "de": "Setzt den vorhandenen pausierten Stoppuhr mit dem ausgewählten Namen fort. Es wird kein neuer gestartet. Wenn kein passender {noun} vorhanden ist, meldet die Aktion einen Fehler.",
-          "es": "Reanuda el cronómetro existente en pausa con el nombre seleccionado. No inicia uno nuevo. Si no existe ningún {noun} con ese nombre, la acción informa de un error.",
-          "fr": "Reprend le chronomètre existant en pause portant le nom sélectionné. Aucun nouveau n’est démarré. Si aucun {noun} correspondant n’existe, l’action signale une erreur.",
-          "it": "Riprende il cronometro esistente in pausa con il nome selezionato. Non ne avvia uno nuovo. Se non esiste un {noun} con quel nome, l’azione segnala un errore.",
-          "no": "Gjenopptar den eksisterende stoppeklokke med det valgte navnet hvis den er satt på pause. En ny startes ikke. Hvis ingen {noun} med navnet finnes, rapporterer handlingen en feil.",
-          "sv": "Återupptar det befintliga pausade stoppur med det valda namnet. Inget nytt startas. Om inget {noun} med det namnet finns rapporterar åtgärden ett fel.",
-          "pl": "Wznawia istniejący wstrzymany stoper o wybranej nazwie. Nie uruchamia nowego. Jeśli nie istnieje {noun} o tej nazwie, akcja zgłosi błąd.",
-          "ru": "Возобновляет существующий приостановленный объект «секундомер» с выбранным именем. Новый объект не запускается. Если объект «{noun}» с таким именем не найден, действие выдаст ошибку.",
-          "ko": "선택한 이름의 기존 일시 정지된 스톱워치를 재개합니다. 새로 시작하지 않습니다. 해당 이름의 {noun}가 없으면 작업에서 오류를 보고합니다.",
-          "ar": "يستأنف ساعة الإيقاف الموجود والمتوقف مؤقتًا بالاسم المحدد، ولا يبدأ واحدًا جديدًا. إذا لم يوجد {noun} بهذا الاسم، فسيُبلغ الإجراء عن خطأ."
-        },
-        "args": [
-          {
-            "name": "namedd",
-            "required": false,
-            "type": "autocomplete",
-            "title": {
-              "en": "Pick",
-              "nl": "Kies",
-              "da": "Vælg",
-              "de": "Wählen",
-              "es": "Elegir",
-              "fr": "Choisir",
-              "it": "Scegliere",
-              "no": "Velg",
-              "sv": "Välj",
-              "pl": "Wybierz",
-              "ru": "Выбрать",
-              "ko": "선택하세요",
-              "ar": "اختر"
-            },
-            "placeholder": {
-              "en": "Pick or type",
-              "nl": "Kies of type",
-              "da": "Vælg eller skriv",
-              "de": "Wählen oder eingeben",
-              "es": "Elige o escribe",
-              "fr": "Choisissez ou tapez",
-              "it": "Scegli o digita",
-              "no": "Velg eller skriv inn",
-              "sv": "Välj eller skriv",
-              "pl": "Wybierz lub wpisz",
-              "ru": "Выберите или введите",
               "ko": "선택하거나 입력하세요",
               "ar": "اختر أو اكتب"
             }
@@ -6751,126 +5888,6 @@
                 }
               }
             ]
-          }
-        ]
-      },
-      {
-        "id": "timer_resume_existing",
-        "title": {
-          "en": "Resume timer",
-          "nl": "Hervat timer",
-          "da": "Genoptag timeren",
-          "de": "Timer fortsetzen",
-          "es": "Reanudar temporizador",
-          "fr": "Reprendre le minuteur",
-          "it": "Riprendi il timer",
-          "no": "Gjenoppta timeren",
-          "sv": "Återuppta timern",
-          "pl": "Wznów timer",
-          "ru": "Возобновить таймер",
-          "ko": "타이머 재개",
-          "ar": "استئناف المؤقت"
-        },
-        "titleFormatted": {
-          "en": "Resume timer [[namedd]] / [[name]]",
-          "nl": "Hervat timer [[namedd]] / [[name]]",
-          "da": "Genoptag timeren [[namedd]] / [[name]]",
-          "de": "Timer fortsetzen [[namedd]] / [[name]]",
-          "es": "Reanudar temporizador [[namedd]] / [[name]]",
-          "fr": "Reprendre le minuteur [[namedd]] / [[name]]",
-          "it": "Riprendi il timer [[namedd]] / [[name]]",
-          "no": "Gjenoppta timeren [[namedd]] / [[name]]",
-          "sv": "Återuppta timern [[namedd]] / [[name]]",
-          "pl": "Wznów timer [[namedd]] / [[name]]",
-          "ru": "Возобновить таймер [[namedd]] / [[name]]",
-          "ko": "타이머 재개 [[namedd]] / [[name]]",
-          "ar": "استئناف المؤقت [[namedd]] / [[name]]"
-        },
-        "hint": {
-          "en": "Resumes an existing paused timer with the selected name. It does not create a new one. If no matching {noun} exists, the action reports an error.",
-          "nl": "Hervat de bestaande gepauzeerde timer met de gekozen naam. Er wordt geen nieuwe gestart. Als er geen {noun} met die naam bestaat, geeft de actie een fout.",
-          "da": "Genoptager den eksisterende timer med det valgte navn, hvis den er sat på pause. Der startes ikke en ny. Hvis ingen {noun} med navnet findes, giver handlingen en fejl.",
-          "de": "Setzt den vorhandenen pausierten Timer mit dem ausgewählten Namen fort. Es wird kein neuer gestartet. Wenn kein passender {noun} vorhanden ist, meldet die Aktion einen Fehler.",
-          "es": "Reanuda el temporizador existente en pausa con el nombre seleccionado. No inicia uno nuevo. Si no existe ningún {noun} con ese nombre, la acción informa de un error.",
-          "fr": "Reprend le minuteur existant en pause portant le nom sélectionné. Aucun nouveau n’est démarré. Si aucun {noun} correspondant n’existe, l’action signale une erreur.",
-          "it": "Riprende il timer esistente in pausa con il nome selezionato. Non ne avvia uno nuovo. Se non esiste un {noun} con quel nome, l’azione segnala un errore.",
-          "no": "Gjenopptar den eksisterende timer med det valgte navnet hvis den er satt på pause. En ny startes ikke. Hvis ingen {noun} med navnet finnes, rapporterer handlingen en feil.",
-          "sv": "Återupptar det befintliga pausade timer med det valda namnet. Inget nytt startas. Om inget {noun} med det namnet finns rapporterar åtgärden ett fel.",
-          "pl": "Wznawia istniejący wstrzymany timer o wybranej nazwie. Nie uruchamia nowego. Jeśli nie istnieje {noun} o tej nazwie, akcja zgłosi błąd.",
-          "ru": "Возобновляет существующий приостановленный объект «таймер» с выбранным именем. Новый объект не запускается. Если объект «{noun}» с таким именем не найден, действие выдаст ошибку.",
-          "ko": "선택한 이름의 기존 일시 정지된 타이머를 재개합니다. 새로 시작하지 않습니다. 해당 이름의 {noun}가 없으면 작업에서 오류를 보고합니다.",
-          "ar": "يستأنف المؤقت الموجود والمتوقف مؤقتًا بالاسم المحدد، ولا يبدأ واحدًا جديدًا. إذا لم يوجد {noun} بهذا الاسم، فسيُبلغ الإجراء عن خطأ."
-        },
-        "args": [
-          {
-            "name": "namedd",
-            "required": false,
-            "type": "autocomplete",
-            "title": {
-              "en": "Pick",
-              "nl": "Kies",
-              "da": "Vælg",
-              "de": "Wählen",
-              "es": "Elegir",
-              "fr": "Choisir",
-              "it": "Scegliere",
-              "no": "Velg",
-              "sv": "Välj",
-              "pl": "Wybierz",
-              "ru": "Выбрать",
-              "ko": "선택하세요",
-              "ar": "اختر"
-            },
-            "placeholder": {
-              "en": "Pick or type",
-              "nl": "Kies of type",
-              "da": "Vælg eller skriv",
-              "de": "Wählen oder eingeben",
-              "es": "Elige o escribe",
-              "fr": "Choisissez ou tapez",
-              "it": "Scegli o digita",
-              "no": "Velg eller skriv inn",
-              "sv": "Välj eller skriv",
-              "pl": "Wybierz lub wpisz",
-              "ru": "Выберите или введите",
-              "ko": "선택하거나 입력하세요",
-              "ar": "اختر أو اكتب"
-            }
-          },
-          {
-            "name": "name",
-            "required": false,
-            "title": {
-              "en": "Name",
-              "nl": "Naam",
-              "da": "Navn",
-              "de": "Name",
-              "es": "Nombre",
-              "fr": "Nom",
-              "it": "Nome",
-              "no": "Navn",
-              "sv": "Namn",
-              "pl": "Nazwa",
-              "ru": "Имя",
-              "ko": "이름",
-              "ar": "الاسم"
-            },
-            "type": "text",
-            "placeholder": {
-              "en": "Type a name",
-              "nl": "Type een naam",
-              "da": "Indtast et navn",
-              "de": "Geben Sie einen Namen ein",
-              "es": "Escribe un nombre",
-              "fr": "Tapez un nom",
-              "it": "Digita un nome",
-              "no": "Skriv inn et navn",
-              "sv": "Skriv ett namn",
-              "pl": "Wpisz nazwę",
-              "ru": "Введите имя",
-              "ko": "이름을 입력하세요",
-              "ar": "اكتب اسمًا"
-            }
           }
         ]
       },
@@ -7398,126 +6415,6 @@
                 }
               }
             ]
-          }
-        ]
-      },
-      {
-        "id": "transition_resume_existing",
-        "title": {
-          "en": "Resume transition",
-          "nl": "Hervat transitie",
-          "da": "Genoptag overgangen",
-          "de": "Übergang fortsetzen",
-          "es": "Reanudar transición",
-          "fr": "Reprendre la transition",
-          "it": "Riprendi la transizione",
-          "no": "Gjenoppta overgangen",
-          "sv": "Återuppta övergången",
-          "pl": "Wznów przejście",
-          "ru": "Возобновить переход",
-          "ko": "전환 재개",
-          "ar": "استئناف الانتقال"
-        },
-        "titleFormatted": {
-          "en": "Resume transition [[namedd]] / [[name]]",
-          "nl": "Hervat transitie [[namedd]] / [[name]]",
-          "da": "Genoptag overgangen [[namedd]] / [[name]]",
-          "de": "Übergang fortsetzen [[namedd]] / [[name]]",
-          "es": "Reanudar transición [[namedd]] / [[name]]",
-          "fr": "Reprendre la transition [[namedd]] / [[name]]",
-          "it": "Riprendi la transizione [[namedd]] / [[name]]",
-          "no": "Gjenoppta overgangen [[namedd]] / [[name]]",
-          "sv": "Återuppta övergången [[namedd]] / [[name]]",
-          "pl": "Wznów przejście [[namedd]] / [[name]]",
-          "ru": "Возобновить переход [[namedd]] / [[name]]",
-          "ko": "전환 재개 [[namedd]] / [[name]]",
-          "ar": "استئناف الانتقال [[namedd]] / [[name]]"
-        },
-        "hint": {
-          "en": "Resumes an existing paused transition with the selected name. It does not create a new one. If no matching {noun} exists, the action reports an error.",
-          "nl": "Hervat de bestaande gepauzeerde transitie met de gekozen naam. Er wordt geen nieuwe gestart. Als er geen {noun} met die naam bestaat, geeft de actie een fout.",
-          "da": "Genoptager den eksisterende overgang med det valgte navn, hvis den er sat på pause. Der startes ikke en ny. Hvis ingen {noun} med navnet findes, giver handlingen en fejl.",
-          "de": "Setzt den vorhandenen pausierten Übergang mit dem ausgewählten Namen fort. Es wird kein neuer gestartet. Wenn kein passender {noun} vorhanden ist, meldet die Aktion einen Fehler.",
-          "es": "Reanuda el transición existente en pausa con el nombre seleccionado. No inicia uno nuevo. Si no existe ningún {noun} con ese nombre, la acción informa de un error.",
-          "fr": "Reprend le transition existant en pause portant le nom sélectionné. Aucun nouveau n’est démarré. Si aucun {noun} correspondant n’existe, l’action signale une erreur.",
-          "it": "Riprende il transizione esistente in pausa con il nome selezionato. Non ne avvia uno nuovo. Se non esiste un {noun} con quel nome, l’azione segnala un errore.",
-          "no": "Gjenopptar den eksisterende overgang med det valgte navnet hvis den er satt på pause. En ny startes ikke. Hvis ingen {noun} med navnet finnes, rapporterer handlingen en feil.",
-          "sv": "Återupptar det befintliga pausade övergång med det valda namnet. Inget nytt startas. Om inget {noun} med det namnet finns rapporterar åtgärden ett fel.",
-          "pl": "Wznawia istniejący wstrzymany przejście o wybranej nazwie. Nie uruchamia nowego. Jeśli nie istnieje {noun} o tej nazwie, akcja zgłosi błąd.",
-          "ru": "Возобновляет существующий приостановленный объект «переход» с выбранным именем. Новый объект не запускается. Если объект «{noun}» с таким именем не найден, действие выдаст ошибку.",
-          "ko": "선택한 이름의 기존 일시 정지된 전환를 재개합니다. 새로 시작하지 않습니다. 해당 이름의 {noun}가 없으면 작업에서 오류를 보고합니다.",
-          "ar": "يستأنف الانتقال الموجود والمتوقف مؤقتًا بالاسم المحدد، ولا يبدأ واحدًا جديدًا. إذا لم يوجد {noun} بهذا الاسم، فسيُبلغ الإجراء عن خطأ."
-        },
-        "args": [
-          {
-            "name": "namedd",
-            "required": false,
-            "type": "autocomplete",
-            "title": {
-              "en": "Pick",
-              "nl": "Kies",
-              "da": "Vælg",
-              "de": "Wählen",
-              "es": "Elegir",
-              "fr": "Choisir",
-              "it": "Scegliere",
-              "no": "Velg",
-              "sv": "Välj",
-              "pl": "Wybierz",
-              "ru": "Выбрать",
-              "ko": "선택하세요",
-              "ar": "اختر"
-            },
-            "placeholder": {
-              "en": "Pick or type",
-              "nl": "Kies of type",
-              "da": "Vælg eller skriv",
-              "de": "Wählen oder eingeben",
-              "es": "Elige o escribe",
-              "fr": "Choisissez ou tapez",
-              "it": "Scegli o digita",
-              "no": "Velg eller skriv inn",
-              "sv": "Välj eller skriv",
-              "pl": "Wybierz lub wpisz",
-              "ru": "Выберите или введите",
-              "ko": "선택하거나 입력하세요",
-              "ar": "اختر أو اكتب"
-            }
-          },
-          {
-            "name": "name",
-            "required": false,
-            "title": {
-              "en": "Name",
-              "nl": "Naam",
-              "da": "Navn",
-              "de": "Name",
-              "es": "Nombre",
-              "fr": "Nom",
-              "it": "Nome",
-              "no": "Navn",
-              "sv": "Namn",
-              "pl": "Nazwa",
-              "ru": "Имя",
-              "ko": "이름",
-              "ar": "الاسم"
-            },
-            "type": "text",
-            "placeholder": {
-              "en": "Type a name",
-              "nl": "Type een naam",
-              "da": "Indtast et navn",
-              "de": "Geben Sie einen Namen ein",
-              "es": "Escribe un nombre",
-              "fr": "Tapez un nom",
-              "it": "Digita un nome",
-              "no": "Skriv inn et navn",
-              "sv": "Skriv ett namn",
-              "pl": "Wpisz nazwę",
-              "ru": "Введите имя",
-              "ko": "이름을 입력하세요",
-              "ar": "اكتب اسمًا"
-            }
           }
         ]
       },
@@ -9402,6 +8299,1109 @@
               "ko": "이름을 입력하세요",
               "ar": "اكتب اسمًا"
             }
+          }
+        ]
+      },
+      {
+        "id": "stopwatch_get_duration",
+        "title": {
+          "en": "Get the elapsed duration of a stopwatch",
+          "nl": "Get the elapsed duration of a stopwatch",
+          "da": "Få den forløbne tid på et stopur",
+          "de": "Get the elapsed duration of a stopwatch",
+          "es": "Obtén la duración transcurrida de un cronómetro",
+          "fr": "Obtenez la durée écoulée d'un chronomètre",
+          "it": "Ottieni la durata trascorsa di un cronometro",
+          "no": "Få den forløpte tiden til en stoppeklokke",
+          "sv": "Få den förflutna tiden för en stoppklocka",
+          "pl": "Uzyskaj upływający czas stopera",
+          "ru": "Получить прошедшее время секундомера",
+          "ko": "스톱워치의 경과 시간을 확인하세요.",
+          "ar": "احصل على المدة المنقضية للساعة التوقيفية"
+        },
+        "titleFormatted": {
+          "en": "Get the elapsed duration of stopwatch [[namedd]] / [[name]]",
+          "nl": "Krijg de verlopen duur van stopwatch [[namedd]] / [[name]]",
+          "da": "Få den forløbne tid for stopuret [[namedd]] / [[name]]",
+          "de": "Abfrage der verstrichenen Stoppuhrzeit [[namedd]] / [[name]]",
+          "es": "Obtén la duración transcurrida del cronómetro [[namedd]] / [[name]]",
+          "fr": "Obtenez la durée écoulée du chronomètre [[namedd]] / [[name]]",
+          "it": "Ottieni la durata trascorsa del cronometro [[namedd]] / [[name]]",
+          "no": "Få den forløpte tiden til stoppeklokke [[namedd]] / [[name]]",
+          "sv": "Hämta den förflutna tiden för stoppuret [[namedd]] / [[name]]",
+          "pl": "Uzyskaj upływający czas stopera [[namedd]] / [[name]]",
+          "ru": "Получить прошедшее время секундомера [[namedd]] / [[name]]",
+          "ko": "스톱워치 [[namedd]] / [[name]]의 경과 시간을 확인하세요.",
+          "ar": "احصل على المدة المنقضية للساعة [[namedd]] / [[name]]"
+        },
+        "hint": {
+          "en": "You can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
+          "nl": "U kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
+          "da": "Du kan enten vælge et navn, eller skrive og vælge det, eller skrive et navn i navnefeltet. Picker'en har forrang, når begge er udfyldt. Navnet vil først dukke op i picker'en efter at have gemt den (aktiverede) flow.",
+          "de": "Sie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows im Picker angezeigt.",
+          "es": "Puedes seleccionar un nombre, escribirlo y seleccionarlo, o escribir un nombre en el campo de nombre. El Selector tiene prioridad cuando ambos están llenos. El nombre solo aparecerá en el selector después de guardar el flujo (habilitado).",
+          "fr": "Vous pouvez soit sélectionner un nom, soit le taper et le sélectionner, soit taper un nom dans le champ de nom. Le sélecteur est prioritaire lorsque les deux sont remplis. Le nom n'apparaîtra dans le sélecteur qu'après avoir enregistré le flux (activé).",
+          "it": "Puoi selezionare un nome, oppure digitarlo e selezionarlo, o digitare un nome nel campo del nome. Il Selettore ha la precedenza quando entrambi sono compilati. Il nome apparirà nel selettore solo dopo aver salvato il flusso (abilitato).",
+          "no": "Du kan enten velge et navn, eller skrive og velge det, eller skrive et navn i navnefeltet. Velgeren er ledende når begge er fylt ut. Navnet vil bare vises i velgeren etter at den (aktiverte) flyten er lagret.",
+          "sv": "Du kan antingen välja ett namn, skriva och välja det, eller skriva ett namn i namnfältet. Väljaren är ledande när båda är ifyllda. Namnet kommer bara att visas i väljaren efter att du sparat det (aktiverade) flödet.",
+          "pl": "Możesz wybrać nazwę, wpisać i wybrać ją, lub wpisać nazwę w polu nazwy. Picker ma pierwszeństwo, gdy oba pola są wypełnione. Nazwa pojawi się w pickerze dopiero po zapisaniu (włączonego) przepływu.",
+          "ru": "Вы можете либо выбрать имя, либо ввести и выбрать его, либо ввести имя в поле для имени. Если оба поля заполнены, приоритет имеет выбор из списка. Имя появится в списке только после сохранения (включенного) потока.",
+          "ko": "이름을 선택하거나 입력하여 선택할 수 있으며, 이름 필드에 이름을 입력할 수도 있습니다. 둘 다 입력된 경우에는 선택기가 우선합니다. 이름은 (활성화된) 플로우를 저장한 후에만 선택기에 나타납니다.",
+          "ar": "يمكنك إما اختيار اسم، أو كتابته واختياره، أو كتابة اسم في حقل الاسم. يكون المُختار هو السائد عندما يتم ملء كلاهما. سيظهر الاسم في المُختار فقط بعد حفظ التدفق (المُمكّن)."
+        },
+        "args": [
+          {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "da": "Vælg",
+              "de": "Wählen",
+              "es": "Elegir",
+              "fr": "Choisir",
+              "it": "Scegliere",
+              "no": "Velg",
+              "sv": "Välj",
+              "pl": "Wybierz",
+              "ru": "Выбрать",
+              "ko": "선택",
+              "ar": "اختر"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "da": "Vælg eller skriv",
+              "de": "Wählen oder eingeben",
+              "es": "Elige o escribe",
+              "fr": "Choisissez ou tapez",
+              "it": "Scegli o digita",
+              "no": "Velg eller skriv inn",
+              "sv": "Välj eller skriv",
+              "pl": "Wybierz lub wpisz",
+              "ru": "Выберите или введите текст",
+              "ko": "선택하거나 입력하세요",
+              "ar": "اختر أو اكتب"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "title": {
+              "en": "Name",
+              "nl": "Naam",
+              "da": "Navn",
+              "de": "Name",
+              "es": "Nombre",
+              "fr": "Nom",
+              "it": "Nome",
+              "no": "Navn",
+              "sv": "Namn",
+              "pl": "Nazwa",
+              "ru": "Имя",
+              "ko": "이름",
+              "ar": "الاسم"
+            },
+            "type": "text",
+            "placeholder": {
+              "en": "Type a name",
+              "nl": "Type een naam",
+              "da": "Indtast et navn",
+              "de": "Geben Sie einen Namen ein",
+              "es": "Escribe un nombre",
+              "fr": "Tapez un nom",
+              "it": "Digita un nome",
+              "no": "Skriv inn et navn",
+              "sv": "Skriv ett namn",
+              "pl": "Wpisz nazwę",
+              "ru": "Введите имя",
+              "ko": "이름을 입력하세요",
+              "ar": "اكتب اسمًا"
+            }
+          }
+        ],
+        "tokens": [
+          {
+            "name": "name",
+            "type": "string",
+            "title": {
+              "en": "Name",
+              "nl": "Naam",
+              "da": "Navn",
+              "de": "Name",
+              "es": "Nombre",
+              "fr": "Nom",
+              "it": "Nome",
+              "no": "Navn",
+              "sv": "Namn",
+              "pl": "Nazwa",
+              "ru": "Имя",
+              "ko": "이름",
+              "ar": "الاسم"
+            }
+          },
+          {
+            "name": "elapsed",
+            "type": "number",
+            "title": {
+              "en": "Elapsed in Milliseconds",
+              "nl": "Verlopen in milliseconden",
+              "da": "Forløbet i millisekunder",
+              "de": "Verstrichen in Millisekunden",
+              "es": "Transcurrido en milisegundos",
+              "fr": "Écoulé en millisecondes",
+              "it": "Trascorso in millisecondi",
+              "no": "Forløpt i millisekunder",
+              "sv": "Förfluten tid i millisekunder",
+              "pl": "Upłynęło w milisekundach",
+              "ru": "Прошло в миллисекундах",
+              "ko": "밀리초 경과",
+              "ar": "الوقت المنقضي بالمللي ثانية"
+            }
+          },
+          {
+            "name": "elapsedInSeconds",
+            "type": "number",
+            "title": {
+              "en": "Elapsed in Seconds",
+              "nl": "Verlopen in seconden",
+              "da": "Forløbet i sekunder",
+              "de": "Verstrichen in Sekunden",
+              "es": "Transcurrido en segundos",
+              "fr": "Écoulé en secondes",
+              "it": "Trascorso in Secondi",
+              "no": "Forløpt i sekunder",
+              "sv": "Förfluten tid i sekunder",
+              "pl": "Upłynęło w sekundach",
+              "ru": "Прошло в секундах",
+              "ko": "경과 시간 (초)",
+              "ar": "الوقت المنقضي بالثواني"
+            }
+          },
+          {
+            "name": "elapsedInMinutes",
+            "type": "number",
+            "title": {
+              "en": "Elapsed in Minutes",
+              "nl": "Verlopen in minuten",
+              "da": "Forløbet i minutter",
+              "de": "Verstrichen in Minuten",
+              "es": "Transcurrido en minutos",
+              "fr": "Écoulé en minutes",
+              "it": "Trascorso in minuti",
+              "no": "Forløpt i minutter",
+              "sv": "Förfluten tid i minuter",
+              "pl": "Upłynęło w minutach",
+              "ru": "Прошло в минутах",
+              "ko": "경과 시간 (분)",
+              "ar": "الوقت المنقضي بالدقائق"
+            }
+          },
+          {
+            "name": "elapsedInHours",
+            "type": "number",
+            "title": {
+              "en": "Elapsed in Hours",
+              "nl": "Verlopen in uren",
+              "da": "Forløbet i timer",
+              "de": "Verstrichen in Stunden",
+              "es": "Transcurrido en horas",
+              "fr": "Écoulé en heures",
+              "it": "Trascorso in ore",
+              "no": "Forløpt i timer",
+              "sv": "Förfluten tid i timmar",
+              "pl": "Upłynęło w godzinach",
+              "ru": "Прошло в часах",
+              "ko": "경과 시간 (시간 단위)",
+              "ar": "منقضية بالساعات"
+            }
+          },
+          {
+            "name": "elapsedTimeInMinutes",
+            "type": "string",
+            "title": {
+              "en": "Elapsed in Minutes",
+              "nl": "Verlopen in minuten",
+              "da": "Forløbet i minutter",
+              "de": "Verstrichen in Minuten",
+              "es": "Transcurrido en minutos",
+              "fr": "Écoulé en minutes",
+              "it": "Trascorso in minuti",
+              "no": "Forløpt i minutter",
+              "sv": "Förfluten tid i minuter",
+              "pl": "Upłynęło w minutach",
+              "ru": "Прошло в минутах",
+              "ko": "경과 시간 (분)",
+              "ar": "الوقت المنقضي بالدقائق"
+            },
+            "example": "mm:ss"
+          },
+          {
+            "name": "elapsedTimeInHours",
+            "type": "string",
+            "title": {
+              "en": "Elapsed in Hours",
+              "nl": "Verlopen in uren",
+              "da": "Forløbet i timer",
+              "de": "Verstrichen in Stunden",
+              "es": "Transcurrido en horas",
+              "fr": "Écoulé en heures",
+              "it": "Trascorso in ore",
+              "no": "Forløpt i timer",
+              "sv": "Förfluten tid i timmar",
+              "pl": "Upłynęło w godzinach",
+              "ru": "Прошло в часах",
+              "ko": "경과 시간 (시간 단위)",
+              "ar": "الوقت المنقضي بالساعات"
+            },
+            "example": "HH:mm:ss"
+          },
+          {
+            "name": "elapsedTimeInHoursShort",
+            "type": "string",
+            "title": {
+              "en": "Elapsed in Hours (short)",
+              "nl": "Verlopen in uren (kort)",
+              "da": "Forløbet i timer (kort)",
+              "de": "Verstrichen in Stunden (kurz)",
+              "es": "Transcurrido en horas (corto)",
+              "fr": "Écoulé en heures (court)",
+              "it": "Trascorso in Ore (breve)",
+              "no": "Forløpt i timer (kort)",
+              "sv": "Förfluten tid i timmar (kort)",
+              "pl": "Upłynęło w godzinach (krótko)",
+              "ru": "Прошло часов (кратко)",
+              "ko": "경과 시간 (단축)",
+              "ar": "الوقت المنقضي بالساعات (قصير)"
+            },
+            "example": "HH:mm"
+          }
+        ]
+      },
+      {
+        "id": "timer_get_duration",
+        "title": {
+          "en": "Get the duration of a timer",
+          "nl": "Get the duration of a timer",
+          "da": "Få varigheden af en timer",
+          "de": "Get the duration of a timer",
+          "es": "Obtén la duración de un temporizador",
+          "fr": "Obtenez la durée d'un minuteur",
+          "it": "Ottieni la durata di un timer",
+          "no": "Få varigheten til en timer",
+          "sv": "Hämta varaktigheten för en timer",
+          "pl": "Uzyskaj czas trwania timera",
+          "ru": "Получить продолжительность таймера",
+          "ko": "타이머의 지속 시간 확인하기",
+          "ar": "احصل على مدة المؤقت"
+        },
+        "titleFormatted": {
+          "en": "Get the elapsed/remaining duration of timer [[namedd]] / [[name]]",
+          "nl": "Krijg de verstreken/resterend duur van timer [[namedd]] / [[name]]",
+          "da": "Få den forløbne/tilbageværende tid for timeren [[namedd]] / [[name]]",
+          "de": "Abfrage abgelaufen/verbleibend Timerlaufzeit [[namedd]] / [[name]]",
+          "es": "Obtén la duración transcurrida/restante del temporizador [[namedd]] / [[name]]",
+          "fr": "Obtenez la durée écoulée/restante du minuteur [[namedd]] / [[name]]",
+          "it": "Ottieni la durata trascorsa/rimanente del timer [[namedd]] / [[name]]",
+          "no": "Få den forløpte/gjenstående varigheten til timeren [[namedd]] / [[name]]",
+          "sv": "Hämta den förflutna/återstående tiden för timer [[namedd]] / [[name]]",
+          "pl": "Uzyskaj upływający/pozostały czas timera [[namedd]] / [[name]]",
+          "ru": "Получите прошедшую/оставшуюся продолжительность таймера [[namedd]] / [[name]]",
+          "ko": "타이머 [[namedd]] / [[name]]의 경과/남은 시간을 확인하세요.",
+          "ar": "احصل على المدة المنقضية/المتبقية للمؤقت [[namedd]] / [[name]]"
+        },
+        "hint": {
+          "en": "You can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
+          "nl": "U kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
+          "da": "Du kan enten vælge et navn, eller skrive og vælge det, eller skrive et navn i navnefeltet. Picker'en har forrang, når begge er udfyldt. Navnet vil først dukke op i picker'en efter at have gemt den (aktiverede) flow.",
+          "de": "Sie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows im Picker angezeigt.",
+          "es": "Puedes seleccionar un nombre, o escribirlo y seleccionarlo, o escribir un nombre en el campo de nombre. El Selector tiene prioridad cuando ambos están llenos. El nombre solo aparecerá en el selector después de guardar el flujo (habilitado).",
+          "fr": "Vous pouvez soit sélectionner un nom, soit le taper et le sélectionner, soit taper un nom dans le champ de nom. Le sélecteur est prioritaire lorsque les deux sont remplis. Le nom n'apparaîtra dans le sélecteur qu'après avoir enregistré le flux (activé).",
+          "it": "Puoi selezionare un nome, oppure digitarlo e selezionarlo, o digitare un nome nel campo del nome. Il Selettore ha la precedenza quando entrambi sono compilati. Il nome apparirà nel selettore solo dopo aver salvato il flusso (abilitato).",
+          "no": "Du kan enten velge et navn, eller skrive og velge det, eller skrive et navn i navnefeltet. Velgeren er ledende når begge er fylt ut. Navnet vil bare vises i velgeren etter at den (aktiverte) flyten er lagret.",
+          "sv": "Du kan antingen välja ett namn, skriva och välja det, eller skriva ett namn i namnfältet. Väljaren är ledande när båda är ifyllda. Namnet kommer bara att visas i väljaren efter att du har sparat det (aktiverade) flödet.",
+          "pl": "Możesz wybrać nazwę, wpisać i wybrać ją, lub wpisać nazwę w polu nazwy. Gdy oba pola są wypełnione, priorytet ma Picker. Nazwa pojawi się w Pickerze dopiero po zapisaniu (włączonego) przepływu.",
+          "ru": "Вы можете либо выбрать имя, либо ввести и выбрать его, либо ввести имя в поле для имени. Если оба поля заполнены, приоритет имеет выбор из списка. Имя появится в списке только после сохранения (включенного) потока.",
+          "ko": "이름을 선택하거나 입력하여 선택할 수 있으며, 이름 필드에 이름을 입력할 수도 있습니다. 둘 다 입력된 경우에는 선택기가 우선합니다. 이름은 (활성화된) 플로우를 저장한 후에만 선택기에 나타납니다.",
+          "ar": "يمكنك إما اختيار اسم، أو كتابته واختياره، أو كتابة اسم في حقل الاسم. يكون المُختار هو السائد عندما يتم ملء كلاهما. سيظهر الاسم في المُختار فقط بعد حفظ التدفق (المُمكّن)."
+        },
+        "args": [
+          {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "da": "Vælg",
+              "de": "Wählen",
+              "es": "Elegir",
+              "fr": "Choisir",
+              "it": "Scegliere",
+              "no": "Velg",
+              "sv": "Välj",
+              "pl": "Wybierz",
+              "ru": "Выбрать",
+              "ko": "선택하세요",
+              "ar": "اختر"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "da": "Vælg eller skriv",
+              "de": "Wählen oder eingeben",
+              "es": "Elige o escribe",
+              "fr": "Choisissez ou tapez",
+              "it": "Scegli o digita",
+              "no": "Velg eller skriv inn",
+              "sv": "Välj eller skriv",
+              "pl": "Wybierz lub wpisz",
+              "ru": "Выберите или введите текст",
+              "ko": "선택하거나 입력하세요",
+              "ar": "اختر أو اكتب"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "title": {
+              "en": "Name",
+              "nl": "Naam",
+              "da": "Navn",
+              "de": "Name",
+              "es": "Nombre",
+              "fr": "Nom",
+              "it": "Nome",
+              "no": "Navn",
+              "sv": "Namn",
+              "pl": "Nazwa",
+              "ru": "Имя",
+              "ko": "이름",
+              "ar": "الاسم"
+            },
+            "type": "text",
+            "placeholder": {
+              "en": "Type a name",
+              "nl": "Type een naam",
+              "da": "Indtast et navn",
+              "de": "Geben Sie einen Namen ein",
+              "es": "Escribe un nombre",
+              "fr": "Tapez un nom",
+              "it": "Digita un nome",
+              "no": "Skriv inn et navn",
+              "sv": "Skriv ett namn",
+              "pl": "Wpisz nazwę",
+              "ru": "Введите имя",
+              "ko": "이름을 입력하세요",
+              "ar": "اكتب اسمًا"
+            }
+          }
+        ],
+        "tokens": [
+          {
+            "name": "name",
+            "type": "string",
+            "title": {
+              "en": "Name",
+              "nl": "Naam",
+              "da": "Navn",
+              "de": "Name",
+              "es": "Nombre",
+              "fr": "Nom",
+              "it": "Nome",
+              "no": "Navn",
+              "sv": "Namn",
+              "pl": "Nazwa",
+              "ru": "Имя",
+              "ko": "이름",
+              "ar": "الاسم"
+            }
+          },
+          {
+            "name": "duration",
+            "type": "number",
+            "title": {
+              "en": "Duration in Milliseconds",
+              "nl": "Duur in milliseconden",
+              "da": "Varighed i millisekunder",
+              "de": "Dauer in Millisekunden",
+              "es": "Duración en milisegundos",
+              "fr": "Durée en millisecondes",
+              "it": "Durata in millisecondi",
+              "no": "Varighet i millisekunder",
+              "sv": "Varaktighet i millisekunder",
+              "pl": "Czas trwania w milisekundach",
+              "ru": "Продолжительность в миллисекундах",
+              "ko": "밀리초 단위의 지속 시간",
+              "ar": "المدة الزمنية بالمللي ثانية"
+            }
+          },
+          {
+            "name": "durationInSeconds",
+            "type": "number",
+            "title": {
+              "en": "Duration in Seconds",
+              "nl": "Duur in seconden",
+              "da": "Varighed i sekunder",
+              "de": "Dauer in Sekunden",
+              "es": "Duración en segundos",
+              "fr": "Durée en secondes",
+              "it": "Durata in secondi",
+              "no": "Varighet i sekunder",
+              "sv": "Varaktighet i sekunder",
+              "pl": "Czas trwania w sekundach",
+              "ru": "Продолжительность в секундах",
+              "ko": "초 단위 지속 시간",
+              "ar": "المدة بالثواني"
+            }
+          },
+          {
+            "name": "durationInMinutes",
+            "type": "number",
+            "title": {
+              "en": "Duration in Minutes",
+              "nl": "Duur in minuten",
+              "da": "Varighed i minutter",
+              "de": "Dauer in Minuten",
+              "es": "Duración en minutos",
+              "fr": "Durée en minutes",
+              "it": "Durata in minuti",
+              "no": "Varighet i minutter",
+              "sv": "Varaktighet i minuter",
+              "pl": "Czas trwania w minutach",
+              "ru": "Продолжительность в минутах",
+              "ko": "분 단위 지속 시간",
+              "ar": "المدة بالدقائق"
+            }
+          },
+          {
+            "name": "durationInHours",
+            "type": "number",
+            "title": {
+              "en": "Duration in Hours",
+              "nl": "Duur in uren",
+              "da": "Varighed i timer",
+              "de": "Dauer in Stunden",
+              "es": "Duración en horas",
+              "fr": "Durée en heures",
+              "it": "Durata in ore",
+              "no": "Varighet i timer",
+              "sv": "Varaktighet i timmar",
+              "pl": "Czas trwania w godzinach",
+              "ru": "Продолжительность в часах",
+              "ko": "시간(시간 단위)",
+              "ar": "المدة بالساعات"
+            }
+          },
+          {
+            "name": "durationTimeInMinutes",
+            "type": "string",
+            "title": {
+              "en": "Duration in Minutes",
+              "nl": "Duur in minuten",
+              "da": "Varighed i minutter",
+              "de": "Dauer in Minuten",
+              "es": "Duración en minutos",
+              "fr": "Durée en minutes",
+              "it": "Durata in minuti",
+              "no": "Varighet i minutter",
+              "sv": "Varaktighet i minuter",
+              "pl": "Czas trwania w minutach",
+              "ru": "Продолжительность в минутах",
+              "ko": "분 단위 지속 시간",
+              "ar": "المدة بالدقائق"
+            },
+            "example": "mm:ss"
+          },
+          {
+            "name": "durationTimeInHours",
+            "type": "string",
+            "title": {
+              "en": "Duration in Hours",
+              "nl": "Duur in uren",
+              "da": "Varighed i timer",
+              "de": "Dauer in Stunden",
+              "es": "Duración en horas",
+              "fr": "Durée en heures",
+              "it": "Durata in ore",
+              "no": "Varighet i timer",
+              "sv": "Varaktighet i timmar",
+              "pl": "Czas trwania w godzinach",
+              "ru": "Продолжительность в часах",
+              "ko": "시간(시간 단위)",
+              "ar": "المدة بالساعات"
+            },
+            "example": "HH:mm:ss"
+          },
+          {
+            "name": "durationTimeInHoursShort",
+            "type": "string",
+            "title": {
+              "en": "Duration in Hours (short)",
+              "nl": "Duur in uren (kort)",
+              "da": "Varighed i timer (kort)",
+              "de": "Dauer in Stunden (kurz)",
+              "es": "Duración en horas (corto)",
+              "fr": "Durée en heures (court)",
+              "it": "Durata in ore (breve)",
+              "no": "Varighet i timer (kort)",
+              "sv": "Varaktighet i timmar (kort)",
+              "pl": "Czas trwania w godzinach (krótko)",
+              "ru": "Длительность в часах (кратко)",
+              "ko": "시간 (단기)",
+              "ar": "المدة بالساعات (قصير)"
+            },
+            "example": "HH:mm"
+          },
+          {
+            "name": "elapsed",
+            "type": "number",
+            "title": {
+              "en": "Elapsed in Milliseconds",
+              "nl": "Verlopen in milliseconden",
+              "da": "Forløbet i millisekunder",
+              "de": "Verstrichen in Millisekunden",
+              "es": "Transcurrido en milisegundos",
+              "fr": "Écoulé en millisecondes",
+              "it": "Trascorso in millisecondi",
+              "no": "Forløpt i millisekunder",
+              "sv": "Förfluten tid i millisekunder",
+              "pl": "Upłynęło w milisekundach",
+              "ru": "Прошло в миллисекундах",
+              "ko": "경과 시간 (밀리초)",
+              "ar": "الوقت المنقضي بالمللي ثانية"
+            }
+          },
+          {
+            "name": "elapsedInSeconds",
+            "type": "number",
+            "title": {
+              "en": "Elapsed in Seconds",
+              "nl": "Verlopen in seconden",
+              "da": "Forløbet i sekunder",
+              "de": "Verstrichen in Sekunden",
+              "es": "Transcurrido en segundos",
+              "fr": "Écoulé en secondes",
+              "it": "Trascorso in secondi",
+              "no": "Forløpt i sekunder",
+              "sv": "Förfluten tid i sekunder",
+              "pl": "Upłynęło w sekundach",
+              "ru": "Прошло секунд",
+              "ko": "경과 시간 (초)",
+              "ar": "الوقت المنقضي بالثواني"
+            }
+          },
+          {
+            "name": "elapsedInMinutes",
+            "type": "number",
+            "title": {
+              "en": "Elapsed in Minutes",
+              "nl": "Verlopen in minuten",
+              "da": "Forløbet i minutter",
+              "de": "Verstrichen in Minuten",
+              "es": "Transcurrido en minutos",
+              "fr": "Écoulé en minutes",
+              "it": "Trascorso in Minuti",
+              "no": "Forløpt i minutter",
+              "sv": "Förfluten tid i minuter",
+              "pl": "Upłynęło w minutach",
+              "ru": "Прошло в минутах",
+              "ko": "경과 시간 (분)",
+              "ar": "الوقت المنقضي بالدقائق"
+            }
+          },
+          {
+            "name": "elapsedInHours",
+            "type": "number",
+            "title": {
+              "en": "Elapsed in Hours",
+              "nl": "Verlopen in uren",
+              "da": "Forløbet i timer",
+              "de": "Verstrichen in Stunden",
+              "es": "Transcurrido en horas",
+              "fr": "Écoulé en heures",
+              "it": "Trascorso in ore",
+              "no": "Forløpt i timer",
+              "sv": "Förfluten tid i timmar",
+              "pl": "Upłynęło w godzinach",
+              "ru": "Прошло в часах",
+              "ko": "경과 시간 (시간 단위)",
+              "ar": "الوقت المنقضي بالساعات"
+            }
+          },
+          {
+            "name": "elapsedTimeInMinutes",
+            "type": "string",
+            "title": {
+              "en": "Elapsed in Minutes",
+              "nl": "Verlopen in minuten",
+              "da": "Forløbet i minutter",
+              "de": "Verstrichen in Minuten",
+              "es": "Transcurrido en minutos",
+              "fr": "Écoulé en minutes",
+              "it": "Trascorso in Minuti",
+              "no": "Forløpt i minutter",
+              "sv": "Förfluten tid i minuter",
+              "pl": "Upłynęło w minutach",
+              "ru": "Прошло минут",
+              "ko": "경과 시간 (분)",
+              "ar": "الوقت المنقضي بالدقائق"
+            },
+            "example": "mm:ss"
+          },
+          {
+            "name": "elapsedTimeInHours",
+            "type": "string",
+            "title": {
+              "en": "Elapsed in Hours",
+              "nl": "Verlopen in uren",
+              "da": "Forløbet i timer",
+              "de": "Verstrichen in Stunden",
+              "es": "Transcurrido en horas",
+              "fr": "Écoulé en heures",
+              "it": "Trascorso in ore",
+              "no": "Forløpt i timer",
+              "sv": "Förfluten tid i timmar",
+              "pl": "Upłynęło w godzinach",
+              "ru": "Прошло в часах",
+              "ko": "경과 시간 (시간 단위)",
+              "ar": "الوقت المنقضي بالساعات"
+            },
+            "example": "HH:mm:ss"
+          },
+          {
+            "name": "elapsedTimeInHoursShort",
+            "type": "string",
+            "title": {
+              "en": "Elapsed in Hours (short)",
+              "nl": "Verlopen in uren (kort)",
+              "da": "Forløbet i timer (kort)",
+              "de": "Verstrichen in Stunden (kurz)",
+              "es": "Transcurrido en horas (corto)",
+              "fr": "Écoulé en heures (court)",
+              "it": "Trascorso in ore (breve)",
+              "no": "Forløpt i timer (kort)",
+              "sv": "Förfluten tid i timmar (kort)",
+              "pl": "Upłynęło w godz. (krótko)",
+              "ru": "Прошло часов (кратко)",
+              "ko": "경과 시간 (단축)",
+              "ar": "الوقت المنقضي بالساعات (قصير)"
+            },
+            "example": "HH:mm"
+          }
+        ]
+      },
+      {
+        "id": "transition_get_duration",
+        "title": {
+          "en": "Get the duration of a transition",
+          "nl": "Get the duration of a transition",
+          "da": "Få varigheden af en overgang",
+          "de": "Get the duration of a transition",
+          "es": "Obtén la duración de una transición",
+          "fr": "Obtenez la durée d'une transition",
+          "it": "Ottieni la durata di una transizione",
+          "no": "Få varigheten av en overgang",
+          "sv": "Få varaktigheten av en övergång",
+          "pl": "Uzyskaj czas trwania przejścia",
+          "ru": "Получите продолжительность перехода",
+          "ko": "전환의 지속 시간 확인하기",
+          "ar": "احصل على مدة الانتقال"
+        },
+        "titleFormatted": {
+          "en": "Get the elapsed/remaining duration of transition [[namedd]] / [[name]]",
+          "nl": "Krijg de verstreken/resterend duur van transition [[namedd]] / [[name]]",
+          "da": "Få den forløbne/tilbageværende varighed af overgangen [[namedd]] / [[name]]",
+          "de": "Abfrage abgelaufen/verbleibend Dauer von Übergang [[namedd]] / [[name]]",
+          "es": "Obtén la duración transcurrida/restante de la transición [[namedd]] / [[name]]",
+          "fr": "Obtenez la durée écoulée/restante de la transition [[namedd]] / [[name]]",
+          "it": "Ottieni la durata trascorsa/rimanente della transizione [[namedd]] / [[name]]",
+          "no": "Få den forløpte/gjenstående varigheten av overgangen [[namedd]] / [[name]]",
+          "sv": "Hämta den förflutna/återstående tiden för övergång [[namedd]] / [[name]]",
+          "pl": "Uzyskaj upływający/pozostały czas trwania przejścia [[namedd]] / [[name]]",
+          "ru": "Получите прошедшую/оставшуюся длительность перехода [[namedd]] / [[name]]",
+          "ko": "전환 [[namedd]] / [[name]]의 경과/남은 시간을 확인하세요.",
+          "ar": "احصل على المدة المنقضية/المتبقية للانتقال [[namedd]] / [[name]]"
+        },
+        "hint": {
+          "en": "You can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
+          "nl": "U kunt een naam selecteren, of typen en selecteren, of een naam typen in het naamveld.\nDe kiezer is leidend als beide zijn gevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
+          "da": "Du kan enten vælge et navn, eller skrive og vælge det, eller skrive et navn i navnefeltet. Picker'en har forrang, når begge er udfyldt. Navnet vil først dukke op i picker'en efter at have gemt den (aktiverede) flow.",
+          "de": "Sie können entweder einen Namen auswählen oder ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDer Picker führt, wenn beide besetzt sind.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows im Picker angezeigt.",
+          "es": "Puedes seleccionar un nombre, o escribirlo y seleccionarlo, o escribir un nombre en el campo de nombre. El Selector tiene prioridad cuando ambos están llenos. El nombre solo aparecerá en el selector después de guardar el flujo (habilitado).",
+          "fr": "Vous pouvez soit sélectionner un nom, soit le taper et le sélectionner, soit taper un nom dans le champ de nom. Le sélecteur est prioritaire lorsque les deux sont remplis. Le nom n'apparaîtra dans le sélecteur qu'après avoir enregistré le flux (activé).",
+          "it": "Puoi selezionare un nome, oppure digitarlo e selezionarlo, o digitare un nome nel campo del nome. Il Picker ha la precedenza quando entrambi sono compilati. Il nome apparirà nel Picker solo dopo aver salvato il flusso (abilitato).",
+          "no": "Du kan enten velge et navn, eller skrive og velge det, eller skrive et navn i navnefeltet. Velgeren er ledende når begge er fylt ut. Navnet vil bare vises i velgeren etter at den (aktiverte) flyten er lagret.",
+          "sv": "Du kan antingen välja ett namn, skriva och välja det, eller skriva ett namn i namnfältet. Väljaren är ledande när båda är ifyllda. Namnet kommer bara att visas i väljaren efter att du har sparat det (aktiverade) flödet.",
+          "pl": "Możesz wybrać nazwę, wpisać i wybrać ją, lub wpisać nazwę w polu nazwy. Gdy oba pola są wypełnione, priorytet ma Picker. Nazwa pojawi się w Pickerze dopiero po zapisaniu (włączonego) przepływu.",
+          "ru": "Вы можете либо выбрать имя, либо ввести и выбрать его, либо ввести имя в поле для имени. Если оба поля заполнены, приоритет имеет выбор из списка. Имя появится в списке только после сохранения (включенного) потока.",
+          "ko": "이름을 선택하거나 입력하여 선택할 수 있으며, 이름 필드에 이름을 입력할 수도 있습니다. 둘 다 입력된 경우 선택기가 우선합니다. 이름은 (활성화된) 플로우를 저장한 후에만 선택기에 나타납니다.",
+          "ar": "يمكنك إما اختيار اسم، أو كتابته واختياره، أو كتابة اسم في حقل الاسم. يكون المُختار هو السائد عندما يتم ملء كلاهما. سيظهر الاسم في المُختار فقط بعد حفظ التدفق (المُمكّن)."
+        },
+        "args": [
+          {
+            "name": "namedd",
+            "required": false,
+            "type": "autocomplete",
+            "title": {
+              "en": "Pick",
+              "nl": "Kies",
+              "da": "Vælg",
+              "de": "Wählen",
+              "es": "Elegir",
+              "fr": "Choisir",
+              "it": "Scegliere",
+              "no": "Velg",
+              "sv": "Välj",
+              "pl": "Wybierz",
+              "ru": "Выбрать",
+              "ko": "선택하세요",
+              "ar": "اختر"
+            },
+            "placeholder": {
+              "en": "Pick or type",
+              "nl": "Kies of type",
+              "da": "Vælg eller skriv",
+              "de": "Wählen oder eingeben",
+              "es": "Elige o escribe",
+              "fr": "Choisissez ou tapez",
+              "it": "Scegli o digita",
+              "no": "Velg eller skriv inn",
+              "sv": "Välj eller skriv",
+              "pl": "Wybierz lub wpisz",
+              "ru": "Выберите или введите текст",
+              "ko": "선택하거나 입력하세요",
+              "ar": "اختر أو اكتب"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "title": {
+              "en": "Name",
+              "nl": "Naam",
+              "da": "Navn",
+              "de": "Name",
+              "es": "Nombre",
+              "fr": "Nom",
+              "it": "Nome",
+              "no": "Navn",
+              "sv": "Namn",
+              "pl": "Nazwa",
+              "ru": "Имя",
+              "ko": "이름",
+              "ar": "الاسم"
+            },
+            "type": "text",
+            "placeholder": {
+              "en": "Type a name",
+              "nl": "Type een naam",
+              "da": "Indtast et navn",
+              "de": "Geben Sie einen Namen ein",
+              "es": "Escribe un nombre",
+              "fr": "Tapez un nom",
+              "it": "Digita un nome",
+              "no": "Skriv inn et navn",
+              "sv": "Skriv ett namn",
+              "pl": "Wpisz nazwę",
+              "ru": "Введите имя",
+              "ko": "이름을 입력하세요",
+              "ar": "اكتب اسمًا"
+            }
+          }
+        ],
+        "tokens": [
+          {
+            "name": "name",
+            "type": "string",
+            "title": {
+              "en": "Name",
+              "nl": "Naam",
+              "da": "Navn",
+              "de": "Name",
+              "es": "Nombre",
+              "fr": "Nom",
+              "it": "Nome",
+              "no": "Navn",
+              "sv": "Namn",
+              "pl": "Nazwa",
+              "ru": "Имя",
+              "ko": "이름",
+              "ar": "الاسم"
+            }
+          },
+          {
+            "name": "duration",
+            "type": "number",
+            "title": {
+              "en": "Duration in Milliseconds",
+              "nl": "Duur in milliseconden",
+              "da": "Varighed i millisekunder",
+              "de": "Dauer in Millisekunden",
+              "es": "Duración en milisegundos",
+              "fr": "Durée en millisecondes",
+              "it": "Durata in millisecondi",
+              "no": "Varighet i millisekunder",
+              "sv": "Varaktighet i millisekunder",
+              "pl": "Czas trwania w milisekundach",
+              "ru": "Продолжительность в миллисекундах",
+              "ko": "밀리초 단위의 지속 시간",
+              "ar": "المدة الزمنية بالمللي ثانية"
+            }
+          },
+          {
+            "name": "durationInSeconds",
+            "type": "number",
+            "title": {
+              "en": "Duration in Seconds",
+              "nl": "Duur in seconden",
+              "da": "Varighed i sekunder",
+              "de": "Dauer in Sekunden",
+              "es": "Duración en segundos",
+              "fr": "Durée en secondes",
+              "it": "Durata in secondi",
+              "no": "Varighet i sekunder",
+              "sv": "Varaktighet i sekunder",
+              "pl": "Czas trwania w sekundach",
+              "ru": "Продолжительность в секундах",
+              "ko": "초 단위 지속 시간",
+              "ar": "المدة بالثواني"
+            }
+          },
+          {
+            "name": "durationInMinutes",
+            "type": "number",
+            "title": {
+              "en": "Duration in Minutes",
+              "nl": "Duur in minuten",
+              "da": "Varighed i minutter",
+              "de": "Dauer in Minuten",
+              "es": "Duración en minutos",
+              "fr": "Durée en minutes",
+              "it": "Durata in minuti",
+              "no": "Varighet i minutter",
+              "sv": "Varaktighet i minuter",
+              "pl": "Czas trwania w minutach",
+              "ru": "Продолжительность в минутах",
+              "ko": "분 단위 지속 시간",
+              "ar": "المدة بالدقائق"
+            }
+          },
+          {
+            "name": "durationInHours",
+            "type": "number",
+            "title": {
+              "en": "Duration in Hours",
+              "nl": "Duur in uren",
+              "da": "Varighed i timer",
+              "de": "Dauer in Stunden",
+              "es": "Duración en horas",
+              "fr": "Durée en heures",
+              "it": "Durata in ore",
+              "no": "Varighet i timer",
+              "sv": "Varaktighet i timmar",
+              "pl": "Czas trwania w godzinach",
+              "ru": "Продолжительность в часах",
+              "ko": "시간 단위 지속 시간",
+              "ar": "المدة بالساعات"
+            }
+          },
+          {
+            "name": "durationTimeInMinutes",
+            "type": "string",
+            "title": {
+              "en": "Duration in Minutes",
+              "nl": "Duur in minuten",
+              "da": "Varighed i minutter",
+              "de": "Dauer in Minuten",
+              "es": "Duración en minutos",
+              "fr": "Durée en minutes",
+              "it": "Durata in minuti",
+              "no": "Varighet i minutter",
+              "sv": "Varaktighet i minuter",
+              "pl": "Czas trwania w minutach",
+              "ru": "Продолжительность в минутах",
+              "ko": "분 단위 지속 시간",
+              "ar": "المدة بالدقائق"
+            },
+            "example": "mm:ss"
+          },
+          {
+            "name": "durationTimeInHours",
+            "type": "string",
+            "title": {
+              "en": "Duration in Hours",
+              "nl": "Duur in uren",
+              "da": "Varighed i timer",
+              "de": "Dauer in Stunden",
+              "es": "Duración en horas",
+              "fr": "Durée en heures",
+              "it": "Durata in ore",
+              "no": "Varighet i timer",
+              "sv": "Varaktighet i timmar",
+              "pl": "Czas trwania w godzinach",
+              "ru": "Продолжительность в часах",
+              "ko": "시간(시간 단위)",
+              "ar": "المدة بالساعات"
+            },
+            "example": "HH:mm:ss"
+          },
+          {
+            "name": "durationTimeInHoursShort",
+            "type": "string",
+            "title": {
+              "en": "Duration in Hours (short)",
+              "nl": "Duur in uren (kort)",
+              "da": "Varighed i timer (kort)",
+              "de": "Dauer in Stunden (kurz)",
+              "es": "Duración en horas (corto)",
+              "fr": "Durée en heures (court)",
+              "it": "Durata in ore (breve)",
+              "no": "Varighet i timer (kort)",
+              "sv": "Varaktighet i timmar (kort)",
+              "pl": "Czas trwania w godzinach (krótko)",
+              "ru": "Длительность в часах (кратко)",
+              "ko": "시간 (단축)",
+              "ar": "المدة بالساعات (قصير)"
+            },
+            "example": "HH:mm"
+          },
+          {
+            "name": "elapsed",
+            "type": "number",
+            "title": {
+              "en": "Elapsed in Milliseconds",
+              "nl": "Verlopen in milliseconden",
+              "da": "Forløbet i millisekunder",
+              "de": "Verstrichen in Millisekunden",
+              "es": "Transcurrido en milisegundos",
+              "fr": "Écoulé en millisecondes",
+              "it": "Trascorso in millisecondi",
+              "no": "Forløpt i millisekunder",
+              "sv": "Förfluten tid i millisekunder",
+              "pl": "Upłynęło w milisekundach",
+              "ru": "Прошло в миллисекундах",
+              "ko": "경과 시간(밀리초)",
+              "ar": "الوقت المنقضي بالمللي ثانية"
+            }
+          },
+          {
+            "name": "elapsedInSeconds",
+            "type": "number",
+            "title": {
+              "en": "Elapsed in Seconds",
+              "nl": "Verlopen in seconden",
+              "da": "Forløbet i sekunder",
+              "de": "Verstrichen in Sekunden",
+              "es": "Transcurrido en segundos",
+              "fr": "Écoulé en secondes",
+              "it": "Trascorso in Secondi",
+              "no": "Forløpt i sekunder",
+              "sv": "Förfluten tid i sekunder",
+              "pl": "Upłynęło w sekundach",
+              "ru": "Прошло в секундах",
+              "ko": "경과 시간 (초)",
+              "ar": "الوقت المنقضي بالثواني"
+            }
+          },
+          {
+            "name": "elapsedInMinutes",
+            "type": "number",
+            "title": {
+              "en": "Elapsed in Minutes",
+              "nl": "Verlopen in minuten",
+              "da": "Forløbet i minutter",
+              "de": "Verstrichen in Minuten",
+              "es": "Transcurrido en minutos",
+              "fr": "Écoulé en minutes",
+              "it": "Trascorso in minuti",
+              "no": "Forløpt i minutter",
+              "sv": "Förfluten tid i minuter",
+              "pl": "Upłynęło w minutach",
+              "ru": "Прошло в минутах",
+              "ko": "경과 시간 (분)",
+              "ar": "الوقت المنقضي بالدقائق"
+            }
+          },
+          {
+            "name": "elapsedInHours",
+            "type": "number",
+            "title": {
+              "en": "Elapsed in Hours",
+              "nl": "Verlopen in uren",
+              "da": "Forløbet i timer",
+              "de": "Verstrichen in Stunden",
+              "es": "Transcurrido en horas",
+              "fr": "Écoulé en heures",
+              "it": "Trascorso in ore",
+              "no": "Forløpt i timer",
+              "sv": "Förfluten tid i timmar",
+              "pl": "Upłynęło w godzinach",
+              "ru": "Прошло в часах",
+              "ko": "경과 시간 (시간 단위)",
+              "ar": "الوقت المنقضي بالساعات"
+            }
+          },
+          {
+            "name": "elapsedTimeInMinutes",
+            "type": "string",
+            "title": {
+              "en": "Elapsed in Minutes",
+              "nl": "Verlopen in minuten",
+              "da": "Forløbet i minutter",
+              "de": "Verstrichen in Minuten",
+              "es": "Transcurrido en minutos",
+              "fr": "Écoulé en minutes",
+              "it": "Trascorso in minuti",
+              "no": "Forløpt i minutter",
+              "sv": "Förfluten tid i minuter",
+              "pl": "Upłynęło w minutach",
+              "ru": "Прошло минут",
+              "ko": "경과 시간 (분)",
+              "ar": "الوقت المنقضي بالدقائق"
+            },
+            "example": "mm:ss"
+          },
+          {
+            "name": "elapsedTimeInHours",
+            "type": "string",
+            "title": {
+              "en": "Elapsed in Hours",
+              "nl": "Verlopen in uren",
+              "da": "Forløbet i timer",
+              "de": "Verstrichen in Stunden",
+              "es": "Transcurrido en horas",
+              "fr": "Écoulé en heures",
+              "it": "Trascorso in ore",
+              "no": "Forløpt i timer",
+              "sv": "Förfluten tid i timmar",
+              "pl": "Upłynęło w godzinach",
+              "ru": "Прошло в часах",
+              "ko": "경과 시간 (시간 단위)",
+              "ar": "الوقت المنقضي بالساعات"
+            },
+            "example": "HH:mm:ss"
+          },
+          {
+            "name": "elapsedTimeInHoursShort",
+            "type": "string",
+            "title": {
+              "en": "Elapsed in Hours (short)",
+              "nl": "Verlopen in uren (kort)",
+              "da": "Forløbet i timer (kort)",
+              "de": "Verstrichen in Stunden (kurz)",
+              "es": "Transcurrido en horas (corto)",
+              "fr": "Écoulé en heures (court)",
+              "it": "Trascorso in Ore (breve)",
+              "no": "Forløpt i timer (kort)",
+              "sv": "Förfluten tid i timmar (kort)",
+              "pl": "Upłynęło w godzinach (krótko)",
+              "ru": "Прошло часов (кратко)",
+              "ko": "경과 시간 (단축)",
+              "ar": "الوقت المنقضي بالساعات (قصير)"
+            },
+            "example": "HH:mm"
           }
         ]
       },

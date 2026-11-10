@@ -1,6 +1,8 @@
 'use strict';
 
 const assert = require('assert');
+const fs = require('fs');
+const path = require('path');
 const Chronograph = require('../lib/chronograph.js');
 const { ChronographType, Utils } = require('../lib/utils.js');
 const ResumeChronograph = require('../lib/generic/actions/resume_chronograph.js');
@@ -12,6 +14,21 @@ describe('Resume chronograph actions', () => {
 		['stopwatch', ChronographType.STOPWATCH]
 	];
 	const chronographIds = [];
+
+	it('has translated hints without unresolved placeholders', () => {
+		const languages = ['en', 'nl', 'da', 'de', 'es', 'fr', 'it', 'no', 'sv', 'pl', 'ru', 'ko', 'ar'];
+		for (const [kind] of types) {
+			const file = path.join(__dirname, '..', '.homeycompose', 'flow', 'actions', `1_${kind}_resume_existing.json`);
+			const card = JSON.parse(fs.readFileSync(file, 'utf8'));
+			for (const language of languages) {
+				assert.ok(card.hint[language], `${kind}: ${language}`);
+				assert.ok(!/\{[^}]+\}/.test(card.hint[language]), `${kind}: ${language}`);
+				assert.strictEqual(card.hint[language].split('\n').length, 4, `${kind}: ${language}`);
+			}
+			assert.ok(card.hint.en.includes('The Picker is leading when both are filled.'));
+			assert.ok(card.hint.en.includes('only appear in the picker after saving the (enabled) flow.'));
+		}
+	});
 
 	function createAction(id, type) {
 		let runListener;
