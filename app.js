@@ -67,11 +67,6 @@ const TransitionPaused = require('./lib/transition/triggers/transition_paused.js
  */
 
 /**
- * Configured chronographs, grouped by their lowercase kind.
- * @typedef {Object.<ChronographCategory, ChronographConfiguration[]>} ChronographConfigurationMap
- */
-
-/**
  * A chronograph state snapshot persisted for restoring active chronographs.
  * @typedef {Object} ChronographActiveSnapshot
  * @property {string} id Generated chronograph identifier.
@@ -110,21 +105,11 @@ const TransitionPaused = require('./lib/transition/triggers/transition_paused.js
  * @property {Object} flowcard Flow card manifest definition.
  */
 
-/**
- * Homey application state and Flow-card registration for Chronograph.
- * @property {ChronographConfigurationMap} [chronographs] Configured chronographs grouped by kind.
- * @property {ChronographConfigurationMap} [oldChronographs] Previous configuration used while refreshing Flow-card names.
- * @property {Object.<string, ChronographFlowCardBinding[]>} [chronographsCards] Flow cards indexed by chronograph kind.
- * @property {Object.<string, Object>} [_cards] Registered action, condition, and trigger cards indexed by ID.
- * @property {number} [roundOfDurationsFlowcards] Decimal places used for Flow-card duration values.
- */
+/** Homey application state and Flow-card registration for Chronograph. */
 class Application extends Homey.App {
 
-	constructor() {
-		super();
-		/** @type {ChronographConfigurationMap} */
-		this.chronographs = {};
-	}
+	/** @type {{[key: string]: ChronographConfiguration[], timer?: ChronographConfiguration[], stopwatch?: ChronographConfiguration[], transition?: ChronographConfiguration[]}} Configured chronographs grouped by kind. */
+	chronographs = {};
 
 	onInit() {
 		this.log('OnInit (sync)');
