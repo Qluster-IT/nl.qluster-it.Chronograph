@@ -1,0 +1,8 @@
+{
+	"timer_not_running": "Таймер __name__ не запущен.",
+	"stopwatch_not_running": "Секундомер __name__ не запущен.",
+	"transition_not_running": "Переход __name__ не запущен.",
+	"invalid_duration": "Недопустимая длительность.",
+	"invalid_transition": "Недопустимый переход.",
+	"invalid_name": "Недопустимое имя."
+}

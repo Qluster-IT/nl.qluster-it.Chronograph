@@ -13,6 +13,7 @@
 }">
 	<main class="chronograph-widget homey-text-regular" ng-class="{
 		'chronograph-vivid': runningColor !== 'none' || inactiveColor !== 'none',
+		'chronograph-layout-normal': layout === 'normal',
 		'chronograph-layout-large': layout === 'large',
 		'chronograph-layout-compact': layout === 'compact'
 	}">
@@ -23,7 +24,7 @@
 		}">
 			<div class="chronograph-row">
 				<div class="chronograph-summary">
-					<h2 class="chronograph-name">{{ selectedChronograph.name }}</h2>
+					<h2 class="chronograph-name">{{ getDisplayName(selectedChronograph) }}</h2>
 					<p class="chronograph-status">{{ selectedChronograph.active ? (selectedChronograph.running ? labels.running : labels.paused) : labels.notRunning }}</p>
 				</div>
 				<p class="chronograph-duration" aria-live="polite" ng-if="selectedChronograph.active">{{ formatDuration(selectedChronograph) }}</p>
@@ -33,7 +34,7 @@
 				<i class="fa-solid fa-play" aria-hidden="true"></i>
 			</button>
 
-			<form class="chronograph-start-form" ng-if="!selectedChronograph.active && (layout !== 'compact' || showStartForm)" ng-submit="start()">
+			<form class="chronograph-start-form chronograph-transition-start-form" ng-if="!selectedChronograph.active && (layout !== 'compact' || showStartForm)" ng-submit="start()">
 				<div class="chronograph-fields">
 					<div class="chronograph-duration-fields">
 						<label class="visually-hidden" for="duration">{{ labels.duration }}</label>
@@ -56,13 +57,15 @@
 						</div>
 					</div>
 				</div>
-				<button class="chronograph-start-button" type="submit" ng-disabled="busy" ng-attr-data-button-color="{{ playColor }}">
-					<i class="fa-solid fa-play" aria-hidden="true"></i>
-					{{ labels.start }}
-				</button>
-				<button class="chronograph-cancel-button" type="button" ng-if="layout === 'compact'" ng-click="cancelStart()" ng-disabled="busy" title="{{ labels.cancel }}" aria-label="{{ labels.cancel }}">
-					<i class="fa-solid fa-xmark" aria-hidden="true"></i>
-				</button>
+				<div class="chronograph-transition-start-actions">
+					<button class="chronograph-start-button" type="submit" ng-disabled="busy" ng-attr-data-button-color="{{ playColor }}">
+						<i class="fa-solid fa-play" aria-hidden="true"></i>
+						{{ labels.start }}
+					</button>
+					<button class="chronograph-cancel-button" type="button" ng-if="layout === 'compact'" ng-click="cancelStart()" ng-disabled="busy" title="{{ labels.cancel }}" aria-label="{{ labels.cancel }}">
+						<i class="fa-solid fa-xmark" aria-hidden="true"></i>
+					</button>
+				</div>
 			</form>
 
 			<div class="chronograph-actions" ng-if="selectedChronograph.active">

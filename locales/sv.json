@@ -1,5 +1,5 @@
 {
-  "timer_not_running": "Timer __name__ körs inte.",
+  "timer_not_running": "Timern __name__ körs inte.",
   "stopwatch_not_running": "Stoppuret __name__ körs inte.",
   "transition_not_running": "Övergången __name__ körs inte.",
   "invalid_duration": "Ogiltig varaktighet.",
@@ -20,10 +20,26 @@
     "no_transitions": "Inga övergångar.",
     "days_abbreviation": "d",
     "stop": "Stoppa",
-    "pause": "Paus",
+    "pause": "Pausa",
     "resume": "Återuppta",
     "roundOfDurationsFlowcards": "Omgång av nummer från 'Hämta varaktigheten av [x]' flödeskorten.",
     "save": "Spara",
-    "saved": "Sparad."
+    "saved": "Sparad.",
+    "widget_select_chronograph": "Välj en kronograf i widgetens inställningar.",
+    "widget_running": "Kör",
+    "widget_paused": "Pausad",
+    "widget_not_running": "Kör inte",
+    "widget_duration": "Varaktighet",
+    "widget_unit": "Varaktighetsenhet",
+    "widget_from": "Från",
+    "widget_to": "Till",
+    "widget_steps": "Steg",
+    "widget_start": "Starta",
+    "widget_cancel": "Avbryt",
+    "milliseconds": "Millisekunder",
+    "seconds": "Sekunder",
+    "minutes": "Minuter",
+    "hours": "Timmar",
+    "days": "Dagar"
   }
 }

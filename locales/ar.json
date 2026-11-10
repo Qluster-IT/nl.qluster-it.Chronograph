@@ -1,7 +1,7 @@
 {
-  "timer_not_running": "المؤقت __name__ غير متوقف.",
-  "stopwatch_not_running": "ساعة التوقف __name__ غير متوقفة.",
-  "transition_not_running": "الانتقال __name__ غير متوقف.",
+  "timer_not_running": "المؤقت __name__ غير قيد التشغيل.",
+  "stopwatch_not_running": "ساعة الإيقاف __name__ غير قيد التشغيل.",
+  "transition_not_running": "الانتقال __name__ غير قيد التشغيل.",
   "invalid_duration": "مدة غير صالحة.",
   "invalid_transition": "انتقال غير صالح.",
   "invalid_name": "اسم غير صالح.",
@@ -10,10 +10,10 @@
   "new": "جديد",
   "settings": {
     "timers": "المؤقتات",
-    "stopwatches": "ساعات التوقف",
+    "stopwatches": "ساعات الإيقاف",
     "transitions": "الانتقالات",
     "no_active_timers": "لا توجد مؤقتات نشطة.",
-    "no_active_stopwatches": "لا توجد ساعات توقف نشطة.",
+    "no_active_stopwatches": "لا توجد ساعات إيقاف نشطة.",
     "no_active_transitions": "لا توجد انتقالات نشطة.",
     "no_timers": "لا توجد مؤقتات.",
     "no_stopwatches": "لا توجد ساعات توقف.",
@@ -24,6 +24,22 @@
     "resume": "استئناف",
     "roundOfDurationsFlowcards": "تقريب الأرقام من بطاقات التدفق ‘احصل على مدة [x]’.",
     "save": "حفظ",
-    "saved": "تم الحفظ."
+    "saved": "تم الحفظ.",
+    "widget_select_chronograph": "اختر ساعة توقيت من إعدادات الأداة.",
+    "widget_running": "قيد التشغيل",
+    "widget_paused": "متوقف مؤقتًا",
+    "widget_not_running": "غير قيد التشغيل",
+    "widget_duration": "المدة",
+    "widget_unit": "وحدة المدة",
+    "widget_from": "من",
+    "widget_to": "إلى",
+    "widget_steps": "الخطوات",
+    "widget_start": "بدء",
+    "widget_cancel": "إلغاء",
+    "milliseconds": "مللي ثانية",
+    "seconds": "ثوانٍ",
+    "minutes": "دقائق",
+    "hours": "ساعات",
+    "days": "أيام"
   }
 }

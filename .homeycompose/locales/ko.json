@@ -1,0 +1,8 @@
+{
+	"timer_not_running": "타이머 __name__이(가) 실행 중이 아닙니다.",
+	"stopwatch_not_running": "스톱워치 __name__이(가) 실행 중이 아닙니다.",
+	"transition_not_running": "전환 __name__이(가) 실행 중이 아닙니다.",
+	"invalid_duration": "잘못된 시간입니다.",
+	"invalid_transition": "잘못된 전환입니다.",
+	"invalid_name": "잘못된 이름입니다."
+}

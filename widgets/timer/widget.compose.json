@@ -8,9 +8,17 @@
 			"hint": { "en": "Choose a configured timer", "nl": "Kies een ingestelde timer" }
 		},
 		{
+			"id": "alternativeName",
+			"type": "text",
+			"title": { "en": "Alternative name", "nl": "Alternatieve naam" },
+			"hint": { "en": "Optionally show a shorter name in the widget", "nl": "Toon desgewenst een kortere naam in de widget" },
+			"value": ""
+		},
+		{
 			"id": "layout",
 			"type": "dropdown",
 			"title": { "en": "Layout", "nl": "Indeling" },
+			"hint": { "en": "Choose how compact or spacious the widget looks", "nl": "Kies hoe compact of ruim de widget wordt weergegeven" },
 			"value": "normal",
 			"values": [
 				{ "id": "compact", "title": { "en": "Compact", "nl": "Compact" } },
@@ -19,9 +27,10 @@
 			]
 		},
 		{
-			"id": "runningColor",
+			"id": "inactiveColor",
 			"type": "dropdown",
-			"title": { "en": "Color when active", "nl": "Kleur bij actief" },
+			"title": { "en": "Color when inactive", "nl": "Kleur bij inactief" },
+			"hint": { "en": "Background color when the timer is stopped; None keeps the normal background", "nl": "Achtergrondkleur wanneer de timer gestopt is; Geen behoudt de normale achtergrond" },
 			"value": "none",
 			"values": [
 				{ "id": "none", "title": { "en": "None", "nl": "Geen" } },
@@ -40,9 +49,32 @@
 			]
 		},
 		{
-			"id": "inactiveColor",
+			"id": "pausedColor",
 			"type": "dropdown",
-			"title": { "en": "Color when inactive", "nl": "Kleur bij inactief" },
+			"title": { "en": "Color when paused", "nl": "Kleur bij pauze" },
+			"hint": { "en": "Background color while the timer is paused; None keeps the normal background", "nl": "Achtergrondkleur wanneer de timer gepauzeerd is; Geen behoudt de normale achtergrond" },
+			"value": "none",
+			"values": [
+				{ "id": "none", "title": { "en": "None", "nl": "Geen" } },
+				{ "id": "blue", "title": { "en": "Blue", "nl": "Blauw" } },
+				{ "id": "red", "title": { "en": "Red", "nl": "Rood" } },
+				{ "id": "orange", "title": { "en": "Orange", "nl": "Oranje" } },
+				{ "id": "yellow", "title": { "en": "Yellow", "nl": "Geel" } },
+				{ "id": "green", "title": { "en": "Green", "nl": "Groen" } },
+				{ "id": "purple", "title": { "en": "Purple", "nl": "Paars" } },
+				{ "id": "teal", "title": { "en": "Teal", "nl": "Blauwgroen" } },
+				{ "id": "cyan", "title": { "en": "Cyan", "nl": "Cyaan" } },
+				{ "id": "indigo", "title": { "en": "Indigo", "nl": "Indigo" } },
+				{ "id": "pink", "title": { "en": "Pink", "nl": "Roze" } },
+				{ "id": "brown", "title": { "en": "Brown", "nl": "Bruin" } },
+				{ "id": "grey", "title": { "en": "Grey", "nl": "Grijs" } }
+			]
+		},
+		{
+			"id": "runningColor",
+			"type": "dropdown",
+			"title": { "en": "Color when active", "nl": "Kleur bij actief" },
+			"hint": { "en": "Background color while the timer is running; None keeps the normal background", "nl": "Achtergrondkleur wanneer de timer loopt; Geen behoudt de normale achtergrond" },
 			"value": "none",
 			"values": [
 				{ "id": "none", "title": { "en": "None", "nl": "Geen" } },
@@ -64,6 +96,7 @@
 			"id": "playColor",
 			"type": "dropdown",
 			"title": { "en": "Play button color", "nl": "Kleur van de afspeelknop" },
+			"hint": { "en": "Choose the color of the Start and Resume buttons", "nl": "Kies de kleur van de Start- en Hervatten-knoppen" },
 			"value": "blue",
 			"values": [
 				{ "id": "blue", "title": { "en": "Blue", "nl": "Blauw" } },
@@ -84,6 +117,7 @@
 			"id": "pauseColor",
 			"type": "dropdown",
 			"title": { "en": "Pause button color", "nl": "Kleur van de pauzeknop" },
+			"hint": { "en": "Choose the color of the Pause button", "nl": "Kies de kleur van de Pauze-knop" },
 			"value": "blue",
 			"values": [
 				{ "id": "blue", "title": { "en": "Blue", "nl": "Blauw" } },
@@ -104,6 +138,7 @@
 			"id": "stopColor",
 			"type": "dropdown",
 			"title": { "en": "Stop button color", "nl": "Kleur van de stopknop" },
+			"hint": { "en": "Choose the color of the Stop button", "nl": "Kies de kleur van de Stop-knop" },
 			"value": "red",
 			"values": [
 				{ "id": "blue", "title": { "en": "Blue", "nl": "Blauw" } },
@@ -124,12 +159,14 @@
 			"id": "showMilliseconds",
 			"type": "checkbox",
 			"title": { "en": "Show milliseconds", "nl": "Toon milliseconden" },
+			"hint": { "en": "Include milliseconds in the displayed timer value", "nl": "Toon milliseconden bij de timerwaarde" },
 			"value": false
 		},
 		{
 			"id": "defaultDuration",
 			"type": "number",
 			"title": { "en": "Default duration", "nl": "Standaardduur" },
+			"hint": { "en": "Pre-fill this duration when starting the timer; leave empty for no default", "nl": "Vul deze duur vooraf in bij het starten van de timer; laat leeg voor geen standaardwaarde" },
 			"value": null,
 			"min": 0.001
 		},
@@ -137,6 +174,7 @@
 			"id": "defaultDurationUnit",
 			"type": "dropdown",
 			"title": { "en": "Default duration unit", "nl": "Standaardeenheid voor duur" },
+			"hint": { "en": "Unit used for the default duration", "nl": "Eenheid voor de standaardduur" },
 			"value": "minutes",
 			"values": [
 				{ "id": "milliseconds", "title": { "en": "Milliseconds", "nl": "Milliseconden" } },
@@ -150,6 +188,7 @@
 			"id": "preferSavedValues",
 			"type": "checkbox",
 			"title": { "en": "Prefer saved Flow values", "nl": "Geef voorkeur aan opgeslagen Flow-waarden" },
+			"hint": { "en": "Use values saved from the timer's Flow start card instead of widget defaults when available", "nl": "Gebruik opgeslagen waarden van de Flow-startkaart in plaats van widgetstandaarden, indien beschikbaar" },
 			"value": false
 		}
 	],

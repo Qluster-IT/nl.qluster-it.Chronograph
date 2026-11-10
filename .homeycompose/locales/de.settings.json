@@ -9,5 +9,20 @@
 	"stop": "Stop",
 	"pause": "Pause",
 	"resume": "Fortsetzen",
-	"widget_cancel": "Abbrechen"
+	"widget_select_chronograph": "Wähle einen Chronographen in den Widget-Einstellungen aus.",
+	"widget_running": "Läuft",
+	"widget_paused": "Pausiert",
+	"widget_not_running": "Läuft nicht",
+	"widget_duration": "Dauer",
+	"widget_unit": "Dauereinheit",
+	"widget_from": "Von",
+	"widget_to": "Bis",
+	"widget_steps": "Schritte",
+	"widget_start": "Starten",
+	"widget_cancel": "Abbrechen",
+	"milliseconds": "Millisekunden",
+	"seconds": "Sekunden",
+	"minutes": "Minuten",
+	"hours": "Stunden",
+	"days": "Tage"
 }

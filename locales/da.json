@@ -24,6 +24,22 @@
     "resume": "Genoptag",
     "roundOfDurationsFlowcards": "Runde af numre fra 'Få varigheden af [x]' flowcards.",
     "save": "Gem",
-    "saved": "Gemt."
+    "saved": "Gemt.",
+    "widget_select_chronograph": "Vælg et kronografur i widgetindstillingerne.",
+    "widget_running": "Kører",
+    "widget_paused": "Sat på pause",
+    "widget_not_running": "Kører ikke",
+    "widget_duration": "Varighed",
+    "widget_unit": "Varighedsenhed",
+    "widget_from": "Fra",
+    "widget_to": "Til",
+    "widget_steps": "Trin",
+    "widget_start": "Start",
+    "widget_cancel": "Annuller",
+    "milliseconds": "Millisekunder",
+    "seconds": "Sekunder",
+    "minutes": "Minutter",
+    "hours": "Timer",
+    "days": "Dage"
   }
 }

@@ -1,0 +1,8 @@
+{
+	"timer_not_running": "El temporizador __name__ no está en marcha.",
+	"stopwatch_not_running": "El cronómetro __name__ no está en marcha.",
+	"transition_not_running": "La transición __name__ no está en marcha.",
+	"invalid_duration": "Duración no válida.",
+	"invalid_transition": "Transición no válida.",
+	"invalid_name": "Nombre no válido."
+}

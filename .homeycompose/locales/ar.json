@@ -1,0 +1,8 @@
+{
+	"timer_not_running": "المؤقت __name__ غير قيد التشغيل.",
+	"stopwatch_not_running": "ساعة الإيقاف __name__ غير قيد التشغيل.",
+	"transition_not_running": "الانتقال __name__ غير قيد التشغيل.",
+	"invalid_duration": "مدة غير صالحة.",
+	"invalid_transition": "انتقال غير صالح.",
+	"invalid_name": "اسم غير صالح."
+}

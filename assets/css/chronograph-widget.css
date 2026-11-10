@@ -222,6 +222,35 @@ body.chronograph-vivid-running {
 	white-space: nowrap;
 }
 
+.chronograph-layout-normal .chronograph-tile {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	align-items: center;
+	gap: var(--homey-su-2, 8px);
+}
+
+.chronograph-layout-normal .chronograph-row {
+	display: contents;
+}
+
+.chronograph-layout-normal .chronograph-summary,
+.chronograph-layout-normal .chronograph-start-form {
+	grid-column: 1 / -1;
+}
+
+.chronograph-layout-normal .chronograph-start-form,
+.chronograph-layout-large .chronograph-start-form {
+	justify-content: flex-end;
+}
+
+.chronograph-layout-normal .chronograph-duration {
+	grid-column: 1;
+}
+
+.chronograph-layout-normal .chronograph-actions {
+	grid-column: 2;
+}
+
 .chronograph-layout-large .chronograph-tile {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr) auto;
@@ -235,6 +264,16 @@ body.chronograph-vivid-running {
 
 .chronograph-layout-large .chronograph-summary {
 	grid-column: 1 / -1;
+}
+
+.chronograph-layout-large .chronograph-name {
+	font-size: var(--homey-font-size-large, 20px);
+	line-height: var(--homey-line-height-large, 28px);
+}
+
+.chronograph-layout-large .chronograph-status {
+	font-size: var(--homey-font-size-small, 14px);
+	line-height: var(--homey-line-height-small, 20px);
 }
 
 .chronograph-layout-large .chronograph-duration {
@@ -347,6 +386,10 @@ body.chronograph-vivid-running {
 	width: 100%;
 }
 
+.chronograph-layout-compact .chronograph-transition-start-form {
+	align-items: flex-end;
+}
+
 .chronograph-layout-compact .chronograph-start-form .chronograph-fields {
 	flex: 1 1 auto;
 }
@@ -356,6 +399,17 @@ body.chronograph-vivid-running {
 	align-items: center;
 	gap: 8px;
 	min-width: 0;
+}
+
+.chronograph-transition-start-form {
+	align-items: flex-end;
+}
+
+.chronograph-transition-start-actions {
+	display: flex;
+	justify-content: flex-end;
+	align-self: flex-end;
+	gap: var(--homey-su-2, 8px);
 }
 
 .chronograph-fields {
@@ -512,6 +566,11 @@ body.chronograph-vivid-running {
 	.chronograph-start-form {
 		align-items: stretch;
 		flex-direction: column;
+	}
+
+	.chronograph-transition-start-form {
+		align-items: flex-end;
+		flex-direction: row;
 	}
 
 	.chronograph-start-button {

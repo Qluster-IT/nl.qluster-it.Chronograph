@@ -13,6 +13,7 @@
 }">
 	<main class="chronograph-widget homey-text-regular" ng-class="{
 		'chronograph-vivid': runningColor !== 'none' || inactiveColor !== 'none',
+		'chronograph-layout-normal': layout === 'normal',
 		'chronograph-layout-large': layout === 'large',
 		'chronograph-layout-compact': layout === 'compact'
 	}">
@@ -23,7 +24,7 @@
 		}">
 			<div class="chronograph-row">
 				<div class="chronograph-summary">
-					<h2 class="chronograph-name">{{ selectedChronograph.name }}</h2>
+					<h2 class="chronograph-name">{{ getDisplayName(selectedChronograph) }}</h2>
 					<p class="chronograph-status">{{ selectedChronograph.active ? (selectedChronograph.running ? labels.running : labels.paused) : labels.notRunning }}</p>
 				</div>
 				<p class="chronograph-duration" aria-live="polite" ng-if="selectedChronograph.active">{{ formatDuration(selectedChronograph) }}</p>

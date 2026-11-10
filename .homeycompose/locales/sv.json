@@ -1,0 +1,8 @@
+{
+	"timer_not_running": "Timern __name__ körs inte.",
+	"stopwatch_not_running": "Stoppuret __name__ körs inte.",
+	"transition_not_running": "Övergången __name__ körs inte.",
+	"invalid_duration": "Ogiltig varaktighet.",
+	"invalid_transition": "Ogiltig övergång.",
+	"invalid_name": "Ogiltigt namn."
+}

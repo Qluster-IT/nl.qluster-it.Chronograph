@@ -1,0 +1,8 @@
+{
+	"timer_not_running": "Timer __name__ nie działa.",
+	"stopwatch_not_running": "Stoper __name__ nie działa.",
+	"transition_not_running": "Przejście __name__ nie działa.",
+	"invalid_duration": "Nieprawidłowy czas trwania.",
+	"invalid_transition": "Nieprawidłowe przejście.",
+	"invalid_name": "Nieprawidłowa nazwa."
+}

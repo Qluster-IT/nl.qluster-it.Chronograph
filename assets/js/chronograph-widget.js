@@ -25,6 +25,7 @@ function onHomeyReady(Homey) {
 			};
 			var selectedSetting = settings.chronograph;
 			var selectedId = selectedSetting && (selectedSetting.id || (selectedSetting.data && selectedSetting.data.id));
+			$scope.alternativeName = typeof settings.alternativeName === 'string' ? settings.alternativeName.trim() : '';
 			$scope.layout = settings.layout === 'compact' || settings.layout === 'large' ? settings.layout : 'normal';
 			var buttonColors = [
 				'blue', 'red', 'orange', 'yellow', 'green', 'purple',
@@ -36,11 +37,13 @@ function onHomeyReady(Homey) {
 			$scope.inactiveColor = settings.inactiveColor === 'none' || buttonColors.indexOf(settings.inactiveColor) !== -1
 				? settings.inactiveColor
 				: 'none';
+			$scope.pausedColor = settings.pausedColor === 'none' || buttonColors.indexOf(settings.pausedColor) !== -1
+				? settings.pausedColor
+				: 'none';
 			$scope.getWidgetColor = function () {
 				var chronograph = $scope.selectedChronograph;
-				return chronograph && chronograph.active && chronograph.running
-					? $scope.runningColor
-					: $scope.inactiveColor;
+				if (!chronograph || !chronograph.active) return $scope.inactiveColor;
+				return chronograph.running ? $scope.runningColor : $scope.pausedColor;
 			};
 			$scope.playColor = buttonColors.indexOf(settings.playColor) !== -1 ? settings.playColor : 'blue';
 			$scope.pauseColor = buttonColors.indexOf(settings.pauseColor) !== -1 ? settings.pauseColor : 'blue';
@@ -188,6 +191,10 @@ function onHomeyReady(Homey) {
 				if (chronograph.running) chronograph.updatedAt = Date.now();
 				return chronograph;
 			}
+
+			$scope.getDisplayName = function (chronograph) {
+				return $scope.alternativeName || chronograph.name;
+			};
 
 			$scope.start = function () {
 				if (!$scope.selectedChronograph || $scope.selectedChronograph.active || $scope.busy) return;

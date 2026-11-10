@@ -1,0 +1,8 @@
+{
+	"timer_not_running": "Timeren __name__ kjører ikke.",
+	"stopwatch_not_running": "Stoppeklokken __name__ kjører ikke.",
+	"transition_not_running": "Overgangen __name__ kjører ikke.",
+	"invalid_duration": "Ugyldig varighet.",
+	"invalid_transition": "Ugyldig overgang.",
+	"invalid_name": "Ugyldig navn."
+}
