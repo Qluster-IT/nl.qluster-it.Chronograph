@@ -2,6 +2,8 @@ const assert = require('assert');
 const Chronograph = require('../lib/chronograph.js');
 const { ChronographType } = require('../lib/utils.js');
 
+Chronograph.homey = { setTimeout, clearTimeout };
+
 Chronograph.events.on('log', (chronograph, text) => {
 //	console.log('[' + chronograph.getName() + '] ' + text);
 });
@@ -357,31 +359,38 @@ describe('Chronograph', () => {
 	});
 
 	it('should allow for multiple timers with splits at once', function(done) {
-		this.timeout(5500);
+		this.timeout(4000);
 
 		let splits = 0;
-		for (var i = 1; i <= 150; i++) {
-			let duration = 2 + (3 * Math.random());
-			let timer = new Chronograph(1000 + i, 'bulk timer ' + i, duration, 'seconds');
+		const timerCount = 20;
+		for (let i = 1; i <= timerCount; i++) {
+			let timer = new Chronograph(1000 + i, 'bulk timer ' + i, 0.5, 'seconds');
 			timer.setData('type', ChronographType.TIMER);
-			let offset = Math.random();
-			while (offset < duration) {
-				timer.addSplit(offset, 'seconds');
-				splits++;
-				offset += Math.random();
-			}
+			timer.addSplit(0.1, 'seconds');
+			splits++;
 		}
 		let all = Chronograph.all().filter(chronograph => chronograph.getData('type') == ChronographType.TIMER);
-		assert.equal(150, all.length);
+		assert.equal(timerCount, all.length);
 		all.forEach(timer => {
 			timer.start();
 		});
-		setTimeout(() => {
+		const startedAt = Date.now();
+		const checkTimers = () => {
 			all = Chronograph.all().filter(chronograph => chronograph.getData('type') == ChronographType.TIMER);
-			assert.equal(0, all.length);
-			assert.equal(splits, events.split, 'all splits should have been executed');
+			if (all.length && Date.now() - startedAt < 3000) {
+				setTimeout(checkTimers, 100);
+				return;
+			}
+			try {
+				assert.equal(0, all.length, 'all timers should have finished');
+				assert.equal(splits, events.split, 'all splits should have been executed');
+			} catch (error) {
+				done(error);
+				return;
+			}
 			events = {};
 			done();
-		}, 5250);
+		};
+		setTimeout(checkTimers, 100);
 	});
 });

@@ -26,6 +26,7 @@ const TransitionAdjust = require('./lib/transition/actions/transition_adjust.js'
 const TransitionPause = require('./lib/transition/actions/transition_pause.js');
 const TransitionStop = require('./lib/transition/actions/transition_stop.js');
 const TransitionStopAll = require('./lib/transition/actions/transition_stop_all.js');
+const ResumeChronograph = require('./lib/generic/actions/resume_chronograph.js');
 
 // Conditions.
 const TimerCompare = require('./lib/timer/conditions/timer_compare.js');
@@ -307,6 +308,7 @@ class Application extends Homey.App {
 			"timer_pause": new TimerPause('timer_pause', this.homey),
 			"timer_stop": new TimerStop('timer_stop', this.homey),
 			"timer_stop_all": new TimerStopAll('timer_stop_all', this.homey),
+			"timer_resume_existing": new ResumeChronograph('timer_resume_existing', this.homey, ChronographType.TIMER),
 
 			// Conditions.
 			"timer_compare": new TimerCompare("timer_compare", this.homey),
@@ -333,6 +335,7 @@ class Application extends Homey.App {
 			"stopwatch_pause": new StopwatchPause('stopwatch_pause', this.homey),
 			"stopwatch_stop": new StopwatchStop('stopwatch_stop', this.homey),
 			"stopwatch_stop_all": new StopwatchStopAll('stopwatch_stop_all', this.homey),
+			"stopwatch_resume_existing": new ResumeChronograph('stopwatch_resume_existing', this.homey, ChronographType.STOPWATCH),
 
 			// Conditions.
 			"stopwatch_compare": new StopwatchCompare("stopwatch_compare", this.homey),
@@ -356,6 +359,7 @@ class Application extends Homey.App {
 			"transition_pause": new TransitionPause('transition_pause', this.homey),
 			"transition_stop": new TransitionStop('transition_stop', this.homey),
 			"transition_stop_all": new TransitionStopAll('transition_stop_all', this.homey),
+			"transition_resume_existing": new ResumeChronograph('transition_resume_existing', this.homey, ChronographType.TRANSITION),
 
 			// Conditions.
 			"transition_compare": new TransitionCompare("transition_compare", this.homey),
