@@ -1,0 +1,275 @@
+{
+  "id": "timer_elapsed",
+  "title": {
+    "en": "Timer reached an elapsed duration",
+    "nl": "Timer heeft een verstreken looptijd bereikt",
+    "da": "Timeren har nået en forløbet tid",
+    "de": "Timer hat eine verstrichene Zeit erreicht",
+    "es": "El temporizador alcanzó un tiempo transcurrido",
+    "fr": "Le minuteur a atteint une durée écoulée",
+    "it": "Il timer ha raggiunto una durata trascorsa",
+    "no": "Timeren har nådd en forløpt tid",
+    "sv": "Timern har nått en förfluten tid",
+    "pl": "Timer osiągnął określony czas, który upłynął",
+    "ru": "Таймер достиг заданного прошедшего времени",
+    "ko": "타이머의 경과 시간이 지정한 시간에 도달했습니다.",
+    "ar": "وصل المؤقت إلى المدة المنقضية المحددة"
+  },
+  "titleFormatted": {
+    "en": "Timer [[namedd]] / [[name]] has been running for [[time]] [[unit]]",
+    "nl": "Timer [[namedd]] / [[name]] loopt al [[time]] [[unit]]",
+    "da": "Timer [[namedd]] / [[name]] har kørt i [[time]] [[unit]]",
+    "de": "Timer [[namedd]] / [[name]] läuft seit [[time]] [[unit]]",
+    "es": "El temporizador [[namedd]] / [[name]] lleva [[time]] [[unit]] en marcha",
+    "fr": "Le minuteur [[namedd]] / [[name]] fonctionne depuis [[time]] [[unit]]",
+    "it": "Il timer [[namedd]] / [[name]] è in esecuzione da [[time]] [[unit]]",
+    "no": "Timer [[namedd]] / [[name]] har kjørt i [[time]] [[unit]]",
+    "sv": "Timern [[namedd]] / [[name]] har körts i [[time]] [[unit]]",
+    "pl": "Timer [[namedd]] / [[name]] działa od [[time]] [[unit]]",
+    "ru": "Таймер [[namedd]] / [[name]] работает уже [[time]] [[unit]]",
+    "ko": "타이머 [[namedd]] / [[name]]이(가) [[time]] [[unit]] 동안 실행되었습니다.",
+    "ar": "يعمل المؤقت [[namedd]] / [[name]] منذ [[time]] [[unit]]"
+  },
+  "hint": {
+    "en": "This card is activated when a timer with the provided name has been running for the specified duration.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
+    "nl": "Dit kaartje wordt geactiveerd wanneer een timer met de opgegeven naam de ingestelde tijd heeft gelopen.\nU kunt een naam selecteren, typen en selecteren, of een naam invoeren in het naamveld.\nDe kiezer is leidend als beide zijn ingevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
+    "da": "Dette kort aktiveres, når en timer med det angivne navn har kørt i den valgte tid.\nDu kan vælge et navn, skrive og vælge det eller skrive et navn i navnefeltet.\nVælgeren har forrang, når begge er udfyldt.\nNavnet vises først i vælgeren, når det (aktiverede) flow er gemt.",
+    "de": "Diese Karte wird aktiviert, wenn ein Timer mit dem angegebenen Namen die festgelegte Zeit gelaufen ist.\nSie können einen Namen auswählen, eingeben und auswählen oder in das Namensfeld eingeben.\nWenn beide Felder ausgefüllt sind, hat die Auswahl Vorrang.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows in der Auswahl angezeigt.",
+    "es": "Esta tarjeta se activa cuando un temporizador con el nombre indicado ha estado en marcha durante el tiempo especificado.\nPuedes seleccionar un nombre, escribirlo y seleccionarlo, o escribir un nombre en el campo correspondiente.\nEl selector tiene prioridad cuando ambos campos están completos.\nEl nombre solo aparecerá en el selector después de guardar el flujo (habilitado).",
+    "fr": "Cette carte s’active lorsqu’un minuteur portant le nom fourni a fonctionné pendant la durée indiquée.\nVous pouvez sélectionner un nom, le saisir puis le sélectionner, ou saisir un nom dans le champ correspondant.\nLe sélecteur est prioritaire lorsque les deux champs sont remplis.\nLe nom n’apparaîtra dans le sélecteur qu’après l’enregistrement du flux (activé).",
+    "it": "Questa scheda si attiva quando un timer con il nome specificato è in esecuzione da quanto indicato.\nPuoi selezionare un nome, digitarlo e selezionarlo oppure inserirlo nel campo del nome.\nIl selettore ha la precedenza quando entrambi i campi sono compilati.\nIl nome apparirà nel selettore solo dopo aver salvato il Flow (abilitato).",
+    "no": "Dette kortet aktiveres når en timer med det angitte navnet har kjørt så lenge som angitt.\nDu kan velge et navn, skrive det inn og velge det, eller skrive et navn i navnefeltet.\nVelgeren har forrang når begge feltene er fylt ut.\nNavnet vises i velgeren først etter at den (aktiverte) flyten er lagret.",
+    "sv": "Det här kortet aktiveras när en timer med det angivna namnet har körts under den angivna tiden.\nDu kan välja ett namn, skriva och välja det eller skriva ett namn i namnfältet.\nVäljaren har företräde när båda fälten är ifyllda.\nNamnet visas i väljaren först när det (aktiverade) flödet har sparats.",
+    "pl": "Ta karta uruchamia się, gdy timer o podanej nazwie działa przez określony czas.\nMożesz wybrać nazwę, wpisać ją i wybrać albo wpisać ją w polu nazwy.\nWybór z listy ma pierwszeństwo, gdy oba pola są wypełnione.\nNazwa pojawi się na liście dopiero po zapisaniu (włączonego) Flow.",
+    "ru": "Эта карта активируется, когда таймер с указанным именем работает заданное время.\nМожно выбрать имя, ввести его и выбрать или указать имя в соответствующем поле.\nЕсли заполнены оба поля, приоритет имеет выбор из списка.\nИмя появится в списке только после сохранения включенного Flow.",
+    "ko": "지정한 이름의 타이머가 설정한 시간 동안 실행되었을 때 이 카드가 활성화됩니다.\n이름을 선택하거나 입력한 후 선택하거나 이름 입력란에 직접 입력할 수 있습니다.\n두 항목이 모두 입력된 경우 선택기가 우선합니다.\n이름은 플로우를 활성화하여 저장한 후에만 선택기에 표시됩니다.",
+    "ar": "يتم تفعيل هذه البطاقة عندما يعمل المؤقت ذو الاسم المحدد للمدة التي اخترتها.\nيمكنك اختيار اسم، أو كتابته ثم اختياره، أو إدخاله في حقل الاسم.\nتكون الأولوية للاختيار من القائمة عند ملء الحقلين.\nلن يظهر الاسم في القائمة إلا بعد حفظ التدفق (المفعّل)."
+  },
+  "args": [
+    {
+      "name": "namedd",
+      "required": false,
+      "type": "autocomplete",
+      "title": {
+        "en": "Pick",
+        "nl": "Kies",
+        "da": "Vælg",
+        "de": "Wählen",
+        "es": "Elegir",
+        "fr": "Choisir",
+        "it": "Scegliere",
+        "no": "Velg",
+        "sv": "Välj",
+        "pl": "Wybierz",
+        "ru": "Выбрать",
+        "ko": "선택하세요",
+        "ar": "اختر"
+      },
+      "placeholder": {
+        "en": "Pick or type",
+        "nl": "Kies of type",
+        "da": "Vælg eller skriv",
+        "de": "Wählen oder eingeben",
+        "es": "Elige o escribe",
+        "fr": "Choisissez ou tapez",
+        "it": "Scegli o digita",
+        "no": "Velg eller skriv",
+        "sv": "Välj eller skriv",
+        "pl": "Wybierz lub wpisz",
+        "ru": "Выберите или введите",
+        "ko": "선택하거나 입력하세요",
+        "ar": "اختر أو اكتب"
+      }
+    },
+    {
+      "name": "name",
+      "required": false,
+      "title": {
+        "en": "Name",
+        "nl": "Naam",
+        "da": "Navn",
+        "de": "Name",
+        "es": "Nombre",
+        "fr": "Nom",
+        "it": "Nome",
+        "no": "Navn",
+        "sv": "Namn",
+        "pl": "Nazwa",
+        "ru": "Имя",
+        "ko": "이름",
+        "ar": "الاسم"
+      },
+      "type": "text"
+    },
+    {
+      "name": "time",
+      "title": {
+        "en": "Elapsed time",
+        "nl": "Verstreken looptijd",
+        "da": "Forløbet tid",
+        "de": "Verstrichene Zeit",
+        "es": "Tiempo transcurrido",
+        "fr": "Temps écoulé",
+        "it": "Tempo trascorso",
+        "no": "Forløpt tid",
+        "sv": "Förfluten tid",
+        "pl": "Czas, który upłynął",
+        "ru": "Прошедшее время",
+        "ko": "경과 시간",
+        "ar": "الوقت المنقضي"
+      },
+      "type": "number",
+      "min": 0,
+      "step": 0.01
+    },
+    {
+      "name": "unit",
+      "title": {
+        "en": "Unit",
+        "nl": "Eenheid",
+        "da": "Enhed",
+        "de": "Einheit",
+        "es": "Unidad",
+        "fr": "Unité",
+        "it": "Unità",
+        "no": "Enhet",
+        "sv": "Enhet",
+        "pl": "Jednostka",
+        "ru": "Единица",
+        "ko": "단위",
+        "ar": "وحدة"
+      },
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "seconds",
+          "label": {
+            "en": "seconds",
+            "nl": "seconden",
+            "da": "sekunder",
+            "de": "Sekunden",
+            "es": "segundos",
+            "fr": "secondes",
+            "it": "secondi",
+            "no": "sekunder",
+            "sv": "sekunder",
+            "pl": "sekundy",
+            "ru": "секунды",
+            "ko": "초",
+            "ar": "ثواني"
+          }
+        },
+        {
+          "id": "minutes",
+          "label": {
+            "en": "minutes",
+            "nl": "minuten",
+            "da": "minutter",
+            "de": "Minuten",
+            "es": "minutos",
+            "fr": "minutes",
+            "it": "minuti",
+            "no": "minutter",
+            "sv": "minuter",
+            "pl": "minuty",
+            "ru": "минуты",
+            "ko": "분",
+            "ar": "دقائق"
+          }
+        },
+        {
+          "id": "hours",
+          "label": {
+            "en": "hours",
+            "nl": "uren",
+            "da": "timer",
+            "de": "Stunden",
+            "es": "horas",
+            "fr": "heures",
+            "it": "ore",
+            "no": "timer",
+            "sv": "timmar",
+            "pl": "godziny",
+            "ru": "часы",
+            "ko": "시간",
+            "ar": "ساعات"
+          }
+        },
+        {
+          "id": "days",
+          "label": {
+            "en": "days",
+            "nl": "dagen",
+            "da": "dage",
+            "de": "Tage",
+            "es": "días",
+            "fr": "jours",
+            "it": "giorni",
+            "no": "dager",
+            "sv": "dagar",
+            "pl": "dni",
+            "ru": "дни",
+            "ko": "일",
+            "ar": "أيام"
+          }
+        }
+      ]
+    }
+  ],
+  "tokens": [
+    {
+      "name": "name",
+      "type": "string",
+      "title": {
+        "en": "Name",
+        "nl": "Naam",
+        "da": "Navn",
+        "de": "Name",
+        "es": "Nombre",
+        "fr": "Nom",
+        "it": "Nome",
+        "no": "Navn",
+        "sv": "Namn",
+        "pl": "Nazwa",
+        "ru": "Имя",
+        "ko": "이름",
+        "ar": "الاسم"
+      },
+      "example": {
+        "en": "bathroom",
+        "nl": "badkamer",
+        "da": "badeværelse",
+        "de": "Badezimmer",
+        "es": "baño",
+        "fr": "salle de bain",
+        "it": "bagno",
+        "no": "bad",
+        "sv": "badrum",
+        "pl": "łazienka",
+        "ru": "ванная комната",
+        "ko": "욕실",
+        "ar": "حمام"
+      }
+    },
+    {
+      "name": "seconds",
+      "type": "number",
+      "title": {
+        "en": "Elapsed time (s)",
+        "nl": "Verstreken looptijd (s)",
+        "da": "Forløbet tid (s)",
+        "de": "Verstrichene Zeit (s)",
+        "es": "Tiempo transcurrido (s)",
+        "fr": "Temps écoulé (s)",
+        "it": "Tempo trascorso (s)",
+        "no": "Forløpt tid (s)",
+        "sv": "Förfluten tid (s)",
+        "pl": "Czas, który upłynął (s)",
+        "ru": "Прошедшее время (с)",
+        "ko": "경과 시간 (초)",
+        "ar": "الوقت المنقضي (ث)"
+      },
+      "example": 60
+    }
+  ]
+}

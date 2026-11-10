@@ -336,6 +336,26 @@ describe('Chronograph', () => {
 		}, 1050);
 	});
 
+	it('should schedule elapsed and remaining timer splits at their correct points', function() {
+		const timer = new Chronograph(999, 'split direction test', 10, 'seconds');
+		timer.setData('type', ChronographType.TIMER);
+
+		Chronograph.addTimerSplits(timer, {
+			settings: {
+				get: key => ({
+					timer_splits: [{ name: 'split direction test', time: 3, unit: 'seconds' }],
+					timer_elapsed_splits: [{ name: 'split direction test', time: 2, unit: 'seconds' }]
+				})[key]
+			}
+		});
+
+		assert.deepStrictEqual(timer._splits.map(split => [split.time, split.unit]), [
+			[7000, 'milliseconds'],
+			[2, 'seconds']
+		]);
+		delete Chronograph._chronographs[timer.getId()];
+	});
+
 	it('should allow for multiple timers with splits at once', function(done) {
 		this.timeout(5500);
 

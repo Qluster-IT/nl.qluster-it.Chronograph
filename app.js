@@ -39,6 +39,7 @@ const DelayPassed = require('./lib/generic/conditions/delay_passed.js');
 // Triggers.
 const TimerStarted = require('./lib/timer/triggers/timer_started.js');
 const TimerSplit = require('./lib/timer/triggers/timer_split.js');
+const TimerElapsed = require('./lib/timer/triggers/timer_elapsed.js');
 const TimerFinished = require('./lib/timer/triggers/timer_finished.js');
 const TimerStopped = require('./lib/timer/triggers/timer_stopped.js');
 const TimerPaused = require('./lib/timer/triggers/timer_paused.js');
@@ -314,6 +315,7 @@ class Application extends Homey.App {
 			// Triggers.
 			"timer_started": new TimerStarted('timer_started', this.homey),
 			"timer_split": new TimerSplit('timer_split', this.homey),
+			"timer_elapsed": new TimerElapsed('timer_elapsed', this.homey),
 			"timer_finished": new TimerFinished('timer_finished', this.homey),
 			"timer_stopped": new TimerStopped('timer_stopped', this.homey),
 			"timer_paused": new TimerPaused('timer_paused', this.homey)
@@ -463,13 +465,7 @@ class Application extends Homey.App {
 
 				// Add the splits.
 				if (raw.data.type == ChronographType.TIMER) {
-					let splits = this.homey.settings.get('timer_splits') || [];
-					splits
-						.filter(split => split.name == chronograph.getName())
-						.forEach(split => {
-							let reversedSplit = chronograph.getTargetDuration() - Utils.calculateDuration(split.time, split.unit, true);
-							chronograph.addSplit(reversedSplit, 'milliseconds', split);
-						});
+					Chronograph.addTimerSplits(chronograph, this.homey);
 				}
 
 				if (raw.data.type == ChronographType.STOPWATCH) {
