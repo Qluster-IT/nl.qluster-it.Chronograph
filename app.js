@@ -54,7 +54,77 @@ const TransitionFinished = require('./lib/transition/triggers/transition_finishe
 const TransitionStopped = require('./lib/transition/triggers/transition_stopped.js');
 const TransitionPaused = require('./lib/transition/triggers/transition_paused.js');
 
+/**
+ * Lowercase key used to group configured chronographs by kind.
+ * @typedef {'timer' | 'stopwatch' | 'transition'} ChronographCategory
+ */
+
+/**
+ * A chronograph name configured in a Flow card and persisted in app settings.
+ * @typedef {Object} ChronographConfiguration
+ * @property {string} name User-configured chronograph name.
+ * @property {number} [action] Timestamp in milliseconds of the last chronograph event.
+ */
+
+/**
+ * Configured chronographs, grouped by their lowercase kind.
+ * @typedef {Object.<ChronographCategory, ChronographConfiguration[]>} ChronographConfigurationMap
+ */
+
+/**
+ * A chronograph state snapshot persisted for restoring active chronographs.
+ * @typedef {Object} ChronographActiveSnapshot
+ * @property {string} id Generated chronograph identifier.
+ * @property {string} name Configured chronograph name.
+ * @property {number} duration Elapsed duration in milliseconds when captured.
+ * @property {number} targetDuration Target duration in milliseconds, or a falsy value when unset.
+ * @property {Object.<string, *>} data Chronograph metadata required to restore its type and settings.
+ * @property {boolean} running Whether the chronograph was running when captured.
+ * @property {boolean} removed Whether the chronograph was removed in the captured event.
+ * @property {number} now Capture timestamp in milliseconds.
+ * @property {number} remaining Remaining duration in milliseconds.
+ * @property {number} elapsed Elapsed duration in milliseconds.
+ */
+
+/**
+ * An item returned by the widget chronograph-name autocomplete listener.
+ * @typedef {Object} ChronographWidgetAutocompleteItem
+ * @property {string} name Displayed chronograph name.
+ * @property {string} id Generated chronograph identifier.
+ * @property {ChronographCategory} type Widget chronograph kind.
+ * @property {string} chronographName Configured chronograph name.
+ * @property {{type: string, name: string}} data Chronograph type and name passed to the widget.
+ */
+
+/**
+ * A chronograph name suggestion returned to a Flow-card autocomplete field.
+ * @typedef {Object} ChronographNameAutocompleteItem
+ * @property {string} name Suggested chronograph name.
+ * @property {string} description Localized text identifying an existing or new name.
+ */
+
+/**
+ * A registered Flow card paired with its manifest definition.
+ * @typedef {Object} ChronographFlowCardBinding
+ * @property {Object} card Homey Flow card instance.
+ * @property {Object} flowcard Flow card manifest definition.
+ */
+
+/**
+ * Homey application state and Flow-card registration for Chronograph.
+ * @property {ChronographConfigurationMap} [chronographs] Configured chronographs grouped by kind.
+ * @property {ChronographConfigurationMap} [oldChronographs] Previous configuration used while refreshing Flow-card names.
+ * @property {Object.<string, ChronographFlowCardBinding[]>} [chronographsCards] Flow cards indexed by chronograph kind.
+ * @property {Object.<string, Object>} [_cards] Registered action, condition, and trigger cards indexed by ID.
+ * @property {number} [roundOfDurationsFlowcards] Decimal places used for Flow-card duration values.
+ */
 class Application extends Homey.App {
+
+	constructor() {
+		super();
+		/** @type {ChronographConfigurationMap} */
+		this.chronographs = {};
+	}
 
 	onInit() {
 		this.log('OnInit (sync)');
@@ -98,6 +168,7 @@ class Application extends Homey.App {
 			this.homey.setTimeout(async () => {
 
 				try {
+					/** @type {Object.<string, ChronographFlowCardBinding[]>} */
 					this.chronographsCards = {};
 					await this._initializeChronographsFromFlowArguments();
 				} catch (error) {
@@ -133,16 +204,20 @@ class Application extends Homey.App {
 				return (this.chronographs && this.chronographs[type] || [])
 					.map(chronograph => typeof chronograph === 'string' ? { name: chronograph } : chronograph)
 					.filter(chronograph => chronograph.name && chronograph.name.toLowerCase().includes(search))
-					.map(chronograph => ({
-						name: chronograph.name,
-						id: Utils.generateId(chronographType, chronograph.name),
-						type,
-						chronographName: chronograph.name,
-						data: {
-							type: chronographType,
-							name: chronograph.name
-						}
-					}));
+					.map(chronograph => {
+						/** @type {ChronographWidgetAutocompleteItem} */
+						const item = {
+							name: chronograph.name,
+							id: Utils.generateId(chronographType, chronograph.name),
+							type,
+							chronographName: chronograph.name,
+							data: {
+								type: chronographType,
+								name: chronograph.name
+							}
+						};
+						return item;
+					});
 			});
 		});
 	}
@@ -180,6 +255,7 @@ class Application extends Homey.App {
 
 	async _initializeChronographsFromFlowArguments() {
 		this.chronographs = {};
+		/** @type {ChronographConfigurationMap | undefined} Previously saved chronograph settings. */
 		this.oldChronographs = this.homey.settings.get('chronographs');
 		for (const flowTypeId in this.homey.manifest.flow) {
 			if (Object.hasOwnProperty.call(this.homey.manifest.flow, flowTypeId)) {
@@ -200,17 +276,25 @@ class Application extends Homey.App {
 								if (query) l = l.filter(x => x.name.toLowerCase().indexOf(query.toLowerCase()) > -1);
 								l = l.sort();
 								l = l.map(x => {
-									return {
+									/** @type {ChronographNameAutocompleteItem} */
+									const item = {
 										name: x.name,
 										description: this.homey.__("existing")
 									}
+									return item;
 								});
-								if (query && !this.chronographs[chronograph_type].find(x => x.name == query)) l.unshift({ name: query, description: this.homey.__("new") });
+								if (query && !this.chronographs[chronograph_type].find(x => x.name == query)) {
+									/** @type {ChronographNameAutocompleteItem} */
+									const newName = { name: query, description: this.homey.__("new") };
+									l.unshift(newName);
+								}
 								return l;
 
 							});
 							if (!this.chronographsCards[chronograph_type]) this.chronographsCards[chronograph_type] = [];
-							this.chronographsCards[chronograph_type].push({ card, flowcard });
+							/** @type {ChronographFlowCardBinding} */
+							const binding = { card, flowcard };
+							this.chronographsCards[chronograph_type].push(binding);
 							await this.setArgumentNames(card, flowcard, true);
 							card.on('update', async () => {
 								await this.setArgumentNames(card, flowcard);
@@ -241,6 +325,7 @@ class Application extends Homey.App {
 		for (let i = 0; i < names.length; i++)
 			if (names[i] && !this.chronographs[type].find(x => x.name == names[i])) {
 				let oldChronograph = this.oldChronographs && this.oldChronographs[type] ? this.oldChronographs[type].find(x => x.name == names[i]) : undefined;
+				/** @type {ChronographConfiguration} */
 				let chrono = { name: names[i] };
 				if (oldChronograph) chrono.action = oldChronograph.action;
 				this.chronographs[type].push(chrono) & (changed = true);
@@ -296,6 +381,7 @@ class Application extends Homey.App {
 	// };
 
 	_initializeTimerCards() {
+		/** @type {Object.<string, Object>} Registered timer Flow cards, indexed by manifest ID. */
 		this._cards = {
 			// Actions.
 			"timer_get_duration": new TimerGetDuration("timer_get_duration", this.homey),
@@ -325,6 +411,7 @@ class Application extends Homey.App {
 	}
 
 	_initializeStopwatchCards() {
+		/** @type {Object.<string, Object>} Registered stopwatch Flow cards, indexed by manifest ID. */
 		this._cards = {
 			// Actions.
 			"stopwatch_get_duration": new StopwatchGetDuration("stopwatch_get_duration", this.homey),
@@ -350,6 +437,7 @@ class Application extends Homey.App {
 	}
 
 	_initializeTransitionCards() {
+		/** @type {Object.<string, Object>} Registered transition Flow cards, indexed by manifest ID. */
 		this._cards = {
 			// Actions.
 			"transition_get_duration": new TransitionGetDuration("transition_get_duration", this.homey),
@@ -375,6 +463,7 @@ class Application extends Homey.App {
 	}
 
 	_initializeGenericCards() {
+		/** @type {Object.<string, Object>} Registered generic Flow cards, indexed by manifest ID. */
 		this._cards = {
 			// Actions.
 
@@ -406,6 +495,7 @@ class Application extends Homey.App {
 				let elapsed = chronograph.getDuration();
 				let remaining = target - elapsed;
 
+				/** @type {ChronographActiveSnapshot} State saved for realtime updates and restart recovery. */
 				let raw = {
 					id: chronograph.getId(),
 					name: chronograph.getName(),
@@ -420,6 +510,7 @@ class Application extends Homey.App {
 				};
 
 				this.homey.api.realtime('chronograph_event', raw).catch(() => { }).then(() => { });
+				/** @type {Object.<string, ChronographActiveSnapshot>} Active snapshots indexed by chronograph ID. */
 				let active = this.homey.settings.get('chronographs_active') || {};
 				if (event == 'removed') {
 					delete (active[chronograph.getId()]);
@@ -451,6 +542,7 @@ class Application extends Homey.App {
 
 	_restoreChronographs() {
 		try {
+			/** @type {Object.<string, ChronographActiveSnapshot>} Active snapshots to restore after startup. */
 			let active = this.homey.settings.get('chronographs_active') || {};
 			this.homey.settings.set('chronographs_active', {});
 			Object.values(active).forEach(raw => {
