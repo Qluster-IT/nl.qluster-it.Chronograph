@@ -1,0 +1,11 @@
+{
+	"name": "chronograph-icon-previews",
+	"version": "1.0.0",
+	"private": true,
+	"scripts": {
+		"generate": "node generate-icon-previews.js"
+	},
+	"devDependencies": {
+		"@resvg/resvg-js": "^2.6.2"
+	}
+}

@@ -6,6 +6,8 @@
 	<link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
 	<link rel="stylesheet" href="../../assets/css/fontawesome.min.css">
 	<link rel="stylesheet" href="../../assets/css/solid.min.css">
+	<link rel="stylesheet" href="../../assets/css/regular.min.css">
+	<link rel="stylesheet" href="../../assets/css/brands.min.css">
 	<link rel="stylesheet" href="../../assets/css/chronograph-widget.css">
 </head>
 <body class="homey-widget" data-chronograph-type="stopwatch" ng-attr-data-widget-color="{{ getWidgetColor() }}" ng-controller="ChronographWidgetController" ng-class="{
@@ -23,7 +25,7 @@
 		}">
 			<div class="chronograph-row">
 				<div class="chronograph-summary">
-					<h2 class="chronograph-name"><i class="chronograph-icon fa-solid" ng-if="iconClass" ng-class="iconClass" aria-hidden="true"></i><img class="chronograph-icon" ng-if="iconImage" ng-src="{{ iconImage }}" alt="" aria-hidden="true">{{ getDisplayName(selectedChronograph) }}</h2>
+					<h2 class="chronograph-name"><i class="chronograph-icon" ng-if="iconClass" ng-class="iconClass" ng-attr-data-button-color="{{ iconColor }}" aria-hidden="true"></i><img class="chronograph-icon" ng-if="iconImage && !iconMask" ng-src="{{ iconImage }}" alt="" aria-hidden="true"><span class="chronograph-icon chronograph-icon-mask" ng-if="iconMask" ng-attr-data-button-color="{{ iconColor }}" ng-style="{ '-webkit-mask-image': iconMask, 'mask-image': iconMask }" aria-hidden="true"></span>{{ getDisplayName(selectedChronograph) }}</h2>
 					<p class="chronograph-status">{{ selectedChronograph.active ? (selectedChronograph.running ? labels.running : labels.paused) : labels.notRunning }}</p>
 				</div>
 				<p class="chronograph-duration" aria-live="polite" ng-if="selectedChronograph.active">{{ formatDuration(selectedChronograph) }}</p>

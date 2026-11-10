@@ -1,6 +1,8 @@
 'use strict';
 
 const assert = require('assert');
+const fs = require('fs');
+const path = require('path');
 const Chronograph = require('../lib/chronograph.js');
 const { Utils, ChronographType } = require('../lib/utils.js');
 const appApi = require('../api.js');
@@ -46,6 +48,7 @@ describe('Chronograph widget API', () => {
 		};
 		homey = {
 			app: { chronographs },
+			__: key => key,
 			settings: {
 				get: key => savedStartArgs[key] || [],
 				set: (key, value) => { savedStartArgs[key] = value; }
@@ -203,6 +206,60 @@ describe('Chronograph widget API', () => {
 		assert.ok(stopwatch);
 		assert.strictEqual(stopwatch.isRunning(), true);
 		assert.ok(isNaN(stopwatch.getTargetDuration()));
+	});
+
+	it('requires widget timer and transition durations of at least one in the chosen unit', async () => {
+		const types = [
+			{ type: ChronographType.TIMER, name: 'Widget API timer', api: widgetApi },
+			{ type: ChronographType.TRANSITION, name: 'Widget API transition', api: transitionWidgetApi }
+		];
+
+		for (const { type, name, api } of types) {
+			const id = Utils.generateId(type, name);
+			for (const time of [0, 0.001, 0.999, -1, '0.5', NaN, Infinity, 'invalid']) {
+				await assert.rejects(api.startChronograph({
+					homey,
+					params: { id },
+					body: { time, unit: 'seconds', from: 0, to: 10, steps: 2 }
+				}), /invalid_duration/);
+				assert.strictEqual(Chronograph.get(id), false);
+			}
+			for (const time of [1, 1.5, '2']) {
+				await api.startChronograph({
+					homey,
+					params: { id },
+					body: { time, unit: 'seconds', from: 0, to: 10, steps: 2 }
+				});
+				assert.strictEqual(Chronograph.get(id).getTargetDuration(), Number(time) * 1000);
+				Chronograph.get(id).stop();
+			}
+		}
+	});
+
+	it('uses zero as the duration setting default and enforces the start minimum', () => {
+		for (const type of ['timer', 'transition']) {
+			const root = path.join(__dirname, '..', 'widgets', type);
+			const compose = JSON.parse(fs.readFileSync(path.join(root, 'widget.compose.json'), 'utf8'));
+			const duration = compose.settings.find(setting => setting.id === 'defaultDuration');
+			assert.strictEqual(duration.type, 'number');
+			assert.strictEqual(duration.value, 0);
+			assert.strictEqual(duration.min, 0);
+			assert.strictEqual(duration.pattern, undefined);
+			const unit = compose.settings.find(setting => setting.id === 'defaultDurationUnit');
+			assert.strictEqual(unit.value, 'auto');
+			assert.ok(unit.values.some(value => value.id === 'auto'));
+			const html = fs.readFileSync(path.join(root, 'public', 'index.html'), 'utf8');
+			assert.match(html, /<input\b[^>]*\bid="duration"[^>]*\bmin="1"[^>]*\bstep="any"/);
+		}
+	});
+
+	it('still permits fractional durations through Flow start listeners', async () => {
+		await Chronograph.timer_startRunListener(homey, {
+			name: 'Widget API timer',
+			time: 0.5,
+			unit: 'seconds'
+		});
+		assert.strictEqual(Chronograph.get(chronographId).getTargetDuration(), 500);
 	});
 
 	it('starts a transition with widget duration and configured transition values', async () => {

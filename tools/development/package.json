@@ -1,0 +1,17 @@
+{
+	"name": "chronograph-development",
+	"version": "1.0.0",
+	"private": true,
+	"scripts": {
+		"test": "mocha \"../../test/**/*.test.js\""
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "npm --prefix ../.. test"
+		}
+	},
+	"devDependencies": {
+		"husky": "^3.1.0",
+		"mocha": "^6.2.2"
+	}
+}

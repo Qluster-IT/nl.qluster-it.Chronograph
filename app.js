@@ -204,6 +204,7 @@ class Application extends Homey.App {
 				return (this.chronographs && this.chronographs[type] || [])
 					.map(chronograph => typeof chronograph === 'string' ? { name: chronograph } : chronograph)
 					.filter(chronograph => chronograph.name && chronograph.name.toLowerCase().includes(search))
+					.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base', numeric: true }))
 					.map(chronograph => {
 						/** @type {ChronographWidgetAutocompleteItem} */
 						const item = {

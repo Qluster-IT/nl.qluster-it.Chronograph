@@ -15,12 +15,6 @@
 			"value": ""
 		},
 		{
-			"id": "icon",
-			"type": "autocomplete",
-			"title": { "en": "Icon", "nl": "Pictogram" },
-			"hint": {"en":"Choose a Font Awesome icon to show beside the timer name","nl":"Kies een Font Awesome-pictogram naast de timernaam","da":"Vælg et Font Awesome-ikon, der vises ved siden af timernavnet.","de":"Wähle ein Font-Awesome-Symbol neben dem Timernamen.","es":"Elige un icono de Font Awesome para mostrar junto al nombre del temporizador.","fr":"Choisissez une icône Font Awesome à afficher à côté du nom du minuteur.","it":"Scegli un’icona Font Awesome da mostrare accanto al nome del timer.","no":"Velg et Font Awesome-ikon som vises ved siden av timernavnet.","sv":"Välj en Font Awesome-ikon som visas bredvid timernamnet.","pl":"Wybierz ikonę Font Awesome wyświetlaną obok nazwy timera.","ru":"Выберите значок Font Awesome для отображения рядом с названием таймера.","ko":"타이머 이름 옆에 표시할 Font Awesome 아이콘을 선택하세요.","ar":"اختر أيقونة Font Awesome لعرضها بجوار اسم المؤقت."}
-		},
-		{
 			"id": "layout",
 			"type": "dropdown",
 			"title": { "en": "Layout", "nl": "Indeling" },
@@ -30,6 +24,33 @@
 				{ "id": "compact", "title": { "en": "Compact", "nl": "Compact" } },
 				{ "id": "normal", "title": { "en": "Normal", "nl": "Normaal" } },
 				{ "id": "large", "title": { "en": "Larger", "nl": "Groter" } }
+			]
+		},
+		{
+			"id": "icon",
+			"type": "autocomplete",
+			"title": { "en": "Icon", "nl": "Pictogram" },
+			"hint": {"en":"Choose a Font Awesome icon to show beside the timer name","nl":"Kies een Font Awesome-pictogram naast de timernaam","da":"Vælg et Font Awesome-ikon, der vises ved siden af timernavnet.","de":"Wähle ein Font-Awesome-Symbol neben dem Timernamen.","es":"Elige un icono de Font Awesome para mostrar junto al nombre del temporizador.","fr":"Choisissez une icône Font Awesome à afficher à côté du nom du minuteur.","it":"Scegli un’icona Font Awesome da mostrare accanto al nome del timer.","no":"Velg et Font Awesome-ikon som vises ved siden av timernavnet.","sv":"Välj en Font Awesome-ikon som visas bredvid timernamnet.","pl":"Wybierz ikonę Font Awesome wyświetlaną obok nazwy timera.","ru":"Выберите значок Font Awesome для отображения рядом с названием таймера.","ko":"타이머 이름 옆에 표시할 Font Awesome 아이콘을 선택하세요.","ar":"اختر أيقونة Font Awesome لعرضها بجوار اسم المؤقت."}
+		},
+		{
+			"id": "iconColor",
+			"type": "dropdown",
+			"title": { "en": "Icon color", "nl": "Pictogramkleur" },
+			"hint": {"en":"Choose the icon color","nl":"Kies de kleur van het pictogram","da":"Vælg ikonets farve.","de":"Wähle die Farbe des Symbols.","es":"Elige el color del icono.","fr":"Choisissez la couleur de l’icône.","it":"Scegli il colore dell’icona.","no":"Velg fargen på ikonet.","sv":"Välj ikonens färg.","pl":"Wybierz kolor ikony.","ru":"Выберите цвет значка.","ko":"아이콘 색상을 선택하세요.","ar":"اختر لون الأيقونة."},
+			"value": "blue",
+			"values": [
+				{ "id": "blue", "title": { "en": "Blue", "nl": "Blauw" } },
+				{ "id": "red", "title": { "en": "Red", "nl": "Rood" } },
+				{ "id": "orange", "title": { "en": "Orange", "nl": "Oranje" } },
+				{ "id": "yellow", "title": { "en": "Yellow", "nl": "Geel" } },
+				{ "id": "green", "title": { "en": "Green", "nl": "Groen" } },
+				{ "id": "purple", "title": { "en": "Purple", "nl": "Paars" } },
+				{ "id": "teal", "title": { "en": "Teal", "nl": "Blauwgroen" } },
+				{ "id": "cyan", "title": { "en": "Cyan", "nl": "Cyaan" } },
+				{ "id": "indigo", "title": { "en": "Indigo", "nl": "Indigo" } },
+				{ "id": "pink", "title": { "en": "Pink", "nl": "Roze" } },
+				{ "id": "brown", "title": { "en": "Brown", "nl": "Bruin" } },
+				{ "id": "grey", "title": { "en": "Grey", "nl": "Grijs" } }
 			]
 		},
 		{
@@ -172,17 +193,18 @@
 			"id": "defaultDuration",
 			"type": "number",
 			"title": { "en": "Default duration", "nl": "Standaardduur" },
-			"hint": {"en":"Pre-fill this duration when starting the timer; leave empty for no default","nl":"Vul deze duur vooraf in bij het starten van de timer; laat leeg voor geen standaardwaarde","da":"Udfyld varigheden på forhånd, når timer startes; lad feltet stå tomt for ingen standardværdi.","de":"Füllt diese Dauer beim Starten von Timer voraus; leer lassen, wenn kein Standardwert gewünscht ist.","es":"Rellena esta duración al iniciar el temporizador; déjalo vacío para no usar un valor predeterminado.","fr":"Préremplit cette durée au démarrage du minuteur ; laissez vide pour ne pas définir de valeur par défaut.","it":"Precompila questa durata all’avvio del timer; lascia vuoto per non impostare un valore predefinito.","no":"Fyll inn varigheten når timer startes; la feltet stå tomt for ingen standardverdi.","sv":"Förifyll varaktigheten när timer startas; lämna tomt för inget standardvärde.","pl":"Wstępnie wypełnia czas przy uruchamianiu timer; pozostaw puste, aby nie ustawiać wartości domyślnej.","ru":"Подставлять эту длительность при запуске объекта «таймер»; оставьте поле пустым, чтобы не задавать значение по умолчанию.","ko":"타이머 시작 시 이 시간을 미리 입력합니다. 기본값을 사용하지 않으려면 비워 두세요.","ar":"املأ هذه المدة مسبقًا عند بدء المؤقت؛ اترك الحقل فارغًا لعدم تعيين قيمة افتراضية."},
-			"value": null,
-			"min": 0.001
+			"hint": {"en":"Set to 0 to use the last duration saved from a Flow or the API, if available. Otherwise, enter a duration of at least 1.","nl":"Stel in op 0 om, indien beschikbaar, de laatst opgeslagen duur uit een Flow of de API te gebruiken. Voer anders een duur van minimaal 1 in.","da":"Indstil til 0 for at bruge den senest gemte varighed fra et Flow eller API?et, hvis den findes. Indtast ellers en varighed p? mindst 1.","de":"Auf 0 setzen, um die zuletzt aus einem Flow oder der API gespeicherte Dauer zu verwenden, falls verf?gbar. Andernfalls eine Dauer von mindestens 1 eingeben.","es":"Establece 0 para usar la ?ltima duraci?n guardada desde un Flow o la API, si est? disponible. De lo contrario, introduce una duraci?n de al menos 1.","fr":"D?finissez 0 pour utiliser la derni?re dur?e enregistr?e depuis un Flow ou l?API, si elle est disponible. Sinon, saisissez une dur?e d?au moins 1.","it":"Imposta 0 per usare l?ultima durata salvata da un Flow o dall?API, se disponibile. Altrimenti, inserisci una durata di almeno 1.","no":"Sett til 0 for ? bruke den sist lagrede varigheten fra en Flow eller API-et, hvis den finnes. Angi ellers en varighet p? minst 1.","sv":"Ange 0 f?r att anv?nda den senast sparade varaktigheten fr?n ett Flow eller API:et, om den finns. Ange annars en varaktighet p? minst 1.","pl":"Ustaw 0, aby u?y? ostatniego czasu zapisanego z Flow lub API, je?li jest dost?pny. W przeciwnym razie wpisz czas wynosz?cy co najmniej 1.","ru":"??????? 0, ????? ???????????? ????????? ????????????, ??????????? ?? Flow ??? API, ???? ??? ????????. ????? ??????? ???????????? ?? ????? 1.","ko":"0?? ???? Flow ?? API?? ????? ??? ??? ?? ?? ?? ?????. ??? ??? 1 ??? ??? ?????.","ar":"???? ?????? ??? 0 ???????? ??? ??? ?????? ?? Flow ?? ????? API ?? ?????. ???? ????? ??? ?? ??? ?? 1."},
+			"value": 0,
+			"min": 0
 		},
 		{
 			"id": "defaultDurationUnit",
 			"type": "dropdown",
 			"title": { "en": "Default duration unit", "nl": "Standaardeenheid voor duur" },
-			"hint": {"en":"Unit used for the default duration","nl":"Eenheid voor de standaardduur","da":"Enhed for standardvarigheden.","de":"Einheit für die Standarddauer.","es":"Unidad de la duración predeterminada.","fr":"Unité utilisée pour la durée par défaut.","it":"Unità della durata predefinita.","no":"Enhet for standardvarigheten.","sv":"Enhet för standardvaraktigheten.","pl":"Jednostka domyślnego czasu trwania.","ru":"Единица измерения длительности по умолчанию.","ko":"기본 시간의 단위입니다.","ar":"وحدة المدة الافتراضية."},
-			"value": "minutes",
+			"hint": {"en":"Unit for the default duration. Automatic uses the saved Flow or API unit when available, otherwise minutes.","nl":"Eenheid voor de standaardduur. Automatisch gebruikt indien beschikbaar de opgeslagen Flow- of API-eenheid, anders minuten.","da":"Enhed for standardvarigheden. Automatisk bruger den gemte Flow- eller API-enhed, hvis den findes, ellers minutter.","de":"Einheit für die Standarddauer. Automatisch verwendet die gespeicherte Flow- oder API-Einheit, falls verfügbar, andernfalls Minuten.","es":"Unidad de la duración predeterminada. Automático usa la unidad guardada del Flow o la API si está disponible; si no, minutos.","fr":"Unité de la durée par défaut. Automatique utilise l’unité enregistrée du Flow ou de l’API si disponible, sinon les minutes.","it":"Unità della durata predefinita. Automatico usa l’unità salvata dal Flow o dall’API se disponibile, altrimenti i minuti.","no":"Enhet for standardvarigheten. Automatisk bruker den lagrede Flow- eller API-enheten hvis den finnes, ellers minutter.","sv":"Enhet för standardvaraktigheten. Automatiskt använder den sparade Flow- eller API-enheten om den finns, annars minuter.","pl":"Jednostka domyślnego czasu. Automatycznie używa zapisanej jednostki Flow lub API, jeśli jest dostępna, a w przeciwnym razie minut.","ru":"Единица длительности по умолчанию. Автоматический выбор использует сохранённую единицу Flow или API, если она доступна, иначе минуты.","ko":"기본 시간 단위입니다. 자동은 저장된 Flow 또는 API 단위가 있으면 이를 사용하고, 없으면 분을 사용합니다.","ar":"وحدة المدة الافتراضية. يستخدم الخيار التلقائي وحدة Flow أو API المحفوظة إن توفرت، وإلا يستخدم الدقائق."},
+			"value": "auto",
 			"values": [
+				{ "id": "auto", "title": { "en": "Automatic", "nl": "Automatisch", "da": "Automatisk", "de": "Automatisch", "es": "Automático", "fr": "Automatique", "it": "Automatico", "no": "Automatisk", "sv": "Automatisk", "pl": "Automatycznie", "ru": "Автоматически", "ko": "자동", "ar": "تلقائي" } },
 				{ "id": "milliseconds", "title": { "en": "Milliseconds", "nl": "Milliseconden" } },
 				{ "id": "seconds", "title": { "en": "Seconds", "nl": "Seconden" } },
 				{ "id": "minutes", "title": { "en": "Minutes", "nl": "Minuten" } },

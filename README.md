@@ -17,6 +17,7 @@ Adds precise timer, stopwatch and transition functionality to Homey.
 * Target multiple timers, stopwatches and transitions at once using wildcards in supported cards.
 * Use the Chronograph dashboard widget to choose a timer, stopwatch or transition in its settings and pause, resume or stop it.
 * Choose a searchable Font Awesome Free icon for each dashboard widget, or select None.
+* Set a timer or transition widget's default duration to 0 to use the last duration saved by a Flow or API start, if available.
 
 **Simple math expressions**
 
@@ -78,6 +79,11 @@ To submit a bug report or feature request, please create an [issue at GitHub](ht
 If you'd like to contribute code to this project, please read the
 [CONTRIBUTING.md](https://github.com/fellownet/chronograph/blob/master/CONTRIBUTING.md) document.
 
+Install the development tools with `npm ci --prefix tools/development`, then run
+the tests from the app root with `npm test`. This also installs the pre-commit
+test hook when Git hooks are available. Development dependencies stay under
+`tools/` and are excluded from the Homey app.
+
 ## Support
 
 If you like this project, perhaps you can support us by making a donation?
@@ -86,11 +92,19 @@ If you like this project, perhaps you can support us by making a donation?
 
 ## Credits
 
-Widget icons use [Font Awesome Free 7.3.1](https://fontawesome.com), including solid, regular and brand icons. Font Awesome's license is included in `assets/licenses/fontawesome-LICENSE.txt`.
+Widget icons use [Font Awesome Free 7.3.1](https://fontawesome.com), including solid, regular and brand icons. Choose an icon color from the widget settings; existing widgets default to blue. After None and the three default icons, results are grouped by regular, solid and brands. Search for `solid`, `regular`, or `brands` to filter by style, optionally combined with an icon name (for example, `regular clock`). Font Awesome's license is included in `assets/licenses/fontawesome-LICENSE.txt`.
+
+To regenerate the widget icon previews after updating the icon catalog, run `npm ci --prefix tools/icon-previews` followed by `npm run generate:icon-previews`. The generator and its dependencies are excluded from the Homey app; the generated preview catalog remains in `assets/`.
 
 Application image by [Agê Barros](https://unsplash.com/@agebarros?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/search/photos/time?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText).
 
 ## Changelog
+
+### v2.3.0
+
+* Added customizable timer, stopwatch and transition dashboard widgets with controls and Flow/API defaults.
+* Clarified that the timer split Flow card uses remaining duration.
+* Added a Flow card for elapsed timer duration.
 
 ### v1.1.2
 

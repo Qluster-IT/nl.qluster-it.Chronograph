@@ -1,18 +1,18 @@
 {
-  "1.1.2": {
-    "en": "Fixed a timer display bug. Additional capabilities for monitoring.",
-    "nl": "Een timer weergave bug opgelost. Aanvullende monitoring mogelijkheden.",
-    "da": "Rettet en fejl i timerens visning. Yderligere muligheder for overvågning.",
-    "de": "Ein Fehler bei der Timer-Anzeige wurde behoben. Zusätzliche Überwachungsfunktionen.",
-    "es": "Se corrigió un error en la visualización del temporizador. Capacidades adicionales para el monitoreo.",
-    "fr": "Correction d'un bug d'affichage du minuteur. Capacités supplémentaires pour la surveillance.",
-    "it": "Risolto un bug nella visualizzazione del timer. Capacità aggiuntive per il monitoraggio.",
-    "no": "Fikset en feil i tidtakerens visning. Flere muligheter for overvåking.",
-    "sv": "Åtgärdade en bugg i timerdisplayen. Ytterligare funktioner för övervakning.",
-    "pl": "Naprawiono błąd wyświetlania timera. Dodatkowe możliwości monitorowania.",
-    "ru": "Исправлена ошибка отображения таймера. Дополнительные возможности для мониторинга.",
-    "ko": "타이머 표시 버그를 수정했습니다. 모니터링을 위한 추가 기능이 제공됩니다.",
-    "ar": "تم إصلاح خطأ في عرض المؤقت. قدرات إضافية للمراقبة."
+  "1.1.0": {
+    "en": "Support for new Homey App Store.",
+    "nl": "Ondersteuning voor de nieuwe Homey App Store.",
+    "da": "Understøttelse af den nye Homey App Store.",
+    "de": "Unterstützung für den neuen Homey App Store.",
+    "es": "Compatibilidad con la nueva tienda de aplicaciones de Homey.",
+    "fr": "Prise en charge du nouveau Homey App Store.",
+    "it": "Supporto per il nuovo Homey App Store.",
+    "no": "Støtte for den nye Homey App Store.",
+    "sv": "Stöd för nya Homey App Store.",
+    "pl": "Wsparcie dla nowego Homey App Store.",
+    "ru": "Поддержка нового магазина приложений Homey.",
+    "ko": "새로운 Homey 앱 스토어 지원.",
+    "ar": "دعم لمتجر تطبيقات Homey الجديد."
   },
   "1.1.1": {
     "en": "Ability to delay the execution of flows. Additional tokens for transition cards. Simplified monitoring of timers, stopwatches and transitions.",
@@ -29,20 +29,20 @@
     "ko": "플로우 실행 지연 기능. 전환 카드에 대한 추가 토큰. 타이머, 스톱워치 및 전환의 간소화된 모니터링.",
     "ar": "إمكانية تأخير تنفيذ التدفقات. رموز إضافية لبطاقات الانتقال. مراقبة مبسطة للمؤقتات وساعات الإيقاف والانتقالات."
   },
-  "1.1.0": {
-    "en": "Support for new Homey App Store.",
-    "nl": "Ondersteuning voor de nieuwe Homey App Store.",
-    "da": "Understøttelse af den nye Homey App Store.",
-    "de": "Unterstützung für den neuen Homey App Store.",
-    "es": "Compatibilidad con la nueva tienda de aplicaciones de Homey.",
-    "fr": "Prise en charge du nouveau Homey App Store.",
-    "it": "Supporto per il nuovo Homey App Store.",
-    "no": "Støtte for den nye Homey App Store.",
-    "sv": "Stöd för nya Homey App Store.",
-    "pl": "Wsparcie dla nowego Homey App Store.",
-    "ru": "Поддержка нового магазина приложений Homey.",
-    "ko": "새로운 Homey 앱 스토어 지원.",
-    "ar": "دعم لمتجر تطبيقات Homey الجديد."
+  "1.1.2": {
+    "en": "Fixed a timer display bug. Additional capabilities for monitoring.",
+    "nl": "Een timer weergave bug opgelost. Aanvullende monitoring mogelijkheden.",
+    "da": "Rettet en fejl i timerens visning. Yderligere muligheder for overvågning.",
+    "de": "Ein Fehler bei der Timer-Anzeige wurde behoben. Zusätzliche Überwachungsfunktionen.",
+    "es": "Se corrigió un error en la visualización del temporizador. Capacidades adicionales para el monitoreo.",
+    "fr": "Correction d'un bug d'affichage du minuteur. Capacités supplémentaires pour la surveillance.",
+    "it": "Risolto un bug nella visualizzazione del timer. Capacità aggiuntive per il monitoraggio.",
+    "no": "Fikset en feil i tidtakerens visning. Flere muligheter for overvåking.",
+    "sv": "Åtgärdade en bugg i timerdisplayen. Ytterligare funktioner för övervakning.",
+    "pl": "Naprawiono błąd wyświetlania timera. Dodatkowe możliwości monitorowania.",
+    "ru": "Исправлена ошибка отображения таймера. Дополнительные возможности для мониторинга.",
+    "ko": "타이머 표시 버그를 수정했습니다. 모니터링을 위한 추가 기능이 제공됩니다.",
+    "ar": "تم إصلاح خطأ في عرض المؤقت. قدرات إضافية للمراقبة."
   },
   "1.2.0": {
     "en": "Rewriten to SDK3.",
@@ -1123,5 +1123,20 @@
     "ru": "Изменили исходный код и задачи с Bitbucket на GitHub.",
     "ko": "소스 코드와 문제를 Bitbucket에서 GitHub로 변경했습니다.",
     "ar": "تم تغيير الشيفرة المصدرية والمشكلات من Bitbucket إلى GitHub."
+  },
+  "2.3.0": {
+    "en": "Added customizable timer, stopwatch and transition dashboard widgets with controls and Flow/API defaults.\nClarified that the timer split Flow card uses remaining duration.\nAdded a Flow card for elapsed timer duration.",
+    "nl": "Aanpasbare dashboardwidgets toegevoegd voor timers, stopwatches en transities, met bediening en Flow/API-standaardwaarden.\nVerduidelijkt dat de timer-splitflowkaart de resterende duur gebruikt.\nEen flowkaart voor de verstreken timerduur toegevoegd.",
+    "da": "Tilføjet tilpasselige dashboard-widgets til timere, stopure og overgange med betjening og standardværdier fra Flow/API.\nPræciseret, at timerens split-flowkort bruger den resterende tid.\nTilføjet et flowkort for timerens forløbne tid.",
+    "de": "Anpassbare Dashboard-Widgets für Timer, Stoppuhren und Übergänge mit Bedienelementen und Flow/API-Standardwerten hinzugefügt.\nKlargestellt, dass die Timer-Split-Flowkarte die verbleibende Zeit verwendet.\nEine Flowkarte für die verstrichene Timerzeit hinzugefügt.",
+    "es": "Se añadieron widgets de panel personalizables para temporizadores, cronómetros y transiciones, con controles y valores predeterminados de Flow/API.\nSe aclaró que la tarjeta Flow de división del temporizador utiliza el tiempo restante.\nSe añadió una tarjeta Flow para el tiempo transcurrido del temporizador.",
+    "fr": "Ajout de widgets de tableau de bord personnalisables pour les minuteurs, chronomètres et transitions, avec commandes et valeurs par défaut Flow/API.\nPrécision que la carte Flow de temps intermédiaire du minuteur utilise la durée restante.\nAjout d'une carte Flow pour la durée écoulée du minuteur.",
+    "it": "Aggiunti widget personalizzabili per timer, cronometri e transizioni, con controlli e valori predefiniti Flow/API.\nChiarito che la scheda Flow del tempo intermedio del timer usa il tempo rimanente.\nAggiunta una scheda Flow per il tempo trascorso del timer.",
+    "no": "Lagt til tilpassbare dashboard-widgeter for tidtakere, stoppeklokker og overganger med kontroller og standardverdier fra Flow/API.\nPresisert at tidtakerens delingskort i Flow bruker gjenværende tid.\nLagt til et Flow-kort for medgått tid på tidtakeren.",
+    "sv": "Lagt till anpassningsbara dashboard-widgetar för timers, stoppur och övergångar med kontroller och standardvärden från Flow/API.\nFörtydligat att timerns mellantidskort i Flow använder återstående tid.\nLagt till ett Flow-kort för timerns förflutna tid.",
+    "pl": "Dodano konfigurowalne widżety pulpitu dla timerów, stoperów i przejść, ze sterowaniem i wartościami domyślnymi z Flow/API.\nWyjaśniono, że karta Flow czasu pośredniego timera używa pozostałego czasu.\nDodano kartę Flow dla czasu, który upłynął na timerze.",
+    "ru": "Добавлены настраиваемые виджеты таймеров, секундомеров и переходов с управлением и значениями по умолчанию из Flow/API.\nУточнено, что карточка Flow промежуточной отсечки таймера использует оставшееся время.\nДобавлена карточка Flow для прошедшего времени таймера.",
+    "ko": "타이머, 스톱워치 및 전환을 위한 사용자 설정 대시보드 위젯과 제어 기능 및 Flow/API 기본값을 추가했습니다.\n타이머 구간 Flow 카드가 남은 시간을 사용한다는 점을 명확히 했습니다.\n타이머 경과 시간을 위한 Flow 카드를 추가했습니다.",
+    "ar": "أُضيفت أدوات لوحة تحكم قابلة للتخصيص للمؤقتات وساعات الإيقاف والانتقالات، مع عناصر تحكم وقيم افتراضية من Flow/API.\nتم توضيح أن بطاقة Flow للوقت الجزئي للمؤقت تستخدم الوقت المتبقي.\nأُضيفت بطاقة Flow للوقت المنقضي للمؤقت."
   }
 }

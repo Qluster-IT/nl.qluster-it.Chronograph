@@ -20,14 +20,21 @@ function onHomeyReady(Homey) {
 			$scope.iconClass = '';
 			$scope.iconImage = '';
 			if (selectedIcon && typeof selectedIcon === 'object') {
-				if (selectedIcon.id !== 'none' && typeof selectedIcon.image === 'string'
-					&& selectedIcon.image.indexOf('data:image/svg+xml;base64,') === 0) {
+				var iconId = typeof selectedIcon.id === 'string'
+					? /^(fas|far|fab):([a-z0-9-]+)$/.exec(selectedIcon.id)
+					: null;
+				if (iconId) {
+					var iconStyles = { fas: 'fa-solid', far: 'fa-regular', fab: 'fa-brands' };
+					$scope.iconClass = iconStyles[iconId[1]] + ' fa-' + iconId[2];
+				} else if (selectedIcon.id !== 'none' && typeof selectedIcon.image === 'string'
+					&& (selectedIcon.image.indexOf('data:image/svg+xml;base64,') === 0
+						|| selectedIcon.image.indexOf('data:image/png;base64,') === 0)) {
 					$scope.iconImage = selectedIcon.image;
 				}
 			} else {
 				var legacyIcon = typeof selectedIcon === 'string' ? selectedIcon : defaultIcons[widgetType];
 				if (legacyIcon && legacyIcon !== 'none' && /^[a-z0-9-]+$/.test(legacyIcon)) {
-					$scope.iconClass = 'fa-' + legacyIcon;
+					$scope.iconClass = 'fa-solid fa-' + legacyIcon;
 				}
 			}
 			var isTimer = widgetType === 'timer';
@@ -46,6 +53,10 @@ function onHomeyReady(Homey) {
 				'blue', 'red', 'orange', 'yellow', 'green', 'purple',
 				'teal', 'cyan', 'indigo', 'pink', 'brown', 'grey'
 			];
+			$scope.iconColor = buttonColors.indexOf(settings.iconColor) !== -1 ? settings.iconColor : 'blue';
+			$scope.iconMask = $scope.iconColor !== 'blue' && /^data:image\/(?:svg\+xml|png);base64,[a-z0-9+/=]+$/i.test($scope.iconImage)
+				? 'url("' + $scope.iconImage + '")'
+				: '';
 			$scope.runningColor = settings.runningColor === 'none' || buttonColors.indexOf(settings.runningColor) !== -1
 				? settings.runningColor
 				: 'none';
@@ -91,12 +102,17 @@ function onHomeyReady(Homey) {
 			$scope.startValues = {};
 			var widgetDefaults = {};
 			if (!isStopwatch) {
-				$scope.startValues.time = settings.defaultDuration;
-				$scope.startValues.unit = settings.defaultDurationUnit || 'minutes';
+				var configuredDuration = Number(String(settings.defaultDuration).replace(',', '.'));
 				widgetDefaults.time = settings.defaultDuration !== undefined
 					&& settings.defaultDuration !== null
-					&& settings.defaultDuration !== '';
-				widgetDefaults.unit = widgetDefaults.time;
+					&& settings.defaultDuration !== ''
+					&& configuredDuration !== 0;
+				$scope.startValues.time = widgetDefaults.time
+					? configuredDuration
+					: null;
+				var defaultUnit = settings.defaultDurationUnit;
+				widgetDefaults.unit = widgetDefaults.time && !!defaultUnit && defaultUnit !== 'auto';
+				$scope.startValues.unit = widgetDefaults.unit ? defaultUnit : 'minutes';
 			}
 			if (isTransition) {
 				$scope.startValues.from = settings.defaultTransitionFrom;
