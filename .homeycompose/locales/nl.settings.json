@@ -8,5 +8,7 @@
 	"days_abbreviation": "d",
 	"stop": "Stoppen",
 	"pause": "Pauzeren",
-	"resume": "Hervatten"
+	"resume": "Hervatten",
+	"widget_type": "Type chronograaf",
+	"widget_chronograph": "Chronograaf"
 }

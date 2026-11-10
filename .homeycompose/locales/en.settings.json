@@ -8,5 +8,7 @@
 	"days_abbreviation": "d",
 	"stop": "Stop",
 	"pause": "Pause",
-	"resume": "Resume"
+	"resume": "Resume",
+	"widget_type": "Chronograph type",
+	"widget_chronograph": "Chronograph"
 }

@@ -10,6 +10,7 @@ FUNKTIONER
 * Understøttelse af tilfældige eller beregnede varigheder eller justeringer ved brug af simple matematiske udtryk.
 * Alle timere, stopure og overgange er vedholdende over Homey genstart.
 * Ret flere timere, stopure og overgange på én gang ved at bruge wildcards i understøttede kort.
+* Chronograph-dashboardwidgetten giver dig mulighed for at vælge, sætte på pause, genoptage eller stoppe en aktiv timer, et stopur eller en overgang.
 * Brug matematiske udtryk inde i flowcards.
 * Brug HomeyScript til at udløse eller sætte timere, stopure og overgange.
 

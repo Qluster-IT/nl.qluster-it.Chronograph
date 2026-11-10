@@ -1,10 +1,7 @@
 # Chronograph
 
 Adds precise timer, stopwatch and transition functionality to Homey.
-
-[![Build Status](https://travis-ci.com/fellownet/chronograph.svg?branch=master)](https://travis-ci.com/fellownet/chronograph)
-[![Code Climate](https://codeclimate.com/github/fellownet/chronograph/badges/gpa.svg)](https://codeclimate.com/github/fellownet/chronograph)
-[![Donate](https://img.shields.io/badge/paypal-donate-blue.svg)](https://www.paypal.me/bobkersten)
+[![Donate](https://img.shields.io/badge/paypal-donate-blue.svg)](https://www.paypal.me/qlusterit)
 
 ## Features
 
@@ -18,6 +15,7 @@ Adds precise timer, stopwatch and transition functionality to Homey.
 * Support for random or computed durations or adjustments using simple math expressions,
 * All timers, stopwatches and transitions are persistent across Homey restarts,
 * Target multiple timers, stopwatches and transitions at once using wildcards in supported cards.
+* Add a Chronograph dashboard widget to select, pause, resume or stop an active timer, stopwatch or transition.
 
 **Simple math expressions**
 

@@ -1,0 +1,21 @@
+{
+	"name": {
+		"en": "Chronograph",
+		"nl": "Chronograaf"
+	},
+	"height": 340,
+	"api": {
+		"getChronographs": {
+			"method": "GET",
+			"path": "/chronographs"
+		},
+		"putChronograph": {
+			"method": "PUT",
+			"path": "/chronographs/:id"
+		},
+		"deleteChronograph": {
+			"method": "DELETE",
+			"path": "/chronographs/:id"
+		}
+	}
+}

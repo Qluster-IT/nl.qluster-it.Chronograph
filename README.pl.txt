@@ -10,6 +10,7 @@ FUNKCJE
 * Wsparcie dla losowych lub obliczanych czasów trwania lub regulacji za pomocą prostych wyrażeń matematycznych.
 * Wszystkie timery, stopery i przejścia są trwałe nawet po ponownym uruchomieniu Homey.
 * Kieruj wiele timerów, stoperów i przejść naraz używając symboli wieloznacznych w obsługiwanych kartach.
+* Widżet Chronograph na pulpicie pozwala wybrać, wstrzymać, wznowić lub zatrzymać aktywny timer, stoper albo przejście.
 * Używaj wyrażeń matematycznych w kartach przepływów.
 * Używaj HomeyScript do wyzwalania lub ustawiania timerów, stoperów i przejść.
 

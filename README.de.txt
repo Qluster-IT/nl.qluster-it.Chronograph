@@ -10,6 +10,7 @@ FEATURES
 * Unterstützung für zufällige oder berechnete Dauern oder Anpassungen mithilfe einfacher mathematischer Ausdrücke.
 * Alle Timer, Stoppuhren und Übergänge bleiben bei Homey-Neustarts erhalten.
 * Richte mehrere Timer, Stoppuhren und Übergänge gleichzeitig mit Platzhaltern in unterstützten Karten aus.
+* Mit dem Chronograph-Dashboard-Widget kannst du einen aktiven Timer, eine Stoppuhr oder einen Übergang auswählen, pausieren, fortsetzen oder stoppen.
 * Verwende Mathematik-Ausdrücke innerhalb von Flow-Karten.
 * Nutze HomeyScript, um Timer, Stoppuhren und Übergänge auszulösen oder einzustellen.
 

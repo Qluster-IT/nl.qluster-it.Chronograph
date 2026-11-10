@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../../assets/css/fontawesome.min.css">
+	<link rel="stylesheet" href="../../assets/css/solid.min.css">
+	<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+	<main class="container-fluid py-2" ng-controller="ChronographWidgetController">
+		<div class="mb-3">
+			<label class="form-label" for="chronograph-type">{{ labels.type }}</label>
+			<select class="form-select" id="chronograph-type" ng-model="selectedType" ng-change="selectType()">
+				<option value="Timer">{{ labels.timer }}</option>
+				<option value="Stopwatch">{{ labels.stopwatch }}</option>
+				<option value="Transition">{{ labels.transition }}</option>
+			</select>
+		</div>
+
+		<div class="mb-3" ng-if="availableChronographs.length">
+			<label class="form-label" for="chronograph-select">{{ labels.chronograph }}</label>
+			<select class="form-select" id="chronograph-select" ng-model="selectedId" ng-options="chronograph.id as chronograph.name for chronograph in availableChronographs" ng-change="selectChronograph()"></select>
+		</div>
+
+		<section class="card chronograph-card" ng-if="selectedChronograph">
+			<div class="card-body text-center">
+				<h2 class="card-title h5 text-truncate">{{ selectedChronograph.name }}</h2>
+				<p class="chronograph-duration mb-3" aria-live="polite">{{ formatDuration(selectedChronograph) }}</p>
+				<div class="d-flex justify-content-center gap-2">
+					<button class="btn btn-primary" type="button" ng-click="toggle()" ng-disabled="busy">
+						<i class="fa-solid" ng-class="selectedChronograph.running ? 'fa-pause' : 'fa-play'" aria-hidden="true"></i>
+						{{ selectedChronograph.running ? labels.pause : labels.resume }}
+					</button>
+					<button class="btn btn-outline-danger" type="button" ng-click="stop()" ng-disabled="busy">
+						<i class="fa-solid fa-stop" aria-hidden="true"></i>
+						{{ labels.stop }}
+					</button>
+				</div>
+			</div>
+		</section>
+
+		<p class="text-body-secondary mb-0" ng-if="!loading && !availableChronographs.length">{{ emptyMessage() }}</p>
+		<p class="text-danger mb-0" role="alert" ng-if="error">{{ error }}</p>
+	</main>
+	<script src="../../assets/js/angular.min.js"></script>
+	<script src="widget.js"></script>
+</body>
+</html>

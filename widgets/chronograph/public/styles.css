@@ -1,0 +1,16 @@
+html,
+body {
+	min-width: 220px;
+	background: transparent;
+}
+
+.chronograph-card {
+	border-radius: 0.75rem;
+}
+
+.chronograph-duration {
+	font-size: clamp(1.75rem, 8vw, 2.5rem);
+	font-variant-numeric: tabular-nums;
+	font-weight: 600;
+	line-height: 1.15;
+}

@@ -10,6 +10,7 @@ FUNKTIONER
 * Stöd för slumpmässiga eller beräknade varaktigheter eller justeringar med enkla matematiska uttryck.
 * Alla timers, stoppur och övergångar är beständiga över Homey omstarter.
 * Rikta flera timers, stoppur och övergångar samtidigt med hjälp av jokertecken i stödda kort.
+* Chronographs instrumentpanelswidget låter dig välja, pausa, återuppta eller stoppa en aktiv timer, ett stoppur eller en övergång.
 * Använd matematiska uttryck inom flödeskort.
 * Använd HomeyScript för att trigga eller ställa in timers, stoppur och övergångar.
 

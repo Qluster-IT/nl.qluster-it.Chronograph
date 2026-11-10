@@ -10,6 +10,7 @@ FUNCTIES
 * Ondersteuning voor willekeurige of berekende duur of aanpassingen met behulp van eenvoudige wiskundige uitdrukkingen.
 * Alle timers, stopwatches en overgangen blijven behouden bij Homey-herstarts.
 * Richt op meerdere timers, stopwatches en overgangen tegelijk met gebruik van wildcards in ondersteunde kaarten.
+* Met de Chronograph-dashboardwidget kun je een actieve timer, stopwatch of transitie selecteren, pauzeren, hervatten of stoppen.
 * Gebruik wiskundige uitdrukkingen binnen flowkaarten.
 * Gebruik HomeyScript om timers, stopwatches en overgangen te starten of in te stellen.
 

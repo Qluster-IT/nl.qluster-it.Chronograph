@@ -24,6 +24,8 @@
     "resume": "Resume",
     "roundOfDurationsFlowcards": "Round of numbers from the 'Get the Duration of [x]' flowcards.",
     "save": "Save",
-    "saved": "Saved."
+    "saved": "Saved.",
+    "widget_type": "Chronograph type",
+    "widget_chronograph": "Chronograph"
   }
 }
