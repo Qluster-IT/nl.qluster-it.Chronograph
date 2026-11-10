@@ -162,18 +162,33 @@ describe('Chronograph widget API', () => {
 		assert.ok(timer);
 		assert.strictEqual(timer.isRunning(), true);
 		assert.strictEqual(timer.getTargetDuration(), 2000);
-		assert.deepStrictEqual(chronographs.timer[0].flowValues, { time: 2, unit: 'seconds' });
-		assert.deepStrictEqual(savedStartArgs.chronographs, chronographs);
+		assert.strictEqual(chronographs.timer[0].flowValues, undefined);
+		assert.strictEqual(savedStartArgs.chronographs, undefined);
 
 		const result = await widgetApi.getChronograph({ homey, params: { id: chronographId } });
-		assert.strictEqual(result.defaults.time, 2);
+		assert.strictEqual(result.defaults.time, 30);
 		assert.strictEqual(result.defaults.unit, 'seconds');
 
 		await widgetApi.deleteChronograph({ homey, params: { id: chronographId } });
 		const stopped = await widgetApi.getChronograph({ homey, params: { id: chronographId } });
 		assert.strictEqual(stopped.active, false);
-		assert.strictEqual(stopped.defaults.time, 2);
+		assert.strictEqual(stopped.defaults.time, 30);
 		assert.strictEqual(stopped.defaults.unit, 'seconds');
+	});
+
+	it('saves values when started through the Flow start listener', async () => {
+		await Chronograph.timer_startRunListener(homey, {
+			name: 'Widget API timer',
+			time: '45',
+			unit: 'minutes'
+		});
+
+		assert.deepStrictEqual(chronographs.timer[0].flowValues, { time: 45, unit: 'minutes' });
+		assert.deepStrictEqual(savedStartArgs.chronographs, chronographs);
+		assert.deepStrictEqual(Chronograph.get(chronographId).getData('flowValues'), {
+			time: 45,
+			unit: 'minutes'
+		});
 	});
 
 	it('starts a stopwatch without a duration', async () => {
@@ -197,6 +212,14 @@ describe('Chronograph widget API', () => {
 		assert.strictEqual(result.defaults.to, 90);
 		assert.strictEqual(result.defaults.steps, 12);
 
+		const previousTransitionFlowValues = {
+			time: 15,
+			unit: 'minutes',
+			from: 10,
+			to: 90,
+			steps: 12
+		};
+		chronographs.transition[0].flowValues = previousTransitionFlowValues;
 		await transitionWidgetApi.startChronograph({
 			homey,
 			params: { id: transitionId },
@@ -210,20 +233,15 @@ describe('Chronograph widget API', () => {
 		assert.strictEqual(transition.getData('from'), 0);
 		assert.strictEqual(transition.getData('to'), 50);
 		assert.strictEqual(transition.getData('steps'), 4);
-		assert.deepStrictEqual(chronographs.transition[0].flowValues, {
-			time: 2,
-			unit: 'seconds',
-			from: 0,
-			to: 50,
-			steps: 4
-		});
+		assert.strictEqual(transition.getData('flowValues'), undefined);
+		assert.deepStrictEqual(chronographs.transition[0].flowValues, previousTransitionFlowValues);
 
 		const updated = await transitionWidgetApi.getChronograph({ homey, params: { id: transitionId } });
-		assert.strictEqual(updated.defaults.time, 2);
-		assert.strictEqual(updated.defaults.unit, 'seconds');
-		assert.strictEqual(updated.defaults.from, 0);
-		assert.strictEqual(updated.defaults.to, 50);
-		assert.strictEqual(updated.defaults.steps, 4);
+		assert.strictEqual(updated.defaults.time, 15);
+		assert.strictEqual(updated.defaults.unit, 'minutes');
+		assert.strictEqual(updated.defaults.from, 10);
+		assert.strictEqual(updated.defaults.to, 90);
+		assert.strictEqual(updated.defaults.steps, 12);
 	});
 
 	it('rejects invalid running values and unknown chronographs', async () => {

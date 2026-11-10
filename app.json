@@ -9800,6 +9800,123 @@
           }
         },
         {
+          "id": "icon",
+          "type": "dropdown",
+          "title": {
+            "en": "Icon",
+            "nl": "Pictogram"
+          },
+          "hint": {
+            "en": "Choose a Font Awesome icon to show beside the stopwatch name",
+            "nl": "Kies een Font Awesome-pictogram naast de stopwatchnaam",
+            "da": "Vælg et Font Awesome-ikon, der vises ved siden af stopursnavnet.",
+            "de": "Wähle ein Font-Awesome-Symbol neben dem Namen der Stoppuhr.",
+            "es": "Elige un icono de Font Awesome para mostrar junto al nombre del cronómetro.",
+            "fr": "Choisissez une icône Font Awesome à afficher à côté du nom du chronomètre.",
+            "it": "Scegli un’icona Font Awesome da mostrare accanto al nome del cronometro.",
+            "no": "Velg et Font Awesome-ikon som vises ved siden av stoppeklokkenavnet.",
+            "sv": "Välj en Font Awesome-ikon som visas bredvid stoppurets namn.",
+            "pl": "Wybierz ikonę Font Awesome wyświetlaną obok nazwy stopera.",
+            "ru": "Выберите значок Font Awesome для отображения рядом с названием секундомера.",
+            "ko": "스톱워치 이름 옆에 표시할 Font Awesome 아이콘을 선택하세요.",
+            "ar": "اختر أيقونة Font Awesome لعرضها بجوار اسم ساعة الإيقاف."
+          },
+          "value": "stopwatch",
+          "values": [
+            {
+              "id": "none",
+              "title": {
+                "en": "None",
+                "nl": "Geen"
+              }
+            },
+            {
+              "id": "clock",
+              "title": {
+                "en": "Clock",
+                "nl": "Klok"
+              }
+            },
+            {
+              "id": "stopwatch",
+              "title": {
+                "en": "Stopwatch",
+                "nl": "Stopwatch"
+              }
+            },
+            {
+              "id": "hourglass-half",
+              "title": {
+                "en": "Hourglass",
+                "nl": "Zandloper"
+              }
+            },
+            {
+              "id": "bell",
+              "title": {
+                "en": "Bell",
+                "nl": "Bel"
+              }
+            },
+            {
+              "id": "fire",
+              "title": {
+                "en": "Fire",
+                "nl": "Vuur"
+              }
+            },
+            {
+              "id": "mug-hot",
+              "title": {
+                "en": "Hot drink",
+                "nl": "Warme drank"
+              }
+            },
+            {
+              "id": "rocket",
+              "title": {
+                "en": "Rocket",
+                "nl": "Raket"
+              }
+            },
+            {
+              "id": "heart",
+              "title": {
+                "en": "Heart",
+                "nl": "Hart"
+              }
+            },
+            {
+              "id": "lightbulb",
+              "title": {
+                "en": "Light bulb",
+                "nl": "Lamp"
+              }
+            },
+            {
+              "id": "bolt",
+              "title": {
+                "en": "Bolt",
+                "nl": "Bliksem"
+              }
+            },
+            {
+              "id": "star",
+              "title": {
+                "en": "Star",
+                "nl": "Ster"
+              }
+            },
+            {
+              "id": "shuffle",
+              "title": {
+                "en": "Shuffle",
+                "nl": "Willekeurig"
+              }
+            }
+          ]
+        },
+        {
           "id": "alternativeName",
           "type": "text",
           "title": {
@@ -10624,6 +10741,123 @@
             "ko": "설정된 타이머를 선택하세요.",
             "ar": "اختر المؤقت مُعدًا مسبقًا."
           }
+        },
+        {
+          "id": "icon",
+          "type": "dropdown",
+          "title": {
+            "en": "Icon",
+            "nl": "Pictogram"
+          },
+          "hint": {
+            "en": "Choose a Font Awesome icon to show beside the timer name",
+            "nl": "Kies een Font Awesome-pictogram naast de timernaam",
+            "da": "Vælg et Font Awesome-ikon, der vises ved siden af timernavnet.",
+            "de": "Wähle ein Font-Awesome-Symbol neben dem Timernamen.",
+            "es": "Elige un icono de Font Awesome para mostrar junto al nombre del temporizador.",
+            "fr": "Choisissez une icône Font Awesome à afficher à côté du nom du minuteur.",
+            "it": "Scegli un’icona Font Awesome da mostrare accanto al nome del timer.",
+            "no": "Velg et Font Awesome-ikon som vises ved siden av timernavnet.",
+            "sv": "Välj en Font Awesome-ikon som visas bredvid timernamnet.",
+            "pl": "Wybierz ikonę Font Awesome wyświetlaną obok nazwy timera.",
+            "ru": "Выберите значок Font Awesome для отображения рядом с названием таймера.",
+            "ko": "타이머 이름 옆에 표시할 Font Awesome 아이콘을 선택하세요.",
+            "ar": "اختر أيقونة Font Awesome لعرضها بجوار اسم المؤقت."
+          },
+          "value": "clock",
+          "values": [
+            {
+              "id": "none",
+              "title": {
+                "en": "None",
+                "nl": "Geen"
+              }
+            },
+            {
+              "id": "clock",
+              "title": {
+                "en": "Clock",
+                "nl": "Klok"
+              }
+            },
+            {
+              "id": "stopwatch",
+              "title": {
+                "en": "Stopwatch",
+                "nl": "Stopwatch"
+              }
+            },
+            {
+              "id": "hourglass-half",
+              "title": {
+                "en": "Hourglass",
+                "nl": "Zandloper"
+              }
+            },
+            {
+              "id": "bell",
+              "title": {
+                "en": "Bell",
+                "nl": "Bel"
+              }
+            },
+            {
+              "id": "fire",
+              "title": {
+                "en": "Fire",
+                "nl": "Vuur"
+              }
+            },
+            {
+              "id": "mug-hot",
+              "title": {
+                "en": "Hot drink",
+                "nl": "Warme drank"
+              }
+            },
+            {
+              "id": "rocket",
+              "title": {
+                "en": "Rocket",
+                "nl": "Raket"
+              }
+            },
+            {
+              "id": "heart",
+              "title": {
+                "en": "Heart",
+                "nl": "Hart"
+              }
+            },
+            {
+              "id": "lightbulb",
+              "title": {
+                "en": "Light bulb",
+                "nl": "Lamp"
+              }
+            },
+            {
+              "id": "bolt",
+              "title": {
+                "en": "Bolt",
+                "nl": "Bliksem"
+              }
+            },
+            {
+              "id": "star",
+              "title": {
+                "en": "Star",
+                "nl": "Ster"
+              }
+            },
+            {
+              "id": "shuffle",
+              "title": {
+                "en": "Shuffle",
+                "nl": "Willekeurig"
+              }
+            }
+          ]
         },
         {
           "id": "alternativeName",
@@ -11536,6 +11770,123 @@
             "ko": "설정된 전환를 선택하세요.",
             "ar": "اختر الانتقال مُعدًا مسبقًا."
           }
+        },
+        {
+          "id": "icon",
+          "type": "dropdown",
+          "title": {
+            "en": "Icon",
+            "nl": "Pictogram"
+          },
+          "hint": {
+            "en": "Choose a Font Awesome icon to show beside the transition name",
+            "nl": "Kies een Font Awesome-pictogram naast de transitienaam",
+            "da": "Vælg et Font Awesome-ikon, der vises ved siden af overgangens navn.",
+            "de": "Wähle ein Font-Awesome-Symbol neben dem Namen des Übergangs.",
+            "es": "Elige un icono de Font Awesome para mostrar junto al nombre de la transición.",
+            "fr": "Choisissez une icône Font Awesome à afficher à côté du nom de la transition.",
+            "it": "Scegli un’icona Font Awesome da mostrare accanto al nome della transizione.",
+            "no": "Velg et Font Awesome-ikon som vises ved siden av overgangsnavnet.",
+            "sv": "Välj en Font Awesome-ikon som visas bredvid övergångens namn.",
+            "pl": "Wybierz ikonę Font Awesome wyświetlaną obok nazwy przejścia.",
+            "ru": "Выберите значок Font Awesome для отображения рядом с названием перехода.",
+            "ko": "전환 이름 옆에 표시할 Font Awesome 아이콘을 선택하세요.",
+            "ar": "اختر أيقونة Font Awesome لعرضها بجوار اسم الانتقال."
+          },
+          "value": "shuffle",
+          "values": [
+            {
+              "id": "none",
+              "title": {
+                "en": "None",
+                "nl": "Geen"
+              }
+            },
+            {
+              "id": "clock",
+              "title": {
+                "en": "Clock",
+                "nl": "Klok"
+              }
+            },
+            {
+              "id": "stopwatch",
+              "title": {
+                "en": "Stopwatch",
+                "nl": "Stopwatch"
+              }
+            },
+            {
+              "id": "hourglass-half",
+              "title": {
+                "en": "Hourglass",
+                "nl": "Zandloper"
+              }
+            },
+            {
+              "id": "bell",
+              "title": {
+                "en": "Bell",
+                "nl": "Bel"
+              }
+            },
+            {
+              "id": "fire",
+              "title": {
+                "en": "Fire",
+                "nl": "Vuur"
+              }
+            },
+            {
+              "id": "mug-hot",
+              "title": {
+                "en": "Hot drink",
+                "nl": "Warme drank"
+              }
+            },
+            {
+              "id": "rocket",
+              "title": {
+                "en": "Rocket",
+                "nl": "Raket"
+              }
+            },
+            {
+              "id": "heart",
+              "title": {
+                "en": "Heart",
+                "nl": "Hart"
+              }
+            },
+            {
+              "id": "lightbulb",
+              "title": {
+                "en": "Light bulb",
+                "nl": "Lamp"
+              }
+            },
+            {
+              "id": "bolt",
+              "title": {
+                "en": "Bolt",
+                "nl": "Bliksem"
+              }
+            },
+            {
+              "id": "star",
+              "title": {
+                "en": "Star",
+                "nl": "Ster"
+              }
+            },
+            {
+              "id": "shuffle",
+              "title": {
+                "en": "Shuffle",
+                "nl": "Willekeurig"
+              }
+            }
+          ]
         },
         {
           "id": "alternativeName",

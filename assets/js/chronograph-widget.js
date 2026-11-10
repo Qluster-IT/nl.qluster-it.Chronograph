@@ -15,6 +15,14 @@ function onHomeyReady(Homey) {
 			var lastHeight = 0;
 			var settings = Homey.getSettings() || {};
 			var widgetType = document.body.getAttribute('data-chronograph-type');
+			var availableIcons = [
+				'clock', 'stopwatch', 'hourglass-half', 'bell', 'fire', 'mug-hot',
+				'rocket', 'heart', 'lightbulb', 'bolt', 'star', 'shuffle'
+			];
+			var selectedIcon = settings.icon;
+			$scope.iconClass = selectedIcon && selectedIcon !== 'none' && availableIcons.indexOf(selectedIcon) !== -1
+				? 'fa-' + selectedIcon
+				: '';
 			var isTimer = widgetType === 'timer';
 			var isTransition = widgetType === 'transition';
 			var isStopwatch = widgetType === 'stopwatch';

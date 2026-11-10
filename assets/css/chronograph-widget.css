@@ -202,6 +202,11 @@ body.chronograph-vivid-running {
 	white-space: nowrap;
 }
 
+.chronograph-icon {
+	margin-right: 0.4em;
+	color: var(--chronograph-blue);
+}
+
 .chronograph-status {
 	overflow: hidden;
 	margin: 0;
