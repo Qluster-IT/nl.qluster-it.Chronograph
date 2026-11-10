@@ -27,6 +27,7 @@
     "saved": "Opgeslagen.",
     "widget_type": "Type chronograaf",
     "widget_chronograph": "Chronograaf",
+    "widget_icon_none": "Geen",
     "widget_select_chronograph": "Selecteer een chronograaf in de widgetinstellingen.",
     "widget_running": "Actief",
     "widget_paused": "Gepauzeerd",

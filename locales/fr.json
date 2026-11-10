@@ -25,6 +25,7 @@
     "roundOfDurationsFlowcards": "Arrondi des chiffres des cartes de flux 'Obtenir la durée de [x]'.",
     "save": "Enregistrer",
     "saved": "Enregistré.",
+    "widget_icon_none": "Aucune",
     "widget_select_chronograph": "Sélectionnez un chronographe dans les paramètres du widget.",
     "widget_running": "En cours",
     "widget_paused": "En pause",

@@ -23,7 +23,7 @@
 		}">
 			<div class="chronograph-row">
 				<div class="chronograph-summary">
-					<h2 class="chronograph-name"><i class="chronograph-icon fa-solid" ng-if="iconClass" ng-class="iconClass" aria-hidden="true"></i>{{ getDisplayName(selectedChronograph) }}</h2>
+					<h2 class="chronograph-name"><i class="chronograph-icon fa-solid" ng-if="iconClass" ng-class="iconClass" aria-hidden="true"></i><img class="chronograph-icon" ng-if="iconImage" ng-src="{{ iconImage }}" alt="" aria-hidden="true">{{ getDisplayName(selectedChronograph) }}</h2>
 					<p class="chronograph-status">{{ selectedChronograph.active ? (selectedChronograph.running ? labels.running : labels.paused) : labels.notRunning }}</p>
 				</div>
 				<p class="chronograph-duration" aria-live="polite" ng-if="selectedChronograph.active">{{ formatDuration(selectedChronograph) }}</p>

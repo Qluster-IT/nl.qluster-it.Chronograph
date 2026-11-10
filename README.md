@@ -16,6 +16,7 @@ Adds precise timer, stopwatch and transition functionality to Homey.
 * All timers, stopwatches and transitions are persistent across Homey restarts,
 * Target multiple timers, stopwatches and transitions at once using wildcards in supported cards.
 * Use the Chronograph dashboard widget to choose a timer, stopwatch or transition in its settings and pause, resume or stop it.
+* Choose a searchable Font Awesome Free icon for each dashboard widget, or select None.
 
 **Simple math expressions**
 
@@ -84,6 +85,8 @@ If you like this project, perhaps you can support us by making a donation?
 - Bitcoin: 3KU2PbVyB1cVh7n6uNuNYbhuZopC9GP2hp
 
 ## Credits
+
+Widget icons use [Font Awesome Free 7.3.1](https://fontawesome.com), including solid, regular and brand icons. Font Awesome's license is included in `assets/licenses/fontawesome-LICENSE.txt`.
 
 Application image by [Agê Barros](https://unsplash.com/@agebarros?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/search/photos/time?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText).
 

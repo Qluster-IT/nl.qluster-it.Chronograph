@@ -25,6 +25,7 @@
     "roundOfDurationsFlowcards": "Проход чисел из карточек действия 'Получить продолжительность [x]'.",
     "save": "Сохранить",
     "saved": "Сохранено.",
+    "widget_icon_none": "???",
     "widget_select_chronograph": "Выберите хронометр в настройках виджета.",
     "widget_running": "Работает",
     "widget_paused": "Приостановлен",

@@ -3,6 +3,7 @@
 const Homey = require('homey');
 const Chronograph = require('./lib/chronograph.js');
 const { Utils, ChronographType, LogLevel } = require('./lib/utils.js');
+const { searchIcons } = require('./lib/widget-icons.js');
 
 // Actions.
 const TimerGetDuration = require('./lib/timer/actions/timer_get_duration.js');
@@ -194,6 +195,9 @@ class Application extends Homey.App {
 	_registerChronographWidgetAutocomplete() {
 		['timer', 'transition', 'stopwatch'].forEach(type => {
 			const widget = this.homey.dashboards.getWidget(type);
+			widget.registerSettingAutocompleteListener('icon', async query => {
+				return searchIcons(query, this.homey.__('settings.widget_icon_none'));
+			});
 			widget.registerSettingAutocompleteListener('chronograph', async (query) => {
 				const chronographType = ChronographType[type.toUpperCase()];
 				const search = (query || '').toLowerCase();

@@ -15,14 +15,21 @@ function onHomeyReady(Homey) {
 			var lastHeight = 0;
 			var settings = Homey.getSettings() || {};
 			var widgetType = document.body.getAttribute('data-chronograph-type');
-			var availableIcons = [
-				'clock', 'stopwatch', 'hourglass-half', 'bell', 'fire', 'mug-hot',
-				'rocket', 'heart', 'lightbulb', 'bolt', 'star', 'shuffle'
-			];
+			var defaultIcons = { timer: 'clock', stopwatch: 'stopwatch', transition: 'shuffle' };
 			var selectedIcon = settings.icon;
-			$scope.iconClass = selectedIcon && selectedIcon !== 'none' && availableIcons.indexOf(selectedIcon) !== -1
-				? 'fa-' + selectedIcon
-				: '';
+			$scope.iconClass = '';
+			$scope.iconImage = '';
+			if (selectedIcon && typeof selectedIcon === 'object') {
+				if (selectedIcon.id !== 'none' && typeof selectedIcon.image === 'string'
+					&& selectedIcon.image.indexOf('data:image/svg+xml;base64,') === 0) {
+					$scope.iconImage = selectedIcon.image;
+				}
+			} else {
+				var legacyIcon = typeof selectedIcon === 'string' ? selectedIcon : defaultIcons[widgetType];
+				if (legacyIcon && legacyIcon !== 'none' && /^[a-z0-9-]+$/.test(legacyIcon)) {
+					$scope.iconClass = 'fa-' + legacyIcon;
+				}
+			}
 			var isTimer = widgetType === 'timer';
 			var isTransition = widgetType === 'transition';
 			var isStopwatch = widgetType === 'stopwatch';
