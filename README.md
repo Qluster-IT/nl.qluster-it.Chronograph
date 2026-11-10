@@ -18,6 +18,7 @@ Adds precise timer, stopwatch and transition functionality to Homey.
 * Use the Chronograph dashboard widget to choose a timer, stopwatch or transition in its settings and pause, resume or stop it.
 * Choose a searchable Font Awesome Free icon for each dashboard widget, or select None.
 * Set a timer or transition widget's default duration to 0 to use the last duration saved by a Flow or API start, if available.
+* Transition widget default start, end and step values use the last saved Flow or API values when set to 0 or left empty.
 
 **Simple math expressions**
 

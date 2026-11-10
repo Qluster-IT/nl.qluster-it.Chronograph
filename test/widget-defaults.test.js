@@ -10,6 +10,7 @@ const script = fs.readFileSync(path.join(__dirname, '..', 'assets', 'js', 'chron
 async function loadWidget(type, settings, defaults) {
 	let controller;
 	const listeners = {};
+	const state = { active: false, running: false, defaults };
 	const module = { controller: (name, definition) => { controller = definition[definition.length - 1]; } };
 	const scope = { $on() {}, $applyAsync(callback) { callback(); } };
 	const homey = {
@@ -17,7 +18,7 @@ async function loadWidget(type, settings, defaults) {
 		__: key => key,
 		ready() {},
 		on: (name, callback) => { listeners[name] = callback; },
-		api: () => Promise.resolve({ active: false, running: false, defaults })
+		api: () => Promise.resolve(Object.assign({}, state))
 	};
 	const context = {
 		angular: { module: () => module, bootstrap() {} },
@@ -28,9 +29,11 @@ async function loadWidget(type, settings, defaults) {
 	};
 	vm.runInNewContext(script, context);
 	context.onHomeyReady(homey);
-	controller(scope, () => {}, () => {});
+	const timeout = () => {};
+	timeout.cancel = () => {};
+	controller(scope, () => {}, timeout);
 	await new Promise(resolve => setImmediate(resolve));
-	return { scope, listeners };
+	return { scope, listeners, state };
 }
 
 describe('Widget duration defaults', () => {
@@ -53,6 +56,11 @@ describe('Widget duration defaults', () => {
 			}
 		});
 
+		it('converts saved numeric strings for ' + type + ' number inputs', async () => {
+			const { scope } = await loadWidget(type, { defaultDuration: 0 }, { time: '1,5', unit: 'seconds' });
+			assert.strictEqual(scope.startValues.time, 1.5);
+		});
+
 		it('leaves duration empty and uses minutes without saved values for a zero ' + type + ' setting', async () => {
 			const { scope } = await loadWidget(type, { defaultDuration: 0, defaultDurationUnit: 'auto' }, {});
 			assert.strictEqual(scope.startValues.time, null);
@@ -67,6 +75,24 @@ describe('Widget duration defaults', () => {
 			await listeners.chronograph_event_multi();
 			assert.strictEqual(scope.startValues.time, 8);
 			assert.strictEqual(scope.startValues.unit, 'hours');
+		});
+
+		it('restores saved defaults after ' + type + ' stops or finishes without resetting edits during inactivity', async () => {
+			const { scope, listeners, state } = await loadWidget(type, { defaultDuration: 0 }, { time: 5, unit: 'seconds' });
+			scope.startValues.time = 9;
+			await listeners.chronograph_event_multi();
+			assert.strictEqual(scope.startValues.time, 9);
+			state.active = true;
+			await listeners.chronograph_event_multi();
+			state.active = false;
+			await listeners.chronograph_event_multi();
+			assert.strictEqual(scope.startValues.time, 5);
+			state.active = true;
+			await listeners.chronograph_event_multi();
+			scope.startValues.time = 7;
+			scope.stop();
+			await new Promise(resolve => setImmediate(resolve));
+			assert.strictEqual(scope.startValues.time, 5);
 		});
 
 		it('converts text duration to a number and uses the selected unit for ' + type, async () => {
@@ -94,4 +120,26 @@ describe('Widget duration defaults', () => {
 			assert.strictEqual(scope.startValues.unit, 'days');
 		});
 	}
+
+	it('uses saved transition values for null or zero settings, including saved zero values', async () => {
+		const { scope } = await loadWidget('transition', {
+			defaultTransitionFrom: 0,
+			defaultTransitionTo: '0',
+			defaultTransitionSteps: null
+		}, { time: '5', unit: 'seconds', from: '0', to: '75.5', steps: '10' });
+		assert.strictEqual(scope.startValues.from, 0);
+		assert.strictEqual(scope.startValues.to, 75.5);
+		assert.strictEqual(scope.startValues.steps, 10);
+	});
+
+	it('keeps nonzero transition settings instead of saved values', async () => {
+		const { scope } = await loadWidget('transition', {
+			defaultTransitionFrom: 4,
+			defaultTransitionTo: 9,
+			defaultTransitionSteps: 3
+		}, { from: 0, to: 50, steps: 10 });
+		assert.strictEqual(scope.startValues.from, 4);
+		assert.strictEqual(scope.startValues.to, 9);
+		assert.strictEqual(scope.startValues.steps, 3);
+	});
 });

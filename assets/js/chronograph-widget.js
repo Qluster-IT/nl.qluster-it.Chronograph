@@ -115,12 +115,10 @@ function onHomeyReady(Homey) {
 				$scope.startValues.unit = widgetDefaults.unit ? defaultUnit : 'minutes';
 			}
 			if (isTransition) {
-				$scope.startValues.from = settings.defaultTransitionFrom;
-				$scope.startValues.to = settings.defaultTransitionTo;
-				$scope.startValues.steps = settings.defaultTransitionSteps;
 				['from', 'to', 'steps'].forEach(function (key) {
 					var value = settings['defaultTransition' + key.charAt(0).toUpperCase() + key.slice(1)];
-					widgetDefaults[key] = value !== undefined && value !== null && value !== '';
+					widgetDefaults[key] = value !== undefined && value !== null && value !== '' && Number(value) !== 0;
+					$scope.startValues[key] = widgetDefaults[key] ? Number(value) : null;
 				});
 			}
 			var lastSavedValues = null;
@@ -138,6 +136,24 @@ function onHomeyReady(Homey) {
 				scheduleHeightUpdate();
 			}
 
+			function applySavedDefaults(defaults) {
+				if (!defaults) return;
+				var keys = isTransition ? ['time', 'unit', 'from', 'to', 'steps'] : ['time', 'unit'];
+				keys.forEach(function (key) {
+					var savedValue = defaults[key];
+					if (!widgetDefaults[key] && savedValue !== undefined && savedValue !== null && savedValue !== '') {
+						if (key !== 'unit') {
+							savedValue = Number(String(savedValue).replace(',', '.'));
+							if (!isFinite(savedValue)) {
+								console.error('Invalid saved widget default for ' + key, defaults[key]);
+								return;
+							}
+						}
+						$scope.startValues[key] = savedValue;
+					}
+				});
+			}
+
 			function refresh() {
 				if (!selectedId) {
 					$scope.loading = false;
@@ -149,21 +165,14 @@ function onHomeyReady(Homey) {
 					.then(function (chronograph) {
 						if (destroyed) return;
 						$scope.$applyAsync(function () {
+							var wasActive = $scope.selectedChronograph && $scope.selectedChronograph.active;
 							$scope.selectedChronograph = applyChronographUpdate(chronograph);
 							if (chronograph.active) $scope.cancelStart();
 							if (chronograph.defaults) {
 								var savedValuesKey = JSON.stringify(chronograph.defaults);
-								if (savedValuesKey !== lastSavedValues) {
+								if (savedValuesKey !== lastSavedValues || (wasActive && !chronograph.active)) {
 									lastSavedValues = savedValuesKey;
-									var keys = isTransition
-										? ['time', 'unit', 'from', 'to', 'steps']
-										: ['time', 'unit'];
-									keys.forEach(function (key) {
-										var savedValue = chronograph.defaults[key];
-										if (!widgetDefaults[key] && savedValue !== undefined && savedValue !== null && savedValue !== '') {
-											$scope.startValues[key] = savedValue;
-										}
-									});
+									applySavedDefaults(chronograph.defaults);
 								}
 							}
 							$scope.loading = false;
@@ -311,6 +320,7 @@ function onHomeyReady(Homey) {
 					$scope.$applyAsync(function () {
 						$scope.selectedChronograph.active = false;
 						$scope.selectedChronograph.running = false;
+						applySavedDefaults($scope.selectedChronograph.defaults);
 						$scope.showStartForm = false;
 						$scope.busy = false;
 					});

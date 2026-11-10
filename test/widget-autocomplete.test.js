@@ -46,4 +46,45 @@ describe('Widget chronograph autocomplete', () => {
 			assert.deepStrictEqual(chronographs[type].map(item => typeof item === 'string' ? item : item.name), ['zebra', 'Alpha 10', 'alpha 2', 'Beta']);
 		}
 	});
+
+	it('preserves last Flow values when Flow card names are refreshed', async () => {
+		const module = { exports: {} };
+		const script = fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8');
+		vm.runInNewContext(script, {
+			module,
+			require: id => id === 'homey' ? { App: class {} } : {}
+		});
+		const prototype = module.exports.prototype;
+		for (const type of ['timer', 'transition']) {
+			const values = { time: 12, unit: 'minutes', from: 0, to: 80, steps: 4 };
+			const card = { getArgumentValues: async () => [{ name: 'Example' }] };
+			const app = {
+				chronographs: { [type]: [{ name: 'Example', flowValues: values }] },
+				chronographsCards: { [type]: [{ card }] },
+				homey: { settings: { set() {} }, error(...args) { throw new Error(args.join(' ')); } },
+				setArgumentNamesCard: prototype.setArgumentNamesCard
+			};
+			await prototype.setArgumentNames.call(app, card, { id: type + '_start' }, false);
+			assert.strictEqual(app.chronographs[type][0].flowValues, values);
+		}
+	});
+
+	it('retains saved Flow or API chronographs even without a matching Flow card on startup', async () => {
+		const module = { exports: {} };
+		vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8'), {
+			module,
+			require: id => id === 'homey' ? { App: class {} } : {}
+		});
+		const values = { time: 12, unit: 'minutes' };
+		const app = {
+			homey: {
+				settings: { get: () => ({ timer: [{ name: 'API timer', flowValues: values }, { name: 'old name' }] }) },
+				manifest: { flow: {} }
+			}
+		};
+		await module.exports.prototype._initializeChronographsFromFlowArguments.call(app);
+		assert.strictEqual(app.chronographs.timer.length, 1);
+		assert.strictEqual(app.chronographs.timer[0].name, 'API timer');
+		assert.strictEqual(app.chronographs.timer[0].flowValues, values);
+	});
 });

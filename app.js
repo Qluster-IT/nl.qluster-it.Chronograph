@@ -258,6 +258,12 @@ class Application extends Homey.App {
 		this.chronographs = {};
 		/** @type {ChronographConfigurationMap | undefined} Previously saved chronograph settings. */
 		this.oldChronographs = this.homey.settings.get('chronographs');
+		if (this.oldChronographs) {
+			for (const type of ['timer', 'stopwatch', 'transition']) {
+				this.chronographs[type] = (this.oldChronographs[type] || [])
+					.filter(chronograph => chronograph && chronograph.flowValues);
+			}
+		}
 		for (const flowTypeId in this.homey.manifest.flow) {
 			if (Object.hasOwnProperty.call(this.homey.manifest.flow, flowTypeId)) {
 				const flowType = this.homey.manifest.flow[flowTypeId];
@@ -345,7 +351,7 @@ class Application extends Homey.App {
 			if (firstRun) {
 				if (!this.chronographs[type]) this.chronographs[type] = [];
 			} else {
-				this.oldChronographs = this.chronographs;
+				this.oldChronographs = Object.assign({}, this.chronographs);
 				this.chronographs[type] = [];
 			}
 
