@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../../assets/css/fontawesome.min.css">
+	<link rel="stylesheet" href="../../assets/css/solid.min.css">
+	<link rel="stylesheet" href="../../assets/css/chronograph-widget.css">
+</head>
+<body class="homey-widget" data-chronograph-type="stopwatch" ng-attr-data-widget-color="{{ getWidgetColor() }}" ng-controller="ChronographWidgetController" ng-class="{
+	'chronograph-vivid-running': selectedChronograph && getWidgetColor() !== 'none'
+}">
+	<main class="chronograph-widget homey-text-regular" ng-class="{
+		'chronograph-vivid': runningColor !== 'none' || inactiveColor !== 'none',
+		'chronograph-layout-large': layout === 'large',
+		'chronograph-layout-compact': layout === 'compact'
+	}">
+		<section class="chronograph-tile" ng-if="selectedChronograph" ng-class="{
+			'chronograph-tile-running': selectedChronograph.active && selectedChronograph.running,
+			'chronograph-tile-paused': selectedChronograph.active && !selectedChronograph.running
+		}">
+			<div class="chronograph-row">
+				<div class="chronograph-summary">
+					<h2 class="chronograph-name">{{ selectedChronograph.name }}</h2>
+					<p class="chronograph-status">{{ selectedChronograph.active ? (selectedChronograph.running ? labels.running : labels.paused) : labels.notRunning }}</p>
+				</div>
+				<p class="chronograph-duration" aria-live="polite" ng-if="selectedChronograph.active">{{ formatDuration(selectedChronograph) }}</p>
+			</div>
+
+			<button class="chronograph-start-button chronograph-compact-start" type="button" ng-if="layout === 'compact' && !selectedChronograph.active" ng-click="beginStart()" ng-disabled="busy" ng-attr-data-button-color="{{ playColor }}" title="{{ labels.start }}" aria-label="{{ labels.start }}">
+				<i class="fa-solid fa-play" aria-hidden="true"></i>
+			</button>
+			<div class="chronograph-actions" ng-if="selectedChronograph.active">
+				<button class="chronograph-action" type="button" ng-click="toggle()" ng-disabled="busy" title="{{ selectedChronograph.running ? labels.pause : labels.resume }}" aria-label="{{ selectedChronograph.running ? labels.pause : labels.resume }}" ng-attr-data-button-color="{{ selectedChronograph.running ? pauseColor : playColor }}">
+					<i class="fa-solid" ng-class="selectedChronograph.running ? 'fa-pause' : 'fa-play'" aria-hidden="true"></i>
+				</button>
+				<button class="chronograph-action" type="button" ng-click="stop()" ng-disabled="busy" title="{{ labels.stop }}" aria-label="{{ labels.stop }}" ng-attr-data-button-color="{{ stopColor }}">
+					<i class="fa-solid fa-stop" aria-hidden="true"></i>
+				</button>
+			</div>
+			<form class="chronograph-start-form" ng-if="layout !== 'compact' && !selectedChronograph.active" ng-submit="start()">
+				<button class="chronograph-start-button" type="submit" ng-disabled="busy" ng-attr-data-button-color="{{ playColor }}">
+					<i class="fa-solid fa-play" aria-hidden="true"></i>
+					{{ labels.start }}
+				</button>
+			</form>
+		</section>
+
+		<p class="chronograph-message" ng-if="!loading && !selectedChronograph">{{ labels.selectChronograph }}</p>
+		<p class="chronograph-error" role="alert" ng-if="error">{{ error }}</p>
+	</main>
+	<script src="../../assets/js/angular.min.js"></script>
+	<script src="../../assets/js/chronograph-widget.js"></script>
+</body>
+</html>

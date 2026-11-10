@@ -6,13 +6,13 @@
 	<link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
 	<link rel="stylesheet" href="../../assets/css/fontawesome.min.css">
 	<link rel="stylesheet" href="../../assets/css/solid.min.css">
-	<link rel="stylesheet" href="styles.css">
+	<link rel="stylesheet" href="../../assets/css/chronograph-widget.css">
 </head>
-<body class="homey-widget" ng-controller="ChronographWidgetController" ng-class="{
-	'chronograph-vivid-running': colorStyle === 'deep' && selectedChronograph && selectedChronograph.active && selectedChronograph.running
+<body class="homey-widget" data-chronograph-type="transition" ng-attr-data-widget-color="{{ getWidgetColor() }}" ng-controller="ChronographWidgetController" ng-class="{
+	'chronograph-vivid-running': selectedChronograph && getWidgetColor() !== 'none'
 }">
 	<main class="chronograph-widget homey-text-regular" ng-class="{
-		'chronograph-vivid': colorStyle === 'deep',
+		'chronograph-vivid': runningColor !== 'none' || inactiveColor !== 'none',
 		'chronograph-layout-large': layout === 'large',
 		'chronograph-layout-compact': layout === 'compact'
 	}">
@@ -34,14 +34,14 @@
 			</button>
 
 			<form class="chronograph-start-form" ng-if="!selectedChronograph.active && (layout !== 'compact' || showStartForm)" ng-submit="start()">
-				<div class="chronograph-fields" ng-if="selectedChronograph.type !== 'Stopwatch'">
+				<div class="chronograph-fields">
 					<div class="chronograph-duration-fields">
 						<label class="visually-hidden" for="duration">{{ labels.duration }}</label>
 						<input class="form-control" id="duration" type="number" min="0.001" step="any" ng-model="startValues.time" required>
 						<label class="visually-hidden" for="duration-unit">{{ labels.unit }}</label>
 						<select class="form-select" id="duration-unit" ng-model="startValues.unit" ng-options="unit.id as unit.label for unit in units"></select>
 					</div>
-					<div class="chronograph-transition-fields" ng-if="selectedChronograph.type === 'Transition'">
+					<div class="chronograph-transition-fields">
 						<div>
 							<label class="visually-hidden" for="transition-from">{{ labels.from }}</label>
 							<input class="form-control" id="transition-from" type="number" step="any" placeholder="{{ labels.from }}" ng-model="startValues.from" required>
@@ -60,6 +60,9 @@
 					<i class="fa-solid fa-play" aria-hidden="true"></i>
 					{{ labels.start }}
 				</button>
+				<button class="chronograph-cancel-button" type="button" ng-if="layout === 'compact'" ng-click="cancelStart()" ng-disabled="busy" title="{{ labels.cancel }}" aria-label="{{ labels.cancel }}">
+					<i class="fa-solid fa-xmark" aria-hidden="true"></i>
+				</button>
 			</form>
 
 			<div class="chronograph-actions" ng-if="selectedChronograph.active">
@@ -76,6 +79,6 @@
 		<p class="chronograph-error" role="alert" ng-if="error">{{ error }}</p>
 	</main>
 	<script src="../../assets/js/angular.min.js"></script>
-	<script src="widget.js"></script>
+	<script src="../../assets/js/chronograph-widget.js"></script>
 </body>
 </html>

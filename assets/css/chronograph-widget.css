@@ -125,14 +125,59 @@ body {
 }
 
 .chronograph-vivid-running {
-	background: color-mix(in oklab, var(--chronograph-blue) 55%, #000);
+	--chronograph-current-color: var(--homey-color-blue, #2f8df6);
+	background: color-mix(in oklab, var(--chronograph-current-color) 55%, #000);
 	color: #fff;
 	--chronograph-muted: rgb(255 255 255 / 78%);
 	--chronograph-neutral: rgb(255 255 255 / 16%);
 }
 
+body.chronograph-vivid-running[data-widget-color="red"] {
+	--chronograph-current-color: var(--homey-color-red, #f25f5c);
+}
+
+body.chronograph-vivid-running[data-widget-color="orange"] {
+	--chronograph-current-color: var(--homey-color-orange, #f07a1f);
+}
+
+body.chronograph-vivid-running[data-widget-color="yellow"] {
+	--chronograph-current-color: #f5c518;
+}
+
+body.chronograph-vivid-running[data-widget-color="green"] {
+	--chronograph-current-color: var(--homey-color-green, #71d51b);
+}
+
+body.chronograph-vivid-running[data-widget-color="purple"] {
+	--chronograph-current-color: #9033fc;
+}
+
+body.chronograph-vivid-running[data-widget-color="teal"] {
+	--chronograph-current-color: #1fc7b0;
+}
+
+body.chronograph-vivid-running[data-widget-color="cyan"] {
+	--chronograph-current-color: #2cc3e8;
+}
+
+body.chronograph-vivid-running[data-widget-color="indigo"] {
+	--chronograph-current-color: #7c83f7;
+}
+
+body.chronograph-vivid-running[data-widget-color="pink"] {
+	--chronograph-current-color: #f2549e;
+}
+
+body.chronograph-vivid-running[data-widget-color="brown"] {
+	--chronograph-current-color: #b9875a;
+}
+
+body.chronograph-vivid-running[data-widget-color="grey"] {
+	--chronograph-current-color: #9a9ca6;
+}
+
 body.chronograph-vivid-running {
-	background-color: color-mix(in oklab, var(--homey-color-blue, #2f8df6) 55%, #000);
+	background-color: color-mix(in oklab, var(--chronograph-current-color) 55%, #000);
 }
 
 .chronograph-row {
@@ -178,13 +223,30 @@ body.chronograph-vivid-running {
 }
 
 .chronograph-layout-large .chronograph-tile {
-	gap: var(--homey-su-4, 16px);
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	align-items: center;
+	gap: var(--homey-su-2, 8px) var(--homey-su-4, 16px);
 }
 
 .chronograph-layout-large .chronograph-row {
-	align-items: flex-start;
-	flex-direction: column;
-	gap: var(--homey-su-2, 8px);
+	display: contents;
+}
+
+.chronograph-layout-large .chronograph-summary {
+	grid-column: 1 / -1;
+}
+
+.chronograph-layout-large .chronograph-duration {
+	grid-column: 1;
+}
+
+.chronograph-layout-large .chronograph-actions {
+	grid-column: 2;
+}
+
+.chronograph-layout-large .chronograph-start-form {
+	grid-column: 1 / -1;
 }
 
 .chronograph-layout-large .chronograph-duration {
@@ -208,6 +270,14 @@ body.chronograph-vivid-running {
 	min-height: 40px;
 	padding-right: var(--homey-su-4, 16px);
 	padding-left: var(--homey-su-4, 16px);
+}
+
+.chronograph-widget.chronograph-layout-large .form-control,
+.chronograph-widget.chronograph-layout-large .form-select {
+	min-height: 40px;
+	padding: 6px 10px;
+	font-size: 16px;
+	line-height: 24px;
 }
 
 .chronograph-layout-compact .chronograph-tile {
@@ -262,12 +332,14 @@ body.chronograph-vivid-running {
 }
 
 .chronograph-layout-compact .chronograph-action,
-.chronograph-layout-compact .chronograph-compact-start {
+.chronograph-layout-compact .chronograph-compact-start,
+.chronograph-layout-compact .chronograph-cancel-button {
 	flex-basis: 28px;
 	width: 28px;
 	height: 28px;
 	min-height: 28px;
 	padding: 0;
+	border-radius: 50%;
 }
 
 .chronograph-layout-compact .chronograph-start-form {
@@ -350,6 +422,20 @@ body.chronograph-vivid-running {
 	-webkit-tap-highlight-color: transparent;
 }
 
+.chronograph-cancel-button {
+	flex: 0 0 auto;
+	min-height: 32px;
+	padding: 0 10px;
+	border: 1px solid color-mix(in srgb, var(--chronograph-muted) 30%, var(--homey-background-color, transparent));
+	border-radius: 16px;
+	background: var(--chronograph-neutral);
+	color: var(--chronograph-text);
+	font: inherit;
+	font-size: 14px;
+	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
+}
+
 .chronograph-actions {
 	display: flex;
 	justify-content: flex-end;
@@ -374,12 +460,14 @@ body.chronograph-vivid-running {
 }
 
 .chronograph-start-button:focus-visible,
+.chronograph-cancel-button:focus-visible,
 .chronograph-action:focus-visible {
 	outline: 2px solid var(--chronograph-blue);
 	outline-offset: 2px;
 }
 
 .chronograph-start-button:disabled,
+.chronograph-cancel-button:disabled,
 .chronograph-action:disabled {
 	cursor: wait;
 	opacity: 0.6;
@@ -406,12 +494,31 @@ body.chronograph-vivid-running {
 		line-height: var(--homey-line-height-small, 20px);
 	}
 
+	.chronograph-layout-large .chronograph-duration {
+		font-size: var(--homey-font-size-large, 20px);
+		line-height: var(--homey-line-height-large, 28px);
+	}
+
+	.chronograph-layout-large .chronograph-actions {
+		gap: var(--homey-su-1, 4px);
+	}
+
+	.chronograph-layout-large .chronograph-action {
+		flex-basis: 32px;
+		width: 32px;
+		height: 32px;
+	}
+
 	.chronograph-start-form {
 		align-items: stretch;
 		flex-direction: column;
 	}
 
 	.chronograph-start-button {
+		align-self: flex-end;
+	}
+
+	.chronograph-cancel-button {
 		align-self: flex-end;
 	}
 }

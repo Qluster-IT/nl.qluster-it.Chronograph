@@ -41,6 +41,7 @@
     "seconds": "Seconds",
     "minutes": "Minutes",
     "hours": "Hours",
-    "days": "Days"
+    "days": "Days",
+    "widget_cancel": "Cancel"
   }
 }

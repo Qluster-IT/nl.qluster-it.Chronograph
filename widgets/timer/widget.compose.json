@@ -1,0 +1,162 @@
+{
+	"name": { "en": "Timer", "nl": "Timer" },
+	"settings": [
+		{
+			"id": "chronograph",
+			"type": "autocomplete",
+			"title": { "en": "Timer", "nl": "Timer" },
+			"hint": { "en": "Choose a configured timer", "nl": "Kies een ingestelde timer" }
+		},
+		{
+			"id": "layout",
+			"type": "dropdown",
+			"title": { "en": "Layout", "nl": "Indeling" },
+			"value": "normal",
+			"values": [
+				{ "id": "compact", "title": { "en": "Compact", "nl": "Compact" } },
+				{ "id": "normal", "title": { "en": "Normal", "nl": "Normaal" } },
+				{ "id": "large", "title": { "en": "Larger", "nl": "Groter" } }
+			]
+		},
+		{
+			"id": "runningColor",
+			"type": "dropdown",
+			"title": { "en": "Color when active", "nl": "Kleur bij actief" },
+			"value": "none",
+			"values": [
+				{ "id": "none", "title": { "en": "None", "nl": "Geen" } },
+				{ "id": "blue", "title": { "en": "Blue", "nl": "Blauw" } },
+				{ "id": "red", "title": { "en": "Red", "nl": "Rood" } },
+				{ "id": "orange", "title": { "en": "Orange", "nl": "Oranje" } },
+				{ "id": "yellow", "title": { "en": "Yellow", "nl": "Geel" } },
+				{ "id": "green", "title": { "en": "Green", "nl": "Groen" } },
+				{ "id": "purple", "title": { "en": "Purple", "nl": "Paars" } },
+				{ "id": "teal", "title": { "en": "Teal", "nl": "Blauwgroen" } },
+				{ "id": "cyan", "title": { "en": "Cyan", "nl": "Cyaan" } },
+				{ "id": "indigo", "title": { "en": "Indigo", "nl": "Indigo" } },
+				{ "id": "pink", "title": { "en": "Pink", "nl": "Roze" } },
+				{ "id": "brown", "title": { "en": "Brown", "nl": "Bruin" } },
+				{ "id": "grey", "title": { "en": "Grey", "nl": "Grijs" } }
+			]
+		},
+		{
+			"id": "inactiveColor",
+			"type": "dropdown",
+			"title": { "en": "Color when inactive", "nl": "Kleur bij inactief" },
+			"value": "none",
+			"values": [
+				{ "id": "none", "title": { "en": "None", "nl": "Geen" } },
+				{ "id": "blue", "title": { "en": "Blue", "nl": "Blauw" } },
+				{ "id": "red", "title": { "en": "Red", "nl": "Rood" } },
+				{ "id": "orange", "title": { "en": "Orange", "nl": "Oranje" } },
+				{ "id": "yellow", "title": { "en": "Yellow", "nl": "Geel" } },
+				{ "id": "green", "title": { "en": "Green", "nl": "Groen" } },
+				{ "id": "purple", "title": { "en": "Purple", "nl": "Paars" } },
+				{ "id": "teal", "title": { "en": "Teal", "nl": "Blauwgroen" } },
+				{ "id": "cyan", "title": { "en": "Cyan", "nl": "Cyaan" } },
+				{ "id": "indigo", "title": { "en": "Indigo", "nl": "Indigo" } },
+				{ "id": "pink", "title": { "en": "Pink", "nl": "Roze" } },
+				{ "id": "brown", "title": { "en": "Brown", "nl": "Bruin" } },
+				{ "id": "grey", "title": { "en": "Grey", "nl": "Grijs" } }
+			]
+		},
+		{
+			"id": "playColor",
+			"type": "dropdown",
+			"title": { "en": "Play button color", "nl": "Kleur van de afspeelknop" },
+			"value": "blue",
+			"values": [
+				{ "id": "blue", "title": { "en": "Blue", "nl": "Blauw" } },
+				{ "id": "red", "title": { "en": "Red", "nl": "Rood" } },
+				{ "id": "orange", "title": { "en": "Orange", "nl": "Oranje" } },
+				{ "id": "yellow", "title": { "en": "Yellow", "nl": "Geel" } },
+				{ "id": "green", "title": { "en": "Green", "nl": "Groen" } },
+				{ "id": "purple", "title": { "en": "Purple", "nl": "Paars" } },
+				{ "id": "teal", "title": { "en": "Teal", "nl": "Blauwgroen" } },
+				{ "id": "cyan", "title": { "en": "Cyan", "nl": "Cyaan" } },
+				{ "id": "indigo", "title": { "en": "Indigo", "nl": "Indigo" } },
+				{ "id": "pink", "title": { "en": "Pink", "nl": "Roze" } },
+				{ "id": "brown", "title": { "en": "Brown", "nl": "Bruin" } },
+				{ "id": "grey", "title": { "en": "Grey", "nl": "Grijs" } }
+			]
+		},
+		{
+			"id": "pauseColor",
+			"type": "dropdown",
+			"title": { "en": "Pause button color", "nl": "Kleur van de pauzeknop" },
+			"value": "blue",
+			"values": [
+				{ "id": "blue", "title": { "en": "Blue", "nl": "Blauw" } },
+				{ "id": "red", "title": { "en": "Red", "nl": "Rood" } },
+				{ "id": "orange", "title": { "en": "Orange", "nl": "Oranje" } },
+				{ "id": "yellow", "title": { "en": "Yellow", "nl": "Geel" } },
+				{ "id": "green", "title": { "en": "Green", "nl": "Groen" } },
+				{ "id": "purple", "title": { "en": "Purple", "nl": "Paars" } },
+				{ "id": "teal", "title": { "en": "Teal", "nl": "Blauwgroen" } },
+				{ "id": "cyan", "title": { "en": "Cyan", "nl": "Cyaan" } },
+				{ "id": "indigo", "title": { "en": "Indigo", "nl": "Indigo" } },
+				{ "id": "pink", "title": { "en": "Pink", "nl": "Roze" } },
+				{ "id": "brown", "title": { "en": "Brown", "nl": "Bruin" } },
+				{ "id": "grey", "title": { "en": "Grey", "nl": "Grijs" } }
+			]
+		},
+		{
+			"id": "stopColor",
+			"type": "dropdown",
+			"title": { "en": "Stop button color", "nl": "Kleur van de stopknop" },
+			"value": "red",
+			"values": [
+				{ "id": "blue", "title": { "en": "Blue", "nl": "Blauw" } },
+				{ "id": "red", "title": { "en": "Red", "nl": "Rood" } },
+				{ "id": "orange", "title": { "en": "Orange", "nl": "Oranje" } },
+				{ "id": "yellow", "title": { "en": "Yellow", "nl": "Geel" } },
+				{ "id": "green", "title": { "en": "Green", "nl": "Groen" } },
+				{ "id": "purple", "title": { "en": "Purple", "nl": "Paars" } },
+				{ "id": "teal", "title": { "en": "Teal", "nl": "Blauwgroen" } },
+				{ "id": "cyan", "title": { "en": "Cyan", "nl": "Cyaan" } },
+				{ "id": "indigo", "title": { "en": "Indigo", "nl": "Indigo" } },
+				{ "id": "pink", "title": { "en": "Pink", "nl": "Roze" } },
+				{ "id": "brown", "title": { "en": "Brown", "nl": "Bruin" } },
+				{ "id": "grey", "title": { "en": "Grey", "nl": "Grijs" } }
+			]
+		},
+		{
+			"id": "showMilliseconds",
+			"type": "checkbox",
+			"title": { "en": "Show milliseconds", "nl": "Toon milliseconden" },
+			"value": false
+		},
+		{
+			"id": "defaultDuration",
+			"type": "number",
+			"title": { "en": "Default duration", "nl": "Standaardduur" },
+			"value": null,
+			"min": 0.001
+		},
+		{
+			"id": "defaultDurationUnit",
+			"type": "dropdown",
+			"title": { "en": "Default duration unit", "nl": "Standaardeenheid voor duur" },
+			"value": "minutes",
+			"values": [
+				{ "id": "milliseconds", "title": { "en": "Milliseconds", "nl": "Milliseconden" } },
+				{ "id": "seconds", "title": { "en": "Seconds", "nl": "Seconden" } },
+				{ "id": "minutes", "title": { "en": "Minutes", "nl": "Minuten" } },
+				{ "id": "hours", "title": { "en": "Hours", "nl": "Uren" } },
+				{ "id": "days", "title": { "en": "Days", "nl": "Dagen" } }
+			]
+		},
+		{
+			"id": "preferSavedValues",
+			"type": "checkbox",
+			"title": { "en": "Prefer saved Flow values", "nl": "Geef voorkeur aan opgeslagen Flow-waarden" },
+			"value": false
+		}
+	],
+	"api": {
+		"getChronograph": { "method": "GET", "path": "/timer/:id" },
+		"putChronograph": { "method": "PUT", "path": "/timers/:id" },
+		"deleteChronograph": { "method": "DELETE", "path": "/timers/:id" },
+		"startChronograph": { "method": "POST", "path": "/timer/:id/start" }
+	}
+}

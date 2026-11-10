@@ -4,7 +4,9 @@ const assert = require('assert');
 const Chronograph = require('../lib/chronograph.js');
 const { Utils, ChronographType } = require('../lib/utils.js');
 const appApi = require('../api.js');
-const widgetApi = require('../widgets/chronograph/api.js');
+const widgetApi = require('../widgets/timer/api.js');
+const stopwatchWidgetApi = require('../widgets/stopwatch/api.js');
+const transitionWidgetApi = require('../widgets/transition/api.js');
 
 describe('Chronograph widget API', () => {
 	let chronographId;
@@ -114,6 +116,38 @@ describe('Chronograph widget API', () => {
 		assert.strictEqual(Chronograph.get(chronographId), false);
 	});
 
+	it('pauses, resumes and stops selected stopwatches and transitions', async () => {
+		const widgetTypes = [
+			{ type: ChronographType.STOPWATCH, name: 'Widget API stopwatch', api: stopwatchWidgetApi },
+			{ type: ChronographType.TRANSITION, name: 'Widget API transition', api: transitionWidgetApi }
+		];
+
+		for (const { type, name, api } of widgetTypes) {
+			const id = Utils.generateId(type, name);
+			homey.widgetChronographIds.push(id);
+			const chronograph = new Chronograph(id, name, 30, 'seconds');
+			chronograph.setData('type', type);
+			chronograph.start();
+
+			const paused = await api.putChronograph({
+				homey,
+				params: { id },
+				body: { running: false }
+			});
+			assert.strictEqual(paused.running, false);
+
+			const resumed = await api.putChronograph({
+				homey,
+				params: { id },
+				body: { running: true }
+			});
+			assert.strictEqual(resumed.running, true);
+
+			assert.strictEqual(await api.deleteChronograph({ homey, params: { id } }), true);
+			assert.strictEqual(Chronograph.get(id), false);
+		}
+	});
+
 	it('starts a timer with the duration supplied by the widget', async () => {
 		await widgetApi.startChronograph({
 			homey,
@@ -129,7 +163,7 @@ describe('Chronograph widget API', () => {
 
 	it('starts a stopwatch without a duration', async () => {
 		const stopwatchId = Utils.generateId(ChronographType.STOPWATCH, 'Widget API stopwatch');
-		await widgetApi.startChronograph({
+		await stopwatchWidgetApi.startChronograph({
 			homey,
 			params: { id: stopwatchId },
 			body: {}
@@ -143,12 +177,12 @@ describe('Chronograph widget API', () => {
 
 	it('starts a transition with widget duration and configured transition values', async () => {
 		const transitionId = Utils.generateId(ChronographType.TRANSITION, 'Widget API transition');
-		const result = await widgetApi.getChronograph({ homey, params: { id: transitionId } });
+		const result = await transitionWidgetApi.getChronograph({ homey, params: { id: transitionId } });
 		assert.strictEqual(result.defaults.from, 10);
 		assert.strictEqual(result.defaults.to, 90);
 		assert.strictEqual(result.defaults.steps, 12);
 
-		await widgetApi.startChronograph({
+		await transitionWidgetApi.startChronograph({
 			homey,
 			params: { id: transitionId },
 			body: { time: 2, unit: 'seconds', from: 0, to: 50, steps: 4 }
@@ -176,6 +210,18 @@ describe('Chronograph widget API', () => {
 			homey,
 			params: { id: 'missing' },
 			body: { running: false }
+		}), /Chronograph not found in app configuration/);
+	});
+
+	it('restricts each widget API to its own chronograph type', async () => {
+		await assert.rejects(transitionWidgetApi.getChronograph({
+			homey,
+			params: { id: chronographId }
+		}), /Chronograph not found in app configuration/);
+		await assert.rejects(stopwatchWidgetApi.startChronograph({
+			homey,
+			params: { id: chronographId },
+			body: {}
 		}), /Chronograph not found in app configuration/);
 	});
 

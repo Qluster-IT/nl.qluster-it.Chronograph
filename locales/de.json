@@ -24,6 +24,7 @@
     "resume": "Fortsetzen",
     "roundOfDurationsFlowcards": "Zahlenrunde aus den Flussdiagrammen „Get the Duration of [x]“.",
     "save": "Speichern",
-    "saved": "Gespeichert."
+    "saved": "Gespeichert.",
+    "widget_cancel": "Abbrechen"
   }
 }
