@@ -83,6 +83,7 @@ class Application extends Homey.App {
 			this._initializeStopwatchCards();
 			this._initializeTransitionCards();
 			this._initializeGenericCards();
+			this._registerChronographWidgetAutocomplete();
 
 
 
@@ -119,6 +120,41 @@ class Application extends Homey.App {
 		} catch (error) {
 			this.homey.error('app init', error)
 		}
+	}
+
+	_registerChronographWidgetAutocomplete() {
+		const widget = this.homey.dashboards.getWidget('chronograph');
+		widget.registerSettingAutocompleteListener('chronograph', async (query) => {
+			const chronographs = this.chronographs || {};
+			const search = (query || '').toLowerCase();
+			const options = [];
+
+			Object.keys(chronographs).forEach(type => {
+				const chronographType = ChronographType[type.toUpperCase()];
+				if (!chronographType) return;
+
+				(chronographs[type] || []).forEach(chronograph => {
+					const name = typeof chronograph === 'string' ? chronograph : chronograph.name;
+					if (!name) return;
+
+					const label = type.charAt(0).toUpperCase() + type.slice(1) + ': ' + name;
+					if (search && !label.toLowerCase().includes(search)) return;
+
+					options.push({
+						name: label,
+						id: Utils.generateId(chronographType, name),
+						type,
+						chronographName: name,
+						data: {
+							type: chronographType,
+							name
+						}
+					});
+				});
+			});
+
+			return options;
+		});
 	}
 
 	setRoundOfDurationsFlowcards() {

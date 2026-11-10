@@ -3,11 +3,159 @@
 		"en": "Chronograph",
 		"nl": "Chronograaf"
 	},
-	"height": 340,
+	"settings": [
+		{
+			"id": "chronograph",
+			"type": "autocomplete",
+			"title": {
+				"en": "Chronograph",
+				"nl": "Chronograaf"
+			},
+			"hint": {
+				"en": "Choose a configured timer, stopwatch or transition",
+				"nl": "Kies een ingestelde timer, stopwatch of transitie"
+			}
+		},
+		{
+			"id": "colorStyle",
+			"type": "dropdown",
+			"title": {
+				"en": "Color style",
+				"nl": "Kleurstijl"
+			},
+			"value": "soft",
+			"values": [
+				{
+					"id": "soft",
+					"title": {
+						"en": "Muted",
+						"nl": "Gedempt"
+					}
+				},
+				{
+					"id": "deep",
+					"title": {
+						"en": "Vivid",
+						"nl": "Levendig"
+					}
+				}
+			]
+		},
+		{
+			"id": "layout",
+			"type": "dropdown",
+			"title": {
+				"en": "Layout",
+				"nl": "Indeling"
+			},
+			"value": "normal",
+			"values": [
+				{
+					"id": "normal",
+					"title": {
+						"en": "Normal",
+						"nl": "Normaal"
+					}
+				},
+				{
+					"id": "compact",
+					"title": {
+						"en": "Compact",
+						"nl": "Compact"
+					}
+				},
+				{
+					"id": "large",
+					"title": {
+						"en": "Larger",
+						"nl": "Groter"
+					}
+				}
+			]
+		},
+		{
+			"id": "playColor",
+			"type": "dropdown",
+			"title": {
+				"en": "Play button color",
+				"nl": "Kleur van de afspeelknop"
+			},
+			"value": "blue",
+			"values": [
+				{ "id": "blue", "title": { "en": "Blue", "nl": "Blauw" } },
+				{ "id": "red", "title": { "en": "Red", "nl": "Rood" } },
+				{ "id": "orange", "title": { "en": "Orange", "nl": "Oranje" } },
+				{ "id": "yellow", "title": { "en": "Yellow", "nl": "Geel" } },
+				{ "id": "green", "title": { "en": "Green", "nl": "Groen" } },
+				{ "id": "purple", "title": { "en": "Purple", "nl": "Paars" } },
+				{ "id": "teal", "title": { "en": "Teal", "nl": "Blauwgroen" } },
+				{ "id": "cyan", "title": { "en": "Cyan", "nl": "Cyaan" } },
+				{ "id": "indigo", "title": { "en": "Indigo", "nl": "Indigo" } },
+				{ "id": "pink", "title": { "en": "Pink", "nl": "Roze" } },
+				{ "id": "brown", "title": { "en": "Brown", "nl": "Bruin" } },
+				{ "id": "grey", "title": { "en": "Grey", "nl": "Grijs" } }
+			]
+		},
+		{
+			"id": "pauseColor",
+			"type": "dropdown",
+			"title": {
+				"en": "Pause button color",
+				"nl": "Kleur van de pauzeknop"
+			},
+			"value": "blue",
+			"values": [
+				{ "id": "blue", "title": { "en": "Blue", "nl": "Blauw" } },
+				{ "id": "red", "title": { "en": "Red", "nl": "Rood" } },
+				{ "id": "orange", "title": { "en": "Orange", "nl": "Oranje" } },
+				{ "id": "yellow", "title": { "en": "Yellow", "nl": "Geel" } },
+				{ "id": "green", "title": { "en": "Green", "nl": "Groen" } },
+				{ "id": "purple", "title": { "en": "Purple", "nl": "Paars" } },
+				{ "id": "teal", "title": { "en": "Teal", "nl": "Blauwgroen" } },
+				{ "id": "cyan", "title": { "en": "Cyan", "nl": "Cyaan" } },
+				{ "id": "indigo", "title": { "en": "Indigo", "nl": "Indigo" } },
+				{ "id": "pink", "title": { "en": "Pink", "nl": "Roze" } },
+				{ "id": "brown", "title": { "en": "Brown", "nl": "Bruin" } },
+				{ "id": "grey", "title": { "en": "Grey", "nl": "Grijs" } }
+			]
+		},
+		{
+			"id": "stopColor",
+			"type": "dropdown",
+			"title": {
+				"en": "Stop button color",
+				"nl": "Kleur van de stopknop"
+			},
+			"value": "red",
+			"values": [
+				{ "id": "blue", "title": { "en": "Blue", "nl": "Blauw" } },
+				{ "id": "red", "title": { "en": "Red", "nl": "Rood" } },
+				{ "id": "orange", "title": { "en": "Orange", "nl": "Oranje" } },
+				{ "id": "yellow", "title": { "en": "Yellow", "nl": "Geel" } },
+				{ "id": "green", "title": { "en": "Green", "nl": "Groen" } },
+				{ "id": "purple", "title": { "en": "Purple", "nl": "Paars" } },
+				{ "id": "teal", "title": { "en": "Teal", "nl": "Blauwgroen" } },
+				{ "id": "cyan", "title": { "en": "Cyan", "nl": "Cyaan" } },
+				{ "id": "indigo", "title": { "en": "Indigo", "nl": "Indigo" } },
+				{ "id": "pink", "title": { "en": "Pink", "nl": "Roze" } },
+				{ "id": "brown", "title": { "en": "Brown", "nl": "Bruin" } },
+				{ "id": "grey", "title": { "en": "Grey", "nl": "Grijs" } }
+			]
+		},
+		{
+			"id": "showMilliseconds",
+			"type": "checkbox",
+			"title": {
+				"en": "Show milliseconds",
+				"nl": "Toon milliseconden"
+			},
+			"value": false
+		}
+	],
 	"api": {
-		"getChronographs": {
+		"getChronograph": {
 			"method": "GET",
-			"path": "/chronographs"
+			"path": "/chronograph/:id"
 		},
 		"putChronograph": {
 			"method": "PUT",
@@ -16,6 +164,10 @@
 		"deleteChronograph": {
 			"method": "DELETE",
 			"path": "/chronographs/:id"
+		},
+		"startChronograph": {
+			"method": "POST",
+			"path": "/chronograph/:id/start"
 		}
 	}
 }

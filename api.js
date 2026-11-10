@@ -145,16 +145,13 @@ module.exports = {
 	},
 	
 	async getAllChronographs({homey}) {
-		let chronos = homey.settings.get('chronographs');
-		for (const key in chronos) {
-			if (Object.hasOwnProperty.call(chronos, key)) {
-				const type = chronos[key];
-				for (let i = 0; i < type.length; i++) {
-					type[i] = type[i].name;
-					
-				}
-			}
+		const chronographs = homey.app.chronographs || {};
+		const result = {};
+		for (const type of Object.keys(chronographs)) {
+			result[type] = (chronographs[type] || []).map(chronograph =>
+				typeof chronograph === 'string' ? chronograph : chronograph.name
+			);
 		}
-		return chronos;
+		return result;
 	},
 };

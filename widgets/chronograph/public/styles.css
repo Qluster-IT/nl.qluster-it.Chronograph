@@ -1,16 +1,417 @@
+.chronograph-widget [data-button-color="blue"] {
+	--chronograph-button-muted: var(--homey-color-blue-600, #0068c8);
+	--chronograph-button-muted-foreground: #fff;
+	--chronograph-button-vivid: var(--homey-color-blue, #2f8df6);
+	--chronograph-button-vivid-foreground: #fff;
+}
+
+.chronograph-widget {
+	--chronograph-text: var(--homey-text-color, #202127);
+	--chronograph-muted: var(--homey-text-color-light, #777982);
+	--chronograph-blue: var(--homey-color-blue, #2f8df6);
+	--chronograph-red: var(--homey-color-red, #f25f5c);
+	--chronograph-neutral: color-mix(in srgb, var(--chronograph-text) 8%, var(--homey-background-color, transparent));
+	min-width: 220px;
+	color: var(--chronograph-text);
+	container: chronograph / inline-size;
+}
+
+.chronograph-widget [data-button-color="red"] {
+	--chronograph-button-muted: var(--homey-color-red-600, #ad1617);
+	--chronograph-button-vivid: var(--homey-color-red, #f25f5c);
+}
+
+.chronograph-widget [data-button-color="orange"] {
+	--chronograph-button-muted: #a85700;
+	--chronograph-button-vivid: var(--homey-color-orange, #f07a1f);
+}
+
+.chronograph-widget [data-button-color="yellow"] {
+	--chronograph-button-muted: #f5c518;
+	--chronograph-button-vivid: #f5c518;
+	--chronograph-button-muted-foreground: #1a1b21;
+	--chronograph-button-vivid-foreground: #1a1b21;
+}
+
+.chronograph-widget [data-button-color="green"] {
+	--chronograph-button-muted: var(--homey-color-green-700, #267700);
+	--chronograph-button-vivid: var(--homey-color-green, #71d51b);
+	--chronograph-button-vivid-foreground: #1a1b21;
+}
+
+.chronograph-widget [data-button-color="purple"] {
+	--chronograph-button-muted: #7500fb;
+	--chronograph-button-vivid: #9033fc;
+}
+
+.chronograph-widget [data-button-color="teal"] {
+	--chronograph-button-muted: #0b7468;
+	--chronograph-button-vivid: #1fc7b0;
+	--chronograph-button-vivid-foreground: #1a1b21;
+}
+
+.chronograph-widget [data-button-color="cyan"] {
+	--chronograph-button-muted: #0a6e8c;
+	--chronograph-button-vivid: #2cc3e8;
+	--chronograph-button-vivid-foreground: #1a1b21;
+}
+
+.chronograph-widget [data-button-color="indigo"] {
+	--chronograph-button-muted: #3f3bc4;
+	--chronograph-button-vivid: #7c83f7;
+	--chronograph-button-vivid-foreground: #1a1b21;
+}
+
+.chronograph-widget [data-button-color="pink"] {
+	--chronograph-button-muted: #b8155f;
+	--chronograph-button-vivid: #f2549e;
+	--chronograph-button-vivid-foreground: #1a1b21;
+}
+
+.chronograph-widget [data-button-color="brown"] {
+	--chronograph-button-muted: #7a4b24;
+	--chronograph-button-vivid: #b9875a;
+	--chronograph-button-vivid-foreground: #1a1b21;
+}
+
+.chronograph-widget [data-button-color="grey"] {
+	--chronograph-button-muted: #53555f;
+	--chronograph-button-vivid: #9a9ca6;
+	--chronograph-button-vivid-foreground: #1a1b21;
+}
+
+.chronograph-widget.chronograph-vivid [data-button-color] {
+	--chronograph-button-color: var(--chronograph-button-vivid);
+	--chronograph-button-foreground: var(--chronograph-button-vivid-foreground);
+}
+
+.chronograph-widget:not(.chronograph-vivid) [data-button-color] {
+	--chronograph-button-color: var(--chronograph-button-muted);
+	--chronograph-button-foreground: var(--chronograph-button-muted-foreground);
+}
+
+.homey-dark-mode .chronograph-widget,
+.chronograph-widget.homey-dark-mode {
+	--chronograph-neutral: #2e3039;
+}
+
 html,
 body {
 	min-width: 220px;
-	background: transparent;
+	margin: 0;
 }
 
-.chronograph-card {
-	border-radius: 0.75rem;
+body {
+	overflow: hidden;
+	background-color: var(--homey-background-color);
+	color: var(--homey-text-color);
+}
+
+.chronograph-widget,
+.chronograph-widget * {
+	box-sizing: border-box;
+}
+
+.chronograph-tile {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	min-width: 0;
+}
+
+.chronograph-tile-running .chronograph-duration {
+	color: var(--chronograph-blue);
+}
+
+.chronograph-vivid-running {
+	background: color-mix(in oklab, var(--chronograph-blue) 55%, #000);
+	color: #fff;
+	--chronograph-muted: rgb(255 255 255 / 78%);
+	--chronograph-neutral: rgb(255 255 255 / 16%);
+}
+
+body.chronograph-vivid-running {
+	background-color: color-mix(in oklab, var(--homey-color-blue, #2f8df6) 55%, #000);
+}
+
+.chronograph-row {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	min-width: 0;
+}
+
+.chronograph-summary {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.chronograph-name {
+	overflow: hidden;
+	margin: 0;
+	font-size: var(--homey-font-size-small, 14px);
+	font-weight: var(--homey-font-weight-bold, 700);
+	line-height: var(--homey-line-height-small, 20px);
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.chronograph-status {
+	overflow: hidden;
+	margin: 0;
+	color: var(--chronograph-muted);
+	font-size: 12px;
+	line-height: 16px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .chronograph-duration {
-	font-size: clamp(1.75rem, 8vw, 2.5rem);
+	flex: 0 0 auto;
+	margin: 0;
+	font-size: var(--homey-font-size-large, 20px);
 	font-variant-numeric: tabular-nums;
-	font-weight: 600;
-	line-height: 1.15;
+	font-weight: var(--homey-font-weight-medium, 500);
+	line-height: var(--homey-line-height-large, 28px);
+	white-space: nowrap;
+}
+
+.chronograph-layout-large .chronograph-tile {
+	gap: var(--homey-su-4, 16px);
+}
+
+.chronograph-layout-large .chronograph-row {
+	align-items: flex-start;
+	flex-direction: column;
+	gap: var(--homey-su-2, 8px);
+}
+
+.chronograph-layout-large .chronograph-duration {
+	font-size: var(--homey-font-size-xxlarge, 32px);
+	font-weight: var(--homey-font-weight-bold, 700);
+	line-height: var(--homey-line-height-xxlarge, 40px);
+}
+
+.chronograph-layout-large .chronograph-actions {
+	gap: var(--homey-su-3, 12px);
+}
+
+.chronograph-layout-large .chronograph-action {
+	flex-basis: 40px;
+	width: 40px;
+	height: 40px;
+	font-size: 15px;
+}
+
+.chronograph-layout-large .chronograph-start-button {
+	min-height: 40px;
+	padding-right: var(--homey-su-4, 16px);
+	padding-left: var(--homey-su-4, 16px);
+}
+
+.chronograph-layout-compact .chronograph-tile {
+	align-items: center;
+	flex-direction: row;
+	gap: var(--homey-su-2, 8px);
+}
+
+.chronograph-layout-compact .chronograph-row {
+	flex: 1 1 auto;
+	gap: var(--homey-su-2, 8px);
+	min-width: 0;
+}
+
+.chronograph-layout-compact .chronograph-summary {
+	display: flex;
+	align-items: baseline;
+	gap: var(--homey-su-2, 8px);
+}
+
+.chronograph-layout-compact .chronograph-name {
+	flex: 0 1 auto;
+}
+
+.chronograph-layout-compact .chronograph-status {
+	flex: 0 0 auto;
+}
+
+.chronograph-layout-compact .chronograph-duration {
+	font-size: var(--homey-font-size-small, 14px);
+	font-weight: var(--homey-font-weight-medium, 500);
+	line-height: var(--homey-line-height-small, 20px);
+}
+
+.chronograph-layout-compact .chronograph-tile-starting {
+	align-items: stretch;
+	flex-direction: column;
+}
+
+.chronograph-layout-compact .chronograph-tile-starting .chronograph-row {
+	flex: 0 0 auto;
+	width: 100%;
+}
+
+.chronograph-layout-compact .chronograph-tile-starting .chronograph-start-form {
+	width: 100%;
+}
+
+.chronograph-layout-compact .chronograph-actions {
+	flex: 0 0 auto;
+	gap: var(--homey-su-1, 4px);
+}
+
+.chronograph-layout-compact .chronograph-action,
+.chronograph-layout-compact .chronograph-compact-start {
+	flex-basis: 28px;
+	width: 28px;
+	height: 28px;
+	min-height: 28px;
+	padding: 0;
+}
+
+.chronograph-layout-compact .chronograph-start-form {
+	align-items: center;
+	width: 100%;
+}
+
+.chronograph-layout-compact .chronograph-start-form .chronograph-fields {
+	flex: 1 1 auto;
+}
+
+.chronograph-start-form {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-width: 0;
+}
+
+.chronograph-fields {
+	flex: 1 1 auto;
+	display: grid;
+	gap: 8px;
+	min-width: 0;
+}
+
+.chronograph-duration-fields {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	gap: 6px;
+}
+
+.chronograph-transition-fields {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 6px;
+}
+
+.chronograph-widget .form-control,
+.chronograph-widget .form-select {
+	min-width: 0;
+	min-height: 32px;
+	padding: 4px 8px;
+	border: 1px solid color-mix(in srgb, var(--chronograph-muted) 30%, var(--homey-background-color, transparent));
+	border-radius: 8px;
+	background-color: var(--homey-background-color, transparent);
+	color: var(--chronograph-text);
+	font: inherit;
+	font-size: 14px;
+	line-height: 20px;
+}
+
+.chronograph-widget .form-control::placeholder {
+	color: var(--chronograph-muted);
+	opacity: 1;
+}
+
+.chronograph-widget .form-control:focus,
+.chronograph-widget .form-select:focus {
+	border-color: var(--chronograph-blue);
+	box-shadow: 0 0 0 2px color-mix(in srgb, var(--chronograph-blue) 30%, transparent);
+	outline: 0;
+}
+
+.chronograph-start-button {
+	flex: 0 0 auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	min-height: 32px;
+	padding: 0 10px;
+	border: 0;
+	border-radius: 16px;
+	background: var(--chronograph-button-color);
+	color: var(--chronograph-button-foreground);
+	font: inherit;
+	font-size: 14px;
+	font-weight: var(--homey-font-weight-medium, 500);
+	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
+}
+
+.chronograph-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+}
+
+.chronograph-action {
+	display: flex;
+	flex: 0 0 32px;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	background: var(--chronograph-button-color);
+	color: var(--chronograph-button-foreground);
+	font-size: 13px;
+	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
+}
+
+.chronograph-start-button:focus-visible,
+.chronograph-action:focus-visible {
+	outline: 2px solid var(--chronograph-blue);
+	outline-offset: 2px;
+}
+
+.chronograph-start-button:disabled,
+.chronograph-action:disabled {
+	cursor: wait;
+	opacity: 0.6;
+}
+
+.chronograph-message,
+.chronograph-error {
+	margin: 0;
+	font-size: var(--homey-font-size-small, 14px);
+	line-height: var(--homey-line-height-small, 20px);
+}
+
+.chronograph-message {
+	color: var(--chronograph-muted);
+}
+
+.chronograph-error {
+	color: var(--chronograph-red);
+}
+
+@container chronograph (max-width: 299px) {
+	.chronograph-duration {
+		font-size: var(--homey-font-size-small, 14px);
+		line-height: var(--homey-line-height-small, 20px);
+	}
+
+	.chronograph-start-form {
+		align-items: stretch;
+		flex-direction: column;
+	}
+
+	.chronograph-start-button {
+		align-self: flex-end;
+	}
 }

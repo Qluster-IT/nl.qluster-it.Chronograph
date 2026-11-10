@@ -9,6 +9,19 @@
 	"stop": "Stop",
 	"pause": "Pause",
 	"resume": "Resume",
-	"widget_type": "Chronograph type",
-	"widget_chronograph": "Chronograph"
+	"widget_select_chronograph": "Select a Chronograph in the widget settings.",
+	"widget_running": "Running",
+	"widget_paused": "Paused",
+	"widget_not_running": "Not running",
+	"widget_duration": "Duration",
+	"widget_unit": "Duration unit",
+	"widget_from": "From",
+	"widget_to": "To",
+	"widget_steps": "Steps",
+	"widget_start": "Start",
+	"milliseconds": "Milliseconds",
+	"seconds": "Seconds",
+	"minutes": "Minutes",
+	"hours": "Hours",
+	"days": "Days"
 }

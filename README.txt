@@ -10,7 +10,7 @@ FEATURES
 * Support for random or computed durations or adjustments using simple math expressions.
 * All timers, stopwatches and transitions are persistent across Homey restarts.
 * Target multiple timers, stopwatches and transitions at once using wildcards in supported cards.
-* Add a Chronograph dashboard widget to select, pause, resume or stop an active timer, stopwatch or transition.
+* Use the Chronograph dashboard widget to choose a timer, stopwatch or transition in its settings and pause, resume or stop it.
 * Use Math Expressions inside flowcards.
 * Use HomeyScript to trigger or set timers, stopwatches and transitions.
 

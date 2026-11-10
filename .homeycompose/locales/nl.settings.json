@@ -9,6 +9,19 @@
 	"stop": "Stoppen",
 	"pause": "Pauzeren",
 	"resume": "Hervatten",
-	"widget_type": "Type chronograaf",
-	"widget_chronograph": "Chronograaf"
+	"widget_select_chronograph": "Selecteer een chronograaf in de widgetinstellingen.",
+	"widget_running": "Actief",
+	"widget_paused": "Gepauzeerd",
+	"widget_not_running": "Niet actief",
+	"widget_duration": "Duur",
+	"widget_unit": "Tijdseenheid",
+	"widget_from": "Van",
+	"widget_to": "Naar",
+	"widget_steps": "Stappen",
+	"widget_start": "Starten",
+	"milliseconds": "Milliseconden",
+	"seconds": "Seconden",
+	"minutes": "Minuten",
+	"hours": "Uren",
+	"days": "Dagen"
 }

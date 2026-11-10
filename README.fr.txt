@@ -10,7 +10,7 @@ CARACTÉRISTIQUES
 * Prise en charge des durées ou ajustements aléatoires ou calculés à l'aide de simples expressions mathématiques.
 * Toutes les minuteries, chronomètres et transitions sont persistants lors des redémarrages de Homey.
 * Ciblez plusieurs minuteries, chronomètres et transitions à la fois en utilisant des jokers dans les cartes prises en charge.
-* Le widget Chronograph du tableau de bord permet de sélectionner, mettre en pause, reprendre ou arrêter un minuteur, un chronomètre ou une transition actifs.
+* Le widget Chronograph du tableau de bord permet de choisir dans ses paramètres un minuteur, un chronomètre ou une transition, puis de le mettre en pause, de le reprendre ou de l'arrêter.
 * Utilisez des expressions mathématiques à l'intérieur des cartes de flux.
 * Utilisez HomeyScript pour déclencher ou régler des minuteries, chronomètres et transitions.
 

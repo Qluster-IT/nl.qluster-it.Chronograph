@@ -7,50 +7,82 @@ function onHomeyReady(Homey) {
 		function ($scope, $interval) {
 			var refreshInterval;
 			var durationInterval;
+			var resizeObserver;
 			var destroyed = false;
+			var widgetReady = false;
+			var startDefaultsLoaded = false;
+			var lastHeight = 0;
+			var settings = Homey.getSettings() || {};
+			var selectedSetting = settings.chronograph;
+			var selectedId = selectedSetting && (selectedSetting.id || (selectedSetting.data && selectedSetting.data.id));
+			$scope.colorStyle = settings.colorStyle === 'deep' ? 'deep' : 'soft';
+			$scope.layout = settings.layout === 'compact' || settings.layout === 'large' ? settings.layout : 'normal';
+			var buttonColors = [
+				'blue', 'red', 'orange', 'yellow', 'green', 'purple',
+				'teal', 'cyan', 'indigo', 'pink', 'brown', 'grey'
+			];
+			$scope.playColor = buttonColors.indexOf(settings.playColor) !== -1 ? settings.playColor : 'blue';
+			$scope.pauseColor = buttonColors.indexOf(settings.pauseColor) !== -1 ? settings.pauseColor : 'blue';
+			$scope.stopColor = buttonColors.indexOf(settings.stopColor) !== -1 ? settings.stopColor : 'red';
+			$scope.showMilliseconds = settings.showMilliseconds === true;
 
 			$scope.labels = {
-				type: Homey.__('settings.widget_type'),
-				timer: Homey.__('settings.timers'),
-				stopwatch: Homey.__('settings.stopwatches'),
-				transition: Homey.__('settings.transitions'),
-				chronograph: Homey.__('settings.widget_chronograph'),
+				selectChronograph: Homey.__('settings.widget_select_chronograph'),
+				running: Homey.__('settings.widget_running'),
+				paused: Homey.__('settings.widget_paused'),
+				notRunning: Homey.__('settings.widget_not_running'),
+				duration: Homey.__('settings.widget_duration'),
+				unit: Homey.__('settings.widget_unit'),
+				from: Homey.__('settings.widget_from'),
+				to: Homey.__('settings.widget_to'),
+				steps: Homey.__('settings.widget_steps'),
+				start: Homey.__('settings.widget_start'),
 				pause: Homey.__('settings.pause'),
 				resume: Homey.__('settings.resume'),
 				stop: Homey.__('settings.stop')
 			};
-			$scope.selectedType = 'Timer';
-			$scope.selectedId = null;
-			$scope.chronographs = [];
-			$scope.availableChronographs = [];
+			$scope.units = [
+				{ id: 'milliseconds', label: Homey.__('settings.milliseconds') },
+				{ id: 'seconds', label: Homey.__('settings.seconds') },
+				{ id: 'minutes', label: Homey.__('settings.minutes') },
+				{ id: 'hours', label: Homey.__('settings.hours') },
+				{ id: 'days', label: Homey.__('settings.days') }
+			];
+			$scope.startValues = { unit: 'minutes' };
 			$scope.selectedChronograph = null;
+			$scope.showStartForm = false;
 			$scope.loading = true;
 			$scope.busy = false;
 			$scope.error = null;
 			$scope.clock = Date.now();
 
-			function updateSelection() {
-				$scope.availableChronographs = $scope.chronographs.filter(function (chronograph) {
-					return chronograph.type === $scope.selectedType;
-				});
-
-				var selected = $scope.availableChronographs.find(function (chronograph) {
-					return String(chronograph.id) === String($scope.selectedId);
-				});
-
-				if (!selected) {
-					selected = $scope.availableChronographs[0] || null;
-					$scope.selectedId = selected ? selected.id : null;
-				}
-				$scope.selectedChronograph = selected;
+			function markReady() {
+				if (widgetReady) return;
+				widgetReady = true;
+				Homey.ready();
+				scheduleHeightUpdate();
 			}
 
 			function refresh() {
-				return Homey.api('GET', '/chronographs', {})
-					.then(function (chronographs) {
+				if (!selectedId) {
+					$scope.loading = false;
+					markReady();
+					return Promise.resolve();
+				}
+
+				return Homey.api('GET', '/chronograph/' + encodeURIComponent(selectedId), {})
+					.then(function (chronograph) {
 						if (destroyed) return;
 						$scope.$applyAsync(function () {
-							applyChronographUpdate(chronographs);
+							$scope.selectedChronograph = applyChronographUpdate(chronograph);
+							if (!startDefaultsLoaded) {
+								$scope.startValues.time = chronograph.defaults.time || 1;
+								$scope.startValues.unit = chronograph.defaults.unit || 'minutes';
+								$scope.startValues.from = chronograph.defaults.from;
+								$scope.startValues.to = chronograph.defaults.to;
+								$scope.startValues.steps = chronograph.defaults.steps || 20;
+								startDefaultsLoaded = true;
+							}
 							$scope.loading = false;
 							$scope.error = null;
 						});
@@ -63,20 +95,6 @@ function onHomeyReady(Homey) {
 						});
 					});
 			}
-
-			$scope.selectType = function () {
-				updateSelection();
-			};
-
-			$scope.selectChronograph = function () {
-				updateSelection();
-			};
-
-			$scope.emptyMessage = function () {
-				if ($scope.selectedType === 'Timer') return Homey.__('settings.no_active_timers');
-				if ($scope.selectedType === 'Stopwatch') return Homey.__('settings.no_active_stopwatches');
-				return Homey.__('settings.no_active_transitions');
-			};
 
 			$scope.formatDuration = function (chronograph) {
 				var elapsed = chronograph.duration;
@@ -93,9 +111,12 @@ function onHomeyReady(Homey) {
 				var hours = Math.floor((totalSeconds % 86400) / 3600);
 				var minutes = Math.floor((totalSeconds % 3600) / 60);
 				var seconds = (duration % 60000) / 1000;
+				var fractionalSeconds = $scope.showMilliseconds
+					? seconds.toFixed(3).padStart(6, '0')
+					: Math.floor(seconds).toString().padStart(2, '0');
 				var result = (days ? hours : Math.floor(totalSeconds / 3600)).toString().padStart(2, '0')
 					+ ':' + minutes.toString().padStart(2, '0')
-					+ ':' + seconds.toFixed(2).padStart(5, '0');
+					+ ':' + fractionalSeconds;
 
 				return days ? days + Homey.__('settings.days_abbreviation') + ' ' + result : result;
 			};
@@ -104,31 +125,73 @@ function onHomeyReady(Homey) {
 				$scope.clock = Date.now();
 			}
 
-			function applyChronographUpdate(chronographs) {
-				var updatedAt = Date.now();
-				chronographs.forEach(function (chronograph) {
-					chronograph.updatedAt = updatedAt;
+			function scheduleHeightUpdate() {
+				if (!widgetReady || !window.requestAnimationFrame || !Homey.setHeight) return;
+
+				window.requestAnimationFrame(function () {
+					if (destroyed) return;
+					var content = document.querySelector('main');
+					if (!content) return;
+
+					var bodyStyle = window.getComputedStyle(document.body);
+					var verticalPadding = parseFloat(bodyStyle.paddingTop) + parseFloat(bodyStyle.paddingBottom);
+					var height = Math.ceil(content.getBoundingClientRect().height + verticalPadding);
+					if (!height || height === lastHeight) return;
+
+					lastHeight = height;
+					Homey.setHeight(height).catch(function (error) {
+						console.error('Unable to resize Chronograph widget', error);
+					});
 				});
-				$scope.chronographs = chronographs;
-				updateSelection();
 			}
 
-			$scope.toggle = function () {
-				var chronograph = $scope.selectedChronograph;
-				if (!chronograph || $scope.busy) return;
+			function applyChronographUpdate(chronograph) {
+				if (chronograph.running) chronograph.updatedAt = Date.now();
+				return chronograph;
+			}
+
+			$scope.start = function () {
+				if (!$scope.selectedChronograph || $scope.selectedChronograph.active || $scope.busy) return;
 
 				$scope.busy = true;
 				$scope.error = null;
-				Homey.api('PUT', '/chronographs/' + encodeURIComponent(chronograph.id), {
-					running: !chronograph.running
-				}).then(function (updated) {
-					updated.updatedAt = Date.now();
-					$scope.$applyAsync(function () {
-						$scope.chronographs = $scope.chronographs.map(function (item) {
-							return String(item.id) === String(updated.id) ? updated : item;
+				Homey.api('POST', '/chronograph/' + encodeURIComponent(selectedId) + '/start', $scope.startValues)
+					.then(function () {
+						return refresh();
+					})
+					.then(function () {
+						$scope.$applyAsync(function () {
+							$scope.busy = false;
 						});
+					})
+					.catch(function (error) {
+						$scope.$applyAsync(function () {
+							$scope.busy = false;
+							$scope.error = error.message || String(error);
+						});
+					});
+			};
+
+			$scope.beginStart = function () {
+				if (!$scope.selectedChronograph || $scope.selectedChronograph.active || $scope.busy) return;
+				if ($scope.selectedChronograph.type === 'Stopwatch') {
+					$scope.start();
+					return;
+				}
+				$scope.showStartForm = true;
+			};
+
+			$scope.toggle = function () {
+				if (!$scope.selectedChronograph || !$scope.selectedChronograph.active || $scope.busy) return;
+
+				$scope.busy = true;
+				$scope.error = null;
+				Homey.api('PUT', '/chronographs/' + encodeURIComponent(selectedId), {
+					running: !$scope.selectedChronograph.running
+				}).then(function (updated) {
+					$scope.$applyAsync(function () {
+						$scope.selectedChronograph = applyChronographUpdate(Object.assign({ active: true }, updated));
 						$scope.busy = false;
-						updateSelection();
 					});
 				}).catch(function (error) {
 					$scope.$applyAsync(function () {
@@ -139,18 +202,16 @@ function onHomeyReady(Homey) {
 			};
 
 			$scope.stop = function () {
-				var chronograph = $scope.selectedChronograph;
-				if (!chronograph || $scope.busy) return;
+				if (!$scope.selectedChronograph || !$scope.selectedChronograph.active || $scope.busy) return;
 
 				$scope.busy = true;
 				$scope.error = null;
-				Homey.api('DELETE', '/chronographs/' + encodeURIComponent(chronograph.id)).then(function () {
+				Homey.api('DELETE', '/chronographs/' + encodeURIComponent(selectedId)).then(function () {
 					$scope.$applyAsync(function () {
-						$scope.chronographs = $scope.chronographs.filter(function (item) {
-							return String(item.id) !== String(chronograph.id);
-						});
+						$scope.selectedChronograph.active = false;
+						$scope.selectedChronograph.running = false;
+						$scope.showStartForm = false;
 						$scope.busy = false;
-						updateSelection();
 					});
 				}).catch(function (error) {
 					$scope.$applyAsync(function () {
@@ -164,13 +225,20 @@ function onHomeyReady(Homey) {
 				destroyed = true;
 				$interval.cancel(refreshInterval);
 				$interval.cancel(durationInterval);
+				if (resizeObserver) resizeObserver.disconnect();
 			});
+
+			if (window.ResizeObserver) {
+				resizeObserver = new window.ResizeObserver(scheduleHeightUpdate);
+				resizeObserver.observe(document.querySelector('main'));
+			}
 
 			Homey.on('chronograph_event_multi', refresh);
 			refresh().then(function () {
+				if (!selectedId) return;
 				refreshInterval = $interval(refresh, 5000);
 				durationInterval = $interval(updateDurations, 250);
-				Homey.ready();
+				markReady();
 			});
 		}
 	]);
