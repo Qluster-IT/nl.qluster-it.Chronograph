@@ -10,7 +10,6 @@ function onHomeyReady(Homey) {
 			var resizeObserver;
 			var destroyed = false;
 			var widgetReady = false;
-			var startDefaultsLoaded = false;
 			var lastHeight = 0;
 			var settings = Homey.getSettings() || {};
 			var selectedSetting = settings.chronograph;
@@ -48,7 +47,14 @@ function onHomeyReady(Homey) {
 				{ id: 'hours', label: Homey.__('settings.hours') },
 				{ id: 'days', label: Homey.__('settings.days') }
 			];
-			$scope.startValues = { unit: 'minutes' };
+			$scope.startValues = {
+				time: settings.defaultDuration,
+				unit: settings.defaultDurationUnit || 'minutes',
+				from: settings.defaultTransitionFrom,
+				to: settings.defaultTransitionTo,
+				steps: settings.defaultTransitionSteps
+			};
+			var startValuesInitialized = false;
 			$scope.selectedChronograph = null;
 			$scope.showStartForm = false;
 			$scope.loading = true;
@@ -75,13 +81,17 @@ function onHomeyReady(Homey) {
 						if (destroyed) return;
 						$scope.$applyAsync(function () {
 							$scope.selectedChronograph = applyChronographUpdate(chronograph);
-							if (!startDefaultsLoaded) {
-								$scope.startValues.time = chronograph.defaults.time || 1;
-								$scope.startValues.unit = chronograph.defaults.unit || 'minutes';
-								$scope.startValues.from = chronograph.defaults.from;
-								$scope.startValues.to = chronograph.defaults.to;
-								$scope.startValues.steps = chronograph.defaults.steps || 20;
-								startDefaultsLoaded = true;
+							if (chronograph.active) $scope.showStartForm = false;
+							if (!startValuesInitialized) {
+								startValuesInitialized = true;
+								if (settings.preferSavedValues && chronograph.defaults) {
+									['time', 'unit', 'from', 'to', 'steps'].forEach(function (key) {
+										var savedValue = chronograph.defaults[key];
+										if (savedValue !== undefined && savedValue !== null && savedValue !== '') {
+											$scope.startValues[key] = savedValue;
+										}
+									});
+								}
 							}
 							$scope.loading = false;
 							$scope.error = null;
@@ -157,6 +167,7 @@ function onHomeyReady(Homey) {
 				$scope.error = null;
 				Homey.api('POST', '/chronograph/' + encodeURIComponent(selectedId) + '/start', $scope.startValues)
 					.then(function () {
+						$scope.showStartForm = false;
 						return refresh();
 					})
 					.then(function () {

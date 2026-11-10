@@ -80,6 +80,17 @@ describe('Chronograph widget API', () => {
 		assert.strictEqual(result.defaults.time, 30);
 	});
 
+	it('leaves saved Flow defaults empty when no start card values are configured', async () => {
+		savedStartArgs.timer_start_cards = [];
+
+		const result = await widgetApi.getChronograph({ homey, params: { id: chronographId } });
+		assert.strictEqual(result.defaults.time, undefined);
+		assert.strictEqual(result.defaults.unit, undefined);
+		assert.strictEqual(result.defaults.from, undefined);
+		assert.strictEqual(result.defaults.to, undefined);
+		assert.strictEqual(result.defaults.steps, undefined);
+	});
+
 	it('pauses, resumes and stops a selected chronograph', async () => {
 		const timer = new Chronograph(chronographId, 'Widget API timer', 30, 'seconds');
 		timer.setData('type', ChronographType.TIMER);

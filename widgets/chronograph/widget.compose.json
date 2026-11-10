@@ -51,17 +51,17 @@
 			"value": "normal",
 			"values": [
 				{
-					"id": "normal",
-					"title": {
-						"en": "Normal",
-						"nl": "Normaal"
-					}
-				},
-				{
 					"id": "compact",
 					"title": {
 						"en": "Compact",
 						"nl": "Compact"
+					}
+				},
+				{
+					"id": "normal",
+					"title": {
+						"en": "Normal",
+						"nl": "Normaal"
 					}
 				},
 				{
@@ -72,6 +72,73 @@
 					}
 				}
 			]
+		},
+		{
+			"id": "defaultDuration",
+			"type": "number",
+			"title": {
+				"en": "Default duration",
+				"nl": "Standaardduur"
+			},
+			"value": null,
+			"min": 0.001
+		},
+		{
+			"id": "defaultDurationUnit",
+			"type": "dropdown",
+			"title": {
+				"en": "Default duration unit",
+				"nl": "Standaardeenheid voor duur"
+			},
+			"value": "minutes",
+			"values": [
+				{ "id": "milliseconds", "title": { "en": "Milliseconds", "nl": "Milliseconden" } },
+				{ "id": "seconds", "title": { "en": "Seconds", "nl": "Seconden" } },
+				{ "id": "minutes", "title": { "en": "Minutes", "nl": "Minuten" } },
+				{ "id": "hours", "title": { "en": "Hours", "nl": "Uren" } },
+				{ "id": "days", "title": { "en": "Days", "nl": "Dagen" } }
+			]
+		},
+		{
+			"id": "defaultTransitionFrom",
+			"type": "number",
+			"title": {
+				"en": "Default transition start value",
+				"nl": "Standaard beginwaarde transitie"
+			},
+			"value": null
+		},
+		{
+			"id": "defaultTransitionTo",
+			"type": "number",
+			"title": {
+				"en": "Default transition end value",
+				"nl": "Standaard eindwaarde transitie"
+			},
+			"value": null
+		},
+		{
+			"id": "defaultTransitionSteps",
+			"type": "number",
+			"title": {
+				"en": "Default transition steps",
+				"nl": "Standaardstappen transitie"
+			},
+			"value": null,
+			"min": 2
+		},
+		{
+			"id": "preferSavedValues",
+			"type": "checkbox",
+			"title": {
+				"en": "Prefer saved Flow values",
+				"nl": "Geef voorkeur aan opgeslagen Flow-waarden"
+			},
+			"hint": {
+				"en": "Use saved start-card values when available; otherwise use the defaults above.",
+				"nl": "Gebruik opgeslagen startkaartwaarden indien beschikbaar; gebruik anders de bovenstaande standaardwaarden."
+			},
+			"value": false
 		},
 		{
 			"id": "playColor",

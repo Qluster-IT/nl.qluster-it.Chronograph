@@ -48,7 +48,7 @@ function getDefaults(homey, type, name) {
 	const startArgs = getSavedStartArgs(homey, type, name);
 	return {
 		time: startArgs.time,
-		unit: startArgs.unit && (startArgs.unit.id || startArgs.unit) || 'minutes',
+		unit: startArgs.unit && (startArgs.unit.id || startArgs.unit),
 		from: startArgs.from,
 		to: startArgs.to,
 		steps: startArgs.steps
