@@ -351,9 +351,9 @@ describe('Chronograph', () => {
 			}
 		});
 
-		assert.deepStrictEqual(timer._splits.map(split => [split.time, split.unit]), [
-			[7000, 'milliseconds'],
-			[2, 'seconds']
+		assert.deepStrictEqual(timer._splits.map(split => [split.time, split.unit, split.data.timerSplitType]), [
+			[7000, 'milliseconds', 'remaining'],
+			[2, 'seconds', 'elapsed']
 		]);
 		delete Chronograph._chronographs[timer.getId()];
 	});
