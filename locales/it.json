@@ -198,7 +198,17 @@
     "style_size_current": "Dimensione personalizzata (px)",
     "style_size_hint": "La dimensione indica il carattere per testo e icone, l’altezza per pulsanti e campi e lo spessore della barra di stato. Inserisci un valore da 4 a 100 px.",
     "style_size_invalid": "Inserisci un numero intero da 4 a 100.",
-    "style_size_default": "Valore predefinito dell'app: __size__ px. Lascia vuoto per usarlo."
+    "style_size_default": "Valore predefinito dell'app: __size__ px. Lascia vuoto per usarlo.",
+    "style_scheme_ocean": "Oceano",
+    "style_scheme_forest": "Foresta",
+    "style_scheme_sunset": "Tramonto",
+    "style_scheme_twilight": "Crepuscolo",
+    "style_scheme_blossom": "Fioritura",
+    "style_scheme_sky": "Cielo",
+    "style_scheme_amber": "Ambra",
+    "style_scheme_builtin_hint": "Le combinazioni di colori integrate non possono essere modificate. Copia questa combinazione per personalizzarla.",
+    "style_builtin_label": "Integrato",
+    "style_custom_label": "Personalizzato"
   },
   "timer_not_running": "Il timer __name__ non è in esecuzione.",
   "stopwatch_not_running": "Il cronometro __name__ non è in esecuzione.",

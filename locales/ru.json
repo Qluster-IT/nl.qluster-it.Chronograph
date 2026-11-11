@@ -198,7 +198,17 @@
     "style_size_current": "Заданный размер (пкс)",
     "style_size_hint": "Размер задаёт шрифт текста и значков, высоту кнопок и полей и толщину строки состояния. Введите значение от 4 до 100 пикселей.",
     "style_size_invalid": "Введите целое число от 4 до 100.",
-    "style_size_default": "По умолчанию в приложении: __size__ пкс. Оставьте поле пустым, чтобы использовать это значение."
+    "style_size_default": "По умолчанию в приложении: __size__ пкс. Оставьте поле пустым, чтобы использовать это значение.",
+    "style_scheme_ocean": "Океан",
+    "style_scheme_forest": "Лес",
+    "style_scheme_sunset": "Закат",
+    "style_scheme_twilight": "Сумерки",
+    "style_scheme_blossom": "Цветение",
+    "style_scheme_sky": "Небо",
+    "style_scheme_amber": "Янтарь",
+    "style_scheme_builtin_hint": "Встроенные цветовые схемы нельзя редактировать. Создайте копию схемы, чтобы настроить её.",
+    "style_builtin_label": "Встроенные",
+    "style_custom_label": "Пользовательские"
   },
   "timer_not_running": "Таймер __name__ не запущен.",
   "stopwatch_not_running": "Секундомер __name__ не запущен.",

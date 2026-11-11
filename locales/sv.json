@@ -198,7 +198,17 @@
     "style_size_current": "Anpassad storlek (px)",
     "style_size_hint": "Storleken anger teckenstorlek för text och ikoner, höjd för knappar och fält och tjocklek för statusfältet. Ange ett värde från 4 till 100 px.",
     "style_size_invalid": "Ange ett heltal mellan 4 och 100.",
-    "style_size_default": "Appens standard: __size__ px. Lämna tomt för att använda standardvärdet."
+    "style_size_default": "Appens standard: __size__ px. Lämna tomt för att använda standardvärdet.",
+    "style_scheme_ocean": "Hav",
+    "style_scheme_forest": "Skog",
+    "style_scheme_sunset": "Solnedgång",
+    "style_scheme_twilight": "Skymning",
+    "style_scheme_blossom": "Blomning",
+    "style_scheme_sky": "Himmel",
+    "style_scheme_amber": "Bärnsten",
+    "style_scheme_builtin_hint": "Inbyggda färgscheman kan inte redigeras. Kopiera schemat för att anpassa det.",
+    "style_builtin_label": "Inbyggt",
+    "style_custom_label": "Anpassat"
   },
   "timer_not_running": "Timern __name__ körs inte.",
   "stopwatch_not_running": "Stoppuret __name__ körs inte.",

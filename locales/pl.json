@@ -198,7 +198,17 @@
     "style_size_current": "Rozmiar niestandardowy (px)",
     "style_size_hint": "Rozmiar oznacza wielkość tekstu i ikon, wysokość przycisków i pól oraz grubość paska stanu. Wpisz wartość od 4 do 100 px.",
     "style_size_invalid": "Wpisz liczbę całkowitą od 4 do 100.",
-    "style_size_default": "Domyślna wartość aplikacji: __size__ px. Pozostaw puste, aby jej użyć."
+    "style_size_default": "Domyślna wartość aplikacji: __size__ px. Pozostaw puste, aby jej użyć.",
+    "style_scheme_ocean": "Ocean",
+    "style_scheme_forest": "Las",
+    "style_scheme_sunset": "Zachód słońca",
+    "style_scheme_twilight": "Zmierzch",
+    "style_scheme_blossom": "Kwitnienie",
+    "style_scheme_sky": "Niebo",
+    "style_scheme_amber": "Bursztyn",
+    "style_scheme_builtin_hint": "Nie można edytować wbudowanych schematów kolorów. Skopiuj ten schemat, aby go dostosować.",
+    "style_builtin_label": "Wbudowane",
+    "style_custom_label": "Własne"
   },
   "timer_not_running": "Timer __name__ nie działa.",
   "stopwatch_not_running": "Stoper __name__ nie działa.",

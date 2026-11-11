@@ -198,7 +198,17 @@
     "style_size_current": "Tilpasset størrelse (px)",
     "style_size_hint": "Størrelsen angiver skriftstørrelse for tekst og ikoner, højde for knapper og felter og tykkelse for statuslinjen. Angiv en værdi fra 4 til 100 px.",
     "style_size_invalid": "Angiv et heltal fra 4 til 100.",
-    "style_size_default": "Appens standard: __size__ px. Lad feltet stå tomt for at bruge standarden."
+    "style_size_default": "Appens standard: __size__ px. Lad feltet stå tomt for at bruge standarden.",
+    "style_scheme_ocean": "Hav",
+    "style_scheme_forest": "Skov",
+    "style_scheme_sunset": "Solnedgang",
+    "style_scheme_twilight": "Tusmørke",
+    "style_scheme_blossom": "Blomstring",
+    "style_scheme_sky": "Himmel",
+    "style_scheme_amber": "Rav",
+    "style_scheme_builtin_hint": "Indbyggede farveskemaer kan ikke redigeres. Kopiér dette skema for at tilpasse det.",
+    "style_builtin_label": "Indbygget",
+    "style_custom_label": "Brugerdefineret"
   },
   "timer_not_running": "Timeren __name__ kører ikke.",
   "stopwatch_not_running": "Stopuret __name__ kører ikke.",

@@ -198,7 +198,17 @@
     "style_size_current": "재정의 크기 (px)",
     "style_size_hint": "텍스트와 아이콘은 글꼴 크기, 버튼과 필드는 높이, 상태 표시줄은 두께를 설정합니다. 4~100px 값을 입력하세요.",
     "style_size_invalid": "4부터 100까지의 정수를 입력하세요.",
-    "style_size_default": "앱 기본값: __size__ px. 기본값을 사용하려면 비워 두세요."
+    "style_size_default": "앱 기본값: __size__ px. 기본값을 사용하려면 비워 두세요.",
+    "style_scheme_ocean": "바다",
+    "style_scheme_forest": "숲",
+    "style_scheme_sunset": "노을",
+    "style_scheme_twilight": "황혼",
+    "style_scheme_blossom": "꽃",
+    "style_scheme_sky": "하늘",
+    "style_scheme_amber": "호박",
+    "style_scheme_builtin_hint": "기본 색상 구성표는 수정할 수 없습니다. 구성표를 복사하여 원하는 대로 수정하세요.",
+    "style_builtin_label": "기본",
+    "style_custom_label": "사용자 지정"
   },
   "timer_not_running": "타이머 __name__이(가) 실행 중이 아닙니다.",
   "stopwatch_not_running": "스톱워치 __name__이(가) 실행 중이 아닙니다.",

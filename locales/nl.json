@@ -198,7 +198,17 @@
     "style_size_current": "Afwijkende grootte (px)",
     "style_size_hint": "Tekst en pictogrammen gebruiken de lettergrootte; knoppen en velden de hoogte; de statusbalk de dikte. Voer een waarde van 4 tot 100 px in.",
     "style_size_invalid": "Voer een geheel getal van 4 tot 100 in.",
-    "style_size_default": "App-standaard: __size__ px. Laat leeg om de standaard te gebruiken."
+    "style_size_default": "App-standaard: __size__ px. Laat leeg om de standaard te gebruiken.",
+    "style_scheme_ocean": "Oceaan",
+    "style_scheme_forest": "Bos",
+    "style_scheme_sunset": "Zonsondergang",
+    "style_scheme_twilight": "Schemering",
+    "style_scheme_blossom": "Bloesem",
+    "style_scheme_sky": "Hemel",
+    "style_scheme_amber": "Amber",
+    "style_scheme_builtin_hint": "Ingebouwde kleurenschema's kunnen niet worden aangepast. Maak een kopie om dit schema aan te passen.",
+    "style_builtin_label": "Ingebouwd",
+    "style_custom_label": "Eigen"
   },
   "timer_not_running": "Timer __name__ loopt niet.",
   "stopwatch_not_running": "Stopwatch __name__ loopt niet.",

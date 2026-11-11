@@ -198,7 +198,17 @@
     "style_size_current": "Tamaño personalizado (px)",
     "style_size_hint": "El tamaño corresponde a la fuente del texto y los iconos, la altura de botones y campos y el grosor de la barra de estado. Introduce un valor de 4 a 100 px.",
     "style_size_invalid": "Introduce un número entero de 4 a 100.",
-    "style_size_default": "Valor predeterminado de la aplicación: __size__ px. Déjalo vacío para usarlo."
+    "style_size_default": "Valor predeterminado de la aplicación: __size__ px. Déjalo vacío para usarlo.",
+    "style_scheme_ocean": "Océano",
+    "style_scheme_forest": "Bosque",
+    "style_scheme_sunset": "Atardecer",
+    "style_scheme_twilight": "Crepúsculo",
+    "style_scheme_blossom": "Floración",
+    "style_scheme_sky": "Cielo",
+    "style_scheme_amber": "Ámbar",
+    "style_scheme_builtin_hint": "Los esquemas de color integrados no se pueden editar. Copia este esquema para personalizarlo.",
+    "style_builtin_label": "Integrado",
+    "style_custom_label": "Personalizado"
   },
   "timer_not_running": "El temporizador __name__ no está en marcha.",
   "stopwatch_not_running": "El cronómetro __name__ no está en marcha.",

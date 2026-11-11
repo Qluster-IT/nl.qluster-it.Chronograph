@@ -198,7 +198,17 @@
     "style_size_current": "الحجم المخصص (بكسل)",
     "style_size_hint": "يحدد الحجم حجم خط النص والأيقونات وارتفاع الأزرار والحقول وسُمك شريط الحالة. أدخل قيمة من 4 إلى 100 بكسل.",
     "style_size_invalid": "أدخل عدداً صحيحاً من 4 إلى 100.",
-    "style_size_default": "القيمة الافتراضية للتطبيق: __size__ بكسل. اترك الحقل فارغًا لاستخدامها."
+    "style_size_default": "القيمة الافتراضية للتطبيق: __size__ بكسل. اترك الحقل فارغًا لاستخدامها.",
+    "style_scheme_ocean": "المحيط",
+    "style_scheme_forest": "الغابة",
+    "style_scheme_sunset": "الغروب",
+    "style_scheme_twilight": "الشفق",
+    "style_scheme_blossom": "الأزهار",
+    "style_scheme_sky": "السماء",
+    "style_scheme_amber": "الكهرمان",
+    "style_scheme_builtin_hint": "لا يمكن تعديل أنظمة الألوان المضمنة. انسخ هذا النظام لتخصيصه.",
+    "style_builtin_label": "مضمن",
+    "style_custom_label": "مخصص"
   },
   "timer_not_running": "المؤقت __name__ غير قيد التشغيل.",
   "stopwatch_not_running": "ساعة الإيقاف __name__ غير قيد التشغيل.",

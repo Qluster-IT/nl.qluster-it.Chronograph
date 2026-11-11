@@ -198,7 +198,17 @@
     "style_size_current": "Size override (px)",
     "style_size_hint": "Text and icon sizes use font size; buttons and fields use height; the status bar uses thickness. Enter a value from 4 to 100 px.",
     "style_size_invalid": "Enter a whole number from 4 to 100.",
-    "style_size_default": "App default: __size__ px. Leave empty to use the default."
+    "style_size_default": "App default: __size__ px. Leave empty to use the default.",
+    "style_scheme_ocean": "Ocean",
+    "style_scheme_forest": "Forest",
+    "style_scheme_sunset": "Sunset",
+    "style_scheme_twilight": "Twilight",
+    "style_scheme_blossom": "Blossom",
+    "style_scheme_sky": "Sky",
+    "style_scheme_amber": "Amber",
+    "style_scheme_builtin_hint": "Built-in color schemes cannot be edited. Copy this scheme to customize it.",
+    "style_builtin_label": "Built-in",
+    "style_custom_label": "Custom"
   },
   "timer_not_running": "Timer __name__ is not running.",
   "stopwatch_not_running": "Stopwatch __name__ is not running.",

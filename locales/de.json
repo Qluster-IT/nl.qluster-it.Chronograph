@@ -198,7 +198,17 @@
     "style_size_current": "Abweichende Größe (px)",
     "style_size_hint": "Für Text und Symbole gilt die Schriftgröße, für Schaltflächen und Felder die Höhe und für die Statusleiste die Dicke. Wert von 4 bis 100 px eingeben.",
     "style_size_invalid": "Geben Sie eine ganze Zahl von 4 bis 100 ein.",
-    "style_size_default": "App-Standard: __size__ px. Leer lassen, um den Standard zu verwenden."
+    "style_size_default": "App-Standard: __size__ px. Leer lassen, um den Standard zu verwenden.",
+    "style_scheme_ocean": "Ozean",
+    "style_scheme_forest": "Wald",
+    "style_scheme_sunset": "Sonnenuntergang",
+    "style_scheme_twilight": "Dämmerung",
+    "style_scheme_blossom": "Blüte",
+    "style_scheme_sky": "Himmel",
+    "style_scheme_amber": "Bernstein",
+    "style_scheme_builtin_hint": "Integrierte Farbschemata können nicht bearbeitet werden. Erstelle eine Kopie, um dieses Schema anzupassen.",
+    "style_builtin_label": "Integriert",
+    "style_custom_label": "Benutzerdefiniert"
   },
   "timer_not_running": "Timer __name__ läuft nicht.",
   "stopwatch_not_running": "Stopuhr __name__ läuft nicht.",

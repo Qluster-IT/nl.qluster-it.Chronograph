@@ -198,7 +198,17 @@
     "style_size_current": "Taille personnalisée (px)",
     "style_size_hint": "La taille concerne la police du texte et des icônes, la hauteur des boutons et des champs et l’épaisseur de la barre d’état. Saisissez une valeur de 4 à 100 px.",
     "style_size_invalid": "Saisissez un entier de 4 à 100.",
-    "style_size_default": "Valeur par défaut de l'application : __size__ px. Laissez vide pour l'utiliser."
+    "style_size_default": "Valeur par défaut de l'application : __size__ px. Laissez vide pour l'utiliser.",
+    "style_scheme_ocean": "Océan",
+    "style_scheme_forest": "Forêt",
+    "style_scheme_sunset": "Coucher de soleil",
+    "style_scheme_twilight": "Crépuscule",
+    "style_scheme_blossom": "Floraison",
+    "style_scheme_sky": "Ciel",
+    "style_scheme_amber": "Ambre",
+    "style_scheme_builtin_hint": "Les palettes intégrées ne peuvent pas être modifiées. Copiez cette palette pour la personnaliser.",
+    "style_builtin_label": "Intégré",
+    "style_custom_label": "Personnalisé"
   },
   "timer_not_running": "Le minuteur __name__ n’est pas en cours d’exécution.",
   "stopwatch_not_running": "Le chronomètre __name__ n’est pas en cours d’exécution.",
