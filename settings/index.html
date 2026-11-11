@@ -1,250 +1,527 @@
 <!doctype html>
-<html>
+<html lang="en">
 
 <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<script type="text/javascript" src="/homey.js" data-origin="settings"></script>
-	<script type="text/javascript" src="assets/vue.js"></script>
+	<script type="text/javascript" src="../assets/js/angular.min.js"></script>
+	<link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../assets/css/fontawesome.min.css">
+	<link rel="stylesheet" href="../assets/css/solid.min.css">
 	<link rel="stylesheet" href="assets/styles.css">
 </head>
 
-<body>
+<body ng-app="chronographSettings" ng-controller="SettingsController">
+	<main class="settings-page container-fluid">
+		<nav class="settings-tabs nav nav-tabs" role="tablist" aria-label="Chronograph settings">
+			<button class="hy-nostyle settings-tab nav-link" type="button" role="tab"
+				ng-class="{ active: activeTab === 'chronographs' }"
+				ng-attr-aria-selected="{{ activeTab === 'chronographs' }}"
+				ng-click="selectTab('chronographs')">
+				<i class="fa-solid fa-stopwatch" aria-hidden="true"></i>
+				<span>{{ labels.chronographs }}</span>
+			</button>
+			<button class="hy-nostyle settings-tab nav-link" type="button" role="tab"
+				ng-class="{ active: activeTab === 'widgets' }"
+				ng-attr-aria-selected="{{ activeTab === 'widgets' }}"
+				ng-click="selectTab('widgets')">
+				<i class="fa-solid fa-palette" aria-hidden="true"></i>
+				<span>{{ labels.widgets }}</span>
+			</button>
+			<button class="hy-nostyle settings-tab nav-link" type="button" role="tab"
+				ng-class="{ active: activeTab === 'general' }"
+				ng-attr-aria-selected="{{ activeTab === 'general' }}"
+				ng-click="selectTab('general')">
+				<i class="fa-solid fa-gear" aria-hidden="true"></i>
+				<span>{{ labels.general }}</span>
+			</button>
+		</nav>
 
-	<div id="app">
+		<section class="settings-content" role="tabpanel" ng-show="activeTab === 'chronographs'">
+			<h2>{{ labels.chronographsTitle }}</h2>
+			<section class="chronograph-group" ng-repeat="section in sections track by section.key">
+				<h3>
+					<i class="fa-solid" ng-class="section.icon" aria-hidden="true"></i>
+					{{ section.label }}
+				</h3>
+				<div class="chronograph-list" ng-if="getChronographs(section.key).length">
+					<article class="chronograph-row" ng-repeat="chronograph in getChronographs(section.key) track by chronograph.id">
+						<div class="chronograph-summary">
+							<strong class="chronograph-name">{{ chronograph.name }}</strong>
+							<span class="chronograph-status">
+								{{ chronograph.running ? labels.running : labels.paused }}
+								<span aria-hidden="true">·</span>
+								{{ formatDuration(chronograph) }}
+							</span>
+						</div>
+						<div class="chronograph-actions">
+							<button class="hy-nostyle btn btn-outline-secondary btn-sm" type="button"
+								ng-click="toggleChronograph(chronograph)" ng-disabled="chronograph.busy"
+								ng-attr-title="{{ chronograph.running ? labels.pause : labels.resume }}"
+								ng-attr-aria-label="{{ chronograph.running ? labels.pause : labels.resume }}">
+								<i class="fa-solid" ng-class="chronograph.running ? 'fa-pause' : 'fa-play'" aria-hidden="true"></i>
+							</button>
+							<button class="hy-nostyle btn btn-outline-danger btn-sm" type="button"
+								ng-click="stopChronograph(chronograph)" ng-disabled="chronograph.busy"
+								ng-attr-title="{{ labels.stop }}" ng-attr-aria-label="{{ labels.stop }}">
+								<i class="fa-solid fa-stop" aria-hidden="true"></i>
+							</button>
+						</div>
+					</article>
+				</div>
+				<p class="empty-state" ng-if="!getChronographs(section.key).length">{{ section.emptyActive }}</p>
 
-		<div>
-			<h6>{{ Homey.__("settings.roundOfDurationsFlowcards") }}</h6>
-			<input type="number" min="0" max="10" step="1" required v-model="roundOfDurationsFlowcards"></input>
+				<div class="configured-list" ng-if="getConfiguredChronographs(section.key).length">
+					<h4>{{ section.label }}</h4>
+					<div class="configured-row" ng-repeat="chronograph in getConfiguredChronographs(section.key) track by $index">
+						<strong>{{ getConfiguredName(chronograph) }}</strong>
+						<time ng-if="getConfiguredAction(chronograph)" ng-attr-datetime="{{ getConfiguredAction(chronograph) }}">
+							{{ formatConfiguredAction(chronograph) }}
+						</time>
+					</div>
+				</div>
+				<p class="empty-state configured-empty" ng-if="!getConfiguredChronographs(section.key).length">
+					{{ section.emptyConfigured }}
+				</p>
+			</section>
+		</section>
 
-			<button v-on:click="setRoundOfDurationsFlowcards">{{ Homey.__("settings.save") }}</button>
+		<section class="settings-content" role="tabpanel" ng-show="activeTab === 'widgets'">
+			<h2>{{ labels.widgetStyles }}</h2>
+			<p class="help-text">{{ t('settings.style_editor_intro') }}</p>
+			<fieldset class="hy-nostyle style-editor" ng-disabled="!stylesAvailable || savingSettings">
+				<div class="style-actions">
+					<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="selectEditorMode('design')" ng-attr-aria-pressed="{{ editor.mode === 'design' }}">{{ t('settings.style_design_styles') }}</button>
+					<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="selectEditorMode('color')" ng-attr-aria-pressed="{{ editor.mode === 'color' }}">{{ t('settings.style_color_schemes') }}</button>
+				</div>
+				<div class="style-toolbar">
+					<label class="hy-nostyle" for="widget-style">{{ t(editor.mode === 'design' ? 'settings.style_design_styles' : 'settings.style_color_schemes') }}</label>
+					<select ng-if="editor.mode === 'design'" id="widget-style" class="form-select" ng-model="editor.selectedStyleId"
+						ng-change="editor.selectedCell = null; refreshLayoutElement()">
+						<option value="">{{ t('settings.style_select_placeholder') }}</option>
+						<optgroup label="{{ t('settings.style_built_in') }}">
+							<option value="builtin:current">{{ t('settings.style_current') }}</option>
+						</optgroup>
+						<optgroup label="{{ t('settings.style_custom') }}">
+							<option ng-repeat="style in widgetStyles.styles track by style.id" value="custom:{{ style.id }}">{{ style.name }}</option>
+						</optgroup>
+					</select>
+					<select ng-if="editor.mode === 'color'" id="widget-style" class="form-select" ng-model="editor.selectedSchemeId">
+						<option value="builtin:current">{{ t('settings.style_current') }}</option>
+						<option ng-repeat="scheme in widgetStyles.colorSchemes track by scheme.id" value="custom:{{ scheme.id }}">{{ scheme.name }}</option>
+					</select>
+					<div class="style-actions">
+						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="createStyle(false)">
+							<i class="fa-solid fa-plus" aria-hidden="true"></i> {{ editor.mode === 'color' ? t('settings.style_new_scheme') : labels.newStyle }}
+						</button>
+						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button"
+							ng-click="createStyle(true)" ng-disabled="!getEditingItem()">
+							<i class="fa-solid fa-copy" aria-hidden="true"></i> {{ labels.copy }}
+						</button>
+						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button"
+							ng-if="getEditingItem() && !isBuiltInStyle()" ng-click="deleteStyle()">
+							<i class="fa-solid fa-trash" aria-hidden="true"></i> {{ t('settings.style_delete') }}
+						</button>
+					</div>
+				</div>
+
+				<div ng-if="getSelectedStyle() && getEditingItem()" class="style-design">
+					<label class="hy-nostyle" for="widget-style-name">{{ t('settings.style_name') }}</label>
+					<input class="hy-nostyle form-control" id="widget-style-name" type="text"
+						ng-model="getEditingItem().name" maxlength="80" required>
+					<p class="help-text" ng-if="isBuiltInStyle()">{{ t('settings.style_builtin_hint') }}</p>
+
+					<div class="style-design-selectors">
+						<h3 ng-if="editor.mode === 'design'">{{ t('settings.style_design') }}</h3>
+						<label ng-if="editor.mode === 'design'" class="hy-nostyle" for="style-height">{{ t('settings.style_height') }}</label>
+						<select ng-if="editor.mode === 'design'" id="style-height" class="form-select" ng-model="heightMode"
+							ng-model-options="{ getterSetter: true }" ng-disabled="savingSettings">
+							<option value="auto">{{ t('settings.style_height_auto') }}</option>
+							<option value="minimum-without-inputs">{{ t('settings.style_height_minimum_without_inputs') }}</option>
+							<option value="minimum">{{ t('settings.style_height_minimum_with_inputs') }}</option>
+						</select>
+						<label ng-if="editor.mode === 'design'" class="hy-nostyle" for="style-layout-mode">{{ t('settings.style_layout_mode') }}</label>
+						<select ng-if="editor.mode === 'design'" id="style-layout-mode" class="form-select" ng-model="editor.editStatus"
+							ng-options="option.value as option.label for option in layoutModes" ng-change="editor.selectedCell = null; refreshLayoutElement()"></select>
+						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button"
+							ng-if="editor.mode === 'design' && editor.editStatus" ng-click="clearStatusLayout()">{{ t('settings.style_reset_override') }}</button>
+						<h3>{{ t('settings.style_preview') }}</h3>
+						<label ng-if="editor.mode === 'design'" class="hy-nostyle" for="preview-scheme">{{ t('settings.style_color_schemes') }}</label>
+						<select ng-if="editor.mode === 'design'" id="preview-scheme" class="form-select" ng-model="editor.selectedSchemeId">
+							<option value="builtin:current">{{ t('settings.style_current') }}</option>
+							<option ng-repeat="scheme in widgetStyles.colorSchemes track by scheme.id" value="custom:{{ scheme.id }}">{{ scheme.name }}</option>
+						</select>
+						<label ng-if="editor.mode === 'color'" class="hy-nostyle" for="preview-design">{{ t('settings.style_design_styles') }}</label>
+						<select ng-if="editor.mode === 'color'" id="preview-design" class="form-select" ng-model="editor.selectedStyleId" ng-change="refreshLayoutElement()">
+							<option value="builtin:current">{{ t('settings.style_current') }}</option>
+							<option ng-repeat="style in widgetStyles.styles track by style.id" value="custom:{{ style.id }}">{{ style.name }}</option>
+						</select>
+						<label class="hy-nostyle" for="preview-type">{{ t('settings.widget_type') }}</label>
+						<select id="preview-type" class="form-select" ng-model="editor.previewType"
+							ng-change="resetRowPreview(); refreshLayoutElement()">
+							<option value="stopwatch">{{ t('settings.stopwatches') }}</option>
+							<option value="timer">{{ t('settings.timers') }}</option>
+							<option value="transition">{{ t('settings.transitions') }}</option>
+						</select>
+						<label class="hy-nostyle" for="preview-size">{{ t('settings.style_size') }}</label>
+						<select id="preview-size" class="form-select" ng-model="editor.previewSize"
+							ng-change="editor.selectedCell = null; editor.previewState = editor.previewState === 'starting' ? 'inactive' : editor.previewState; refreshLayoutElement()">
+							<option value="compact">{{ t('settings.style_compact') }}</option>
+							<option value="normal">{{ t('settings.style_normal') }}</option>
+							<option value="large">{{ t('settings.style_large') }}</option>
+						</select>
+						<label class="hy-nostyle" for="preview-state">{{ t('settings.style_state') }}</label>
+						<select id="preview-state" class="form-select" ng-model="editor.previewState" ng-change="resetRowPreview(); editor.selectedCell = null; refreshLayoutElement()">
+							<option value="inactive">{{ t('settings.widget_not_running') }}</option>
+							<option value="paused">{{ labels.paused }}</option>
+							<option value="running">{{ labels.running }}</option>
+							<option value="starting" ng-if="editor.previewType !== 'stopwatch' || editor.previewState === 'starting'">{{ t('settings.style_starting') }}</option>
+						</select>
+					</div>
+					<div class="style-preview style-preview-height" ng-class="'style-preview-' + editor.previewSize"
+						ng-attr-data-background="{{ previewColor('background') }}">
+						<div class="style-preview-layer" ng-include="getSelectedStyle().groups ? 'grouped-preview.html' : 'cell-preview.html'"></div>
+						<div class="style-preview-measure" ng-if="heightMode() !== 'auto'" aria-hidden="true" inert>
+							<div class="style-preview-layer" ng-repeat="previewScenario in measureHeightScenarios() track by previewScenario.id">
+								<div ng-include="getSelectedStyle().groups ? 'grouped-preview.html' : 'cell-preview.html'"></div>
+							</div>
+						</div>
+					</div>
+					<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button"
+						ng-if="editor.mode === 'design' && !getSelectedStyle().groups" ng-click="upgradeLayout()">{{ t('settings.style_upgrade') }}</button>
+					<div ng-if="editor.mode === 'design' && getSelectedStyle().groups">
+						<p class="help-text style-grid-hint">{{ t('settings.style_group_hint') }}</p>
+						<div class="style-group-editor">
+							<button class="hy-nostyle style-row-select style-widget-select" type="button"
+								ng-click="selectWidgetBackground()" ng-class="{ 'style-row-selected': editor.selectedBackground }"
+								ng-attr-aria-pressed="{{ editor.selectedBackground }}">{{ t('settings.style_widget') }}</button>
+							<div class="style-group-editor-row" ng-repeat="row in groupedRows(false) track by row.id" ng-click="selectVisibilityRow(row.id)"
+								style-reorder-drop="row" style-reorder-target="{{ row.id }}" ng-attr-data-style-reorder-row="{{ row.id }}">
+								<button type="button" class="hy-nostyle style-row-select" ng-click="$event.stopPropagation(); selectVisibilityRow(row.id)"
+									draggable="true" style-reorder-drag="row" style-reorder-source="{{ row.id }}" ng-attr-title="{{ t('settings.style_row_drag') }}"
+									ng-class="{ 'style-row-selected': editor.selectedRow === row.id }"
+									ng-attr-aria-pressed="{{ editor.selectedRow === row.id }}">{{ t('settings.style_row') }} {{ row.id }}</button>
+								<div class="style-group-slot" ng-repeat="group in row.groups track by group.id"
+									ng-style="{ 'grid-column': 'span ' + group.span }"
+									ng-click="$event.stopPropagation(); selectColumn(row.id, group.id)"
+									ng-class="{ 'style-column-selected': editor.selectedColumn.row === row.id && editor.selectedColumn.group === group.id }"
+									style-group-drop="{{ row.id }}:{{ group.id }}" ng-attr-data-style-group="{{ row.id }}:{{ group.id }}"
+									style-reorder-drop="column" style-reorder-target="{{ row.id }}:{{ group.id }}" ng-attr-data-style-reorder-column="{{ row.id }}:{{ group.id }}">
+									<button type="button" class="hy-nostyle style-group-number" ng-click="$event.stopPropagation(); selectColumn(row.id, group.id)"
+										draggable="true" style-reorder-drag="column" style-reorder-source="{{ row.id }}:{{ group.id }}" ng-attr-title="{{ t('settings.style_column_drag') }}"
+										ng-attr-aria-label="{{ t('settings.style_column') }} {{ row.id }}.{{ group.id }}"
+										ng-attr-aria-pressed="{{ editor.selectedColumn.row === row.id && editor.selectedColumn.group === group.id }}">{{ row.id }}.{{ group.id }}</button>
+									<button class="hy-nostyle style-group-element" type="button"
+										ng-repeat="element in group.elements track by element" style-group-element="{{ element }}"
+										draggable="true"
+										ng-class="{ 'style-cell-selected': editor.selectedElement === element }"
+										ng-click="$event.stopPropagation(); selectLayoutElement(element)">{{ styleLabels[element] }}</button>
+								</div>
+							</div>
+							<div class="style-unused-row">
+								<span class="style-unused-label">{{ t('settings.style_unused') }}</span>
+								<div class="style-group-slot style-unused-slot" style-group-drop="0:1" data-style-group="0:1">
+									<button class="hy-nostyle style-group-element" type="button"
+										ng-repeat="element in unusedElements() track by element" style-group-element="{{ element }}"
+										draggable="true" ng-class="{ 'style-cell-selected': editor.selectedElement === element }"
+										ng-click="selectLayoutElement(element)">{{ styleLabels[element] }}</button>
+								</div>
+							</div>
+						</div>
+						<fieldset class="hy-nostyle style-column-controls" ng-if="editor.selectedColumn">
+							<legend>{{ t('settings.style_column') }} {{ editor.selectedColumn.row }}.{{ editor.selectedColumn.group }}</legend>
+							<div class="style-actions">
+								<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-disabled="editor.selectedColumn.group === 1"
+									ng-click="moveDesignerColumn(editor.selectedColumn.row, editor.selectedColumn.group, editor.selectedColumn.group - 1)">{{ t('settings.style_move_left') }}</button>
+								<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-disabled="editor.selectedColumn.group === rowColumnsForSelection()"
+									ng-click="moveDesignerColumn(editor.selectedColumn.row, editor.selectedColumn.group, editor.selectedColumn.group + 1)">{{ t('settings.style_move_right') }}</button>
+							</div>
+							<label class="hy-nostyle" for="style-column-span">{{ t('settings.style_column_span') }}</label>
+							<select id="style-column-span" class="form-select" ng-model="editor.columnSpan"
+								ng-options="value for value in availableColumnSpans()" ng-change="updateColumnSpan()"></select>
+							<p class="help-text">{{ t('settings.style_column_span_hint') }}</p>
+							<label class="hy-nostyle" for="style-column-alignment">{{ t('settings.style_column_alignment') }}</label>
+							<select id="style-column-alignment" class="form-select" ng-model="editor.columnAlignment" ng-change="updateColumnAlignment()">
+								<option value="left">{{ t('settings.style_align_left') }}</option>
+								<option value="center">{{ t('settings.style_align_center') }}</option>
+								<option value="right">{{ t('settings.style_align_right') }}</option>
+							</select>
+							<label class="hy-nostyle" for="style-column-vertical-alignment">{{ t('settings.style_column_vertical_alignment') }}</label>
+							<select id="style-column-vertical-alignment" class="form-select" ng-model="editor.columnVerticalAlignment" ng-change="updateColumnVerticalAlignment()">
+								<option value="top">{{ t('settings.style_align_top') }}</option>
+								<option value="middle">{{ t('settings.style_align_middle') }}</option>
+								<option value="bottom">{{ t('settings.style_align_bottom') }}</option>
+							</select>
+							<label class="hy-nostyle" for="style-column-direction">{{ t('settings.style_column_direction') }}</label>
+							<select id="style-column-direction" class="form-select" ng-model="editor.columnDirection" ng-change="updateColumnDirection()">
+								<option value="horizontal">{{ t('settings.style_direction_horizontal') }}</option>
+								<option value="vertical">{{ t('settings.style_direction_vertical') }}</option>
+							</select>
+							<label class="hy-nostyle" for="style-column-width">{{ t('settings.style_column_width') }}</label>
+							<select id="style-column-width" class="form-select" ng-model="editor.columnWidth" ng-change="updateColumnWidth()">
+								<option value="span">{{ t('settings.style_width_span') }}</option>
+								<option value="content">{{ t('settings.style_width_content') }}</option>
+							</select>
+						</fieldset>
+								<fieldset class="hy-nostyle style-row-rules" ng-if="editor.rowRule">
+									<legend>{{ t('settings.style_row_visibility') }} {{ editor.selectedRow }}</legend>
+									<div class="style-actions">
+										<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-disabled="editor.selectedRow === 1 || editor.invalidRowRule"
+											ng-click="moveDesignerRow(editor.selectedRow, editor.selectedRow - 1)">{{ t('settings.style_move_up') }}</button>
+										<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-disabled="editor.selectedRow === 5 || editor.invalidRowRule"
+											ng-click="moveDesignerRow(editor.selectedRow, editor.selectedRow + 1)">{{ t('settings.style_move_down') }}</button>
+									</div>
+									<label class="hy-nostyle" for="style-row-columns">{{ t('settings.style_row_columns') }}</label>
+									<select id="style-row-columns" class="form-select" ng-model="editor.rowColumns"
+										ng-options="value for value in layoutGroups" ng-change="updateRowColumns()" ng-disabled="editor.invalidRowRule"></select>
+									<label class="hy-nostyle" for="style-row-alignment">{{ t('settings.style_row_alignment') }}</label>
+									<select id="style-row-alignment" class="form-select" ng-model="editor.rowAlignment"
+										ng-change="updateRowAlignment()" ng-disabled="savingSettings || editor.invalidRowRule">
+										<option value="top">{{ t('settings.style_align_top') }}</option>
+										<option value="middle">{{ t('settings.style_align_middle') }}</option>
+										<option value="bottom">{{ t('settings.style_align_bottom') }}</option>
+									</select>
+									<p class="help-text">{{ t('settings.style_row_alignment_hint') }}</p>
+									<p class="help-text">{{ t('settings.style_row_visibility_hint') }}</p>
+									<label class="hy-nostyle"><input class="hy-nostyle" type="checkbox" ng-model="editor.rowRule.inactive" ng-change="updateRowRule()"> {{ t('settings.style_row_inactive') }}</label>
+									<label class="hy-nostyle"><input class="hy-nostyle" type="checkbox" ng-model="editor.rowRule.paused" ng-change="updateRowRule()"> {{ t('settings.style_row_paused') }}</label>
+									<label class="hy-nostyle"><input class="hy-nostyle" type="checkbox" ng-model="editor.rowRule.running" ng-change="updateRowRule()"> {{ t('settings.style_row_running') }}</label>
+									<label class="hy-nostyle"><input class="hy-nostyle" type="checkbox" ng-model="editor.rowRule.starting" ng-change="updateRowRule()"> {{ t('settings.style_row_starting') }}</label>
+									<div class="style-row-trigger" ng-if="editor.rowRule.starting">
+										<label class="hy-nostyle"><input class="hy-nostyle" type="checkbox" ng-model="editor.rowRule.hideAfter" ng-change="updateRowRule()"> {{ t('settings.style_row_hide_after') }}</label>
+										<label class="hy-nostyle" ng-if="editor.rowRule.hideAfter" for="row-hide-seconds">{{ t('settings.style_row_seconds') }}</label>
+										<input ng-if="editor.rowRule.hideAfter" id="row-hide-seconds" class="hy-nostyle form-control" type="number" min="0.1" max="86400" step="0.1"
+											ng-model="editor.rowRule.seconds" ng-change="updateRowRule()">
+									</div>
+									<p class="help-text" role="alert" ng-if="editor.invalidRowRule">{{ t('settings.style_row_invalid') }}</p>
+								</fieldset>
+						<fieldset class="hy-nostyle style-position-controls" ng-if="editor.selectedElement">
+							<label class="hy-nostyle" for="style-element">{{ t('settings.style_element') }}</label>
+							<select id="style-element" class="form-select" ng-model="editor.selectedElement"
+								ng-options="id as styleLabels[id] for id in styleElements" ng-change="selectLayoutElement(editor.selectedElement)"></select>
+							<label class="hy-nostyle" for="style-row">{{ t('settings.style_row') }}</label>
+							<select id="style-row" class="form-select" ng-model="editor.position.row" ng-options="value as (value === 0 ? t('settings.style_unused') : value) for value in positionRows" ng-change="updatePositionRow()"></select>
+							<label class="hy-nostyle" for="style-group" ng-if="editor.position.row !== 0">{{ t('settings.style_group') }}</label>
+							<select id="style-group" class="form-select" ng-if="editor.position.row !== 0" ng-model="editor.position.group" ng-options="value for value in availablePositionGroups()" ng-change="updateLayoutPosition()"></select>
+							<label class="hy-nostyle" for="style-order" ng-if="editor.position.row !== 0">{{ t('settings.style_order') }}</label>
+							<select id="style-order" class="form-select" ng-if="editor.position.row !== 0" ng-model="editor.position.order" ng-options="value for value in layoutOrders" ng-change="updateLayoutPosition()"></select>
+						</fieldset>
+						<fieldset class="hy-nostyle style-progress-controls" ng-if="editor.selectedElement === 'progress'">
+							<legend>{{ t('settings.style_progress') }}</legend>
+							<div class="style-position-controls">
+							<label class="hy-nostyle" for="progress-direction">{{ t('settings.style_progress_direction') }}</label>
+							<select id="progress-direction" class="form-select" ng-model="progressDirection" ng-model-options="{ getterSetter: true }" ng-disabled="savingSettings">
+								<option value="left-right">{{ t('settings.style_progress_left_right') }}</option>
+								<option value="right-left">{{ t('settings.style_progress_right_left') }}</option>
+								<option value="bottom-top">{{ t('settings.style_progress_bottom_top') }}</option>
+								<option value="top-bottom">{{ t('settings.style_progress_top_bottom') }}</option>
+							</select>
+							<label class="hy-nostyle" for="progress-timer-mode">{{ t('settings.style_progress_timer') }}</label>
+							<select id="progress-timer-mode" class="form-select" ng-model="progressTimerMode" ng-model-options="{ getterSetter: true }" ng-disabled="savingSettings">
+								<option value="elapsed">{{ t('settings.style_progress_fill') }}</option>
+								<option value="remaining">{{ t('settings.style_progress_empty') }}</option>
+							</select>
+							<label class="hy-nostyle style-progress-full-row"><input class="hy-nostyle" type="checkbox" ng-model="progressShowSteps"
+								ng-model-options="{ getterSetter: true }" ng-disabled="savingSettings"> {{ t('settings.style_progress_steps') }}</label>
+							<p class="help-text style-progress-full-row">{{ t('settings.style_progress_hint') }}</p>
+							</div>
+						</fieldset>
+					</div>
+					<p class="help-text style-grid-hint" ng-if="editor.mode === 'design' && !getSelectedStyle().groups">{{ t('settings.style_drag_hint') }}</p>
+					<button ng-if="editor.mode === 'design' && !getSelectedStyle().groups" class="hy-nostyle style-row-select style-widget-select" type="button"
+						ng-click="selectWidgetBackground()" ng-class="{ 'style-row-selected': editor.selectedBackground }"
+						ng-attr-aria-pressed="{{ editor.selectedBackground }}">{{ t('settings.style_widget') }}</button>
+					<div class="style-preview style-layout-editor" ng-if="editor.mode === 'design' && !getSelectedStyle().groups" ng-class="'style-preview-' + editor.previewSize">
+						<div class="style-grid">
+							<button class="hy-nostyle style-cell" type="button"
+								ng-repeat="element in getStyleCells() track by $index"
+								style-grid-cell="{{ $index }}" ng-attr-data-style-cell="{{ $index }}"
+								ng-attr-draggable="{{ element ? 'true' : 'false' }}"
+								ng-class="{ 'style-cell-selected': editor.selectedCell === $index, 'style-cell-empty': !element }"
+								ng-click="selectStyleCell($index)"
+								ng-attr-aria-label="{{ element ? styleLabels[element] : t('settings.style_empty_cell') }}">
+								<span ng-if="element" class="style-cell-label">{{ styleLabels[element] }}</span>
+								<span ng-if="previewVisible(element)" class="style-cell-content"
+									ng-attr-data-palette="{{ isButtonElement(element) ? previewColor(element) : 'default' }}"
+									ng-attr-data-foreground="{{ previewForeground(element) }}">
+									<i ng-if="element === 'icon'" class="fa-solid style-preview-chronograph-icon" ng-class="previewIcon()" aria-hidden="true"></i>
+									<strong ng-if="element === 'name'">{{ t('settings.widget_chronograph') }}</strong>
+									<span ng-if="element === 'status'">{{ editor.previewState === 'running' ? labels.running : (editor.previewState === 'paused' ? labels.paused : t('settings.widget_not_running')) }}</span>
+									<span ng-if="element === 'duration'">12:34.56</span>
+									<i ng-if="element === 'play'" class="fa-solid fa-play" aria-hidden="true"></i>
+									<i ng-if="element === 'pause'" class="fa-solid fa-pause" aria-hidden="true"></i>
+									<i ng-if="element === 'stop'" class="fa-solid fa-stop" aria-hidden="true"></i>
+									<span ng-if="element === 'fields'">{{ t('settings.widget_duration') }}<span ng-if="editor.previewType === 'transition'"> · {{ t('settings.widget_from') }} / {{ t('settings.widget_to') }} / {{ t('settings.widget_steps') }}</span></span>
+								</span>
+							</button>
+						</div>
+					</div>
+
+					<div ng-if="editor.mode === 'color'" class="style-color-elements">
+						<button class="hy-nostyle style-group-element" type="button" ng-click="selectWidgetBackground()" ng-class="{ 'style-cell-selected': editor.selectedBackground }" ng-attr-aria-pressed="{{ editor.selectedBackground }}">{{ t('settings.style_widget') }}</button>
+						<button class="hy-nostyle style-group-element" type="button" ng-repeat="element in styleElements track by element"
+							ng-click="selectLayoutElement(element)" ng-class="{ 'style-cell-selected': !editor.selectedBackground && editor.selectedElement === element }"
+							ng-attr-aria-pressed="{{ !editor.selectedBackground && editor.selectedElement === element }}">{{ styleLabels[element] }}</button>
+					</div>
+					<fieldset ng-if="editor.mode === 'color' && editor.selectedElement === 'progress'" class="hy-nostyle style-progress-controls">
+						<legend>{{ t('settings.style_progress') }}</legend>
+						<div class="style-position-controls">
+						<label class="hy-nostyle" for="progress-background">{{ t('settings.style_background') }}</label>
+						<select id="progress-background" class="form-select" ng-model="progressBackground" ng-model-options="{ getterSetter: true }" ng-options="color.id as color.label for color in elementColorOptions"></select>
+						<label class="hy-nostyle" for="progress-foreground">{{ t('settings.style_progress_foreground') }}</label>
+						<select id="progress-foreground" class="form-select" ng-model="progressForeground" ng-model-options="{ getterSetter: true }" ng-options="color.id as color.label for color in elementColorOptions"></select>
+						</div>
+					</fieldset>
+					<div ng-if="editor.mode === 'color' && selectedColorKey()">
+					<div ng-repeat="key in [selectedColorKey()] track by key">
+						<h3>{{ t('settings.style_colors') }}</h3>
+						<p class="help-text">{{ t('settings.style_color_status_hint') }}</p>
+						<fieldset class="hy-nostyle style-colors">
+						<div class="style-color-row" ng-if="isButtonElement(key)">
+							<label class="hy-nostyle" ng-attr-for="style-color-{{ key }}">{{ t('settings.style_background') }}</label>
+							<select ng-if="editor.previewState === 'inactive'" class="form-select" ng-attr-id="style-color-{{ key }}"
+								ng-model="editor.colorValues[key]" ng-change="updateColorOverride(key)" ng-options="color.id as color.label for color in colorOptions"></select>
+							<select class="form-select" ng-attr-id="style-color-{{ key }}"
+								ng-if="editor.previewState !== 'inactive'"
+								ng-model="editor.colorValues[key]" ng-change="updateColorOverride(key)" ng-options="color.id as color.label for color in stateColorOptions(key)"></select>
+						</div>
+						<div class="style-color-row" ng-if="key !== 'background'">
+							<label class="hy-nostyle" ng-attr-for="style-foreground-{{ key }}">{{ t(isButtonElement(key) ? 'settings.style_foreground' : 'settings.style_color') }}</label>
+							<select ng-if="editor.previewState === 'inactive'" class="form-select" ng-attr-id="style-foreground-{{ key }}"
+								ng-model="editor.foregroundValues[key]" ng-change="updateForeground(key)" ng-options="color.id as color.label for color in (isButtonElement(key) ? foregroundOptions : elementColorOptions)"></select>
+							<select ng-if="editor.previewState !== 'inactive'" class="form-select" ng-attr-id="style-foreground-{{ key }}"
+								ng-model="editor.foregroundValues[key]" ng-change="updateForeground(key)" ng-options="color.id as color.label for color in stateForegroundOptions(key)"></select>
+						</div>
+						<div class="style-color-row" ng-if="key === 'background'">
+							<label class="hy-nostyle" for="style-background">{{ t('settings.style_background') }}</label>
+							<select ng-if="editor.previewState === 'inactive'" class="form-select" id="style-background"
+								ng-model="editor.colorValues.background" ng-change="updateColorOverride('background')" ng-options="color.id as color.label for color in backgroundOptions"></select>
+							<select class="form-select" id="style-background"
+								ng-if="editor.previewState !== 'inactive'"
+								ng-model="editor.colorValues.background" ng-change="updateColorOverride('background')" ng-options="color.id as color.label for color in stateColorOptions('background')"></select>
+						</div>
+						</fieldset>
+					</div>
+					</div>
+				</div>
+			</fieldset>
+		</section>
+
+		<section class="settings-content" role="tabpanel" ng-show="activeTab === 'general'">
+			<h2>{{ labels.generalTitle }}</h2>
+			<div class="setting-row">
+				<div class="setting-description">
+					<label class="hy-nostyle" for="decimal-places">{{ labels.decimals }}</label>
+					<p class="help-text">{{ labels.decimalsDescription }}</p>
+				</div>
+				<select id="decimal-places" class="form-select" ng-model="roundOfDurationsFlowcards"
+					ng-options="value for value in decimalOptions" ng-disabled="!decimalsAvailable || savingSettings">
+				</select>
+			</div>
+		</section>
+
+		<footer class="settings-savebar">
+			<button class="hy-nostyle btn settings-save-button" type="button" ng-click="saveSettings()"
+				ng-class="{ 'is-dirty': isDirty() }" ng-disabled="!isDirty() || savingSettings">
+				{{ labels.save }}
+			</button>
+		</footer>
+	</main>
+
+	<script type="text/ng-template" id="grouped-preview.html">
+		<div class="style-grouped-preview">
+			<div class="style-preview-row" ng-repeat="row in groupedRows(true, previewScenario) track by row.id"
+				ng-attr-data-row-alignment="{{ row.alignment }}" ng-attr-data-preview-row="{{ row.id }}"
+				ng-style="{ 'grid-template-columns': row.tracks }">
+				<div class="style-preview-group" ng-repeat="group in row.groups track by group.id"
+					ng-attr-data-alignment="{{ group.alignment }}"
+					ng-attr-data-vertical-alignment="{{ group.verticalAlignment }}"
+					ng-attr-data-direction="{{ group.direction }}"
+					ng-attr-data-preview-group="{{ row.id }}:{{ group.id }}">
+					<span ng-repeat="element in group.elements track by element" class="style-widget-element"
+						ng-class="'style-widget-' + element"
+						ng-attr-data-palette="{{ isButtonElement(element) ? previewColor(element) : 'default' }}"
+						ng-attr-data-foreground="{{ previewForeground(element) }}">
+						<i ng-if="element === 'icon'" class="fa-solid style-preview-chronograph-icon" ng-class="previewIcon()" aria-hidden="true"></i>
+						<strong ng-if="element === 'name'">{{ t('settings.widget_chronograph') }}</strong>
+						<span ng-if="element === 'status'">{{ (previewScenario ? previewScenario.state : editor.previewState) === 'running' ? labels.running : ((previewScenario ? previewScenario.state : editor.previewState) === 'paused' ? labels.paused : t('settings.widget_not_running')) }}</span>
+						<span ng-if="element === 'duration'">12:34.56</span>
+						<span ng-if="element === 'progress'" class="style-progress" ng-attr-data-direction="{{ progressDirection() }}"
+							ng-attr-data-foreground="{{ progressBackground() }}" role="progressbar"
+							ng-attr-aria-label="{{ t('settings.style_progress') }}" aria-valuemin="0" aria-valuemax="100"
+							ng-attr-aria-valuenow="{{ progressPercent(previewScenario ? previewScenario.state : editor.previewState) }}">
+							<span class="style-progress-fill" ng-attr-data-foreground="{{ progressForeground() }}"
+								ng-style="(progressDirection() === 'left-right' || progressDirection() === 'right-left')
+									? { width: progressPercent(previewScenario ? previewScenario.state : editor.previewState) + '%' }
+									: { height: progressPercent(previewScenario ? previewScenario.state : editor.previewState) + '%' }"></span>
+							<span class="style-progress-marker" ng-if="editor.previewType === 'transition' && progressShowSteps()"
+								ng-repeat="marker in progressMarkers() track by $index"
+								ng-style="(progressDirection() === 'left-right' || progressDirection() === 'right-left') ? { left: marker + '%' } : { top: marker + '%' }"></span>
+						</span>
+						<button ng-if="element === 'cancel'" class="hy-nostyle style-widget-action style-widget-cancel" type="button"
+							ng-click="previewAction(element)" ng-attr-aria-label="{{ previewActionLabel(element) }}" ng-attr-title="{{ previewActionLabel(element) }}"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+						<button ng-if="element === 'start' || element === 'play' || element === 'pause' || element === 'stop'" class="hy-nostyle style-widget-action" type="button"
+							ng-click="previewAction(element)" ng-attr-aria-label="{{ previewActionLabel(element) }}" ng-attr-title="{{ previewActionLabel(element) }}"
+							ng-class="{ 'style-widget-start': element === 'start' }">
+							<i class="fa-solid" ng-class="element === 'start' || element === 'play' ? 'fa-play' : (element === 'pause' ? 'fa-pause' : 'fa-stop')" aria-hidden="true"></i>
+							<span ng-if="element === 'start'">{{ t('settings.widget_start') }}</span>
+						</button>
+						<span ng-if="element === 'fields'"><span ng-include="'preview-fields.html'"></span></span>
+					</span>
+				</div>
+			</div>
 		</div>
-		<h1><img src="assets/timer.svg" /><span data-i18n="settings.timers">Timers</span></h1>
-		<ol v-if="timers.length > 0">
-			<chronograph-item v-for="timer in timers" v-bind:chronograph="timer" v-bind:key="timer.id"></chronograph-item>
-		</ol>
-		<em v-else data-i18n="settings.no_active_timers">No active timers.</em>
-
-		<ol v-if="chronographsNames && chronographsNames.timer && chronographsNames.timer.length > 0">
-			<table>
-				<chronograph-name-item v-for="chronograph in chronographsNames.timer" v-bind:chronograph="chronograph" v-bind:key="chronograph"></chronograph-name-item>
-			</table>
-		</ol>
-		<em v-else data-i18n="settings.no_timers">No timers.</em>
-
-		<h1><img src="assets/stopwatch.svg" /><span data-i18n="settings.stopwatches">Stopwatches</span></h1>
-		<ol v-if="stopwatches.length > 0">
-			<chronograph-item v-for="stopwatch in stopwatches" v-bind:chronograph="stopwatch" v-bind:key="stopwatch.id"></chronograph-item>
-		</ol>
-		<em v-else data-i18n="settings.no_active_stopwatches">No active stopwatches.</em>
-
-		<ol v-if="chronographsNames && chronographsNames.stopwatch && chronographsNames.stopwatch.length > 0">
-			<table>
-				<chronograph-name-item v-for="chronograph in chronographsNames.stopwatch" v-bind:chronograph="chronograph" v-bind:key="chronograph"></chronograph-name-item>
-			</table>
-		</ol>
-		<em v-else data-i18n="settings.no_stopwatches">No stopwatches.</em>
-
-		<h1><img src="assets/transition.svg" /><span data-i18n="settings.transitions">Transitions</span></h1>
-		<ol v-if="transitions.length > 0">
-			<chronograph-item v-for="transition in transitions" v-bind:chronograph="transition" v-bind:key="transition.id"></chronograph-item>
-		</ol>
-		<em v-else data-i18n="settings.no_active_transitions">No active transitions.</em>
-
-		<ol v-if="chronographsNames && chronographsNames.transition && chronographsNames.transition.length > 0">
-			<table>
-				<chronograph-name-item v-for="chronograph in chronographsNames.transition" v-bind:chronograph="chronograph" v-bind:key="chronograph"></chronograph-name-item>
-			</table>
-		</ol>
-		<em v-else data-i18n="settings.no_transitions">No transitions.</em>
-		<!-- <h1><img src="assets/chronographs.svg" /><span data-i18n="settings.chronographs">Chronographs</span></h1>
-		<ol v-if="chronographsNames.length > 0">
-			<chronograph-item v-for="chronograph in chronographsNames" v-bind:chronograph="chronograph" v-bind:key="chronograph"></chronograph-item>
-		</ol>
-		<em v-else data-i18n="settings.no_active_chronographs">No active chronographs.</em> -->
-
-
-	</div>
-
-	<script type="text/javascript">
-		function onHomeyReady(Homey) {
-			Vue.component('chronograph-item', {
-				props: ['chronograph'],
-				template:
-					'<li>'
-					+ '<span><strong>{{ chronograph.name }}</strong></span>'
-					+ '<span><button v-on:click="toggle">{{ chronograph.running ? Homey.__("settings.pause") : Homey.__("settings.resume") }}</button><button v-on:click="stop">{{ Homey.__("settings.stop") }}</button></span>'
-					+ '<span>{{ calculateDuration(chronograph) }}</span>'
-					+ '<br class="cb">'
-					+ '</li>',
-				updated: function () {
-					this.update();
-				},
-				mounted: function () {
-					this.update();
-				},
-				beforeDestroy: function () {
-					clearInterval(this.interval);
-				},
-				methods: {
-					stop: function (event) {
-						Homey.api('DELETE', '/chronographs/' + this.chronograph.id);
-						var index = app.chronographs.length;
-						while (index--) {
-							if (app.chronographs[index].id == this.chronograph.id) {
-								app.chronographs.splice(index, 1);
-								return;
-							}
-						}
-					},
-					toggle: function (event) {
-						this.chronograph.running = !this.chronograph.running;
-						Homey.api('PUT', '/chronographs/' + this.chronograph.id, this.chronograph);
-					},
-					update: function () {
-						if (this.chronograph.running) {
-							if (!this.interval) {
-								this.interval = setInterval(() => {
-									this.chronograph.duration = this.chronograph.duration + 100;
-								}, 100);
-							}
-						} else {
-							if (this.interval) {
-								clearInterval(this.interval);
-								delete (this.interval);
-							}
-						}
-					},
-					calculateDuration: function (chronograph) {
-						var duration = Math.max(0, chronograph.data.type == 'Timer' ? chronograph.targetDuration - chronograph.duration : chronograph.duration);
-						duration /= 1e3;
-						var days = Math.floor(duration / (24 * 3600));
-						duration %= (24 * 3600);
-						var hours = Math.floor(duration / 3600);
-						duration %= 3600;
-						var minutes = Math.floor(duration / 60);
-						duration %= 60;
-						var seconds = duration.toFixed(2);
-
-						var result = seconds.toString().padStart(5, '0');
-						if (minutes > 0 || hours > 0 || days > 0) {
-							result = minutes.toString().padStart(2, '0') + ':' + result;
-						}
-						if (hours > 0 || days > 0) {
-							result = hours.toString().padStart(2, '0') + ':' + result;
-						}
-						if (days > 0) {
-							result = days + Homey.__('settings.days_abbreviation') + ' ' + result;
-						}
-
-						return result;
-					}
-				}
-			});
-			Vue.component('chronograph-name-item', {
-				props: ['chronograph'],
-				template:
-					'<tr>'
-					+ '<td><strong>{{ chronograph.name }}</strong>&nbsp;</td><td>{{chronograph.action ? new Date(chronograph.action).toLocaleString() : \'\'}}</td>'
-					+ '</tr>'
-
-			});
-
-			var app = new Vue({
-				el: '#app',
-				data: {
-					chronographs: [],
-					roundOfDurationsFlowcards: 5,
-					chronographsNames: {}
-				},
-				computed: {
-					timers: function () {
-						return this.chronographs.filter(chronograph => chronograph.data.type == 'Timer');
-					},
-					stopwatches: function () {
-						return this.chronographs.filter(chronograph => chronograph.data.type == 'Stopwatch');
-					},
-					transitions: function () {
-						return this.chronographs.filter(chronograph => chronograph.data.type == 'Transition');
-					},
-					chronographsNames: function () {
-						return this.chronographsNames;
-					}
-				},
-				methods: {
-					refresh: function () {
-						Homey.get('chronographs', (err, val) => {
-							if (err) return Homey.alert(err);
-							this.chronographsNames = val;
-
-						});
-						return new Promise((resolve, reject) => {
-							Homey.api('GET', '/chronographs/', null, (err, body) => {
-								if (err) {
-									reject(err);
-								} else {
-									this.chronographs = this.sort(body);
-									resolve();
-								}
-							});
-						});
-					},
-					setRoundOfDurationsFlowcards: function () {
-						Homey.set('roundOfDurationsFlowcards', Number.parseInt(this.roundOfDurationsFlowcards), (err) => {
-							if (err) return Homey.alert(err);
-							return Homey.alert(Homey.__('settings.saved'));
-						});
-					},
-					sort(what) {
-						return what.sort((left, right) => left.duration == right.duration ? left.name.localeCompare(right.name) : (left.duration > right.duration ? 1 : -1));
-					}
-				},
-				mounted: function () {
-					Homey.get('roundOfDurationsFlowcards', (err, val) => {
-						if (err) return Homey.alert(err);
-						this.roundOfDurationsFlowcards = val;
-					});
-					this.refresh()
-						.then(() => {
-							// After the first refresh, keep on refreshing to make sure the view is updated
-							// even when the events are not properly received.
-							setInterval(this.refresh, 5000);
-
-							// Install the event handlers that process real-time events.
-							Homey.on('chronograph_event', (event) => {
-								//console.log('chronograph_event recieved');
-								var index = this.chronographs.length;
-								while (index--) {
-									if (this.chronographs[index].id == event.id) {
-										if (event.removed) {
-											this.chronographs.splice(index, 1);
-										} else {
-											this.chronographs[index].duration = event.duration;
-											this.chronographs[index].running = event.running;
-										}
-										return;
-									}
-								}
-								if (!event.removed) {
-									this.chronographs.push(event);
-								}
-							});
-							Homey.get('chronographs', (err, val) => {
-								if (err) return Homey.alert(err);
-								this.chronographsNames = val;
-								//console.log('this.chronographsNames', this.chronographsNames);
-
-							});
-							// Set the app to ready; this removes the loading indicator.
-							Homey.ready();
-						})
-						.catch((error) => {
-							console.log(error);
-						});
-					;
-				}
-			});
-		}
 	</script>
-
+	<script type="text/ng-template" id="cell-preview.html">
+		<div class="style-showcase">
+			<div class="style-showcase-cell" ng-repeat="element in getPreviewCells(previewScenario) track by $index">
+				<span ng-if="!(previewScenario && previewScenario.excludeFields && element === 'fields') && previewVisible(element, previewScenario && previewScenario.state)" class="style-cell-content"
+					ng-attr-data-palette="{{ isButtonElement(element) ? previewColor(element) : 'default' }}"
+					ng-attr-data-foreground="{{ previewForeground(element) }}">
+					<i ng-if="element === 'icon'" class="fa-solid" ng-class="previewIcon()" aria-hidden="true"></i>
+					<strong ng-if="element === 'name'">{{ editor.previewType === 'stopwatch' ? t('settings.stopwatches') : (editor.previewType === 'timer' ? t('settings.timers') : t('settings.transitions')) }}</strong>
+					<span ng-if="element === 'status'">{{ (previewScenario ? previewScenario.state : editor.previewState) === 'running' ? labels.running : ((previewScenario ? previewScenario.state : editor.previewState) === 'paused' ? labels.paused : t('settings.widget_not_running')) }}</span>
+					<span ng-if="element === 'duration'">12:34.56</span>
+					<button ng-if="element === 'play' || element === 'pause' || element === 'stop'" class="hy-nostyle style-showcase-action" type="button"
+						ng-click="previewAction(element)" ng-attr-aria-label="{{ previewActionLabel(element) }}" ng-attr-title="{{ previewActionLabel(element) }}">
+						<i class="fa-solid" ng-class="element === 'play' ? 'fa-play' : (element === 'pause' ? 'fa-pause' : 'fa-stop')" aria-hidden="true"></i>
+					</button>
+					<span ng-if="element === 'fields'"><span ng-include="'preview-fields.html'"></span></span>
+				</span>
+			</div>
+			<button ng-if="(previewScenario ? previewScenario.state : editor.previewState) === 'starting'" class="hy-nostyle style-widget-element style-widget-action style-widget-cancel" type="button"
+				ng-attr-data-palette="{{ previewColor('cancel') }}"
+				ng-attr-data-foreground="{{ previewForeground('cancel') }}"
+				ng-click="previewAction('cancel')" ng-attr-aria-label="{{ previewActionLabel('cancel') }}" ng-attr-title="{{ previewActionLabel('cancel') }}"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+		</div>
+	</script>
+	<script type="text/ng-template" id="preview-fields.html">
+		<span class="style-widget-fields">
+			<span class="style-widget-field-row">
+				<input class="hy-nostyle style-widget-field" type="number" min="1" step="any"
+					ng-model="editor.previewValues.time" ng-attr-aria-label="{{ t('settings.widget_duration') }}">
+				<select class="hy-nostyle style-widget-field" ng-model="editor.previewValues.unit"
+					ng-attr-aria-label="{{ t('settings.widget_unit') }}">
+					<option value="milliseconds">{{ t('settings.milliseconds') }}</option>
+					<option value="seconds">{{ t('settings.seconds') }}</option>
+					<option value="minutes">{{ t('settings.minutes') }}</option>
+					<option value="hours">{{ t('settings.hours') }}</option>
+					<option value="days">{{ t('settings.days') }}</option>
+				</select>
+			</span>
+			<span class="style-widget-field-row" ng-if="editor.previewType === 'transition'">
+				<input class="hy-nostyle style-widget-field" type="number" step="any" ng-model="editor.previewValues.from"
+					ng-attr-placeholder="{{ t('settings.widget_from') }}" ng-attr-aria-label="{{ t('settings.widget_from') }}">
+				<input class="hy-nostyle style-widget-field" type="number" step="any" ng-model="editor.previewValues.to"
+					ng-attr-placeholder="{{ t('settings.widget_to') }}" ng-attr-aria-label="{{ t('settings.widget_to') }}">
+				<input class="hy-nostyle style-widget-field" type="number" min="2" step="1" ng-model="editor.previewValues.steps"
+					ng-attr-placeholder="{{ t('settings.widget_steps') }}" ng-attr-aria-label="{{ t('settings.widget_steps') }}">
+			</span>
+		</span>
+	</script>
+	<script type="text/javascript" src="assets/settings.js"></script>
+	<script type="text/javascript" src="assets/widget-style-editor.js"></script>
 </body>
 
 </html>

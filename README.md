@@ -20,6 +20,155 @@ Adds precise timer, stopwatch and transition functionality to Homey.
 * Set a timer or transition widget's default duration to 0 to use the last duration saved by a Flow or API start, if available.
 * Transition widget default start, end and step values use the last saved Flow or API values when set to 0 or left empty.
 
+## Widget style designer
+
+The Widgets tab in app settings lets you create and copy independent named
+design styles and color schemes. Switch between the two editing modes and
+choose the other collection in Design preview to see any combination. In color
+mode all elements can be selected, including unused elements.
+Existing custom styles are split into a design and matching color scheme; save
+the settings to persist this migration. Deleting a design does not delete its
+scheme, or vice versa.
+During development, each built-in Default is temporarily editable for testing.
+Its edits exist only until settings are reloaded and are not saved by the
+Save button. Copying it explicitly creates a custom design or color scheme
+containing those edits, which can be saved. Choose a widget type, size and state
+for the design preview. Confirming deletion removes a custom item immediately
+without saving other pending edits. The built-in Defaults cannot be deleted. Drag a row label
+to reorder rows, or a column number to reorder columns within its row. The
+selected row or column also has move buttons. Reordering applies to the selected
+size, moving the associated settings and element positions in every state;
+other sizes are unchanged. Arrange elements in rows and groups by dragging
+them, or choose their row, group and order using the
+controls. On touchscreens a floating label follows the dragged element until it
+is dropped. Elements in a column are arranged horizontally without wrapping by
+default; select a column to arrange them vertically instead. Text may be
+truncated in a narrow column. Start and Play / Resume are separate elements with independently
+configurable positions and colors. Compact, Normal and Large have separate layouts, shared across the
+three widget types. Move an element to the Unused row to remove it from the
+layout; drag it back or choose a numbered row to restore it. Unused elements
+are specific to the selected size and base layout or state override. Existing
+state-specific positions still override changes to the base layout in other
+states. When a base move would otherwise be hidden by an override in the
+selected preview state, that state's position is updated as well.
+Under Design, each size has a Height setting: Auto follows the current content.
+Minimum including input fields reserves space for the tallest preview state,
+including the start form. Minimum excluding input fields reserves space for
+inactive, paused and running states without input fields; the widget can grow
+when the input form is displayed. Measurements use the available width. This affects the designer
+preview only; styles have not yet been applied to dashboard widgets.
+The Default style uses Minimum excluding input fields for Compact and Minimum including input fields for Normal
+and Large, with row 3 aligned to the bottom in Normal and Large.
+Select a row to align it at the top, middle, or bottom of available vertical
+space. This is most noticeable with Minimum required height when another row
+is hidden. Rows remain in order; when multiple rows request extra space, they
+share it rather than overlapping.
+The preview displays positions from the layout currently being edited: base
+positions in base mode, or resolved positions in state-override mode. Row
+visibility and element visibility still follow the selected preview state.
+Changing the preview type preserves the selected size and state, including an
+open start-form state when temporarily viewing a stopwatch, which has no start form.
+Every non-button element has one Color setting. Buttons have separate
+Background and Text / icon color settings, including Cancel. In Not running,
+a selected color is the base color inherited by other states unless overridden.
+Theme color follows Homey's theme; automatic button text/icon color preserves
+the existing button appearance.
+Select a row to configure its visibility separately per size: choose any
+combination of inactive, paused, running and start form open. An optional
+duration closes the start form and returns to inactive; the earliest duration
+among visible rows applies. The Compact Default's start form closes after ten
+seconds. Start and Cancel also close the form, and Play can reopen it.
+Existing action rules are converted to the closest state: Play to start form
+open, Pause to paused, and Stop to inactive. A timed Play becomes a start form
+timeout; toggle and other action-specific behavior cannot be preserved exactly.
+Start fields are shown only when the chronograph is inactive or its start form
+is open; resuming a paused chronograph does not show them.
+Existing styles retain their previous start-field behavior until the relevant
+row is configured.
+The grouped designer has five rows. Each row can have one to four columns (groups), configured independently per
+size. Reducing the count moves elements from removed columns into the last
+remaining column, including their state-specific positions. The preview keeps
+empty columns in place; start fields wrap within their assigned column.
+In the Large preview, the chronograph icon is larger, and start fields are
+taller and use larger text to match the larger action buttons.
+The Default design places the Status bar in row 2 for Compact and row 5 for
+Normal and Large, visible when running or paused. It can be placed in any
+row for timers and transitions. Each size can configure its background and fill colors in the
+color scheme, and its direction, timer fill/empty mode, and optional transition
+step markers in the design. The
+designer shows sample progress (25% elapsed); markers use the preview step count
+when it is between 2 and 100, otherwise five example steps. The bar is not
+shown for stopwatches. These settings are designer-only until widget integration.
+Select a column to set its span, from one to four units. Every row has four
+units in total; other columns adjust automatically, taking or giving space to
+the nearest columns on the right first, then on the left. If a larger span
+cannot fit, adjacent columns are removed from right to left around the selected
+column. Elements to its right shift into the next available column, cascading
+until the last column, where overflow is combined. Elements from removed columns
+to its left move into the selected column. This applies to every state.
+The selected column remains selected even if its number changes. When columns are
+removed their space joins the last remaining column; new columns take one unit
+from the rightmost column with space to spare. Spans are saved per size and
+shared across preview states.
+Each column also has left, center or right alignment. Direction and alignment
+are configured per size and shared across states. Existing and newly added
+columns default to horizontal and left alignment. When columns are removed,
+surviving columns retain their settings and moved elements use the destination
+column's settings. Vertical alignment can be top, middle or bottom within the
+row; existing and new columns default to middle.
+Column width can either use its span as a share of the remaining row width, or
+fit its content. Content-sized columns take their natural width where space
+permits; span-sized columns divide the remaining space in proportion to their
+spans. Compact Default's first row uses three columns: a two-unit flexible column for icon,
+name and status, followed by content-sized duration and button columns. Its
+second row has two span-sized columns for start fields and Start / Cancel,
+with spans of three and one respectively. Normal and Large Default have a
+single column in their first two rows. Their duration and start rows each have
+a flexible first column and a content-sized second column; Start aligns to
+the bottom of the start row, and Cancel is unused. Existing
+saved styles without width settings retain span-based sizing.
+The Default style defines row visibility for each size: in Normal and Large,
+the start row is shown while inactive and the duration/action row while paused
+or running. In Compact, the start-form row appears after Play.
+Select an element to edit its position and color, or select Widget above the
+designer to edit the background color. Row, element and background settings are shown
+only for the current selection; selecting a column shows its span instead.
+The preview buttons simulate starting, pausing, resuming and stopping, and the
+start fields accept sample input. These controls do not operate real chronographs
+or save the sample values. If a visibility rule hides the controls, use the
+status selector to reset the preview.
+
+Each size has a base layout. State-specific positions override only the
+elements explicitly changed; other elements continue to follow the base.
+Start form layouts inherit the inactive layout before applying their own
+positions for any size.
+Existing cell-based styles remain available and can be converted
+to grouped layouts using the editor. Existing grouped styles initially place
+Start where Play was placed and copy its colors; subsequent edits are independent.
+Colors are shared across sizes. Set the
+default element and background colors in the inactive state. Paused and running
+states inherit these colors unless individually overridden. The compact start
+form also inherits inactive colors unless overridden. Choose Inherit to remove
+an individual override; its label shows the inherited color. The Default style
+sets a blue running duration as an explicit override. Existing saved colors are
+preserved. Use the settings Save button to persist custom styles.
+
+The designer currently stores styles for later use; it does not yet apply them
+to dashboard widgets. Existing widget settings and appearances are unchanged.
+
+### Local settings preview
+
+Run `npm --prefix tools/development run preview:settings` and open
+`http://127.0.0.1:4178/settings/index.html`. Refresh after changing code.
+The preview loads translations for the browser language; add `?lang=nl` or
+`?lang=en` to choose a language. Settings saved in this preview are stored
+in the browser's local storage, not on Homey. Chronographs are sample data and
+reset when the page reloads. The temporary Default style edits are also reset
+on reload. The preview does not load Homey's actual stylesheet or connect to a
+Homey device, so final appearance and behavior still require a Homey check.
+Press Ctrl+C in the terminal to stop the server. Set
+`CHRONOGRAPH_PREVIEW_PORT` before starting it to use another port.
+
 **Simple math expressions**
 
 The start, resume and adjust action cards have built-in support for simple math expressions. This allows

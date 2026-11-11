@@ -3,6 +3,7 @@
 	"version": "1.0.0",
 	"private": true,
 	"scripts": {
+		"preview:settings": "node settings-preview.js",
 		"test": "mocha \"../../test/**/*.test.js\""
 	},
 	"husky": {
