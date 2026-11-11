@@ -15,8 +15,8 @@ function onHomeyReady(Homey) {
 			var lastHeight = 0;
 			var settings = Homey.getSettings() || {};
 		var widgetStyleRuntime = window.ChronographWidgetStyle;
-		var designStyleId = widgetStyleRuntime.settingId(settings.designStyle);
-		var colorSchemeId = widgetStyleRuntime.settingId(settings.colorScheme);
+		var designStyleId = widgetStyleRuntime.settingId(settings.designStyle) || 'builtin:current';
+		var colorSchemeId = widgetStyleRuntime.settingId(settings.colorScheme) || 'builtin:current';
 		var activeDesign;
 		var activeColorScheme;
 		var activeDesignScheme = widgetStyleRuntime.currentScheme();
@@ -183,6 +183,7 @@ function onHomeyReady(Homey) {
 			$scope.widgetType = widgetType;
 			$scope.designEnabled = false;
 			$scope.designRows = [];
+			$scope.designLayers = [];
 			$scope.designState = 'inactive';
 			$scope.designScheme = activeDesignScheme;
 
@@ -196,6 +197,7 @@ function onHomeyReady(Homey) {
 			function updateDesignRows() {
 				if (!activeDesign) {
 					$scope.designRows = [];
+					$scope.designLayers = [];
 					$scope.designEnabled = false;
 					return;
 				}
@@ -206,6 +208,25 @@ function onHomeyReady(Homey) {
 				$scope.designState = state;
 				$scope.designRows = widgetStyleRuntime.buildRows(activeDesign, $scope.layout, state, widgetType, hasDesignStartForm());
 				$scope.designEnabled = $scope.designRows.length > 0;
+				$scope.designLayers = [{ id: 'current', state: state, rows: $scope.designRows, measure: false }];
+				var mode = activeDesign.heightModes && activeDesign.heightModes[$scope.layout] || 'auto';
+				if (mode === 'minimum' || mode === 'minimum-without-inputs') {
+					var states = mode === 'minimum'
+						? ['inactive', 'paused', 'running', 'starting'] : ['inactive', 'paused', 'running'];
+					states.forEach(function (scenario) {
+						var showForm = scenario === 'starting'
+							|| (scenario === 'inactive' && !isStopwatch && $scope.layout !== 'compact'
+								&& (!activeDesign.startFieldsVisibility || activeDesign.startFieldsVisibility[$scope.layout] === 'inactive'));
+						var scenarioState = scenario === 'inactive' && showForm ? 'starting' : scenario;
+						$scope.designLayers.push({
+							id: scenario,
+							state: scenarioState,
+							measure: true,
+							rows: widgetStyleRuntime.buildRows(activeDesign, $scope.layout, scenarioState, widgetType, showForm,
+								mode === 'minimum-without-inputs')
+						});
+					});
+				}
 				$scope.designScheme = activeDesignScheme;
 			}
 
@@ -276,7 +297,7 @@ function onHomeyReady(Homey) {
 			};
 			$scope.designProgressMarkers = function () {
 				var chronograph = $scope.selectedChronograph;
-				var steps = chronograph && chronograph.defaults && Number(chronograph.defaults.steps);
+				var steps = chronograph && chronograph.active && Number(chronograph.steps);
 				var progress = activeDesign && activeDesign.progressSettings
 					&& activeDesign.progressSettings[$scope.layout];
 				if (!isTransition || !progress || !progress.showSteps) return [];
@@ -312,24 +333,23 @@ function onHomeyReady(Homey) {
 			}
 
 			function loadWidgetAppearance() {
-				var needsCollection = (designStyleId && designStyleId !== 'builtin:current')
-					|| (colorSchemeId && colorSchemeId !== 'builtin:current');
+				var needsCollection = designStyleId !== 'builtin:current' || colorSchemeId !== 'builtin:current';
 				if (!needsCollection) {
-					activeDesign = null;
-					applyColorScheme(colorSchemeId === 'builtin:current' ? widgetStyleRuntime.currentScheme() : null);
+					activeDesign = widgetStyleRuntime.currentDesign();
+					applyColorScheme(widgetStyleRuntime.currentScheme());
 					updateDesignRows();
 					return Promise.resolve();
 				}
 				return Homey.api('GET', '/widget-styles', {}).then(function (collection) {
-					var design = designStyleId && designStyleId !== 'builtin:current'
-						? widgetStyleRuntime.findStyle(collection, designStyleId) : null;
-					var scheme = colorSchemeId && colorSchemeId !== 'builtin:current'
+					var design = designStyleId !== 'builtin:current'
+						? widgetStyleRuntime.findStyle(collection, designStyleId) : widgetStyleRuntime.currentDesign();
+					var scheme = colorSchemeId !== 'builtin:current'
 						? widgetStyleRuntime.findScheme(collection, colorSchemeId)
-						: colorSchemeId === 'builtin:current' ? widgetStyleRuntime.currentScheme() : null;
-					if (designStyleId && designStyleId !== 'builtin:current' && !design) {
+						: widgetStyleRuntime.currentScheme();
+					if (designStyleId !== 'builtin:current' && !design) {
 						throw new Error('The selected widget design is no longer available.');
 					}
-					if (colorSchemeId && colorSchemeId !== 'builtin:current' && !scheme) {
+					if (colorSchemeId !== 'builtin:current' && !scheme) {
 						throw new Error('The selected widget color scheme is no longer available.');
 					}
 					$scope.$applyAsync(function () {
@@ -443,6 +463,13 @@ function onHomeyReady(Homey) {
 
 			$scope.start = function () {
 				if (!$scope.selectedChronograph || $scope.selectedChronograph.active || $scope.busy) return;
+				if ($scope.designEnabled) {
+					var invalidInput = document.querySelector('.chronograph-design-layer-current input:invalid');
+					if (invalidInput) {
+						invalidInput.reportValidity();
+						return;
+					}
+				}
 
 				$scope.busy = true;
 				$scope.error = null;

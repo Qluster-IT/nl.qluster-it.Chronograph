@@ -29,7 +29,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		var Homey;
 		chronographSettingsScope = $scope;
 
-		$scope.activeTab = 'chronographs';
+		$scope.activeTab = window.chronographSettingsPreview ? 'widgets' : 'chronographs';
 		$scope.chronographs = [];
 		$scope.chronographsNames = {};
 		$scope.roundOfDurationsFlowcards = 2;

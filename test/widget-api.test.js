@@ -3,6 +3,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
+const vm = require('vm');
 const Chronograph = require('../lib/chronograph.js');
 const { Utils, ChronographType } = require('../lib/utils.js');
 const appApi = require('../api.js');
@@ -311,6 +312,46 @@ describe('Chronograph widget API', () => {
 		assert.strictEqual(updated.defaults.from, 10);
 		assert.strictEqual(updated.defaults.to, 90);
 		assert.strictEqual(updated.defaults.steps, 12);
+		assert.strictEqual(updated.steps, 4);
+		const paused = await transitionWidgetApi.putChronograph({ homey, params: { id: transitionId }, body: { running: false } });
+		assert.strictEqual(paused.steps, 4);
+	});
+
+	it('restores a transition step count and split times for widgets', async () => {
+		const id = Utils.generateId(ChronographType.TRANSITION, 'Widget API transition');
+		const source = fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8');
+		const sandbox = {
+			module: { exports: {} },
+			require(name) {
+				if (name === 'homey') return { App: class {} };
+				if (name === './lib/chronograph.js') return Chronograph;
+				if (name === './lib/utils.js') return require('../lib/utils.js');
+				return class {};
+			},
+			Date,
+			console
+		};
+		vm.runInNewContext(source, sandbox);
+		const app = new sandbox.module.exports();
+		const snapshot = {
+			name: 'Widget API transition',
+			targetDuration: 12000,
+			duration: 0,
+			running: false,
+			data: { type: ChronographType.TRANSITION, steps: 4 }
+		};
+		app.homey = {
+			settings: { get: () => ({ [id]: snapshot }), set() {} },
+			setTimeout() {},
+			error(...args) { throw new Error(args.join(' ')); }
+		};
+		app._restoreChronographs();
+		const restored = Chronograph.get(id);
+		assert.strictEqual(restored.getData('steps'), 4);
+		assert.deepStrictEqual(restored._splits.map(split => split.time), [8000, 4000]);
+		assert.strictEqual(snapshot.data.steps, 4);
+		const result = await transitionWidgetApi.getChronograph({ homey, params: { id } });
+		assert.strictEqual(result.steps, 4);
 	});
 
 	it('rejects invalid running values and unknown chronographs', async () => {

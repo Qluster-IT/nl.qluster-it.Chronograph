@@ -4,5 +4,8 @@
 	"transition_not_running": "الانتقال __name__ غير قيد التشغيل.",
 	"invalid_duration": "مدة غير صالحة.",
 	"invalid_transition": "انتقال غير صالح.",
-	"invalid_name": "اسم غير صالح."
+	"invalid_name": "اسم غير صالح.",
+	"name_required": "تحتاج إلى كتابة (واختيار) اسم أو إدخال اسم.",
+	"existing": "موجود",
+	"new": "جديد"
 }

@@ -11,6 +11,8 @@ const styleScript = fs.readFileSync(path.join(__dirname, '..', 'assets', 'js', '
 async function loadWidget(type, settings, defaults, widgetStyles) {
 	let controller;
 	const listeners = {};
+	const requests = [];
+	let invalidInput = null;
 	const state = { active: false, running: false, defaults };
 	const module = { controller: (name, definition) => { controller = definition[definition.length - 1]; } };
 	const scope = { $on() {}, $applyAsync(callback) { callback(); } };
@@ -19,13 +21,17 @@ async function loadWidget(type, settings, defaults, widgetStyles) {
 		__: key => key,
 		ready() {},
 		on: (name, callback) => { listeners[name] = callback; },
-		api: (method, url) => Promise.resolve(url === '/widget-styles'
-			? widgetStyles
-			: Object.assign({}, state))
+		api: (method, url) => {
+			requests.push({ method, url });
+			return Promise.resolve(url === '/widget-styles' ? widgetStyles : Object.assign({}, state));
+		}
 	};
 	const context = {
 		angular: { module: () => module, bootstrap() {} },
-		document: { body: { getAttribute: () => type } },
+		document: {
+			body: { getAttribute: () => type },
+			querySelector: () => invalidInput
+		},
 		window: {},
 		Promise,
 		Date
@@ -37,10 +43,129 @@ async function loadWidget(type, settings, defaults, widgetStyles) {
 	timeout.cancel = () => {};
 	controller(scope, () => {}, timeout);
 	await new Promise(resolve => setImmediate(resolve));
-	return { scope, listeners, state };
+	return { scope, listeners, state, requests, setInvalidInput: input => { invalidInput = input; } };
 }
 
 describe('Widget duration defaults', () => {
+	it('shows markers for the active transition steps in each default layout', async () => {
+		for (const layout of ['compact', 'normal', 'large']) {
+			const widget = await loadWidget('transition', { layout }, { steps: 12 });
+			assert.deepStrictEqual(Array.from(widget.scope.designProgressMarkers()), []);
+			widget.state.active = true;
+			widget.state.running = true;
+			widget.state.steps = 4;
+			await widget.listeners.chronograph_event_multi();
+			assert.deepStrictEqual(Array.from(widget.scope.designProgressMarkers()), [25, 50, 75], layout);
+			widget.state.running = false;
+			widget.state.steps = 2;
+			await widget.listeners.chronograph_event_multi();
+			assert.deepStrictEqual(Array.from(widget.scope.designProgressMarkers()), [50], layout);
+			widget.state.steps = 101;
+			await widget.listeners.chronograph_event_multi();
+			assert.deepStrictEqual(Array.from(widget.scope.designProgressMarkers()), [], layout);
+		}
+	});
+
+	it('uses the built-in design and scheme for empty settings across widget types and layouts', async () => {
+		for (const type of ['timer', 'stopwatch', 'transition']) {
+			for (const layout of ['compact', 'normal', 'large']) {
+				const empty = await loadWidget(type, { layout, iconColor: 'red' }, {});
+				const explicit = await loadWidget(type, {
+					layout, designStyle: { id: 'builtin:current' }, colorScheme: { id: 'builtin:current' }
+				}, {});
+				assert.strictEqual(empty.scope.designEnabled, true, type + ' ' + layout);
+				assert.deepStrictEqual(JSON.parse(JSON.stringify(empty.scope.designRows)), JSON.parse(JSON.stringify(explicit.scope.designRows)));
+				assert.strictEqual(empty.scope.iconColor, 'blue');
+				assert.ok(!empty.requests.some(request => request.url === '/widget-styles'));
+				empty.state.active = true;
+				empty.state.running = true;
+				await empty.listeners.chronograph_event_multi();
+				assert.strictEqual(empty.scope.designState, 'running');
+				assert.strictEqual(empty.scope.designElementStyle('duration').color, 'var(--homey-color-blue, #2f8df6)');
+				assert.strictEqual(empty.scope.designRows.some(row => row.groups.some(group => group.elements.includes('pause'))), true);
+				assert.strictEqual(empty.scope.designRows.some(row => row.groups.some(group => group.elements.includes('progress'))), type !== 'stopwatch');
+			}
+		}
+	});
+
+	it('uses the default design and selected scheme independently', async () => {
+		const collection = { version: 2, styles: [], colorSchemes: [{ id: 'scheme-a', colors: { icon: 'red', name: 'green' } }] };
+		const icon = 'data:image/svg+xml;base64,PHN2Zy8+';
+		const { scope, requests } = await loadWidget('timer', { colorScheme: { id: 'scheme-a' }, icon: { image: icon } }, {}, collection);
+		assert.strictEqual(scope.designEnabled, true);
+		assert.deepStrictEqual(Array.from(scope.designRows, row => row.id), [1, 2, 4]);
+		assert.strictEqual(scope.iconColor, 'red');
+		assert.strictEqual(scope.iconMask, 'url("' + icon + '")');
+		assert.strictEqual(scope.designElementStyle('name').color, 'var(--homey-color-green, #71d51b)');
+		assert.strictEqual(requests.filter(request => request.url === '/widget-styles').length, 1);
+	});
+
+	it('uses the selected design and default scheme independently', async () => {
+		const design = {
+			id: 'design-a',
+			groups: { normal: { elements: { name: { row: 1, group: 1, order: 1 } }, overrides: {} } },
+			rowColumns: { normal: { 1: 1 } }
+		};
+		const { scope } = await loadWidget('timer', { designStyle: { id: 'design-a' }, iconColor: 'red' }, {}, {
+			version: 2, styles: [design], colorSchemes: []
+		});
+		assert.strictEqual(scope.designEnabled, true);
+		assert.deepStrictEqual(Array.from(scope.designRows, row => row.id), [1]);
+		assert.strictEqual(scope.iconColor, 'blue');
+		assert.strictEqual(scope.designScheme.colors.stop, 'red');
+	});
+
+	it('builds the selected height mode measurement scenarios without changing the visible layout', async () => {
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		for (const mode of ['auto', 'minimum', 'minimum-without-inputs']) {
+			const design = runtime.currentDesign();
+			design.id = 'height-test';
+			design.heightModes.normal = mode;
+			const { scope, state, listeners } = await loadWidget('transition', {
+				designStyle: { id: design.id }, layout: 'normal'
+			}, {}, { version: 2, styles: [design] });
+			assert.strictEqual(scope.designLayers[0].rows, scope.designRows);
+			const layers = scope.designLayers.slice(1);
+			assert.deepStrictEqual(Array.from(layers, layer => layer.id), mode === 'auto' ? []
+				: mode === 'minimum' ? ['inactive', 'paused', 'running', 'starting'] : ['inactive', 'paused', 'running']);
+			const containsFields = layer => layer.rows.some(row => row.groups.some(group => group.elements.includes('fields')));
+			assert.strictEqual(layers.some(containsFields), mode === 'minimum');
+			assert.ok(layers.every(layer => layer.measure));
+			state.active = true;
+			state.running = true;
+			await listeners.chronograph_event_multi();
+			assert.strictEqual(scope.designLayers[0].state, 'running');
+			assert.strictEqual(scope.designLayers.length, layers.length + 1);
+		}
+	});
+
+	it('uses built-in height modes for each size', async () => {
+		for (const [layout, count] of [['compact', 3], ['normal', 4], ['large', 4]]) {
+			const { scope } = await loadWidget('timer', { layout }, {});
+			assert.strictEqual(scope.designLayers.length, count + 1, layout);
+		}
+	});
+
+	it('reports invalid start fields without sending a start request', async () => {
+		const widget = await loadWidget('timer', {}, {});
+		let reported = false;
+		widget.setInvalidInput({ reportValidity() { reported = true; } });
+		widget.scope.start();
+		assert.strictEqual(reported, true);
+		assert.strictEqual(widget.requests.some(request => request.method === 'POST'), false);
+		widget.setInvalidInput(null);
+		widget.scope.start();
+		await new Promise(resolve => setImmediate(resolve));
+		assert.strictEqual(widget.requests.some(request => request.method === 'POST'), true);
+	});
+
+	it('reports an unavailable selected design or scheme instead of treating it as Default', async () => {
+		for (const settings of [{ designStyle: { id: 'missing' } }, { colorScheme: { id: 'missing' } }]) {
+			const { scope } = await loadWidget('timer', settings, {}, { version: 2, styles: [], colorSchemes: [] });
+			assert.match(scope.error, /selected widget (design|color scheme) is no longer available/);
+		}
+	});
+
 	it('loads the selected saved design and color scheme', async () => {
 		const design = {
 			id: 'design-a',

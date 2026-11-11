@@ -29,7 +29,11 @@ mode all elements can be selected, including unused elements.
 Existing custom styles are split into a design and matching color scheme; save
 the settings to persist this migration. Deleting a design does not delete its
 scheme, or vice versa.
-During development, each built-in Default is temporarily editable for testing.
+Each widget uses the built-in Default design and color scheme whenever its
+corresponding selector is empty. A saved design or scheme can be selected
+independently; choosing one does not change the other. The Default color scheme
+also takes precedence over color settings retained from older widget versions.
+In the designer, each built-in Default is temporarily editable for testing.
 Its edits exist only until settings are reloaded and are not saved by the
 Save button. Copying it explicitly creates a custom design or color scheme
 containing those edits, which can be saved. Choose a widget type, size and state
@@ -39,14 +43,13 @@ to reorder rows, or a column number to reorder columns within its row. The
 selected row or column also has move buttons. Reordering applies to the selected
 size, moving the associated settings and element positions in every state;
 other sizes are unchanged. Arrange elements in rows and groups by dragging
-them, or choose their row, group and order using the
-controls. On touchscreens a floating label follows the dragged element until it
+them. On touchscreens a floating label follows the dragged element until it
 is dropped. Elements in a column are arranged horizontally without wrapping by
 default; select a column to arrange them vertically instead. Text may be
 truncated in a narrow column. Start and Play / Resume are separate elements with independently
 configurable positions and colors. Compact, Normal and Large have separate layouts, shared across the
 three widget types. Move an element to the Unused row to remove it from the
-layout; drag it back or choose a numbered row to restore it. Unused elements
+layout; drag it back to a group to restore it. Unused elements
 are specific to the selected size and base layout or state override. Existing
 state-specific positions still override changes to the base layout in other
 states. When a base move would otherwise be hidden by an override in the
@@ -55,8 +58,8 @@ Under Design, each size has a Height setting: Auto follows the current content.
 Minimum including input fields reserves space for the tallest preview state,
 including the start form. Minimum excluding input fields reserves space for
 inactive, paused and running states without input fields; the widget can grow
-when the input form is displayed. Measurements use the available width. This affects the designer
-preview only; styles have not yet been applied to dashboard widgets.
+when the input form is displayed. Measurements use the available width in both
+the designer preview and dashboard widgets.
 The Default style uses Minimum excluding input fields for Compact and Minimum including input fields for Normal
 and Large, with row 3 aligned to the bottom in Normal and Large.
 Select a row to align it at the top, middle, or bottom of available vertical
@@ -97,8 +100,10 @@ row for timers and transitions. Each size can configure its background and fill 
 color scheme, and its direction, timer fill/empty mode, and optional transition
 step markers in the design. The
 designer shows sample progress (25% elapsed); markers use the preview step count
-when it is between 2 and 100, otherwise five example steps. The bar is not
-shown for stopwatches. These settings are designer-only until widget integration.
+when it is between 2 and 100, otherwise five example steps. Widgets use the
+active transition's actual step count and show markers for counts from 2 to 100.
+The Compact status bar is thinner than Normal and Large. The bar is not shown
+for stopwatches.
 Select a column to set its span, from one to four units. Every row has four
 units in total; other columns adjust automatically, taking or giving space to
 the nearest columns on the right first, then on the left. If a larger span
@@ -158,10 +163,16 @@ to dashboard widgets. Existing widget settings and appearances are unchanged.
 
 ### Local settings preview
 
+The root `locales/` directory contains an empty JSON object for each language.
+Homey Compose fills these files with generated translations when building; edit
+translations in `.homeycompose/locales/`, not the generated files.
+
 Run `npm --prefix tools/development run preview:settings` and open
 `http://127.0.0.1:4178/settings/index.html`. Refresh after changing code.
-The preview loads translations for the browser language; add `?lang=nl` or
-`?lang=en` to choose a language. Settings saved in this preview are stored
+The preview opens the Widgets tab by default; Homey settings keep their usual
+default tab. The preview loads translations for the browser language; add `?lang=nl` or
+`?lang=en` to choose a language. It reads translations directly from the Homey
+Compose locale sources, without requiring generated locale files. Settings saved in this preview are stored
 in the browser's local storage, not on Homey. Chronographs are sample data and
 reset when the page reloads. The temporary Default style edits are also reset
 on reload. The preview does not load Homey's actual stylesheet or connect to a

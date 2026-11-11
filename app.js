@@ -603,7 +603,8 @@ class Application extends Homey.App {
 				}
 
 				if (raw.data.type == ChronographType.TRANSITION) {
-					let steps = raw.data.steps--;
+					chronograph.setData('steps', raw.data.steps);
+					let steps = raw.data.steps - 1;
 					let stepDuration = chronograph.getTargetDuration() / steps;
 					while (--steps > 0) {
 						chronograph.addSplit(steps * stepDuration, 'milliseconds');

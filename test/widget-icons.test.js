@@ -136,10 +136,9 @@ describe('Widget icon autocomplete', () => {
 		assert.strictEqual(render('bell').iconClass, 'fa-solid fa-bell');
 		assert.strictEqual(render(undefined).iconClass, 'fa-solid fa-clock');
 		assert.strictEqual(render(undefined).iconColor, 'blue');
-		assert.strictEqual(render(selected, 'timer', 'red').iconColor, 'red');
+		assert.strictEqual(render(selected, 'timer', 'red').iconColor, 'blue');
 		assert.strictEqual(render(selected, 'timer', 'invalid').iconColor, 'blue');
 		assert.strictEqual(render({ image: legacySvg }, 'timer', 'blue').iconMask, '');
-		assert.strictEqual(render({ image: legacySvg }, 'timer', 'red').iconMask, 'url("' + legacySvg + '")');
 		assert.strictEqual(render({ image: legacySvg + '")' }, 'timer', 'red').iconMask, '');
 	});
 
@@ -150,8 +149,9 @@ describe('Widget icon autocomplete', () => {
 			const compose = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'widgets', type, 'widget.compose.json'), 'utf8'));
 			const ids = compose.settings.map(setting => setting.id);
 			assert.strictEqual(ids.indexOf('icon'), ids.indexOf('layout') + 1);
-			assert.strictEqual(ids.indexOf('designStyle'), ids.indexOf('icon') + 1);
+			assert.strictEqual(ids.indexOf('designStyle'), ids.indexOf('alternativeName') + 1);
 			assert.strictEqual(ids.indexOf('colorScheme'), ids.indexOf('designStyle') + 1);
+			assert.strictEqual(ids.indexOf('layout'), ids.indexOf('colorScheme') + 1);
 			assert.deepStrictEqual(ids.filter(id => /color/i.test(id)), ['colorScheme']);
 			assert.strictEqual(compose.settings.find(item => item.id === 'designStyle').type, 'autocomplete');
 			assert.strictEqual(compose.settings.find(item => item.id === 'colorScheme').type, 'autocomplete');

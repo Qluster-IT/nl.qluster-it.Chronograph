@@ -296,17 +296,6 @@
 									</div>
 									<p class="help-text" role="alert" ng-if="editor.invalidRowRule">{{ t('settings.style_row_invalid') }}</p>
 								</fieldset>
-						<fieldset class="hy-nostyle style-position-controls" ng-if="editor.selectedElement">
-							<label class="hy-nostyle" for="style-element">{{ t('settings.style_element') }}</label>
-							<select id="style-element" class="form-select" ng-model="editor.selectedElement"
-								ng-options="id as styleLabels[id] for id in styleElements" ng-change="selectLayoutElement(editor.selectedElement)"></select>
-							<label class="hy-nostyle" for="style-row">{{ t('settings.style_row') }}</label>
-							<select id="style-row" class="form-select" ng-model="editor.position.row" ng-options="value as (value === 0 ? t('settings.style_unused') : value) for value in positionRows" ng-change="updatePositionRow()"></select>
-							<label class="hy-nostyle" for="style-group" ng-if="editor.position.row !== 0">{{ t('settings.style_group') }}</label>
-							<select id="style-group" class="form-select" ng-if="editor.position.row !== 0" ng-model="editor.position.group" ng-options="value for value in availablePositionGroups()" ng-change="updateLayoutPosition()"></select>
-							<label class="hy-nostyle" for="style-order" ng-if="editor.position.row !== 0">{{ t('settings.style_order') }}</label>
-							<select id="style-order" class="form-select" ng-if="editor.position.row !== 0" ng-model="editor.position.order" ng-options="value for value in layoutOrders" ng-change="updateLayoutPosition()"></select>
-						</fieldset>
 						<fieldset class="hy-nostyle style-progress-controls" ng-if="editor.selectedElement === 'progress'">
 							<legend>{{ t('settings.style_progress') }}</legend>
 							<div class="style-position-controls">
@@ -521,6 +510,7 @@
 		</span>
 	</script>
 	<script type="text/javascript" src="assets/settings.js"></script>
+	<script type="text/javascript" src="../assets/js/chronograph-widget-style.js"></script>
 	<script type="text/javascript" src="assets/widget-style-editor.js"></script>
 </body>
 

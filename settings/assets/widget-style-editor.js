@@ -19,85 +19,10 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 		return { row: row, group: group, order: order };
 	}
 
-	function currentLayout(size) {
-		var compact = size === 'compact';
-		return {
-			elements: {
-				icon: position(1, 1, 1),
-				name: position(1, 1, 2),
-				status: position(compact ? 1 : 2, 1, 3),
-				duration: position(compact ? 1 : 3, compact ? 2 : 1, 1),
-				play: position(compact ? 1 : 3, compact ? 3 : 2, 1),
-				start: position(compact ? 3 : 4, 2, 1),
-				pause: position(compact ? 1 : 3, compact ? 3 : 2, 1),
-				stop: position(compact ? 1 : 3, compact ? 3 : 2, 2),
-				fields: position(compact ? 3 : 4, 1, 1),
-				cancel: compact ? position(3, 2, 2) : position(0, 1, 1),
-				progress: position(compact ? 2 : 5, 1, 1)
-			},
-			overrides: compact
-				? { starting: { fields: position(3, 1, 1), start: position(3, 2, 1) } }
-				: { inactive: { start: position(4, 2, 1) } }
-		};
-	}
-
-	function currentGroups() {
-		return {
-			compact: currentLayout('compact'),
-			normal: currentLayout('normal'),
-			large: currentLayout('large')
-		};
-	}
-
-	function configureCurrentColumns(style) {
-		style.rowColumns = { compact: { 1: 3, 2: 1, 3: 2 }, normal: { 1: 1, 2: 1, 3: 2, 4: 2, 5: 1 }, large: { 1: 1, 2: 1, 3: 2, 4: 2, 5: 1 } };
-		style.columnSpans = { compact: { 1: [2, 1, 1], 2: [4], 3: [3, 1] },
-			normal: { 1: [4], 2: [4], 3: [3, 1], 4: [3, 1], 5: [4] }, large: { 1: [4], 2: [4], 3: [3, 1], 4: [3, 1], 5: [4] } };
-		style.columnWidths = { compact: { 1: ['span', 'content', 'content'], 2: ['span'], 3: ['span', 'span'] },
-			normal: { 1: ['span'], 2: ['span'], 3: ['span', 'content'], 4: ['span', 'content'], 5: ['span'] },
-			large: { 1: ['span'], 2: ['span'], 3: ['span', 'content'], 4: ['span', 'content'], 5: ['span'] } };
-		style.columnAlignments = { compact: { 2: ['left'], 3: ['left', 'left'] },
-			normal: { 1: ['left'], 2: ['left'], 3: ['left', 'left'], 4: ['left', 'left'], 5: ['left'] },
-			large: { 1: ['left'], 2: ['left'], 3: ['left', 'left'], 4: ['left', 'left'], 5: ['left'] } };
-		style.columnDirections = { compact: { 2: ['horizontal'], 3: ['horizontal', 'horizontal'] },
-			normal: { 1: ['horizontal'], 2: ['horizontal'], 3: ['horizontal', 'horizontal'], 4: ['horizontal', 'horizontal'], 5: ['horizontal'] },
-			large: { 1: ['horizontal'], 2: ['horizontal'], 3: ['horizontal', 'horizontal'], 4: ['horizontal', 'horizontal'], 5: ['horizontal'] } };
-		style.columnVerticalAlignments = { compact: { 2: ['middle'] }, normal: { 2: ['middle'], 3: ['middle', 'middle'], 4: ['middle', 'middle'], 5: ['middle'] },
-			large: { 1: ['middle'], 2: ['middle'], 3: ['middle', 'middle'], 4: ['middle', 'middle'], 5: ['middle'] } };
-	}
-
-	function configureCurrentPresentation(style) {
-		style.heightModes = { compact: 'minimum-without-inputs', normal: 'minimum', large: 'minimum' };
-		style.rowAlignments = { compact: { 1: 'top' }, normal: { 3: 'bottom' }, large: { 3: 'bottom' } };
-		style.progressSettings = { normal: { timerMode: 'elapsed', showSteps: true }, compact: { showSteps: true } };
-	}
-
-	function currentRowVisibility() {
-		function rule(states, startForm, hideAfterSeconds) {
-			var result = { states: states, actions: {}, startForm: !!startForm };
-			if (hideAfterSeconds !== undefined) result.hideAfterSeconds = hideAfterSeconds;
-			return result;
-		}
-		function expanded() {
-			return {
-				1: rule(['inactive', 'paused', 'running'], true),
-				2: rule(['inactive', 'paused', 'running'], true),
-				3: rule(['paused', 'running']),
-				4: rule(['inactive'], true),
-				5: rule(['paused', 'running'])
-			};
-		}
-		return {
-			compact: {
-				1: rule(['inactive', 'paused', 'running'], true),
-				2: rule(['paused', 'running']),
-				3: rule([], true, 10),
-				4: rule([])
-			},
-			normal: expanded(),
-			large: expanded()
-		};
-	}
+	var currentGroups = window.ChronographWidgetStyle.currentGroups;
+	var configureCurrentColumns = window.ChronographWidgetStyle.configureCurrentColumns;
+	var configureCurrentPresentation = window.ChronographWidgetStyle.configureCurrentPresentation;
+	var currentRowVisibility = window.ChronographWidgetStyle.currentRowVisibility;
 
 	function fromCells(style) {
 		var result = {};
@@ -513,6 +438,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 
 	function create(id, name) {
 		var cells = ['icon', 'name', 'status', 'duration', 'play', 'pause', 'stop', 'fields', '', '', '', ''];
+		var scheme = window.ChronographWidgetStyle.currentScheme();
 		return {
 			id: id,
 			name: name,
@@ -525,20 +451,8 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			startFieldsVisibility: { compact: 'play', normal: 'inactive', large: 'inactive' },
 			colorModel: 2,
 			foregroundModel: 1,
-			colorOverrides: { running: { duration: 'blue' } },
-			colors: {
-				icon: 'blue',
-				name: 'default',
-				status: 'default',
-				duration: 'default',
-				play: 'blue',
-				start: 'blue',
-				pause: 'blue',
-				stop: 'red',
-				inactive: 'none',
-				running: 'none',
-				paused: 'none'
-			}
+			colorOverrides: scheme.colorOverrides,
+			colors: scheme.colors
 		};
 	}
 

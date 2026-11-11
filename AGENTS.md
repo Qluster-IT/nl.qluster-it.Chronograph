@@ -3,6 +3,7 @@
 ## Homey app changes
 
 - Follow the existing Homey SDK 3 and Homey Compose conventions. Treat `.homeycompose/` as the source for composed app configuration.
+- Add or change translations in `.homeycompose/locales/`; settings keys belong in `<language>.settings.json`. Keep the committed root `locales/<language>.json` files as empty objects; Homey Compose fills them when building.
 - Keep changes focused, preserve existing app behavior, and update directly related documentation and tests.
 - Run the relevant tests with `npm test`.
 - Never put development-only tools or dependencies in the app's root `node_modules/`. Keep them under `tools/`, since some Homey apps must include their root `node_modules/` in the app package.

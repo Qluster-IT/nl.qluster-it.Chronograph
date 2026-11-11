@@ -4,5 +4,8 @@
 	"transition_not_running": "La transición __name__ no está en marcha.",
 	"invalid_duration": "Duración no válida.",
 	"invalid_transition": "Transición no válida.",
-	"invalid_name": "Nombre no válido."
+	"invalid_name": "Nombre no válido.",
+	"name_required": "Necesitas escribir y elegir un nombre o ingresar un nombre.",
+	"existing": "Existente",
+	"new": "Nuevo"
 }

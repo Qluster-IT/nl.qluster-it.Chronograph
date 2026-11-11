@@ -6,12 +6,13 @@ const path = require('path');
 const vm = require('vm');
 
 const root = path.join(__dirname, '..');
+const runtimeScript = fs.readFileSync(path.join(root, 'assets', 'js', 'chronograph-widget-style.js'), 'utf8');
 const editorScript = fs.readFileSync(path.join(root, 'settings', 'assets', 'widget-style-editor.js'), 'utf8');
 const settingsScript = fs.readFileSync(path.join(root, 'settings', 'assets', 'settings.js'), 'utf8');
 const html = fs.readFileSync(path.join(root, 'settings', 'index.html'), 'utf8');
 const css = fs.readFileSync(path.join(root, 'settings', 'assets', 'styles.css'), 'utf8');
 
-function loadSettings(widgetStyles, confirm, set) {
+function loadSettings(widgetStyles, confirm, set, preview) {
 	let editor;
 	let controller;
 	const module = {
@@ -25,7 +26,8 @@ function loadSettings(widgetStyles, confirm, set) {
 		equals: (a, b) => JSON.stringify(a) === JSON.stringify(b),
 		toJson: JSON.stringify
 	};
-	const context = { angular, window: {} };
+	const context = { angular, window: { chronographSettingsPreview: preview } };
+	vm.runInNewContext(runtimeScript, context);
 	vm.runInNewContext(editorScript, context);
 	vm.runInNewContext(settingsScript, context);
 	const scope = {
@@ -60,6 +62,38 @@ function loadSettings(widgetStyles, confirm, set) {
 }
 
 describe('Widget style designer preview', () => {
+	it('opens Widgets by default only in the local preview', () => {
+		const preview = loadSettings(undefined, undefined, undefined, true).scope;
+		assert.strictEqual(preview.activeTab, 'widgets');
+		preview.selectTab('general');
+		assert.strictEqual(preview.activeTab, 'general');
+		assert.strictEqual(loadSettings().scope.activeTab, 'chronographs');
+	});
+
+	it('uses drag and drop instead of element position controls without hiding progress settings', () => {
+		for (const id of ['style-element', 'style-row', 'style-group', 'style-order']) {
+			assert.ok(!html.includes(`id="${id}"`), id);
+		}
+		assert.match(html, /style-group-drop=/);
+		assert.match(html, /style-group-element=/);
+		assert.match(html, /<fieldset class="hy-nostyle style-progress-controls" ng-if="editor\.selectedElement === 'progress'">/);
+	});
+
+	it('shares the built-in design and scheme with widget rendering', () => {
+		const { scope } = loadSettings();
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		const design = runtime.currentDesign();
+		const editorDesign = scope.getSelectedStyle();
+		for (const key of Object.keys(design)) {
+			assert.deepStrictEqual(JSON.parse(JSON.stringify(editorDesign[key])), design[key], key);
+		}
+		const editorScheme = scope.getSelectedScheme();
+		const scheme = runtime.currentScheme();
+		for (const key of Object.keys(scheme)) {
+			assert.deepStrictEqual(JSON.parse(JSON.stringify(editorScheme[key])), scheme[key], key);
+		}
+	});
+
 	it('defaults to the timer preview', () => {
 		const { scope } = loadSettings();
 		assert.strictEqual(scope.editor.previewType, 'timer');

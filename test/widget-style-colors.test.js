@@ -6,6 +6,7 @@ const path = require('path');
 const vm = require('vm');
 
 const script = fs.readFileSync(path.join(__dirname, '..', 'settings', 'assets', 'widget-style-editor.js'), 'utf8');
+const runtimeScript = fs.readFileSync(path.join(__dirname, '..', 'assets', 'js', 'chronograph-widget-style.js'), 'utf8');
 
 function loadEditor() {
 	let editor;
@@ -13,12 +14,15 @@ function loadEditor() {
 		factory(name, factory) { if (name === 'widgetStyleEditor') editor = factory(); return this; },
 		directive() { return this; }
 	};
-	vm.runInNewContext(script, {
+	const context = {
+		window: {},
 		angular: {
 			module: () => module,
 			copy: value => JSON.parse(JSON.stringify(value))
 		}
-	});
+	};
+	vm.runInNewContext(runtimeScript, context);
+	vm.runInNewContext(script, context);
 	return editor;
 }
 

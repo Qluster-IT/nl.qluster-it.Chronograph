@@ -66,6 +66,7 @@
 
 	function currentScheme() {
 		return {
+			colorOverrides: { running: { duration: 'blue' } },
 			colors: {
 				icon: 'blue',
 				name: 'default',
@@ -81,6 +82,100 @@
 				paused: 'none'
 			}
 		};
+	}
+
+	function currentLayout(size) {
+		function position(row, group, order) {
+			return { row: row, group: group, order: order };
+		}
+		var compact = size === 'compact';
+		return {
+			elements: {
+				icon: position(1, 1, 1),
+				name: position(1, 1, 2),
+				status: position(compact ? 1 : 2, 1, 3),
+				duration: position(compact ? 1 : 3, compact ? 2 : 1, 1),
+				play: position(compact ? 1 : 3, compact ? 3 : 2, 1),
+				start: position(compact ? 3 : 4, 2, 1),
+				pause: position(compact ? 1 : 3, compact ? 3 : 2, 1),
+				stop: position(compact ? 1 : 3, compact ? 3 : 2, 2),
+				fields: position(compact ? 3 : 4, 1, 1),
+				cancel: compact ? position(3, 2, 2) : position(0, 1, 1),
+				progress: position(compact ? 2 : 5, 1, 1)
+			},
+			overrides: compact
+				? { starting: { fields: position(3, 1, 1), start: position(3, 2, 1) } }
+				: { inactive: { start: position(4, 2, 1) } }
+		};
+	}
+
+	function currentGroups() {
+		return {
+			compact: currentLayout('compact'),
+			normal: currentLayout('normal'),
+			large: currentLayout('large')
+		};
+	}
+
+	function configureCurrentColumns(style) {
+		style.rowColumns = { compact: { 1: 3, 2: 1, 3: 2 }, normal: { 1: 1, 2: 1, 3: 2, 4: 2, 5: 1 }, large: { 1: 1, 2: 1, 3: 2, 4: 2, 5: 1 } };
+		style.columnSpans = { compact: { 1: [2, 1, 1], 2: [4], 3: [3, 1] },
+			normal: { 1: [4], 2: [4], 3: [3, 1], 4: [3, 1], 5: [4] }, large: { 1: [4], 2: [4], 3: [3, 1], 4: [3, 1], 5: [4] } };
+		style.columnWidths = { compact: { 1: ['span', 'content', 'content'], 2: ['span'], 3: ['span', 'span'] },
+			normal: { 1: ['span'], 2: ['span'], 3: ['span', 'content'], 4: ['span', 'content'], 5: ['span'] },
+			large: { 1: ['span'], 2: ['span'], 3: ['span', 'content'], 4: ['span', 'content'], 5: ['span'] } };
+		style.columnAlignments = { compact: { 2: ['left'], 3: ['left', 'left'] },
+			normal: { 1: ['left'], 2: ['left'], 3: ['left', 'left'], 4: ['left', 'left'], 5: ['left'] },
+			large: { 1: ['left'], 2: ['left'], 3: ['left', 'left'], 4: ['left', 'left'], 5: ['left'] } };
+		style.columnDirections = { compact: { 2: ['horizontal'], 3: ['horizontal', 'horizontal'] },
+			normal: { 1: ['horizontal'], 2: ['horizontal'], 3: ['horizontal', 'horizontal'], 4: ['horizontal', 'horizontal'], 5: ['horizontal'] },
+			large: { 1: ['horizontal'], 2: ['horizontal'], 3: ['horizontal', 'horizontal'], 4: ['horizontal', 'horizontal'], 5: ['horizontal'] } };
+		style.columnVerticalAlignments = { compact: { 2: ['middle'] }, normal: { 2: ['middle'], 3: ['middle', 'middle'], 4: ['middle', 'middle'], 5: ['middle'] },
+			large: { 1: ['middle'], 2: ['middle'], 3: ['middle', 'middle'], 4: ['middle', 'middle'], 5: ['middle'] } };
+	}
+
+	function configureCurrentPresentation(style) {
+		style.heightModes = { compact: 'minimum-without-inputs', normal: 'minimum', large: 'minimum' };
+		style.rowAlignments = { compact: { 1: 'top' }, normal: { 3: 'bottom' }, large: { 3: 'bottom' } };
+		style.progressSettings = { normal: { timerMode: 'elapsed', showSteps: true }, compact: { showSteps: true }, large: { showSteps: true } };
+	}
+
+	function currentRowVisibility() {
+		function rule(states, startForm, hideAfterSeconds) {
+			var result = { states: states, actions: {}, startForm: !!startForm };
+			if (hideAfterSeconds !== undefined) result.hideAfterSeconds = hideAfterSeconds;
+			return result;
+		}
+		function expanded() {
+			return {
+				1: rule(['inactive', 'paused', 'running'], true),
+				2: rule(['inactive', 'paused', 'running'], true),
+				3: rule(['paused', 'running']),
+				4: rule(['inactive'], true),
+				5: rule(['paused', 'running'])
+			};
+		}
+		return {
+			compact: {
+				1: rule(['inactive', 'paused', 'running'], true),
+				2: rule(['paused', 'running']),
+				3: rule([], true, 10),
+				4: rule([])
+			},
+			normal: expanded(),
+			large: expanded()
+		};
+	}
+
+	function currentDesign() {
+		var style = {
+			groups: currentGroups(),
+			rowVisibility: currentRowVisibility(),
+			startFieldsVisibility: { compact: 'play', normal: 'inactive', large: 'inactive' }
+		};
+		configureCurrentColumns(style);
+		configureCurrentPresentation(style);
+		return style;
 	}
 
 	function resolvePositions(style, size, state) {
@@ -104,6 +199,7 @@
 
 	function isElementVisible(element, state, type, showForm, style, size) {
 		if (element === 'progress') return type !== 'stopwatch';
+		if (element === 'duration') return state === 'running' || state === 'paused';
 		if (element === 'fields') return type !== 'stopwatch' && showForm;
 		if (element === 'cancel') return state === 'starting' && showForm;
 		if (element === 'start') return state === 'starting' || (state === 'inactive' && type === 'stopwatch');
@@ -116,7 +212,7 @@
 		return true;
 	}
 
-	function buildRows(style, size, state, type, showForm) {
+	function buildRows(style, size, state, type, showForm, excludeFields) {
 		if (!style || !states.includes(state) || !['compact', 'normal', 'large'].includes(size)) return [];
 		var positions = resolvePositions(style, size, state);
 		var rowVisibility = style.rowVisibility && style.rowVisibility[size] || {};
@@ -141,7 +237,8 @@
 				var groupId = groupIndex + 1;
 				var elements = elementIds.filter(function (id) {
 					var position = positions[id];
-					return position && position.row === rowId && position.group === groupId
+					return !(excludeFields && id === 'fields')
+						&& position && position.row === rowId && position.group === groupId
 						&& isElementVisible(id, state, type, showForm, style, size);
 				}).sort(function (left, right) {
 					return positions[left].order - positions[right].order || elementIds.indexOf(left) - elementIds.indexOf(right);
@@ -223,6 +320,11 @@
 		findStyle: findStyle,
 		findScheme: findScheme,
 		currentScheme: currentScheme,
+		currentDesign: currentDesign,
+		currentGroups: currentGroups,
+		currentRowVisibility: currentRowVisibility,
+		configureCurrentColumns: configureCurrentColumns,
+		configureCurrentPresentation: configureCurrentPresentation,
 		buildRows: buildRows,
 		valueColor: valueColor,
 		buttonColor: buttonColor,

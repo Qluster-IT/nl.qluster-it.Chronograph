@@ -4,5 +4,8 @@
 	"transition_not_running": "Transitie __name__ loopt niet.",
 	"invalid_duration": "Ongeldige looptijd.",
 	"invalid_transition": "Ongeldige transitie.",
-	"invalid_name": "Ongeldige naam."
+	"invalid_name": "Ongeldige naam.",
+	"name_required": "U moet een naam (typen en) kiezen of een naam invoeren.",
+	"existing": "Bestaand",
+	"new": "Nieuw"
 }

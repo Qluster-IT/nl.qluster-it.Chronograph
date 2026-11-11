@@ -53,6 +53,8 @@ describe('Widget style runtime', () => {
 		assert.strictEqual(running[0].tracks, 'minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr)');
 		assert.strictEqual(widgetStyle.buildRows(style, 'normal', 'running', 'stopwatch', false)
 			.some(row => row.groups.some(group => group.elements.includes('progress'))), false);
+		assert.strictEqual(widgetStyle.buildRows(style, 'normal', 'starting', 'timer', true, true)
+			.some(row => row.groups.some(group => group.elements.includes('fields'))), false);
 	});
 
 	it('resolves state overrides and legacy color schemes', () => {

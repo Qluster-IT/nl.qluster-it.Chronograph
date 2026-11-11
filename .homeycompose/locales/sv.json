@@ -4,5 +4,8 @@
 	"transition_not_running": "Övergången __name__ körs inte.",
 	"invalid_duration": "Ogiltig varaktighet.",
 	"invalid_transition": "Ogiltig övergång.",
-	"invalid_name": "Ogiltigt namn."
+	"invalid_name": "Ogiltigt namn.",
+	"name_required": "Du behöver (skriva och) välja ett namn eller ange ett namn.",
+	"existing": "Befintlig",
+	"new": "Ny"
 }

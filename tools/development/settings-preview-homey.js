@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+	window.chronographSettingsPreview = true;
 	var language = new URLSearchParams(location.search).get('lang')
 		|| (navigator.language || 'en').slice(0, 2).toLowerCase();
 	var supportedLanguages = ['ar', 'da', 'de', 'en', 'es', 'fr', 'it', 'ko', 'nl', 'no', 'pl', 'ru', 'sv'];
@@ -13,9 +14,14 @@
 	];
 
 	function loadLocale(code) {
-		return fetch('/locales/' + code + '.json').then(function (response) {
-			if (!response.ok) throw new Error('Could not load preview translations: ' + code);
-			return response.json();
+		return Promise.all([code + '.json', code + '.settings.json'].map(function (file) {
+			return fetch('/.homeycompose/locales/' + file).then(function (response) {
+				if (!response.ok) throw new Error('Could not load preview translations: ' + file);
+				return response.json();
+			});
+		})).then(function (parts) {
+			parts[0].settings = parts[1];
+			return parts[0];
 		});
 	}
 

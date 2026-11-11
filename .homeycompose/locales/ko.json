@@ -4,5 +4,8 @@
 	"transition_not_running": "전환 __name__이(가) 실행 중이 아닙니다.",
 	"invalid_duration": "잘못된 시간입니다.",
 	"invalid_transition": "잘못된 전환입니다.",
-	"invalid_name": "잘못된 이름입니다."
+	"invalid_name": "잘못된 이름입니다.",
+	"name_required": "이름을 입력하거나 선택해야 합니다.",
+	"existing": "기존의",
+	"new": "새로운"
 }

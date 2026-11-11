@@ -32,7 +32,7 @@ const server = http.createServer((request, response) => {
 	}
 	if (url === '/') url = '/settings/index.html';
 	if (url === '/homey.js') url = '/tools/development/settings-preview-homey.js';
-	if (!/^\/(?:settings\/|assets\/|locales\/|tools\/development\/settings-preview-homey\.js$)/.test(url)
+	if (!/^\/(?:settings\/|assets\/|\.homeycompose\/locales\/|tools\/development\/settings-preview-homey\.js$)/.test(url)
 		|| url.split('/').some(part => part === '..' || part === '.')
 		|| url.includes('\\')) {
 		response.writeHead(404).end('Not found');

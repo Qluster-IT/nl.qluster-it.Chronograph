@@ -15,24 +15,6 @@
 			"value": ""
 		},
 		{
-			"id": "layout",
-			"type": "dropdown",
-			"title": { "en": "Layout", "nl": "Indeling" },
-			"hint": {"en":"Choose how compact or spacious the widget looks","nl":"Kies hoe compact of ruim de widget wordt weergegeven","da":"Vælg, hvor kompakt eller rummelig widgetten skal være.","de":"Lege fest, wie kompakt oder großzügig das Widget dargestellt wird.","es":"Elige si el widget se muestra de forma compacta o espaciosa.","fr":"Choisissez une présentation compacte ou plus spacieuse du widget.","it":"Scegli se visualizzare il widget in modo compatto o più ampio.","no":"Velg hvor kompakt eller romslig widgeten skal vises.","sv":"Välj hur kompakt eller rymlig widgeten ska visas.","pl":"Wybierz kompaktowy lub bardziej przestronny układ widżetu.","ru":"Выберите компактный или более просторный виджет.","ko":"위젯을 간결하거나 넉넉한 레이아웃으로 표시합니다.","ar":"اختر تخطيطًا مضغوطًا أو واسعًا للأداة."},
-			"value": "normal",
-			"values": [
-				{ "id": "compact", "title": { "en": "Compact", "nl": "Compact" } },
-				{ "id": "normal", "title": { "en": "Normal", "nl": "Normaal" } },
-				{ "id": "large", "title": { "en": "Larger", "nl": "Groter" } }
-			]
-		},
-		{
-			"id": "icon",
-			"type": "autocomplete",
-			"title": { "en": "Icon", "nl": "Pictogram" },
-			"hint": {"en":"Choose a Font Awesome icon to show beside the stopwatch name","nl":"Kies een Font Awesome-pictogram naast de stopwatchnaam","da":"Vælg et Font Awesome-ikon, der vises ved siden af stopursnavnet.","de":"Wähle ein Font-Awesome-Symbol neben dem Namen der Stoppuhr.","es":"Elige un icono de Font Awesome para mostrar junto al nombre del cronómetro.","fr":"Choisissez une icône Font Awesome à afficher à côté du nom du chronomètre.","it":"Scegli un’icona Font Awesome da mostrare accanto al nome del cronometro.","no":"Velg et Font Awesome-ikon som vises ved siden av stoppeklokkenavnet.","sv":"Välj en Font Awesome-ikon som visas bredvid stoppurets namn.","pl":"Wybierz ikonę Font Awesome wyświetlaną obok nazwy stopera.","ru":"Выберите значок Font Awesome для отображения рядом с названием секундомера.","ko":"스톱워치 이름 옆에 표시할 Font Awesome 아이콘을 선택하세요.","ar":"اختر أيقونة Font Awesome لعرضها بجوار اسم ساعة الإيقاف."}
-		},
-		{
 			"id": "designStyle",
 			"type": "autocomplete",
 			"title": {
@@ -55,6 +37,24 @@
 				"en": "Choose a saved widget color scheme",
 				"nl": "Kies een opgeslagen kleurenschema voor widgets"
 			}
+		},
+		{
+			"id": "layout",
+			"type": "dropdown",
+			"title": { "en": "Layout", "nl": "Indeling" },
+			"hint": {"en":"Choose how compact or spacious the widget looks","nl":"Kies hoe compact of ruim de widget wordt weergegeven","da":"Vælg, hvor kompakt eller rummelig widgetten skal være.","de":"Lege fest, wie kompakt oder großzügig das Widget dargestellt wird.","es":"Elige si el widget se muestra de forma compacta o espaciosa.","fr":"Choisissez une présentation compacte ou plus spacieuse du widget.","it":"Scegli se visualizzare il widget in modo compatto o più ampio.","no":"Velg hvor kompakt eller romslig widgeten skal vises.","sv":"Välj hur kompakt eller rymlig widgeten ska visas.","pl":"Wybierz kompaktowy lub bardziej przestronny układ widżetu.","ru":"Выберите компактный или более просторный виджет.","ko":"위젯을 간결하거나 넉넉한 레이아웃으로 표시합니다.","ar":"اختر تخطيطًا مضغوطًا أو واسعًا للأداة."},
+			"value": "normal",
+			"values": [
+				{ "id": "compact", "title": { "en": "Compact", "nl": "Compact" } },
+				{ "id": "normal", "title": { "en": "Normal", "nl": "Normaal" } },
+				{ "id": "large", "title": { "en": "Larger", "nl": "Groter" } }
+			]
+		},
+		{
+			"id": "icon",
+			"type": "autocomplete",
+			"title": { "en": "Icon", "nl": "Pictogram" },
+			"hint": {"en":"Choose a Font Awesome icon to show beside the stopwatch name","nl":"Kies een Font Awesome-pictogram naast de stopwatchnaam","da":"Vælg et Font Awesome-ikon, der vises ved siden af stopursnavnet.","de":"Wähle ein Font-Awesome-Symbol neben dem Namen der Stoppuhr.","es":"Elige un icono de Font Awesome para mostrar junto al nombre del cronómetro.","fr":"Choisissez une icône Font Awesome à afficher à côté du nom du chronomètre.","it":"Scegli un’icona Font Awesome da mostrare accanto al nome del cronometro.","no":"Velg et Font Awesome-ikon som vises ved siden av stoppeklokkenavnet.","sv":"Välj en Font Awesome-ikon som visas bredvid stoppurets namn.","pl":"Wybierz ikonę Font Awesome wyświetlaną obok nazwy stopera.","ru":"Выберите значок Font Awesome для отображения рядом с названием секундомера.","ko":"스톱워치 이름 옆에 표시할 Font Awesome 아이콘을 선택하세요.","ar":"اختر أيقونة Font Awesome لعرضها بجوار اسم ساعة الإيقاف."}
 		},
 		{
 			"id": "showMilliseconds",
