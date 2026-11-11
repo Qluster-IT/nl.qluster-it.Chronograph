@@ -47,6 +47,37 @@ async function loadWidget(type, settings, defaults, widgetStyles) {
 }
 
 describe('Widget duration defaults', () => {
+	it('resolves design sizes independently and preserves legacy defaults', async () => {
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		assert.strictEqual(runtime.defaultElementSize('compact', 'duration'), 14);
+		assert.strictEqual(runtime.defaultElementSize('normal', 'duration'), 20);
+		assert.strictEqual(runtime.defaultElementSize('large', 'duration'), 32);
+		for (const layout of ['compact', 'normal', 'large']) {
+			const widget = await loadWidget('timer', { layout }, {});
+			for (const element of ['icon', 'name', 'status', 'duration', 'play', 'pause', 'stop', 'fields', 'cancel', 'start', 'progress']) {
+				assert.strictEqual(widget.scope.designElementSize(element), runtime.elementSize(null, layout, element), layout + ' ' + element);
+			}
+			assert.strictEqual(widget.scope.designAllowShrink(), true);
+		}
+		const design = runtime.currentDesign();
+		design.id = 'sizes';
+		design.elementSizes = {
+			base: { icon: 25 },
+			overrides: { compact: {}, normal: {}, large: { icon: 38 } }
+		};
+		design.allowShrink = false;
+		for (const [layout, size] of [['compact', 25], ['normal', 25], ['large', 38]]) {
+			const widget = await loadWidget('timer', { layout, designStyle: { id: design.id } }, {}, { version: 2, styles: [design] });
+			assert.strictEqual(widget.scope.designElementSize('icon'), size);
+			assert.strictEqual(widget.scope.designAllowShrink(), false);
+		}
+		design.elementSizes = { overrides: { compact: { icon: 21 }, normal: {}, large: { icon: 38 } } };
+		for (const [layout, size] of [['compact', 21], ['normal', 16], ['large', 38]]) {
+			const widget = await loadWidget('timer', { layout, designStyle: { id: design.id } }, {}, { version: 2, styles: [design] });
+			assert.strictEqual(widget.scope.designElementSize('icon'), size);
+		}
+	});
+
 	it('shows markers for the active transition steps in each default layout', async () => {
 		for (const layout of ['compact', 'normal', 'large']) {
 			const widget = await loadWidget('transition', { layout }, { steps: 12 });
@@ -98,6 +129,32 @@ describe('Widget duration defaults', () => {
 		assert.strictEqual(scope.iconMask, 'url("' + icon + '")');
 		assert.strictEqual(scope.designElementStyle('name').color, 'var(--homey-color-green, #71d51b)');
 		assert.strictEqual(requests.filter(request => request.url === '/widget-styles').length, 1);
+	});
+
+	it('renders built-in color schemes across widget types and sizes without loading saved styles', async () => {
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		for (const preset of runtime.builtInSchemeDefinitions) {
+			for (const type of ['timer', 'stopwatch', 'transition']) {
+				for (const layout of ['compact', 'normal', 'large']) {
+					const widget = await loadWidget(type, { layout, colorScheme: { id: preset.id } }, {});
+					assert.strictEqual(widget.scope.designEnabled, true);
+					assert.strictEqual(widget.scope.iconColor, preset.accent);
+					assert.strictEqual(widget.scope.designProgressForeground(), runtime.valueColor(preset.accent));
+					assert.ok(!widget.requests.some(request => request.url === '/widget-styles'));
+					widget.state.active = true;
+					widget.state.running = true;
+					await widget.listeners.chronograph_event_multi();
+					assert.strictEqual(widget.scope.designElementStyle('duration').color, runtime.valueColor(preset.accent));
+				}
+			}
+			const design = runtime.currentDesign();
+			design.id = 'custom-design';
+			const widget = await loadWidget('timer', { designStyle: { id: design.id }, colorScheme: { id: preset.id } }, {}, {
+				version: 2, styles: [design], colorSchemes: []
+			});
+			assert.strictEqual(widget.scope.iconColor, preset.accent);
+			assert.strictEqual(widget.requests.filter(request => request.url === '/widget-styles').length, 1);
+		}
 	});
 
 	it('uses the selected design and default scheme independently', async () => {

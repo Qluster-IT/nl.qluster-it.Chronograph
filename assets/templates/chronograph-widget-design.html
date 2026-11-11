@@ -1,15 +1,16 @@
-<section class="chronograph-design" ng-style="designBackgroundStyle()">
+<section class="chronograph-design" ng-style="designBackgroundStyle()" ng-attr-data-allow-shrink="{{ designAllowShrink() }}">
 	<div class="chronograph-design-layer" ng-repeat="designLayer in designLayers track by designLayer.id"
 		ng-class="designLayer.measure ? 'chronograph-design-layer-measure' : 'chronograph-design-layer-current'"
 		ng-attr-aria-hidden="{{ designLayer.measure ? 'true' : undefined }}" ng-attr-inert="{{ designLayer.measure ? '' : undefined }}">
 	<div class="chronograph-design-row" ng-repeat="row in designLayer.rows track by row.id"
-		ng-attr-data-row-alignment="{{ row.alignment }}" ng-style="{ 'grid-template-columns': row.tracks }">
+		ng-attr-data-row-alignment="{{ row.alignment }}" ng-style="{ 'grid-template-columns': row.tracks, 'padding-top': row.topPadding + 'px' }">
 		<div class="chronograph-design-group" ng-repeat="group in row.groups track by group.id"
 			ng-attr-data-alignment="{{ group.alignment }}"
 			ng-attr-data-vertical-alignment="{{ group.verticalAlignment }}"
 			ng-attr-data-direction="{{ group.direction }}">
 			<div class="chronograph-design-element" ng-repeat="element in group.elements track by element"
-				ng-class="'chronograph-design-element-' + element" ng-switch="element" ng-style="designElementStyle(element)">
+				ng-class="'chronograph-design-element-' + element" ng-switch="element"
+				ng-attr-style="--element-size: {{ designElementSize(element) }}px; color: {{ designElementStyle(element).color || 'inherit' }}">
 				<h2 ng-switch-when="name" class="chronograph-name">{{ getDisplayName(selectedChronograph) }}</h2>
 				<i ng-switch-when="icon" class="chronograph-icon" ng-if="iconClass" ng-class="iconClass" aria-hidden="true"></i>
 				<img ng-switch-when="icon" class="chronograph-icon" ng-if="iconImage && !iconMask" ng-src="{{ iconImage }}" alt="" aria-hidden="true">

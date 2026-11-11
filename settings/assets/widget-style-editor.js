@@ -88,6 +88,32 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 		return rows && rows[row] || 'top';
 	}
 
+	function rowTopPadding(style, size, row) {
+		var rows = style.rowTopPadding && style.rowTopPadding[size];
+		return rows && rows[row] !== undefined ? rows[row] : 0;
+	}
+
+	function setRowTopPadding(style, size, row, padding) {
+		if (!style.groups || sizes.indexOf(size) === -1 || !Number.isInteger(row) || rowKeys.indexOf(String(row)) === -1
+			|| !Number.isInteger(padding) || padding < 0 || padding > 100) throw new RangeError('Invalid row top padding');
+		if (!style.rowTopPadding) style.rowTopPadding = {};
+		if (!style.rowTopPadding[size]) style.rowTopPadding[size] = {};
+		style.rowTopPadding[size][row] = padding;
+	}
+
+	function validRowTopPadding(style) {
+		var value = style.rowTopPadding;
+		if (value === undefined) return true;
+		if (!style.groups || !value || typeof value !== 'object' || Array.isArray(value)) return false;
+		return Object.keys(value).every(function (size) {
+			var rows = value[size];
+			return sizes.indexOf(size) !== -1 && rows && typeof rows === 'object' && !Array.isArray(rows)
+				&& Object.keys(rows).every(function (row) {
+					return rowKeys.indexOf(row) !== -1 && Number.isInteger(rows[row]) && rows[row] >= 0 && rows[row] <= 100;
+				});
+		});
+	}
+
 	function moveRow(style, size, source, target) {
 		if (!style.groups || sizes.indexOf(size) === -1
 			|| rowKeys.indexOf(String(source)) === -1 || rowKeys.indexOf(String(target)) === -1
@@ -108,7 +134,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			});
 		});
 		['rowVisibility', 'rowColumns', 'columnSpans', 'columnAlignments', 'columnVerticalAlignments',
-			'columnDirections', 'columnWidths', 'rowAlignments'].forEach(function (key) {
+			'columnDirections', 'columnWidths', 'rowAlignments', 'rowTopPadding'].forEach(function (key) {
 			var rows = style[key] && style[key][size];
 			if (!rows) return;
 			var moved = {};
@@ -194,7 +220,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 	}
 
 	function setColumnAlignment(style, size, row, column, alignment) {
-		setColumnValue(style, 'columnAlignments', size, row, column, alignment, ['left', 'center', 'right'], 'left');
+		setColumnValue(style, 'columnAlignments', size, row, column, alignment, ['left', 'center', 'right', 'stretch'], 'left');
 	}
 
 	function setColumnDirection(style, size, row, column, direction) {
@@ -261,9 +287,12 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 		var widths = columnWidths(style, size, row);
 		var index = column - 1;
 		if (!Number.isInteger(index) || index < 0 || index >= spans.length
-			|| !Number.isInteger(span) || span < 1 || span > 4
-			|| (spans.length === 1 && span !== 4)) {
+			|| !Number.isInteger(span) || span < 1 || span > 4) {
 			throw new RangeError('Invalid column span');
+		}
+		if (spans.length === 1 && span < 4) {
+			setRowColumns(style, size, row, 5 - span);
+			return 1;
 		}
 		var removedColumns = [];
 		var originalIndex = index;
@@ -418,7 +447,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 		function validPosition(value) {
 			return value && Number.isInteger(value.row) && value.row >= 0 && value.row <= 5
 				&& Number.isInteger(value.group) && value.group >= 1 && value.group <= 4
-				&& Number.isInteger(value.order) && value.order >= 1 && value.order <= 8
+				&& Number.isInteger(value.order) && value.order >= 1 && value.order <= groupedElementIds.length
 				&& (value.row !== 0 || (value.group === 1 && value.order === 1));
 		}
 		function validElements(value, complete) {
@@ -629,9 +658,11 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			|| !validStartFieldsVisibility(style.startFieldsVisibility) || !validRowVisibility(style.rowVisibility)
 			|| !validForegroundColors(style.foregroundColors) || !validForegroundOverrides(style.foregroundOverrides)
 			|| !validHeightModes(style.heightModes)
+			|| !validElementSizes(style.elementSizes)
+			|| (style.allowShrink !== undefined && typeof style.allowShrink !== 'boolean')
 			|| !validProgressSettings(style)
-			|| !validRowColumns(style.rowColumns) || !validRowAlignments(style) || !validColumnSpans(style)
-			|| !validColumnValues(style, 'columnAlignments', ['left', 'center', 'right'])
+			|| !validRowColumns(style.rowColumns) || !validRowAlignments(style) || !validRowTopPadding(style) || !validColumnSpans(style)
+			|| !validColumnValues(style, 'columnAlignments', ['left', 'center', 'right', 'stretch'])
 			|| !validColumnValues(style, 'columnVerticalAlignments', ['top', 'middle', 'bottom'])
 			|| !validColumnValues(style, 'columnDirections', ['horizontal', 'vertical'])
 			|| !validColumnValues(style, 'columnWidths', ['span', 'content'])) return false;
@@ -668,6 +699,26 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			&& Object.keys(value).every(function (size) {
 				return sizes.indexOf(size) !== -1 && ['auto', 'minimum', 'minimum-without-inputs'].indexOf(value[size]) !== -1;
 			}));
+	}
+
+	function validElementSizes(value) {
+		if (value === undefined) return true;
+		function validMap(map) {
+			return map && typeof map === 'object' && !Array.isArray(map)
+				&& Object.keys(map).every(function (key) {
+					return groupedElementIds.indexOf(key) !== -1 && Number.isInteger(map[key])
+						&& map[key] >= 4 && map[key] <= 100;
+				});
+		}
+		return value && typeof value === 'object' && !Array.isArray(value)
+			&& Object.keys(value).every(function (key) { return key === 'base' || key === 'overrides'; })
+			&& (value.base === undefined || (validMap(value.base) && groupedElementIds.every(function (key) {
+				return Object.prototype.hasOwnProperty.call(value.base, key);
+			}))) && value.overrides && typeof value.overrides === 'object'
+			&& !Array.isArray(value.overrides)
+			&& Object.keys(value.overrides).every(function (size) {
+				return sizes.indexOf(size) !== -1 && validMap(value.overrides[size]);
+			});
 	}
 
 	function validStartFieldsVisibility(value) {
@@ -822,6 +873,8 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 		resolvedGroups: resolvedGroups,
 		rowColumns: rowColumns,
 		rowAlignment: rowAlignment,
+		rowTopPadding: rowTopPadding,
+		setRowTopPadding: setRowTopPadding,
 		moveRow: moveRow,
 		moveColumn: moveColumn,
 		setRowAlignment: setRowAlignment,
@@ -891,7 +944,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 
 		function move(event) {
 			if (pointerId !== event.pointerId) return;
-			if (!dragged && Math.hypot(event.clientX - startX, event.clientY - startY) < 6) return;
+			if (!dragged && Math.hypot(event.clientX - startX, event.clientY - startY) < 6) return false;
 			if (!ghost) {
 				dragged = true;
 				ghost = document.createElement('div');
@@ -903,6 +956,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			}
 			moveGhost(event);
 			event.preventDefault();
+			return true;
 		}
 
 		function end(event) {
@@ -1063,65 +1117,145 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			});
 		}
 	};
-}).directive('styleGroupDrop', function () {
+}).factory('styleGroupInsertion', function () {
+	var indicator;
+	var source;
+	var highlighted;
+
+	function clear() {
+		if (indicator) indicator.remove();
+		indicator = null;
+		if (highlighted) highlighted.classList.remove('style-group-drop-target');
+		highlighted = null;
+	}
+
+	function show(slot, y, translate) {
+		clear();
+		highlighted = slot;
+		slot.classList.add('style-group-drop-target');
+		var unused = slot.getAttribute('data-style-group') === '0:1';
+		var items = Array.from(slot.querySelectorAll('[data-style-element]')).filter(function (item) {
+			return item.getAttribute('data-style-element') !== source;
+		});
+		var index = unused ? -1 : items.findIndex(function (item) {
+			var bounds = item.getBoundingClientRect();
+			return y < bounds.top + bounds.height / 2;
+		});
+		if (index === -1) index = items.length;
+		var slotBounds = slot.getBoundingClientRect();
+		var bounds = items[index] ? items[index].getBoundingClientRect()
+			: items.length ? items[items.length - 1].getBoundingClientRect() : slotBounds;
+		var top = unused ? slotBounds.top + 4 : items[index] ? bounds.top : items.length ? bounds.bottom : slotBounds.bottom - 5;
+		indicator = document.createElement('div');
+		indicator.className = 'style-group-insertion-indicator';
+		var label = document.createElement('span');
+		label.className = 'style-group-insertion-label';
+		var reference = items[index] || items[items.length - 1];
+		var key = unused ? 'settings.style_drop_unused'
+			: items[index] ? 'settings.style_drop_before'
+				: reference ? 'settings.style_drop_after' : 'settings.style_drop_empty';
+		label.textContent = translate(key).replace('__element__', reference ? reference.textContent.trim() : '');
+		indicator.appendChild(label);
+		indicator.style.left = (slotBounds.left + 4) + 'px';
+		indicator.style.width = Math.max(0, slotBounds.width - 8) + 'px';
+		indicator.style.top = top + 'px';
+		document.body.appendChild(indicator);
+		return unused ? 0 : index;
+	}
+
+	return {
+		start: function (id) { clear(); source = id; },
+		show: show,
+		clear: clear
+	};
+}).directive('styleGroupDrop', ['styleGroupInsertion', function (styleGroupInsertion) {
 	return {
 		restrict: 'A',
 		link: function (scope, element, attrs) {
 			function drop(event) {
-				event.preventDefault();
 				var id = event.dataTransfer.getData('application/x-chronograph-style-element');
+				if (!id) return;
+				event.preventDefault();
+				event.stopPropagation();
 				var destination = attrs.styleGroupDrop.split(':').map(Number);
-				if (id && destination.length === 2) {
-					scope.$apply(function () { scope.moveGroupedElement(id, destination[0], destination[1]); });
+				var index = styleGroupInsertion.show(element[0], event.clientY, scope.t);
+				styleGroupInsertion.clear();
+				if (destination.length === 2) {
+					scope.$apply(function () { scope.moveGroupedElement(id, destination[0], destination[1], index); });
 				}
 			}
 			function dragOver(event) {
+				if (Array.prototype.indexOf.call(event.dataTransfer.types, 'application/x-chronograph-style-element') === -1) return;
 				event.preventDefault();
+				event.stopPropagation();
 				event.dataTransfer.dropEffect = 'move';
+				styleGroupInsertion.show(element[0], event.clientY, scope.t);
+			}
+			function dragLeave(event) {
+				if (!event.relatedTarget || !element[0].contains(event.relatedTarget)) styleGroupInsertion.clear();
 			}
 			element.on('dragover', dragOver);
+			element.on('dragleave', dragLeave);
 			element.on('drop', drop);
 			scope.$on('$destroy', function () {
 				element.off('dragover', dragOver);
+				element.off('dragleave', dragLeave);
 				element.off('drop', drop);
 			});
 		}
 	};
-}).directive('styleGroupElement', ['styleTouchDrag', function (styleTouchDrag) {
+}]).directive('styleGroupElement', ['styleTouchDrag', 'styleGroupInsertion', function (styleTouchDrag, styleGroupInsertion) {
 	return {
 		restrict: 'A',
 		link: function (scope, element, attrs) {
 			var touchDrag = styleTouchDrag(element[0]);
 			function dragStart(event) {
+				styleGroupInsertion.start(attrs.styleGroupElement);
 				event.dataTransfer.effectAllowed = 'move';
 				event.dataTransfer.setData('application/x-chronograph-style-element', attrs.styleGroupElement);
 			}
 			function pointerDown(event) {
 				touchDrag.start(event);
 			}
+			function pointerMove(event) {
+				if (!touchDrag.move(event)) return;
+				var target = document.elementFromPoint(event.clientX, event.clientY);
+				var slot = target && target.closest('[data-style-group]');
+				var editor = element[0].closest('.style-group-editor');
+				styleGroupInsertion.start(attrs.styleGroupElement);
+				if (slot && editor && editor.contains(slot)) styleGroupInsertion.show(slot, event.clientY, scope.t);
+			}
 			function pointerUp(event) {
 				if (!touchDrag.end(event)) return;
 				var target = document.elementFromPoint(event.clientX, event.clientY);
 				var slot = target && target.closest('[data-style-group]');
-				if (slot && element[0].closest('.style-group-editor').contains(slot)) {
+				var editor = element[0].closest('.style-group-editor');
+				if (slot && editor && editor.contains(slot)) {
 					var destination = slot.getAttribute('data-style-group').split(':').map(Number);
-					scope.$apply(function () { scope.moveGroupedElement(attrs.styleGroupElement, destination[0], destination[1]); });
+					var index = styleGroupInsertion.show(slot, event.clientY, scope.t);
+					styleGroupInsertion.clear();
+					scope.$apply(function () { scope.moveGroupedElement(attrs.styleGroupElement, destination[0], destination[1], index); });
 				}
+				styleGroupInsertion.clear();
 			}
+			function pointerCancel(event) { touchDrag.cancel(event); styleGroupInsertion.clear(); }
 			element.on('dragstart', dragStart);
+			element.on('dragend', styleGroupInsertion.clear);
 			element.on('pointerdown', pointerDown);
-			element.on('pointermove', touchDrag.move);
+			element.on('pointermove', pointerMove);
 			element.on('pointerup', pointerUp);
-			element.on('pointercancel', touchDrag.cancel);
-			element.on('lostpointercapture', touchDrag.cancel);
+			element.on('pointercancel', pointerCancel);
+			element.on('lostpointercapture', pointerCancel);
 			scope.$on('$destroy', function () {
 				touchDrag.destroy();
+				styleGroupInsertion.clear();
 				element.off('dragstart', dragStart);
+				element.off('dragend', styleGroupInsertion.clear);
 				element.off('pointerdown', pointerDown);
-				element.off('pointermove', touchDrag.move);
+				element.off('pointermove', pointerMove);
 				element.off('pointerup', pointerUp);
-				element.off('pointercancel', touchDrag.cancel);
-				element.off('lostpointercapture', touchDrag.cancel);
+				element.off('pointercancel', pointerCancel);
+				element.off('lostpointercapture', pointerCancel);
 			});
 		}
 	};

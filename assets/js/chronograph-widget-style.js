@@ -6,6 +6,43 @@
 	var elementIds = ['icon', 'name', 'status', 'duration', 'play', 'pause', 'stop', 'fields', 'cancel', 'start', 'progress'];
 	var buttonIds = ['play', 'pause', 'stop', 'cancel', 'start'];
 	var states = ['inactive', 'running', 'paused', 'starting'];
+	var defaultElementSizes = {
+		base: { icon: 16, name: 14, status: 12, duration: 14, play: 28, pause: 28, stop: 28, fields: 32, cancel: 28, start: 32, progress: 6 },
+		overrides: {
+			compact: {},
+			normal: { duration: 20, play: 32, pause: 32, stop: 32, cancel: 32, progress: 8 },
+			large: { icon: 20, name: 20, status: 14, duration: 32, play: 40, pause: 40, stop: 40, fields: 40, cancel: 32, start: 40, progress: 8 }
+		}
+	};
+
+	function elementSizesDefaults() {
+		return { overrides: { compact: {}, normal: {}, large: {} } };
+	}
+
+	function defaultElementSize(size, element) {
+		return defaultElementSizes.overrides[size] && defaultElementSizes.overrides[size][element] !== undefined
+			? defaultElementSizes.overrides[size][element] : defaultElementSizes.base[element];
+	}
+
+	function elementSize(style, size, element) {
+		var values = style && style.elementSizes;
+		if (!values) return defaultElementSize(size, element);
+		var override = values.overrides && values.overrides[size];
+		var value = override && override[element] !== undefined ? override[element] : values.base && values.base[element];
+		if (Number.isInteger(value) && value >= 4 && value <= 100) return value;
+		return defaultElementSize(size, element);
+	}
+
+	function migrateElementSizes(style) {
+		var sizes = elementSizesDefaults();
+		['compact', 'normal', 'large'].forEach(function (size) {
+			elementIds.forEach(function (element) {
+				var value = elementSize(style, size, element);
+				if (value !== defaultElementSize(size, element)) sizes.overrides[size][element] = value;
+			});
+		});
+		return sizes;
+	}
 	var colorValues = {
 		default: 'inherit',
 		none: 'transparent',
@@ -42,6 +79,8 @@
 	}
 
 	function findScheme(collection, id) {
+		var builtIn = builtInScheme(id);
+		if (builtIn) return builtIn;
 		var scheme = findItem(collection && collection.colorSchemes, id);
 		if (scheme) return scheme;
 		var legacy = collection && collection.version === 1 && findItem(collection.styles, id);
@@ -82,6 +121,36 @@
 				paused: 'none'
 			}
 		};
+	}
+
+	var builtInSchemeDefinitions = [
+		{ id: 'builtin:ocean', nameKey: 'settings.style_scheme_ocean', accent: 'teal', buttonText: 'black' },
+		{ id: 'builtin:forest', nameKey: 'settings.style_scheme_forest', accent: 'green', buttonText: 'black' },
+		{ id: 'builtin:sunset', nameKey: 'settings.style_scheme_sunset', accent: 'orange', buttonText: 'black' },
+		{ id: 'builtin:twilight', nameKey: 'settings.style_scheme_twilight', accent: 'purple', buttonText: 'white' },
+		{ id: 'builtin:blossom', nameKey: 'settings.style_scheme_blossom', accent: 'pink', buttonText: 'black' },
+		{ id: 'builtin:sky', nameKey: 'settings.style_scheme_sky', accent: 'cyan', buttonText: 'black' },
+		{ id: 'builtin:amber', nameKey: 'settings.style_scheme_amber', accent: 'yellow', buttonText: 'black' }
+	];
+
+	function builtInScheme(id) {
+		if (id === 'builtin:current') return currentScheme();
+		var definition = builtInSchemeDefinitions.find(function (item) { return item.id === id; });
+		if (!definition) return undefined;
+		var scheme = currentScheme();
+		scheme.colors.icon = definition.accent;
+		scheme.colors.play = definition.accent;
+		scheme.colors.start = definition.accent;
+		scheme.colors.pause = definition.accent;
+		scheme.colorOverrides.running.duration = definition.accent;
+		scheme.foregroundColors = {
+			play: definition.buttonText, start: definition.buttonText, pause: definition.buttonText
+		};
+		scheme.progressColors = {};
+		['compact', 'normal', 'large'].forEach(function (size) {
+			scheme.progressColors[size] = { background: 'grey', foreground: definition.accent };
+		});
+		return scheme;
 	}
 
 	function currentLayout(size) {
@@ -138,6 +207,7 @@
 		style.heightModes = { compact: 'minimum-without-inputs', normal: 'minimum', large: 'minimum' };
 		style.rowAlignments = { compact: { 1: 'top' }, normal: { 3: 'bottom' }, large: { 3: 'bottom' } };
 		style.progressSettings = { normal: { timerMode: 'elapsed', showSteps: true }, compact: { showSteps: true }, large: { showSteps: true } };
+		style.elementSizes = elementSizesDefaults();
 	}
 
 	function currentRowVisibility() {
@@ -259,6 +329,10 @@
 					id: rowId,
 					alignment: style.rowAlignments && style.rowAlignments[size]
 						&& style.rowAlignments[size][rowId] || 'top',
+					topPadding: style.rowTopPadding && style.rowTopPadding[size]
+						&& Number.isInteger(style.rowTopPadding[size][rowId])
+						&& style.rowTopPadding[size][rowId] >= 0 && style.rowTopPadding[size][rowId] <= 100
+						? style.rowTopPadding[size][rowId] : 0,
 					tracks: groups.map(function (group) {
 						return group.width === 'content' ? 'minmax(0, max-content)' : 'minmax(0, ' + group.span + 'fr)';
 					}).join(' '),
@@ -320,11 +394,17 @@
 		findStyle: findStyle,
 		findScheme: findScheme,
 		currentScheme: currentScheme,
+		builtInScheme: builtInScheme,
+		builtInSchemeDefinitions: builtInSchemeDefinitions,
 		currentDesign: currentDesign,
 		currentGroups: currentGroups,
 		currentRowVisibility: currentRowVisibility,
 		configureCurrentColumns: configureCurrentColumns,
 		configureCurrentPresentation: configureCurrentPresentation,
+		elementSizesDefaults: elementSizesDefaults,
+		defaultElementSize: defaultElementSize,
+		migrateElementSizes: migrateElementSizes,
+		elementSize: elementSize,
 		buildRows: buildRows,
 		valueColor: valueColor,
 		buttonColor: buttonColor,

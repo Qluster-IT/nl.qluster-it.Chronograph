@@ -62,6 +62,197 @@ function loadSettings(widgetStyles, confirm, set, preview) {
 }
 
 describe('Widget style designer preview', () => {
+	it('saves stretch column alignment independently per size', () => {
+		const { scope, writes, editor } = loadSettings();
+		scope.createStyle(true);
+		const style = scope.getSelectedStyle();
+		scope.selectColumn(1, 1);
+		scope.editor.columnAlignment = 'stretch';
+		scope.updateColumnAlignment();
+		assert.strictEqual(scope.groupedRows(false).find(row => row.id === 1).groups[0].alignment, 'stretch');
+		assert.strictEqual(editor.columnAlignments(style, 'large', 1)[0], 'left');
+		scope.saveSettings();
+		assert.strictEqual(editor.isValidCollection(writes[0].value), true);
+		const saved = loadSettings(writes[0].value).scope.widgetStyles.styles[0];
+		assert.strictEqual(editor.columnAlignments(saved, 'normal', 1)[0], 'stretch');
+	});
+
+	it('shows a labeled insertion position before, after, in an empty column and in Unused', () => {
+		let insertion;
+		const body = { children: [], appendChild(node) { this.children.push(node); } };
+		const document = {
+			body,
+			createElement() {
+				return {
+					style: {}, children: [],
+					appendChild(node) { this.children.push(node); },
+					remove() { body.children.splice(body.children.indexOf(this), 1); }
+				};
+			}
+		};
+		const module = {
+			factory(name, factory) { if (name === 'styleGroupInsertion') insertion = factory(); return this; },
+			directive() { return this; }
+		};
+		vm.runInNewContext(editorScript, { angular: { module: () => module }, window: {}, document });
+		const item = (id, label, top) => ({
+			textContent: label,
+			getAttribute: () => id,
+			getBoundingClientRect: () => ({ top, bottom: top + 20, height: 20 })
+		});
+		const items = [item('icon', 'Icon', 20), item('name', 'Name', 40)];
+		const slot = {
+			classList: { add() {}, remove() {} },
+			getAttribute: () => '1:1',
+			querySelectorAll: () => items,
+			getBoundingClientRect: () => ({ left: 10, width: 100, top: 0, bottom: 80 })
+		};
+		const translations = {
+			'settings.style_drop_before': 'Before __element__',
+			'settings.style_drop_after': 'After __element__',
+			'settings.style_drop_empty': 'In empty column',
+			'settings.style_drop_unused': 'Move to Unused'
+		};
+		const t = key => translations[key];
+		insertion.start('status');
+		assert.strictEqual(insertion.show(slot, 21, t), 0);
+		assert.strictEqual(body.children[0].children[0].textContent, 'Before Icon');
+		assert.strictEqual(body.children[0].style.top, '20px');
+		assert.strictEqual(insertion.show(slot, 55, t), 2);
+		assert.strictEqual(body.children[0].children[0].textContent, 'After Name');
+		assert.strictEqual(body.children[0].style.top, '60px');
+		insertion.start('icon');
+		assert.strictEqual(insertion.show(slot, 21, t), 0);
+		assert.strictEqual(body.children[0].children[0].textContent, 'Before Name');
+		slot.querySelectorAll = () => [];
+		assert.strictEqual(insertion.show(slot, 10, t), 0);
+		assert.strictEqual(body.children[0].children[0].textContent, 'In empty column');
+		slot.getAttribute = () => '0:1';
+		assert.strictEqual(insertion.show(slot, 10, t), 0);
+		assert.strictEqual(body.children[0].children[0].textContent, 'Move to Unused');
+		insertion.clear();
+		assert.strictEqual(body.children.length, 0);
+	});
+
+	it('edits, previews, moves and persists row top padding independently per size', () => {
+		const { scope, writes, editor, homey } = loadSettings();
+		const alerts = [];
+		homey.alert = message => alerts.push(message);
+		scope.createStyle(false);
+		const style = scope.getSelectedStyle();
+		scope.selectVisibilityRow(1);
+		assert.strictEqual(scope.editor.rowTopPadding, 0);
+		scope.editor.rowTopPadding = 24;
+		scope.updateRowTopPadding();
+		assert.strictEqual(scope.groupedRows(true).find(row => row.id === 1).topPadding, 24);
+		assert.strictEqual(editor.rowTopPadding(style, 'compact', 1), 0);
+		scope.editor.rowPaddingForm = { $invalid: true };
+		scope.saveSettings();
+		scope.selectVisibilityRow(2);
+		assert.strictEqual(scope.editor.selectedRow, 1);
+		assert.strictEqual(writes.length, 0);
+		assert.deepStrictEqual(alerts, ['settings.style_row_padding_invalid', 'settings.style_row_padding_invalid']);
+		scope.editor.rowPaddingForm.$invalid = false;
+		scope.moveDesignerRow(1, 3);
+		assert.strictEqual(editor.rowTopPadding(style, 'normal', 3), 24);
+		assert.strictEqual(editor.rowTopPadding(style, 'normal', 1), 0);
+		scope.saveSettings();
+		const reloaded = loadSettings(writes[0].value).scope;
+		reloaded.editor.selectedStyleId = 'custom:' + style.id;
+		assert.strictEqual(editor.rowTopPadding(reloaded.getSelectedStyle(), 'normal', 3), 24);
+		style.rowTopPadding.normal[3] = 101;
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), false);
+	});
+
+	it('edits independent size overrides using immutable app defaults', () => {
+		const { scope, writes, editor } = loadSettings();
+		scope.createStyle(false);
+		const style = scope.getSelectedStyle();
+		scope.selectLayoutElement('duration');
+		assert.strictEqual(scope.defaultElementSize(), 20);
+		assert.strictEqual(scope.overrideElementSize(), null);
+		scope.overrideElementSize(17);
+		assert.strictEqual(scope.elementSize('duration'), 17);
+		scope.editor.previewSize = 'compact';
+		assert.strictEqual(scope.defaultElementSize(), 14);
+		assert.strictEqual(scope.overrideElementSize(), null);
+		scope.overrideElementSize(23);
+		assert.strictEqual(scope.elementSize('duration'), 23);
+		scope.overrideElementSize(101);
+		assert.strictEqual(scope.elementSize('duration'), 23);
+		assert.strictEqual(scope.overrideElementSize(), 101);
+		scope.overrideElementSize(24);
+		assert.strictEqual(scope.elementSize('duration'), 24);
+		scope.editor.previewSize = 'large';
+		assert.strictEqual(scope.elementSize('duration'), 32);
+		scope.allowDesignShrink(false);
+		assert.strictEqual(style.allowShrink, false);
+		scope.saveSettings();
+		assert.strictEqual(editor.isValidCollection(writes[0].value), true);
+		const reloaded = loadSettings(writes[0].value).scope;
+		reloaded.editor.selectedStyleId = 'custom:' + style.id;
+		reloaded.selectLayoutElement('duration');
+		assert.strictEqual(reloaded.allowDesignShrink(), false);
+		assert.strictEqual(reloaded.overrideElementSize(), 17);
+		reloaded.editor.previewSize = 'compact';
+		assert.strictEqual(reloaded.elementSize('duration'), 24);
+		reloaded.overrideElementSize(null);
+		assert.strictEqual(reloaded.overrideElementSize(), null);
+		assert.strictEqual(reloaded.elementSize('duration'), 14);
+		assert.strictEqual(reloaded.getSelectedStyle().elementSizes.overrides.normal.duration, 17);
+		assert.ok(!html.includes('id="style-size-base"'));
+		assert.ok(!html.includes('ng-model="hasElementSizeOverride"'));
+		assert.match(html, /ng-attr-placeholder="{{ defaultElementSize\(\) }}"/);
+	});
+
+	it('preserves legacy base sizes on migration and resets each size to its app default', () => {
+		const { scope, editor, writes } = loadSettings();
+		scope.createStyle(false);
+		const style = scope.getSelectedStyle();
+		style.elementSizes = {
+			base: { icon: 25, name: 14, status: 12, duration: 14, play: 28, pause: 28, stop: 28, fields: 32, cancel: 28, start: 32, progress: 6 },
+			overrides: { compact: {}, normal: { duration: 20 }, large: { icon: 38, duration: 32 } }
+		};
+		scope.selectLayoutElement('icon');
+		assert.strictEqual(scope.overrideElementSize(), 25);
+		scope.overrideElementSize(null);
+		assert.strictEqual(scope.elementSize('icon'), 16);
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
+		assert.strictEqual(style.elementSizes.base, undefined);
+		assert.strictEqual(style.elementSizes.overrides.compact.icon, 25);
+		assert.strictEqual(style.elementSizes.overrides.large.icon, 38);
+		scope.saveSettings();
+		assert.strictEqual(writes[0].value.styles[0].elementSizes.overrides.large.icon, 38);
+	});
+
+	it('rejects invalid stored element sizes and shrink options', () => {
+		const { scope, editor } = loadSettings();
+		scope.createStyle(false);
+		const style = scope.getSelectedStyle();
+		style.elementSizes.overrides.normal.icon = 101;
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), false);
+		style.elementSizes.overrides.normal.icon = 20;
+		style.allowShrink = 'no';
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), false);
+	});
+
+	it('blocks saving and changing elements while a size input is invalid', () => {
+		const { scope, writes, homey } = loadSettings();
+		const alerts = [];
+		homey.alert = message => alerts.push(message);
+		scope.createStyle(false);
+		scope.selectLayoutElement('duration');
+		scope.editor.elementSizeForm = { $invalid: true };
+		scope.saveSettings();
+		scope.selectLayoutElement('name');
+		assert.strictEqual(writes.length, 0);
+		assert.strictEqual(scope.editor.selectedElement, 'duration');
+		assert.deepStrictEqual(alerts, ['settings.style_size_invalid', 'settings.style_size_invalid']);
+		scope.editor.elementSizeForm.$invalid = false;
+		scope.saveSettings();
+		assert.strictEqual(writes.length, 1);
+	});
+
 	it('opens Widgets by default only in the local preview', () => {
 		const preview = loadSettings(undefined, undefined, undefined, true).scope;
 		assert.strictEqual(preview.activeTab, 'widgets');
@@ -92,6 +283,73 @@ describe('Widget style designer preview', () => {
 		for (const key of Object.keys(scheme)) {
 			assert.deepStrictEqual(JSON.parse(JSON.stringify(editorScheme[key])), scheme[key], key);
 		}
+	});
+
+	it('previews and copies each built-in color scheme without saving the preset', () => {
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		const { scope, writes, editor } = loadSettings();
+		for (const preset of runtime.builtInSchemeDefinitions) {
+			scope.selectEditorMode('color');
+			scope.editor.selectedSchemeId = preset.id;
+			const selected = scope.getSelectedScheme();
+			assert.strictEqual(scope.isBuiltInStyle(), true);
+			assert.strictEqual(selected.name, preset.nameKey);
+			assert.deepStrictEqual(JSON.parse(JSON.stringify(selected.colors)), runtime.builtInScheme(preset.id).colors);
+			scope.deleteStyle();
+			assert.strictEqual(scope.getSelectedScheme(), selected);
+			scope.selectEditorMode('design');
+			assert.strictEqual(scope.getSelectedScheme(), selected);
+			scope.selectEditorMode('color');
+			scope.createStyle(true);
+			const copy = scope.getSelectedScheme();
+			assert.strictEqual(scope.isBuiltInStyle(), false);
+			assert.deepStrictEqual(JSON.parse(JSON.stringify(copy.progressColors)), runtime.builtInScheme(preset.id).progressColors);
+			copy.colors.icon = 'red';
+			assert.strictEqual(selected.colors.icon, preset.accent);
+		}
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
+		scope.saveSettings();
+		const reloaded = loadSettings(writes[0].value).scope;
+		assert.strictEqual(reloaded.widgetStyles.colorSchemes.length, runtime.builtInSchemeDefinitions.length);
+		assert.ok(reloaded.widgetStyles.colorSchemes.every(scheme => scheme.colors.icon === 'red'));
+	});
+
+	it('keeps all built-in color schemes read-only while allowing editable copies', () => {
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		const { scope } = loadSettings();
+		for (const id of ['builtin:current', ...runtime.builtInSchemeDefinitions.map(preset => preset.id)]) {
+			scope.selectEditorMode('color');
+			scope.editor.selectedSchemeId = id;
+			const before = JSON.stringify(scope.getSelectedScheme());
+			for (const state of ['inactive', 'running', 'paused', 'starting']) {
+				scope.editor.previewState = state;
+				scope.editor.colorValues.play = 'red';
+				scope.editor.colorValues.background = 'red';
+				scope.editor.foregroundValues.name = 'red';
+				scope.updateColorOverride('play');
+				scope.updateColorOverride('background');
+				scope.updateForeground('name');
+				for (const size of ['compact', 'normal', 'large']) {
+					scope.editor.previewSize = size;
+					scope.progressBackground('red');
+					scope.progressForeground('red');
+				}
+			}
+			scope.selectEditorMode('design');
+			scope.progressForeground('red');
+			assert.strictEqual(JSON.stringify(scope.getSelectedScheme()), before, id);
+			scope.selectEditorMode('color');
+			scope.createStyle(true);
+			scope.editor.previewState = 'inactive';
+			scope.editor.colorValues.play = 'red';
+			scope.updateColorOverride('play');
+			scope.progressForeground('red');
+			assert.strictEqual(scope.getSelectedScheme().colors.play, 'red');
+			assert.strictEqual(scope.progressForeground(), 'red');
+		}
+		assert.ok(html.includes('ng-disabled="editor.mode === \'color\' && isBuiltInScheme()"'));
+		assert.ok(html.includes('class="hy-nostyle style-colors" ng-disabled="isBuiltInScheme()"'));
+		assert.ok(html.includes('class="hy-nostyle style-progress-controls" ng-disabled="isBuiltInScheme()"'));
 	});
 
 	it('defaults to the timer preview', () => {
@@ -564,7 +822,7 @@ describe('Widget style designer preview', () => {
 		assert.deepStrictEqual(Array.from(editor.columnVerticalAlignments(style, 'large', 4)), ['middle', 'middle']);
 	});
 
-	it('edits the default style only in memory, and saves an explicit copy', () => {
+	it('edits the default design only in memory, and saves an explicit copy', () => {
 		const { scope, writes } = loadSettings();
 		const builtIn = scope.getSelectedStyle();
 		scope.editor.previewState = 'inactive';
@@ -573,7 +831,7 @@ describe('Widget style designer preview', () => {
 		scope.selectLayoutElement('name');
 		scope.editor.position.row = 2;
 		scope.updateLayoutPosition();
-		assert.strictEqual(scope.getSelectedScheme().colors.icon, 'red');
+		assert.strictEqual(scope.getSelectedScheme().colors.icon, 'blue');
 		assert.strictEqual(builtIn.groups.normal.elements.name.row, 2);
 		assert.strictEqual(scope.isDirty(), false);
 		scope.saveSettings();
@@ -586,7 +844,7 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(writes.length, 1);
 		assert.strictEqual(writes[0].key, 'widgetStyles');
 		assert.strictEqual(writes[0].value.styles.length, 1);
-		assert.strictEqual(writes[0].value.colorSchemes[0].colors.icon, 'red');
+		assert.strictEqual(writes[0].value.colorSchemes[0].colors.icon, 'blue');
 		assert.notStrictEqual(writes[0].value.styles[0].id, builtIn.id);
 		assert.strictEqual(loadSettings().scope.getSelectedScheme().colors.icon, 'blue');
 	});
@@ -832,8 +1090,42 @@ describe('Widget style designer preview', () => {
 		scope.updateColumnSpan();
 		assert.strictEqual(scope.editor.selectedColumn.group, 1);
 		assert.deepStrictEqual(Array.from(style.columnSpans.normal[1]), [4]);
-		assert.deepStrictEqual(Array.from(scope.availableColumnSpans()), [4]);
+		assert.deepStrictEqual(Array.from(scope.availableColumnSpans()), [1, 2, 3, 4]);
 		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
+	});
+
+	it('splits a full-width column into the selected span and empty columns', () => {
+		for (const span of [1, 2, 3]) {
+			const { scope, editor, writes } = loadSettings();
+			scope.createStyle(true);
+			const style = scope.getSelectedStyle();
+			scope.selectColumn(1, 1);
+			scope.editor.columnAlignment = 'right';
+			scope.updateColumnAlignment();
+			style.groups.normal.overrides.paused = { name: { row: 1, group: 1, order: 1 } };
+			const positions = JSON.stringify(style.groups.normal);
+			scope.editor.columnSpan = span;
+			scope.updateColumnSpan();
+			assert.deepStrictEqual(Array.from(style.columnSpans.normal[1]), [span, ...Array(4 - span).fill(1)]);
+			assert.strictEqual(style.rowColumns.normal[1], 5 - span);
+			assert.deepStrictEqual(Array.from(style.columnAlignments.normal[1]), ['right', ...Array(4 - span).fill('left')]);
+			assert.strictEqual(JSON.stringify(style.groups.normal), positions);
+			assert.strictEqual(scope.editor.selectedColumn.group, 1);
+			assert.strictEqual(scope.groupedRows(false).find(row => row.id === 1).groups.slice(1)
+				.every(group => group.elements.length === 0), true);
+			assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
+			scope.saveSettings();
+			const reloaded = loadSettings(writes[0].value).scope.widgetStyles.styles[0];
+			assert.deepStrictEqual(Array.from(reloaded.columnSpans.normal[1]), [span, ...Array(4 - span).fill(1)]);
+		}
+	});
+
+	it('keeps drag reordering without row or column move buttons', () => {
+		for (const key of ['style_move_up', 'style_move_down', 'style_move_left', 'style_move_right']) {
+			assert.ok(!html.includes(key));
+		}
+		assert.match(html, /style-reorder-drag="row"/);
+		assert.match(html, /style-reorder-drag="column"/);
 	});
 
 	it('saves column alignment per size and preserves surviving columns when columns change', () => {
@@ -999,6 +1291,46 @@ describe('Widget style designer preview', () => {
 		assert.match(css, /\.style-preview-group\[data-direction="vertical"\]\s*\{[^}]*flex-direction:\s*column;/);
 	});
 
+	it('inserts elements at the chosen position and persists independent state and size layouts', () => {
+		const { scope, editor, writes } = loadSettings();
+		scope.createStyle(true);
+		const style = scope.getSelectedStyle();
+		const group = () => Array.from(scope.groupedRows(false).find(row => row.id === 1).groups[0].elements);
+		assert.deepStrictEqual(group(), ['icon', 'name']);
+		scope.moveGroupedElement('name', 1, 1, 0);
+		assert.deepStrictEqual(group(), ['name', 'icon']);
+		scope.moveGroupedElement('name', 1, 1, 1);
+		assert.deepStrictEqual(group(), ['icon', 'name']);
+		scope.moveGroupedElement('status', 1, 1, 1);
+		assert.deepStrictEqual(group(), ['icon', 'status', 'name']);
+		scope.editor.editStatus = true;
+		scope.editor.previewState = 'paused';
+		scope.moveGroupedElement('name', 1, 1, 0);
+		assert.deepStrictEqual(group(), ['name', 'icon', 'status']);
+		assert.strictEqual(style.groups.normal.elements.name.order, 3);
+		assert.strictEqual(style.groups.normal.overrides.running, undefined);
+		scope.editor.previewState = 'running';
+		assert.deepStrictEqual(group(), ['icon', 'status', 'name']);
+		scope.editor.previewSize = 'large';
+		assert.deepStrictEqual(group(), ['icon', 'name']);
+		scope.saveSettings();
+		assert.strictEqual(editor.isValidCollection(writes[0].value), true);
+		const reloaded = loadSettings(writes[0].value).scope;
+		reloaded.editor.selectedStyleId = 'custom:' + style.id;
+		reloaded.editor.editStatus = true;
+		reloaded.editor.previewState = 'paused';
+		assert.deepStrictEqual(Array.from(reloaded.groupedRows(false).find(row => row.id === 1).groups[0].elements), ['name', 'icon', 'status']);
+	});
+
+	it('supports ordering all elements in one column', () => {
+		const { scope, editor } = loadSettings();
+		scope.createStyle(true);
+		scope.styleElements.forEach((element, index) => scope.moveGroupedElement(element, 1, 1, index));
+		const group = scope.groupedRows(false).find(row => row.id === 1).groups[0];
+		assert.deepStrictEqual(Array.from(group.elements), Array.from(scope.styleElements));
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
+	});
+
 	it('moves elements to and from the unused row and saves them per size', () => {
 		const { scope, writes, editor } = loadSettings();
 		scope.createStyle(true);
@@ -1061,6 +1393,8 @@ describe('Widget style designer preview', () => {
 		scope.moveGroupedElement('start', 2, 1);
 		assert.strictEqual(style.groups.normal.elements.start.row, 2);
 		assert.strictEqual(style.groups.normal.elements.play.row, 3);
+		scope.selectEditorMode('color');
+		scope.createStyle(true);
 		scope.editor.colorValues.start = 'red';
 		scope.updateColorOverride('start');
 		assert.strictEqual(scope.getSelectedScheme().colors.start, 'red');

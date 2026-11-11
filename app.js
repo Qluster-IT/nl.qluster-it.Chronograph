@@ -4,6 +4,7 @@ const Homey = require('homey');
 const Chronograph = require('./lib/chronograph.js');
 const { Utils, ChronographType, LogLevel } = require('./lib/utils.js');
 const { searchIcons } = require('./lib/widget-icons.js');
+const widgetStyleRuntime = require('./assets/js/chronograph-widget-style.js');
 
 // Actions.
 const TimerGetDuration = require('./lib/timer/actions/timer_get_duration.js');
@@ -228,12 +229,21 @@ class Application extends Homey.App {
 					const savedItems = Array.isArray(collection[key]) ? collection[key] : [];
 					const search = (query || '').toLowerCase();
 					const current = this.homey.__('settings.style_current');
-					return [{ id: 'builtin:current', name: current, data: { id: 'builtin:current' } }]
-						.concat(savedItems
-							.filter(item => item && typeof item.id === 'string' && typeof item.name === 'string')
-							.map(item => ({ id: item.id, name: item.name, data: { id: item.id } })))
+					const builtIns = [{ id: 'builtin:current', name: current, data: { id: 'builtin:current' } }];
+					if (settingId === 'colorScheme') widgetStyleRuntime.builtInSchemeDefinitions.forEach(item => {
+						builtIns.push({ id: item.id, name: this.homey.__(item.nameKey), data: { id: item.id } });
+					});
+					const sortByName = (left, right) => left.name.localeCompare(right.name, undefined, { sensitivity: 'base', numeric: true });
+					const builtInLabel = this.homey.__('settings.style_builtin_label');
+					const defaults = builtIns.map(item => ({ ...item, name: `${item.name} (${builtInLabel})` }))
 						.filter(item => item.name.toLowerCase().includes(search))
-						.sort((left, right) => left.name.localeCompare(right.name, undefined, { sensitivity: 'base', numeric: true }));
+						.sort(sortByName);
+					const custom = savedItems
+						.filter(item => item && typeof item.id === 'string' && typeof item.name === 'string')
+						.map(item => ({ id: item.id, name: item.name, data: { id: item.id } }))
+						.filter(item => item.name.toLowerCase().includes(search))
+						.sort(sortByName);
+					return defaults.concat(custom);
 				});
 			});
 		});

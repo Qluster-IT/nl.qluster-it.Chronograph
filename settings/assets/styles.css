@@ -423,6 +423,10 @@ body {
 .style-preview-group[data-direction="vertical"] { flex-direction: column; flex-wrap: nowrap; align-items: flex-start; }
 .style-preview-group[data-direction="vertical"][data-alignment="center"] { align-items: center; }
 .style-preview-group[data-direction="vertical"][data-alignment="right"] { align-items: flex-end; }
+.style-preview-group[data-direction="vertical"][data-alignment="stretch"] { align-items: stretch; }
+.style-preview-group[data-direction="horizontal"][data-alignment="stretch"] > .style-widget-element { flex: 1 1 0; }
+.style-preview-group[data-direction="vertical"][data-alignment="stretch"] > .style-widget-element { width: 100%; }
+.style-grouped-preview .style-preview-group[data-alignment="stretch"] .style-widget-element .style-widget-action { width: 100%; }
 .style-preview-group[data-direction="vertical"][data-vertical-alignment="middle"] { justify-content: center; }
 .style-preview-group[data-direction="vertical"][data-vertical-alignment="bottom"] { justify-content: flex-end; }
 
@@ -533,6 +537,75 @@ body {
 	font-size: 16px;
 }
 
+.style-grouped-preview .style-widget-icon,
+.style-grouped-preview .style-widget-name,
+.style-grouped-preview .style-widget-status,
+.style-grouped-preview .style-widget-duration {
+	font-size: var(--element-size);
+}
+
+.style-showcase .style-cell-content.style-widget-icon,
+.style-showcase .style-cell-content.style-widget-name,
+.style-showcase .style-cell-content.style-widget-status,
+.style-showcase .style-cell-content.style-widget-duration {
+	font-size: var(--element-size);
+}
+
+.style-showcase .style-cell-content .style-showcase-action {
+	width: var(--element-size);
+	height: var(--element-size);
+}
+
+.style-showcase .style-cell-content .style-widget-field {
+	height: var(--element-size);
+}
+
+.style-grouped-preview .style-widget-icon .style-preview-chronograph-icon {
+	font-size: inherit;
+}
+
+.style-grouped-preview .style-widget-element .style-widget-action {
+	width: var(--element-size);
+	height: var(--element-size);
+}
+
+.style-grouped-preview .style-widget-element .style-widget-start {
+	width: auto;
+}
+
+.style-grouped-preview .style-widget-fields .style-widget-field {
+	height: var(--element-size);
+}
+
+.style-grouped-preview .style-widget-progress .style-progress {
+	height: var(--element-size);
+}
+
+.style-grouped-preview .style-widget-progress .style-progress[data-direction="bottom-top"],
+.style-grouped-preview .style-widget-progress .style-progress[data-direction="top-bottom"] {
+	width: var(--element-size);
+	min-width: var(--element-size);
+	height: 80px;
+}
+
+.style-preview-compact .style-grouped-preview .style-widget-progress .style-progress[data-direction="bottom-top"],
+.style-preview-compact .style-grouped-preview .style-widget-progress .style-progress[data-direction="top-bottom"] {
+	height: 48px;
+}
+
+@container (max-width: 299px) {
+	.style-preview-normal[data-allow-shrink="true"] .style-widget-duration {
+		font-size: min(var(--element-size), 14px);
+	}
+	.style-preview-large[data-allow-shrink="true"] .style-widget-duration {
+		font-size: min(var(--element-size), 20px);
+	}
+	.style-preview-large[data-allow-shrink="true"] .style-widget-element .style-widget-action:not(.style-widget-start):not(.style-widget-cancel) {
+		width: min(var(--element-size), 32px);
+		height: min(var(--element-size), 32px);
+	}
+}
+
 .style-widget-element[data-palette="blue"] { --style-color: #2f8df6; }
 .style-widget-element[data-palette="red"] { --style-color: #f25f5c; }
 .style-widget-element[data-palette="orange"] { --style-color: #f07a1f; }
@@ -611,6 +684,38 @@ body {
 	padding: 3px;
 	border: 1px dashed rgba(128, 128, 128, 0.55);
 	border-radius: 4px;
+}
+
+.style-group-drop-target {
+	border-color: var(--chronograph-primary);
+}
+
+.style-group-insertion-indicator {
+	position: fixed;
+	z-index: 10001;
+	height: 3px;
+	border-radius: 2px;
+	background: var(--chronograph-primary);
+	pointer-events: none;
+	transform: translateY(-50%);
+}
+
+.style-group-insertion-label {
+	position: absolute;
+	right: 0;
+	top: 0;
+	max-width: min(250px, 85vw);
+	padding: 4px 7px;
+	border: 1px solid var(--chronograph-primary);
+	border-radius: 4px;
+	background: var(--homey-background-color, #333);
+	color: var(--homey-text-color, #fff);
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.3;
+	white-space: normal;
+	transform: translateY(-100%);
 }
 
 .style-group-number {

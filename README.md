@@ -33,17 +33,24 @@ Each widget uses the built-in Default design and color scheme whenever its
 corresponding selector is empty. A saved design or scheme can be selected
 independently; choosing one does not change the other. The Default color scheme
 also takes precedence over color settings retained from older widget versions.
-In the designer, each built-in Default is temporarily editable for testing.
+The built-in Ocean, Forest, Sunset, Twilight, Blossom, Sky and Amber color
+schemes offer alternative accents and progress-bar colors; select them in the
+designer or in a widget's color scheme setting. Built-in color schemes are
+read-only; copy one to create a customizable scheme.
+Widget design and color-scheme selectors label built-in choices and list them
+above custom choices.
+In the designer, the built-in Default design is temporarily editable for testing.
 Its edits exist only until settings are reloaded and are not saved by the
-Save button. Copying it explicitly creates a custom design or color scheme
-containing those edits, which can be saved. Choose a widget type, size and state
+Save button. Copying it creates a custom design containing those edits, which
+can be saved. Choose a widget type, size and state
 for the design preview. Confirming deletion removes a custom item immediately
-without saving other pending edits. The built-in Defaults cannot be deleted. Drag a row label
-to reorder rows, or a column number to reorder columns within its row. The
-selected row or column also has move buttons. Reordering applies to the selected
+without saving other pending edits. Built-in designs and schemes cannot be deleted. Drag a row label
+to reorder rows, or a column number to reorder columns within its row. Reordering applies to the selected
 size, moving the associated settings and element positions in every state;
 other sizes are unchanged. Arrange elements in rows and groups by dragging
-them. On touchscreens a floating label follows the dragged element until it
+them, including reordering within a column. A line and label mark the insertion
+position relative to nearby elements;
+the Unused row is highlighted when targeted. On touchscreens a floating label follows the dragged element until it
 is dropped. Elements in a column are arranged horizontally without wrapping by
 default; select a column to arrange them vertically instead. Text may be
 truncated in a narrow column. Start and Play / Resume are separate elements with independently
@@ -54,6 +61,12 @@ are specific to the selected size and base layout or state override. Existing
 state-specific positions still override changes to the base layout in other
 states. When a base move would otherwise be hidden by an override in the
 selected preview state, that state's position is updated as well.
+Select an element to set an optional size override (4–100 px) for the selected
+design and widget size. Text and icons use font size, buttons and fields use
+height, and the status bar uses thickness. The app default is shown next to the
+input; leave it empty to use that default. The design-wide
+shrink option controls whether duration text and Large action buttons shrink on
+widgets narrower than 300 px. It is enabled for existing designs by default.
 Under Design, each size has a Height setting: Auto follows the current content.
 Minimum including input fields reserves space for the tallest preview state,
 including the start form. Minimum excluding input fields reserves space for
@@ -66,6 +79,8 @@ Select a row to align it at the top, middle, or bottom of available vertical
 space. This is most noticeable with Minimum required height when another row
 is hidden. Rows remain in order; when multiple rows request extra space, they
 share it rather than overlapping.
+Each row also has top padding from 0 to 100 px, configured independently for
+each widget size. Padding adds to the normal row spacing and moves with the row.
 The preview displays positions from the layout currently being edited: base
 positions in base mode, or resolved positions in state-override mode. Row
 visibility and element visibility still follow the selected preview state.
@@ -115,7 +130,10 @@ The selected column remains selected even if its number changes. When columns ar
 removed their space joins the last remaining column; new columns take one unit
 from the rightmost column with space to spare. Spans are saved per size and
 shared across preview states.
-Each column also has left, center or right alignment. Direction and alignment
+Reducing a full-width column creates empty one-unit columns to its right.
+Each column also has left, center, right or stretch alignment. Stretch fills the
+column width for vertically arranged elements, or shares the width equally
+among horizontally arranged elements. Direction and alignment
 are configured per size and shared across states. Existing and newly added
 columns default to horizontal and left alignment. When columns are removed,
 surviving columns retain their settings and moved elements use the destination

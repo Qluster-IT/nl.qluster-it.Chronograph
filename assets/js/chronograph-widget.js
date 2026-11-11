@@ -234,6 +234,12 @@ function onHomeyReady(Homey) {
 				if (['play', 'pause', 'stop', 'cancel', 'start'].indexOf(element) !== -1) return {};
 				return widgetStyleRuntime.elementStyle(activeDesignScheme, $scope.designState, element);
 			};
+			$scope.designElementSize = function (element) {
+				return widgetStyleRuntime.elementSize(activeDesign, $scope.layout, element);
+			};
+			$scope.designAllowShrink = function () {
+				return !activeDesign || activeDesign.allowShrink !== false;
+			};
 			$scope.designButtonStyle = function (element) {
 				return widgetStyleRuntime.elementStyle(activeDesignScheme, $scope.designState, element);
 			};
@@ -333,19 +339,18 @@ function onHomeyReady(Homey) {
 			}
 
 			function loadWidgetAppearance() {
-				var needsCollection = designStyleId !== 'builtin:current' || colorSchemeId !== 'builtin:current';
+				var builtInScheme = widgetStyleRuntime.builtInScheme(colorSchemeId);
+				var needsCollection = designStyleId !== 'builtin:current' || !builtInScheme;
 				if (!needsCollection) {
 					activeDesign = widgetStyleRuntime.currentDesign();
-					applyColorScheme(widgetStyleRuntime.currentScheme());
+					applyColorScheme(builtInScheme);
 					updateDesignRows();
 					return Promise.resolve();
 				}
 				return Homey.api('GET', '/widget-styles', {}).then(function (collection) {
 					var design = designStyleId !== 'builtin:current'
 						? widgetStyleRuntime.findStyle(collection, designStyleId) : widgetStyleRuntime.currentDesign();
-					var scheme = colorSchemeId !== 'builtin:current'
-						? widgetStyleRuntime.findScheme(collection, colorSchemeId)
-						: widgetStyleRuntime.currentScheme();
+					var scheme = builtInScheme || widgetStyleRuntime.findScheme(collection, colorSchemeId);
 					if (designStyleId !== 'builtin:current' && !design) {
 						throw new Error('The selected widget design is no longer available.');
 					}

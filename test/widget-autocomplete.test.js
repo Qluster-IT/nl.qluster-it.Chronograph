@@ -7,6 +7,53 @@ const vm = require('vm');
 const { Utils, ChronographType } = require('../lib/utils.js');
 
 describe('Widget chronograph autocomplete', () => {
+	it('offers localized built-in color schemes and filters them without affecting designs', async () => {
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		const module = { exports: {} };
+		vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8'), {
+			module,
+			require: id => id === 'homey' ? { App: class {} }
+				: id === './assets/js/chronograph-widget-style.js' ? runtime : {}
+		});
+		const listeners = {};
+		const names = {
+			'settings.style_current': 'Default',
+			'settings.style_scheme_ocean': 'Ocean',
+			'settings.style_scheme_forest': 'Forest',
+			'settings.style_scheme_sunset': 'Sunset',
+			'settings.style_scheme_twilight': 'Twilight',
+			'settings.style_scheme_blossom': 'Blossom',
+			'settings.style_scheme_sky': 'Sky',
+			'settings.style_scheme_amber': 'Amber',
+			'settings.style_builtin_label': 'Built-in'
+		};
+		const app = { homey: {
+			__: key => names[key],
+			settings: { get: () => ({ version: 2, styles: [{ id: 'design', name: 'A design' }], colorSchemes: [
+				{ id: 'custom', name: 'A custom' }, { id: 'ocean-copy', name: 'Ocean' }
+			] }) },
+			dashboards: { getWidget: type => ({
+				registerSettingAutocompleteListener: (setting, listener) => { listeners[type + ':' + setting] = listener; }
+			}) }
+		} };
+		module.exports.prototype._registerChronographWidgetAutocomplete.call(app);
+		for (const type of ['timer', 'stopwatch', 'transition']) {
+			const results = await listeners[type + ':colorScheme']('');
+			assert.deepStrictEqual(Array.from(results, item => item.id), [
+				'builtin:amber', 'builtin:blossom', 'builtin:current', 'builtin:forest', 'builtin:ocean',
+				'builtin:sky', 'builtin:sunset', 'builtin:twilight', 'custom', 'ocean-copy'
+			]);
+			assert.strictEqual(results.find(item => item.id === 'builtin:ocean').name, 'Ocean (Built-in)');
+			assert.strictEqual(results.find(item => item.id === 'ocean-copy').name, 'Ocean');
+			assert.strictEqual(results.find(item => item.id === 'builtin:ocean').data.id, 'builtin:ocean');
+			assert.deepStrictEqual(Array.from(await listeners[type + ':colorScheme']('OCE'), item => item.id), ['builtin:ocean', 'ocean-copy']);
+			const designs = await listeners[type + ':designStyle']('');
+			assert.deepStrictEqual(Array.from(designs, item => item.id), ['builtin:current', 'design']);
+			assert.strictEqual(designs[0].name, 'Default (Built-in)');
+			assert.strictEqual(designs[1].name, 'A design');
+		}
+	});
+
 	it('sorts filtered names without changing the configured order or item data', async () => {
 		const module = { exports: {} };
 		const script = fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8');
