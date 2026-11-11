@@ -3,7 +3,6 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
 	<link rel="stylesheet" href="../../assets/css/fontawesome.min.css">
 	<link rel="stylesheet" href="../../assets/css/solid.min.css">
 	<link rel="stylesheet" href="../../assets/css/regular.min.css">
@@ -19,20 +18,21 @@
 		'chronograph-layout-large': layout === 'large',
 		'chronograph-layout-compact': layout === 'compact'
 	}">
-		<section class="chronograph-tile" ng-if="selectedChronograph" ng-class="{
+		<ng-include ng-if="selectedChronograph && designEnabled" src="'../../assets/templates/chronograph-widget-design.html'"></ng-include>
+		<section class="chronograph-tile" ng-if="selectedChronograph && !designEnabled" ng-class="{
 			'chronograph-tile-running': selectedChronograph.active && selectedChronograph.running,
 			'chronograph-tile-paused': selectedChronograph.active && !selectedChronograph.running,
 			'chronograph-tile-starting': layout === 'compact' && showStartForm
 		}">
 			<div class="chronograph-row">
 				<div class="chronograph-summary">
-					<h2 class="chronograph-name"><i class="chronograph-icon" ng-if="iconClass" ng-class="iconClass" ng-attr-data-button-color="{{ iconColor }}" aria-hidden="true"></i><img class="chronograph-icon" ng-if="iconImage && !iconMask" ng-src="{{ iconImage }}" alt="" aria-hidden="true"><span class="chronograph-icon chronograph-icon-mask" ng-if="iconMask" ng-attr-data-button-color="{{ iconColor }}" ng-style="{ '-webkit-mask-image': iconMask, 'mask-image': iconMask }" aria-hidden="true"></span>{{ getDisplayName(selectedChronograph) }}</h2>
-					<p class="chronograph-status">{{ selectedChronograph.active ? (selectedChronograph.running ? labels.running : labels.paused) : labels.notRunning }}</p>
+					<h2 class="chronograph-name" ng-style="schemeElementStyle('name')"><i class="chronograph-icon" ng-if="iconClass" ng-class="iconClass" ng-attr-data-button-color="{{ iconColor }}" ng-style="schemeElementStyle('icon')" aria-hidden="true"></i><img class="chronograph-icon" ng-if="iconImage && !iconMask" ng-src="{{ iconImage }}" alt="" aria-hidden="true"><span class="chronograph-icon chronograph-icon-mask" ng-if="iconMask" ng-attr-data-button-color="{{ iconColor }}" ng-style="{ '-webkit-mask-image': iconMask, 'mask-image': iconMask }" aria-hidden="true"></span>{{ getDisplayName(selectedChronograph) }}</h2>
+					<p class="chronograph-status" ng-style="schemeElementStyle('status')">{{ selectedChronograph.active ? (selectedChronograph.running ? labels.running : labels.paused) : labels.notRunning }}</p>
 				</div>
-				<p class="chronograph-duration" aria-live="polite" ng-if="selectedChronograph.active">{{ formatDuration(selectedChronograph) }}</p>
+				<p class="chronograph-duration" aria-live="polite" ng-if="selectedChronograph.active" ng-style="schemeElementStyle('duration')">{{ formatDuration(selectedChronograph) }}</p>
 			</div>
 
-			<button class="chronograph-start-button chronograph-compact-start" type="button" ng-if="layout === 'compact' && !selectedChronograph.active && !showStartForm" ng-click="beginStart()" ng-disabled="busy" ng-attr-data-button-color="{{ playColor }}" title="{{ labels.start }}" aria-label="{{ labels.start }}">
+			<button class="chronograph-start-button chronograph-compact-start" type="button" ng-if="layout === 'compact' && !selectedChronograph.active && !showStartForm" ng-click="beginStart()" ng-disabled="busy" ng-attr-data-button-color="{{ playColor }}" ng-style="schemeElementStyle('play')" title="{{ labels.start }}" aria-label="{{ labels.start }}">
 				<i class="fa-solid fa-play" aria-hidden="true"></i>
 			</button>
 
@@ -45,20 +45,20 @@
 						<select class="form-select" id="duration-unit" ng-model="startValues.unit" ng-options="unit.id as unit.label for unit in units"></select>
 					</div>
 				</div>
-				<button class="chronograph-start-button" type="submit" ng-disabled="busy" ng-attr-data-button-color="{{ playColor }}">
+				<button class="chronograph-start-button" type="submit" ng-disabled="busy" ng-attr-data-button-color="{{ playColor }}" ng-style="schemeElementStyle('start')">
 					<i class="fa-solid fa-play" aria-hidden="true"></i>
 					{{ labels.start }}
 				</button>
-				<button class="chronograph-cancel-button" type="button" ng-if="layout === 'compact'" ng-click="cancelStart()" ng-disabled="busy" title="{{ labels.cancel }}" aria-label="{{ labels.cancel }}">
+				<button class="chronograph-cancel-button" type="button" ng-if="layout === 'compact'" ng-click="cancelStart()" ng-disabled="busy" ng-attr-data-button-color="{{ designButtonColor('cancel') }}" ng-style="schemeElementStyle('cancel')" title="{{ labels.cancel }}" aria-label="{{ labels.cancel }}">
 					<i class="fa-solid fa-xmark" aria-hidden="true"></i>
 				</button>
 			</form>
 
 			<div class="chronograph-actions" ng-if="selectedChronograph.active">
-				<button class="chronograph-action" type="button" ng-click="toggle()" ng-disabled="busy" title="{{ selectedChronograph.running ? labels.pause : labels.resume }}" aria-label="{{ selectedChronograph.running ? labels.pause : labels.resume }}" ng-attr-data-button-color="{{ selectedChronograph.running ? pauseColor : playColor }}">
+				<button class="chronograph-action" type="button" ng-click="toggle()" ng-disabled="busy" title="{{ selectedChronograph.running ? labels.pause : labels.resume }}" aria-label="{{ selectedChronograph.running ? labels.pause : labels.resume }}" ng-attr-data-button-color="{{ selectedChronograph.running ? pauseColor : playColor }}" ng-style="schemeElementStyle(selectedChronograph.running ? 'pause' : 'play')">
 					<i class="fa-solid" ng-class="selectedChronograph.running ? 'fa-pause' : 'fa-play'" aria-hidden="true"></i>
 				</button>
-				<button class="chronograph-action" type="button" ng-click="stop()" ng-disabled="busy" title="{{ labels.stop }}" aria-label="{{ labels.stop }}" ng-attr-data-button-color="{{ stopColor }}">
+				<button class="chronograph-action" type="button" ng-click="stop()" ng-disabled="busy" title="{{ labels.stop }}" aria-label="{{ labels.stop }}" ng-attr-data-button-color="{{ stopColor }}" ng-style="schemeElementStyle('stop')">
 					<i class="fa-solid fa-stop" aria-hidden="true"></i>
 				</button>
 			</div>
@@ -68,6 +68,7 @@
 		<p class="chronograph-error" role="alert" ng-if="error">{{ error }}</p>
 	</main>
 	<script src="../../assets/js/angular.min.js"></script>
+	<script src="../../assets/js/chronograph-widget-style.js"></script>
 	<script src="../../assets/js/chronograph-widget.js"></script>
 </body>
 </html>

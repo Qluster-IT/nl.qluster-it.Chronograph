@@ -220,6 +220,22 @@ class Application extends Homey.App {
 						return item;
 					});
 			});
+			['designStyle', 'colorScheme'].forEach(settingId => {
+				widget.registerSettingAutocompleteListener(settingId, async query => {
+					const collection = this.homey.settings.get('widgetStyles') || {};
+					const key = settingId === 'designStyle' ? 'styles'
+						: collection.version === 1 ? 'styles' : 'colorSchemes';
+					const savedItems = Array.isArray(collection[key]) ? collection[key] : [];
+					const search = (query || '').toLowerCase();
+					const current = this.homey.__('settings.style_current');
+					return [{ id: 'builtin:current', name: current, data: { id: 'builtin:current' } }]
+						.concat(savedItems
+							.filter(item => item && typeof item.id === 'string' && typeof item.name === 'string')
+							.map(item => ({ id: item.id, name: item.name, data: { id: item.id } })))
+						.filter(item => item.name.toLowerCase().includes(search))
+						.sort((left, right) => left.name.localeCompare(right.name, undefined, { sensitivity: 'base', numeric: true }));
+				});
+			});
 		});
 	}
 

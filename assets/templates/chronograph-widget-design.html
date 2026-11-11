@@ -1,0 +1,87 @@
+<section class="chronograph-design" ng-style="designBackgroundStyle()">
+	<div class="chronograph-design-row" ng-repeat="row in designRows track by row.id"
+		ng-attr-data-row-alignment="{{ row.alignment }}" ng-style="{ 'grid-template-columns': row.tracks }">
+		<div class="chronograph-design-group" ng-repeat="group in row.groups track by group.id"
+			ng-attr-data-alignment="{{ group.alignment }}"
+			ng-attr-data-vertical-alignment="{{ group.verticalAlignment }}"
+			ng-attr-data-direction="{{ group.direction }}">
+			<div class="chronograph-design-element" ng-repeat="element in group.elements track by element"
+				ng-class="'chronograph-design-element-' + element" ng-switch="element" ng-style="designElementStyle(element)">
+				<h2 ng-switch-when="name" class="chronograph-name">{{ getDisplayName(selectedChronograph) }}</h2>
+				<i ng-switch-when="icon" class="chronograph-icon" ng-if="iconClass" ng-class="iconClass" aria-hidden="true"></i>
+				<img ng-switch-when="icon" class="chronograph-icon" ng-if="iconImage && !iconMask" ng-src="{{ iconImage }}" alt="" aria-hidden="true">
+				<span ng-switch-when="icon" class="chronograph-icon chronograph-icon-mask" ng-if="iconMask"
+					ng-style="{ '-webkit-mask-image': iconMask, 'mask-image': iconMask }" aria-hidden="true"></span>
+				<p ng-switch-when="status" class="chronograph-status">
+					{{ selectedChronograph.active ? (selectedChronograph.running ? labels.running : labels.paused) : labels.notRunning }}
+				</p>
+				<p ng-switch-when="duration" class="chronograph-duration" aria-live="polite" ng-if="selectedChronograph.active">
+					{{ formatDuration(selectedChronograph) }}
+				</p>
+				<div ng-switch-when="fields" class="chronograph-fields">
+					<div class="chronograph-duration-fields" ng-if="!isStopwatch">
+						<label class="visually-hidden" for="design-duration">{{ labels.duration }}</label>
+						<input class="form-control" id="design-duration" type="number" min="1" step="any"
+							ng-model="startValues.time" required>
+						<label class="visually-hidden" for="design-duration-unit">{{ labels.unit }}</label>
+						<select class="form-select" id="design-duration-unit" ng-model="startValues.unit"
+							ng-options="unit.id as unit.label for unit in units"></select>
+					</div>
+					<div class="chronograph-transition-fields" ng-if="isTransition">
+						<div>
+							<label class="visually-hidden" for="design-transition-from">{{ labels.from }}</label>
+							<input class="form-control" id="design-transition-from" type="number" step="any"
+								placeholder="{{ labels.from }}" ng-model="startValues.from" required>
+						</div>
+						<div>
+							<label class="visually-hidden" for="design-transition-to">{{ labels.to }}</label>
+							<input class="form-control" id="design-transition-to" type="number" step="any"
+								placeholder="{{ labels.to }}" ng-model="startValues.to" required>
+						</div>
+						<div>
+							<label class="visually-hidden" for="design-transition-steps">{{ labels.steps }}</label>
+							<input class="form-control" id="design-transition-steps" type="number" min="2" step="1"
+								placeholder="{{ labels.steps }}" ng-model="startValues.steps" required>
+						</div>
+					</div>
+				</div>
+				<div ng-switch-when="progress" class="chronograph-design-progress" role="progressbar"
+					ng-attr-data-direction="{{ designProgressDirection() }}"
+					ng-attr-aria-label="{{ labels.duration }}" aria-valuemin="0" aria-valuemax="100"
+					ng-attr-aria-valuenow="{{ designProgressPercent() }}"
+					ng-style="{ backgroundColor: designProgressBackground() }">
+					<span class="chronograph-design-progress-fill" ng-style="designProgressFillStyle()"></span>
+					<span class="chronograph-design-progress-marker" ng-repeat="marker in designProgressMarkers() track by $index"
+						ng-style="designProgressMarkerStyle(marker)"></span>
+				</div>
+				<button ng-switch-when="start" class="chronograph-start-button" type="button" ng-click="start()"
+					ng-disabled="busy" ng-attr-data-button-color="{{ designButtonColor('start') }}"
+					ng-attr-aria-label="{{ labels.start }}" ng-style="designButtonStyle('start')">
+					<i class="fa-solid fa-play" aria-hidden="true"></i>{{ labels.start }}
+				</button>
+				<button ng-switch-when="play" class="chronograph-action" type="button"
+					ng-click="selectedChronograph.active ? toggle() : beginStart()" ng-disabled="busy"
+					ng-attr-data-button-color="{{ designButtonColor('play') }}"
+					ng-attr-aria-label="{{ selectedChronograph.active ? labels.resume : labels.start }}"
+					ng-style="designButtonStyle('play')">
+					<i class="fa-solid fa-play" aria-hidden="true"></i>
+				</button>
+				<button ng-switch-when="pause" class="chronograph-action" type="button" ng-click="toggle()"
+					ng-disabled="busy" ng-attr-data-button-color="{{ designButtonColor('pause') }}"
+					ng-attr-aria-label="{{ labels.pause }}" ng-style="designButtonStyle('pause')">
+					<i class="fa-solid fa-pause" aria-hidden="true"></i>
+				</button>
+				<button ng-switch-when="stop" class="chronograph-action" type="button" ng-click="stop()"
+					ng-disabled="busy" ng-attr-data-button-color="{{ designButtonColor('stop') }}"
+					ng-attr-aria-label="{{ labels.stop }}" ng-style="designButtonStyle('stop')">
+					<i class="fa-solid fa-stop" aria-hidden="true"></i>
+				</button>
+				<button ng-switch-when="cancel" class="chronograph-cancel-button" type="button" ng-click="cancelStart()"
+					ng-disabled="busy" ng-attr-data-button-color="{{ designButtonColor('cancel') }}"
+					ng-attr-aria-label="{{ labels.cancel }}" ng-style="designButtonStyle('cancel')">
+					<i class="fa-solid fa-xmark" aria-hidden="true"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+</section>

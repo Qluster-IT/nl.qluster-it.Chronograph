@@ -65,6 +65,18 @@ describe('Chronograph widget API', () => {
 		Chronograph.homey = originalHomey;
 	});
 
+	it('exposes only the saved widget style collection to widgets', async () => {
+		const collection = { version: 2, styles: [{ id: 'design', name: 'Design' }], colorSchemes: [] };
+		savedStartArgs.widgetStyles = collection;
+		assert.strictEqual(await widgetApi.getWidgetStyles({ homey }), collection);
+		delete savedStartArgs.widgetStyles;
+		assert.deepStrictEqual(await widgetApi.getWidgetStyles({ homey }), {
+			version: 2,
+			styles: [],
+			colorSchemes: []
+		});
+	});
+
 	it('gets the selected configured and active chronograph', async () => {
 		const timer = new Chronograph(chronographId, 'Widget API timer', 30, 'seconds');
 		timer.setData('type', ChronographType.TIMER);

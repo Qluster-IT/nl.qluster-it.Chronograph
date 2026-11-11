@@ -6,8 +6,9 @@ const path = require('path');
 const vm = require('vm');
 
 const script = fs.readFileSync(path.join(__dirname, '..', 'assets', 'js', 'chronograph-widget.js'), 'utf8');
+const styleScript = fs.readFileSync(path.join(__dirname, '..', 'assets', 'js', 'chronograph-widget-style.js'), 'utf8');
 
-async function loadWidget(type, settings, defaults) {
+async function loadWidget(type, settings, defaults, widgetStyles) {
 	let controller;
 	const listeners = {};
 	const state = { active: false, running: false, defaults };
@@ -18,7 +19,9 @@ async function loadWidget(type, settings, defaults) {
 		__: key => key,
 		ready() {},
 		on: (name, callback) => { listeners[name] = callback; },
-		api: () => Promise.resolve(Object.assign({}, state))
+		api: (method, url) => Promise.resolve(url === '/widget-styles'
+			? widgetStyles
+			: Object.assign({}, state))
 	};
 	const context = {
 		angular: { module: () => module, bootstrap() {} },
@@ -27,6 +30,7 @@ async function loadWidget(type, settings, defaults) {
 		Promise,
 		Date
 	};
+	vm.runInNewContext(styleScript, context);
 	vm.runInNewContext(script, context);
 	context.onHomeyReady(homey);
 	const timeout = () => {};
@@ -37,6 +41,47 @@ async function loadWidget(type, settings, defaults) {
 }
 
 describe('Widget duration defaults', () => {
+	it('loads the selected saved design and color scheme', async () => {
+		const design = {
+			id: 'design-a',
+			name: 'Design A',
+			startFieldsVisibility: { compact: 'play', normal: 'inactive', large: 'inactive' },
+			groups: {
+				compact: { elements: {}, overrides: {} },
+				normal: {
+					elements: {
+						name: { row: 1, group: 1, order: 1 },
+						fields: { row: 2, group: 1, order: 1 },
+						start: { row: 2, group: 2, order: 1 }
+					},
+					overrides: {}
+				},
+				large: { elements: {}, overrides: {} }
+			},
+			rowColumns: { normal: { 1: 1, 2: 2 } },
+			rowVisibility: { normal: {
+				1: { states: ['inactive'], startForm: true },
+				2: { states: [], startForm: true }
+			} }
+		};
+		const scheme = {
+			id: 'scheme-a',
+			name: 'Scheme A',
+			colors: { icon: 'red', name: 'green', start: 'orange', inactive: 'none' }
+		};
+		const { scope } = await loadWidget('timer', {
+			designStyle: { id: 'design-a' },
+			colorScheme: { data: { id: 'scheme-a' } },
+			layout: 'normal'
+		}, {}, { version: 2, styles: [design], colorSchemes: [scheme] });
+		assert.strictEqual(scope.designEnabled, true);
+		assert.deepStrictEqual(Array.from(scope.designRows, row => row.id), [1, 2]);
+		assert.strictEqual(scope.designRows[1].groups[1].elements.includes('start'), true);
+		assert.strictEqual(scope.iconColor, 'red');
+		assert.strictEqual(scope.playColor, 'blue');
+		assert.strictEqual(scope.schemeElementStyle('name').color, 'var(--homey-color-green, #71d51b)');
+	});
+
 	for (const type of ['timer', 'transition']) {
 		it('uses saved duration and unit when ' + type + ' settings are empty', async () => {
 			const { scope } = await loadWidget(type, { defaultDuration: null, defaultDurationUnit: 'auto' }, {

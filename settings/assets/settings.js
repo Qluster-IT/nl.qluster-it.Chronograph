@@ -486,6 +486,14 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				|| (row === 0 && group !== 1)) return;
 			var style = $scope.getSelectedStyle();
 			if (!style || !style.groups) return;
+			var columns = widgetStyleEditor.rowColumns(style, $scope.editor.previewSize, row);
+			if (row > 0 && group > columns + 1) {
+				showError(Homey.__('settings.style_row_column_error'));
+				return;
+			}
+			if (row > 0 && group > columns) {
+				widgetStyleEditor.setRowColumns(style, $scope.editor.previewSize, row, group);
+			}
 			if (group > widgetStyleEditor.rowColumns(style, $scope.editor.previewSize, row)) {
 				showError(Homey.__('settings.style_row_column_error'));
 				return;

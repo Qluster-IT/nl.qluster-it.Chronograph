@@ -2,7 +2,57 @@ const assert = require('assert');
 const Chronograph = require('../lib/chronograph.js');
 const { ChronographType } = require('../lib/utils.js');
 
-Chronograph.homey = { setTimeout, clearTimeout };
+const NativeDate = global.Date;
+const nativeSetTimeout = global.setTimeout;
+const nativeClearTimeout = global.clearTimeout;
+let now = 0;
+let nextTimeoutId = 0;
+let timeouts = [];
+
+const clock = {
+	reset() {
+		now = 1000000;
+		nextTimeoutId = 0;
+		timeouts = [];
+	},
+	setTimeout(callback, delay) {
+		const timeout = { id: ++nextTimeoutId, at: now + Math.max(0, delay), callback };
+		timeouts.push(timeout);
+		return timeout.id;
+	},
+	clearTimeout(id) {
+		timeouts = timeouts.filter(timeout => timeout.id !== id);
+	},
+	tick(delay) {
+		const end = now + delay;
+		let executions = 0;
+		while (true) {
+			timeouts.sort((a, b) => a.at - b.at || a.id - b.id);
+			const timeout = timeouts[0];
+			if (!timeout || timeout.at > end) break;
+			timeouts.shift();
+			now = timeout.at;
+			timeout.callback();
+			if (++executions > 10000) throw new Error('Fake timer loop exceeded its execution limit');
+		}
+		now = end;
+	}
+};
+
+class TestDate extends NativeDate {
+	constructor(...args) {
+		super(...(args.length ? args : [now]));
+	}
+
+	static now() {
+		return now;
+	}
+}
+
+function wait(callback, delay) {
+	clock.tick(delay);
+	callback();
+}
 
 Chronograph.events.on('log', (chronograph, text) => {
 //	console.log('[' + chronograph.getName() + '] ' + text);
@@ -21,6 +71,23 @@ Chronograph.events.on('removed', chronograph => events.removed = chronograph);
 Chronograph.events.on('split', () => events.split = !!events.split ? events.split + 1 : 1);
 
 describe('Chronograph', () => {
+	beforeEach(() => {
+		clock.reset();
+		global.Date = TestDate;
+		Chronograph.homey = {
+			setTimeout: clock.setTimeout.bind(clock),
+			clearTimeout: clock.clearTimeout.bind(clock)
+		};
+		events = {};
+	});
+
+	afterEach(() => {
+		Chronograph.all().slice().forEach(chronograph => chronograph.stop(true));
+		clock.reset();
+		global.Date = NativeDate;
+		Chronograph.homey = { setTimeout: nativeSetTimeout, clearTimeout: nativeClearTimeout };
+	});
+
 	it('should be properly initialized', function() {
 		let name = 'test timer 1';
 		let timer = new Chronograph(1, name, 1, 'minutes');
@@ -73,7 +140,7 @@ describe('Chronograph', () => {
 		assert.ok(!!events.started, 'started event should be emitted');
 		assert.equal(timer, events.started, 'started event should emit correct timer');
 		assert.ok(timer.isRunning(), 'new timer should be running');
-		setTimeout(() => {
+		wait(() => {
 			assert.ok(!Chronograph.get(5), 'timer should not be in global timers array after finish');
 			assert.equal(timer.getDuration(), timer.getTargetDuration(), 'after finishing the timer should have a the target duration')
 			assert.ok(!timer.isRunning(), 'new timer should not be running after finishing');
@@ -98,14 +165,14 @@ describe('Chronograph', () => {
 		assert.ok(!!events.started, 'started event should be emitted');
 		assert.equal(timer, events.started, 'started event should emit correct timer');
 
-		setTimeout(() => {
+		wait(() => {
 			timer.stop();
 			assert.ok(!Chronograph.get(6), 'timer should not be in global timers array after stopping');
 			assert.ok(!timer.isRunning(), 'stopped timer should not be running');
 			assert.ok(!!events.stopped, 'stopped event should be emitted');
 			assert.equal(timer, events.stopped, 'stopped event should emit correct timer');
 
-			setTimeout(() => {
+			wait(() => {
 				assert.ok(!events.finished, 'finished event should not be emitted');
 				assert.ok(!events.split, 'split event should not be emitted');
 				assert.ok(!events.paused, 'paused event should not be emitted');
@@ -129,7 +196,7 @@ describe('Chronograph', () => {
 		assert.ok(!!events.started, 'started event should be emitted');
 		assert.equal(stopwatch, events.started, 'started event should emit correct stopwatch');
 		assert.ok(stopwatch.isRunning(), 'new stopwatch should be running');
-		setTimeout(() => {
+		wait(() => {
 			assert.ok(stopwatch.getDuration() > 350 && stopwatch.getDuration() < 450, 'stopwatch should running at the correct position');
 			stopwatch.stop();
 
@@ -149,7 +216,7 @@ describe('Chronograph', () => {
 		assert.ok(!!events.started, 'started event should be emitted');
 		assert.equal(timer, events.started, 'started event should emit correct timer');
 
-		setTimeout(() => {
+		wait(() => {
 			assert.ok(timer.isRunning(), 'timer should be running');
 			timer.pause();
 			assert.ok(!timer.isRunning(), 'paused timer should not be running');
@@ -158,7 +225,7 @@ describe('Chronograph', () => {
 			assert.ok(!!events.paused, 'paused event should be emitted');
 			assert.equal(timer, events.paused, 'paused event should emit correct timer');
 
-			setTimeout(() => {
+			wait(() => {
 				assert.ok((timer.getTargetDuration() - timer.getDuration()) > 1450 && (timer.getTargetDuration() - timer.getDuration()) < 1550, 'timer should not moved when paused');
 				timer.resume();
 				assert.ok(!!Chronograph.get(8), 'timer should still be in global timers array after resume');
@@ -166,7 +233,7 @@ describe('Chronograph', () => {
 				assert.ok(!!events.resumed, 'resumed event should be emitted');
 				assert.equal(timer, events.resumed, 'resumed event should emit correct timer');
 
-				setTimeout(() => {
+				wait(() => {
 					assert.ok(timer.getDuration() > 950 && timer.getDuration() < 1050, 'timer duration should be correct while running');
 					timer.pause();
 					assert.ok(timer.getDuration() > 950 && timer.getDuration() < 1050, 'timer duration should be correct while paused');
@@ -174,7 +241,7 @@ describe('Chronograph', () => {
 					assert.ok(!!Chronograph.get(8), 'timer should still be in global timers array after pause');
 					timer.resume();
 
-					setTimeout(() => {
+					wait(() => {
 						assert.ok(!Chronograph.get(8), 'timer should not be in global timers array after finish');
 						assert.equal(timer.getTargetDuration(), timer.getDuration(), 'after finishing the timer should have the target duration')
 						assert.ok(!timer.isRunning(), 'new timer should not be running after finishing');
@@ -202,7 +269,7 @@ describe('Chronograph', () => {
 		assert.ok(!!events.started, 'started event should be emitted');
 		assert.equal(timer, events.started, 'started event should emit correct timer');
 
-		setTimeout(() => {
+		wait(() => {
 			assert.ok(timer.isRunning(), 'timer should be running');
 			timer.pause();
 			assert.ok(!timer.isRunning(), 'paused timer should not be running');
@@ -210,7 +277,7 @@ describe('Chronograph', () => {
 			assert.ok(!!events.paused, 'paused event should be emitted');
 			assert.equal(timer, events.paused, 'paused event should emit correct timer');
 
-			setTimeout(() => {
+			wait(() => {
 				assert.ok(!timer.isRunning(), 'paused timer should not be running');
 				timer.stop();
 				assert.ok(!Chronograph.get(9), 'timer should not be in global timers array after stopping');
@@ -238,21 +305,21 @@ describe('Chronograph', () => {
 		timer.addSplit(0.9, 'seconds');
 		timer.start();
 
-		setTimeout(() => {
+		wait(() => {
 			assert.ok(timer.isRunning(), 'timer should be running');
 			timer.pause();
 			assert.ok(!timer.isRunning(), 'paused timer should not be running');
 			assert.equal(events.split, 2, 'two split events should be emitted')
 
-			setTimeout(() => {
+			wait(() => {
 				assert.equal(events.split, 2, 'splits should be paused too')
 				timer.resume();
 
-				setTimeout(() => {
+				wait(() => {
 					assert.equal(events.split, 3, 'third split should come in the correct time')
 					timer.stop();
 
-					setTimeout(() => {
+					wait(() => {
 						assert.equal(events.split, 3, 'splits should be stopped too')
 						assert.ok(!timer.isRunning(), 'stopped timer should not be running');
 
@@ -276,7 +343,7 @@ describe('Chronograph', () => {
 		timer.addSplit(3600 - 0.5, 'seconds');
 		timer.start();
 
-		setTimeout(() => {
+		wait(() => {
 			assert.ok(timer.isRunning(), 'timer should be running');
 			timer.pause();
 			assert.ok(!timer.isRunning(), 'paused timer should not be running');
@@ -284,19 +351,19 @@ describe('Chronograph', () => {
 			timer.adjust(0.2, 'seconds'); // B)
 			assert.ok(!timer.isRunning(), 'adjusted timer should not be running');
 
-			setTimeout(() => {
+			wait(() => {
 				assert.equal(1, events.split, 'one split events should be emitted')
 				timer.resume();
 
 				events = {};
-				setTimeout(() => {
+				wait(() => {
 					timer.adjust(-1.8, 'seconds'); // A) + B) + C)
 
-					setTimeout(() => {
+					wait(() => {
 						assert.equal(2, events.split, 'two split events should be emitted')
 						timer.adjust(3598.6, 'seconds');
 
-						setTimeout(() => {
+						wait(() => {
 							assert.equal(2, events.split, 'two split events should be emitted')
 							assert.equal(timer.getTargetDuration(), timer.getDuration(), 'finished timer should have a the target duration')
 							assert.ok(!timer.isRunning(), 'finished timer should not be running');
@@ -329,7 +396,7 @@ describe('Chronograph', () => {
 		all.forEach(timer => {
 			timer.start();
 		});
-		setTimeout(() => {
+		wait(() => {
 			all = Chronograph.all().filter(chronograph => chronograph.getData('type') == ChronographType.TIMER);
 			assert.equal(0, all.length);
 
@@ -378,7 +445,7 @@ describe('Chronograph', () => {
 		const checkTimers = () => {
 			all = Chronograph.all().filter(chronograph => chronograph.getData('type') == ChronographType.TIMER);
 			if (all.length && Date.now() - startedAt < 3000) {
-				setTimeout(checkTimers, 100);
+				wait(checkTimers, 100);
 				return;
 			}
 			try {
@@ -391,6 +458,6 @@ describe('Chronograph', () => {
 			events = {};
 			done();
 		};
-		setTimeout(checkTimers, 100);
+		wait(checkTimers, 100);
 	});
 });

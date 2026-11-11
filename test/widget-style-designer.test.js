@@ -623,9 +623,11 @@ describe('Widget style designer preview', () => {
 	});
 
 	it('reduces row columns across base and status layouts and saves them per size', () => {
-		const { scope, writes } = loadSettings();
+		const { scope, writes, editor } = loadSettings();
 		scope.createStyle(true);
 		const style = scope.getSelectedStyle();
+		editor.setRowColumns(style, 'normal', 3, 4);
+		editor.setRowColumns(style, 'large', 3, 4);
 		style.groups.normal.overrides.paused = { duration: { row: 3, group: 4, order: 2 } };
 		style.groups.normal.overrides.starting = { fields: { row: 3, group: 3, order: 1 } };
 		scope.selectVisibilityRow(3);
@@ -663,9 +665,10 @@ describe('Widget style designer preview', () => {
 	});
 
 	it('selects columns and redistributes four span units independently per size', () => {
-		const { scope, writes } = loadSettings();
+		const { scope, writes, editor } = loadSettings();
 		scope.createStyle(true);
 		scope.editor.previewState = 'inactive';
+		editor.setRowColumns(scope.getSelectedStyle(), 'large', 4, 4);
 		scope.selectVisibilityRow(4);
 		scope.editor.rowColumns = 2;
 		scope.updateRowColumns();
@@ -722,6 +725,7 @@ describe('Widget style designer preview', () => {
 		const { scope, editor, writes } = loadSettings();
 		scope.createStyle(true);
 		const style = scope.getSelectedStyle();
+		editor.setRowColumns(style, 'normal', 1, 4);
 		style.groups.normal.elements.name.group = 2;
 		style.groups.normal.elements.icon.group = 3;
 		style.groups.normal.elements.status.row = 1;
@@ -750,6 +754,7 @@ describe('Widget style designer preview', () => {
 		const { scope, editor } = loadSettings();
 		scope.createStyle(true);
 		const style = scope.getSelectedStyle();
+		editor.setRowColumns(style, 'normal', 1, 4);
 		const positions = style.groups.normal.elements;
 		positions.icon = { row: 1, group: 1, order: 1 };
 		positions.name = { row: 1, group: 2, order: 1 };
@@ -778,6 +783,7 @@ describe('Widget style designer preview', () => {
 		const { scope, editor } = loadSettings();
 		scope.createStyle(true);
 		const style = scope.getSelectedStyle();
+		editor.setRowColumns(style, 'normal', 1, 4);
 		style.groups.normal.elements.icon.group = 3;
 		style.groups.normal.elements.name.group = 4;
 		scope.selectColumn(1, 4);
@@ -800,6 +806,8 @@ describe('Widget style designer preview', () => {
 		const { scope, editor, writes } = loadSettings();
 		scope.createStyle(true);
 		const style = scope.getSelectedStyle();
+		editor.setRowColumns(style, 'normal', 1, 4);
+		editor.setRowColumns(style, 'large', 1, 4);
 		scope.selectColumn(1, 4);
 		assert.strictEqual(scope.editor.columnAlignment, 'left');
 		scope.editor.columnAlignment = 'right';
@@ -893,6 +901,8 @@ describe('Widget style designer preview', () => {
 		const { scope, editor, writes } = loadSettings();
 		scope.createStyle(true);
 		const style = scope.getSelectedStyle();
+		editor.setRowColumns(style, 'normal', 1, 4);
+		editor.setRowColumns(style, 'large', 1, 4);
 		scope.selectColumn(1, 4);
 		assert.strictEqual(scope.editor.columnDirection, 'horizontal');
 		scope.editor.columnDirection = 'vertical';
@@ -924,6 +934,7 @@ describe('Widget style designer preview', () => {
 		const { scope, editor, writes } = loadSettings();
 		scope.createStyle(true);
 		const style = scope.getSelectedStyle();
+		editor.setRowColumns(style, 'normal', 1, 4);
 		scope.selectColumn(1, 4);
 		assert.strictEqual(scope.editor.columnWidth, 'span');
 		scope.editor.columnWidth = 'content';

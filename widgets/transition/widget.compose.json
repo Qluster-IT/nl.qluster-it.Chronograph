@@ -33,154 +33,28 @@
 			"hint": {"en":"Choose a Font Awesome icon to show beside the transition name","nl":"Kies een Font Awesome-pictogram naast de transitienaam","da":"Vælg et Font Awesome-ikon, der vises ved siden af overgangens navn.","de":"Wähle ein Font-Awesome-Symbol neben dem Namen des Übergangs.","es":"Elige un icono de Font Awesome para mostrar junto al nombre de la transición.","fr":"Choisissez une icône Font Awesome à afficher à côté du nom de la transition.","it":"Scegli un’icona Font Awesome da mostrare accanto al nome della transizione.","no":"Velg et Font Awesome-ikon som vises ved siden av overgangsnavnet.","sv":"Välj en Font Awesome-ikon som visas bredvid övergångens namn.","pl":"Wybierz ikonę Font Awesome wyświetlaną obok nazwy przejścia.","ru":"Выберите значок Font Awesome для отображения рядом с названием перехода.","ko":"전환 이름 옆에 표시할 Font Awesome 아이콘을 선택하세요.","ar":"اختر أيقونة Font Awesome لعرضها بجوار اسم الانتقال."}
 		},
 		{
-			"id": "iconColor",
-			"type": "dropdown",
-			"title": { "en": "Icon color", "nl": "Pictogramkleur" },
-			"hint": {"en":"Choose the icon color","nl":"Kies de kleur van het pictogram","da":"Vælg ikonets farve.","de":"Wähle die Farbe des Symbols.","es":"Elige el color del icono.","fr":"Choisissez la couleur de l’icône.","it":"Scegli il colore dell’icona.","no":"Velg fargen på ikonet.","sv":"Välj ikonens färg.","pl":"Wybierz kolor ikony.","ru":"Выберите цвет значка.","ko":"아이콘 색상을 선택하세요.","ar":"اختر لون الأيقونة."},
-			"value": "blue",
-			"values": [
-				{ "id": "blue", "title": { "en": "Blue", "nl": "Blauw" } },
-				{ "id": "red", "title": { "en": "Red", "nl": "Rood" } },
-				{ "id": "orange", "title": { "en": "Orange", "nl": "Oranje" } },
-				{ "id": "yellow", "title": { "en": "Yellow", "nl": "Geel" } },
-				{ "id": "green", "title": { "en": "Green", "nl": "Groen" } },
-				{ "id": "purple", "title": { "en": "Purple", "nl": "Paars" } },
-				{ "id": "teal", "title": { "en": "Teal", "nl": "Blauwgroen" } },
-				{ "id": "cyan", "title": { "en": "Cyan", "nl": "Cyaan" } },
-				{ "id": "indigo", "title": { "en": "Indigo", "nl": "Indigo" } },
-				{ "id": "pink", "title": { "en": "Pink", "nl": "Roze" } },
-				{ "id": "brown", "title": { "en": "Brown", "nl": "Bruin" } },
-				{ "id": "grey", "title": { "en": "Grey", "nl": "Grijs" } }
-			]
+			"id": "designStyle",
+			"type": "autocomplete",
+			"title": {
+				"en": "Design Style",
+				"nl": "Ontwerpstijl"
+			},
+			"hint": {
+				"en": "Choose a saved widget design",
+				"nl": "Kies een opgeslagen widgetontwerp"
+			}
 		},
 		{
-			"id": "inactiveColor",
-			"type": "dropdown",
-			"title": { "en": "Color when inactive", "nl": "Kleur bij inactief" },
-			"hint": {"en":"Background color when the transition is stopped; None keeps the normal background","nl":"Achtergrondkleur wanneer de transitie gestopt is; Geen behoudt de normale achtergrond","da":"Baggrundsfarve, når overgang er stoppet; vælg Ingen for normal baggrund.","de":"Hintergrundfarbe, wenn der Übergang gestoppt ist; „Keine“ behält den normalen Hintergrund bei.","es":"Color de fondo cuando el transición está detenido; elige Ninguno para mantener el fondo normal.","fr":"Couleur d’arrière-plan lorsque le transition est arrêté ; choisissez Aucun pour conserver l’arrière-plan normal.","it":"Colore di sfondo quando il transizione è fermo; scegli Nessuno per mantenere lo sfondo normale.","no":"Bakgrunnsfarge når overgang er stoppet; velg Ingen for normal bakgrunn.","sv":"Bakgrundsfärg när övergång har stoppats; välj Ingen för vanlig bakgrund.","pl":"Kolor tła, gdy przejście jest zatrzymany; wybierz Brak, aby zachować zwykłe tło.","ru":"Цвет фона, когда объект «переход» остановлен; выберите «Нет», чтобы оставить обычный фон.","ko":"전환가 중지되었을 때의 배경색입니다. 기본 배경을 사용하려면 없음을 선택하세요.","ar":"لون الخلفية عندما يكون الانتقال متوقفًا؛ اختر «بدون» للاحتفاظ بالخلفية العادية."},
-			"value": "none",
-			"values": [
-				{ "id": "none", "title": { "en": "None", "nl": "Geen" } },
-				{ "id": "blue", "title": { "en": "Blue", "nl": "Blauw" } },
-				{ "id": "red", "title": { "en": "Red", "nl": "Rood" } },
-				{ "id": "orange", "title": { "en": "Orange", "nl": "Oranje" } },
-				{ "id": "yellow", "title": { "en": "Yellow", "nl": "Geel" } },
-				{ "id": "green", "title": { "en": "Green", "nl": "Groen" } },
-				{ "id": "purple", "title": { "en": "Purple", "nl": "Paars" } },
-				{ "id": "teal", "title": { "en": "Teal", "nl": "Blauwgroen" } },
-				{ "id": "cyan", "title": { "en": "Cyan", "nl": "Cyaan" } },
-				{ "id": "indigo", "title": { "en": "Indigo", "nl": "Indigo" } },
-				{ "id": "pink", "title": { "en": "Pink", "nl": "Roze" } },
-				{ "id": "brown", "title": { "en": "Brown", "nl": "Bruin" } },
-				{ "id": "grey", "title": { "en": "Grey", "nl": "Grijs" } }
-			]
-		},
-		{
-			"id": "pausedColor",
-			"type": "dropdown",
-			"title": { "en": "Color when paused", "nl": "Kleur bij pauze" },
-			"hint": {"en":"Background color while the transition is paused; None keeps the normal background","nl":"Achtergrondkleur wanneer de transitie gepauzeerd is; Geen behoudt de normale achtergrond","da":"Baggrundsfarve, når overgang er sat på pause; vælg Ingen for normal baggrund.","de":"Hintergrundfarbe, wenn der Übergang pausiert ist; „Keine“ behält den normalen Hintergrund bei.","es":"Color de fondo cuando el transición está en pausa; elige Ninguno para mantener el fondo normal.","fr":"Couleur d’arrière-plan lorsque le transition est en pause ; choisissez Aucun pour conserver l’arrière-plan normal.","it":"Colore di sfondo quando il transizione è in pausa; scegli Nessuno per mantenere lo sfondo normale.","no":"Bakgrunnsfarge når overgang er satt på pause; velg Ingen for normal bakgrunn.","sv":"Bakgrundsfärg när övergång är pausad; välj Ingen för vanlig bakgrund.","pl":"Kolor tła, gdy przejście jest wstrzymany; wybierz Brak, aby zachować zwykłe tło.","ru":"Цвет фона, когда объект «переход» на паузе; выберите «Нет», чтобы оставить обычный фон.","ko":"전환가 일시 정지되었을 때의 배경색입니다. 기본 배경을 사용하려면 없음을 선택하세요.","ar":"لون الخلفية عندما يكون الانتقال متوقفًا مؤقتًا؛ اختر «بدون» للاحتفاظ بالخلفية العادية."},
-			"value": "none",
-			"values": [
-				{ "id": "none", "title": { "en": "None", "nl": "Geen" } },
-				{ "id": "blue", "title": { "en": "Blue", "nl": "Blauw" } },
-				{ "id": "red", "title": { "en": "Red", "nl": "Rood" } },
-				{ "id": "orange", "title": { "en": "Orange", "nl": "Oranje" } },
-				{ "id": "yellow", "title": { "en": "Yellow", "nl": "Geel" } },
-				{ "id": "green", "title": { "en": "Green", "nl": "Groen" } },
-				{ "id": "purple", "title": { "en": "Purple", "nl": "Paars" } },
-				{ "id": "teal", "title": { "en": "Teal", "nl": "Blauwgroen" } },
-				{ "id": "cyan", "title": { "en": "Cyan", "nl": "Cyaan" } },
-				{ "id": "indigo", "title": { "en": "Indigo", "nl": "Indigo" } },
-				{ "id": "pink", "title": { "en": "Pink", "nl": "Roze" } },
-				{ "id": "brown", "title": { "en": "Brown", "nl": "Bruin" } },
-				{ "id": "grey", "title": { "en": "Grey", "nl": "Grijs" } }
-			]
-		},
-		{
-			"id": "runningColor",
-			"type": "dropdown",
-			"title": { "en": "Color when active", "nl": "Kleur bij actief" },
-			"hint": {"en":"Background color while the transition is running; None keeps the normal background","nl":"Achtergrondkleur wanneer de transitie loopt; Geen behoudt de normale achtergrond","da":"Baggrundsfarve, når overgang kører; vælg Ingen for normal baggrund.","de":"Hintergrundfarbe, während der Übergang läuft; „Keine“ behält den normalen Hintergrund bei.","es":"Color de fondo mientras el transición está en marcha; elige Ninguno para mantener el fondo normal.","fr":"Couleur d’arrière-plan lorsque le transition est en cours ; choisissez Aucun pour conserver l’arrière-plan normal.","it":"Colore di sfondo mentre il transizione è in esecuzione; scegli Nessuno per mantenere lo sfondo normale.","no":"Bakgrunnsfarge mens overgang kjører; velg Ingen for normal bakgrunn.","sv":"Bakgrundsfärg medan övergång körs; välj Ingen för vanlig bakgrund.","pl":"Kolor tła podczas działania przejście; wybierz Brak, aby zachować zwykłe tło.","ru":"Цвет фона во время работы объекта «переход»; выберите «Нет», чтобы оставить обычный фон.","ko":"전환가 실행 중일 때의 배경색입니다. 기본 배경을 사용하려면 없음을 선택하세요.","ar":"لون الخلفية أثناء تشغيل الانتقال؛ اختر «بدون» للاحتفاظ بالخلفية العادية."},
-			"value": "none",
-			"values": [
-				{ "id": "none", "title": { "en": "None", "nl": "Geen" } },
-				{ "id": "blue", "title": { "en": "Blue", "nl": "Blauw" } },
-				{ "id": "red", "title": { "en": "Red", "nl": "Rood" } },
-				{ "id": "orange", "title": { "en": "Orange", "nl": "Oranje" } },
-				{ "id": "yellow", "title": { "en": "Yellow", "nl": "Geel" } },
-				{ "id": "green", "title": { "en": "Green", "nl": "Groen" } },
-				{ "id": "purple", "title": { "en": "Purple", "nl": "Paars" } },
-				{ "id": "teal", "title": { "en": "Teal", "nl": "Blauwgroen" } },
-				{ "id": "cyan", "title": { "en": "Cyan", "nl": "Cyaan" } },
-				{ "id": "indigo", "title": { "en": "Indigo", "nl": "Indigo" } },
-				{ "id": "pink", "title": { "en": "Pink", "nl": "Roze" } },
-				{ "id": "brown", "title": { "en": "Brown", "nl": "Bruin" } },
-				{ "id": "grey", "title": { "en": "Grey", "nl": "Grijs" } }
-			]
-		},
-		{
-			"id": "playColor",
-			"type": "dropdown",
-			"title": { "en": "Play button color", "nl": "Kleur van de afspeelknop" },
-			"hint": {"en":"Choose the color of the Start and Resume buttons","nl":"Kies de kleur van de Start- en Hervatten-knoppen","da":"Vælg farven på Start- og Genoptag-knapperne.","de":"Lege die Farbe der Start- und Fortsetzen-Schaltflächen fest.","es":"Elige el color de los botones Iniciar y Reanudar.","fr":"Choisissez la couleur des boutons Démarrer et Reprendre.","it":"Scegli il colore dei pulsanti Avvia e Riprendi.","no":"Velg fargen på Start- og Fortsett-knappene.","sv":"Välj färg på Starta- och Återuppta-knapparna.","pl":"Wybierz kolor przycisków Start i Wznów.","ru":"Выберите цвет кнопок «Старт» и «Продолжить».","ko":"시작 및 재개 버튼의 색상을 선택하세요.","ar":"اختر لون زري البدء والاستئناف."},
-			"value": "blue",
-			"values": [
-				{ "id": "blue", "title": { "en": "Blue", "nl": "Blauw" } },
-				{ "id": "red", "title": { "en": "Red", "nl": "Rood" } },
-				{ "id": "orange", "title": { "en": "Orange", "nl": "Oranje" } },
-				{ "id": "yellow", "title": { "en": "Yellow", "nl": "Geel" } },
-				{ "id": "green", "title": { "en": "Green", "nl": "Groen" } },
-				{ "id": "purple", "title": { "en": "Purple", "nl": "Paars" } },
-				{ "id": "teal", "title": { "en": "Teal", "nl": "Blauwgroen" } },
-				{ "id": "cyan", "title": { "en": "Cyan", "nl": "Cyaan" } },
-				{ "id": "indigo", "title": { "en": "Indigo", "nl": "Indigo" } },
-				{ "id": "pink", "title": { "en": "Pink", "nl": "Roze" } },
-				{ "id": "brown", "title": { "en": "Brown", "nl": "Bruin" } },
-				{ "id": "grey", "title": { "en": "Grey", "nl": "Grijs" } }
-			]
-		},
-		{
-			"id": "pauseColor",
-			"type": "dropdown",
-			"title": { "en": "Pause button color", "nl": "Kleur van de pauzeknop" },
-			"hint": {"en":"Choose the color of the Pause button","nl":"Kies de kleur van de Pauze-knop","da":"Vælg farven på Pause-knappen.","de":"Lege die Farbe der Pause-Schaltfläche fest.","es":"Elige el color del botón Pausar.","fr":"Choisissez la couleur du bouton Pause.","it":"Scegli il colore del pulsante Pausa.","no":"Velg fargen på Pause-knappen.","sv":"Välj färg på Paus-knappen.","pl":"Wybierz kolor przycisku Wstrzymaj.","ru":"Выберите цвет кнопки «Пауза».","ko":"일시 정지 버튼의 색상을 선택하세요.","ar":"اختر لون زر الإيقاف المؤقت."},
-			"value": "blue",
-			"values": [
-				{ "id": "blue", "title": { "en": "Blue", "nl": "Blauw" } },
-				{ "id": "red", "title": { "en": "Red", "nl": "Rood" } },
-				{ "id": "orange", "title": { "en": "Orange", "nl": "Oranje" } },
-				{ "id": "yellow", "title": { "en": "Yellow", "nl": "Geel" } },
-				{ "id": "green", "title": { "en": "Green", "nl": "Groen" } },
-				{ "id": "purple", "title": { "en": "Purple", "nl": "Paars" } },
-				{ "id": "teal", "title": { "en": "Teal", "nl": "Blauwgroen" } },
-				{ "id": "cyan", "title": { "en": "Cyan", "nl": "Cyaan" } },
-				{ "id": "indigo", "title": { "en": "Indigo", "nl": "Indigo" } },
-				{ "id": "pink", "title": { "en": "Pink", "nl": "Roze" } },
-				{ "id": "brown", "title": { "en": "Brown", "nl": "Bruin" } },
-				{ "id": "grey", "title": { "en": "Grey", "nl": "Grijs" } }
-			]
-		},
-		{
-			"id": "stopColor",
-			"type": "dropdown",
-			"title": { "en": "Stop button color", "nl": "Kleur van de stopknop" },
-			"hint": {"en":"Choose the color of the Stop button","nl":"Kies de kleur van de Stop-knop","da":"Vælg farven på Stop-knappen.","de":"Lege die Farbe der Stopp-Schaltfläche fest.","es":"Elige el color del botón Detener.","fr":"Choisissez la couleur du bouton Arrêter.","it":"Scegli il colore del pulsante Stop.","no":"Velg fargen på Stopp-knappen.","sv":"Välj färg på Stopp-knappen.","pl":"Wybierz kolor przycisku Zatrzymaj.","ru":"Выберите цвет кнопки «Стоп».","ko":"중지 버튼의 색상을 선택하세요.","ar":"اختر لون زر الإيقاف."},
-			"value": "red",
-			"values": [
-				{ "id": "blue", "title": { "en": "Blue", "nl": "Blauw" } },
-				{ "id": "red", "title": { "en": "Red", "nl": "Rood" } },
-				{ "id": "orange", "title": { "en": "Orange", "nl": "Oranje" } },
-				{ "id": "yellow", "title": { "en": "Yellow", "nl": "Geel" } },
-				{ "id": "green", "title": { "en": "Green", "nl": "Groen" } },
-				{ "id": "purple", "title": { "en": "Purple", "nl": "Paars" } },
-				{ "id": "teal", "title": { "en": "Teal", "nl": "Blauwgroen" } },
-				{ "id": "cyan", "title": { "en": "Cyan", "nl": "Cyaan" } },
-				{ "id": "indigo", "title": { "en": "Indigo", "nl": "Indigo" } },
-				{ "id": "pink", "title": { "en": "Pink", "nl": "Roze" } },
-				{ "id": "brown", "title": { "en": "Brown", "nl": "Bruin" } },
-				{ "id": "grey", "title": { "en": "Grey", "nl": "Grijs" } }
-			]
+			"id": "colorScheme",
+			"type": "autocomplete",
+			"title": {
+				"en": "Color Scheme",
+				"nl": "Kleurenschema"
+			},
+			"hint": {
+				"en": "Choose a saved widget color scheme",
+				"nl": "Kies een opgeslagen kleurenschema voor widgets"
+			}
 		},
 		{
 			"id": "showMilliseconds",
@@ -236,6 +110,7 @@
 		}
 	],
 	"api": {
+		"getWidgetStyles": { "method": "GET", "path": "/widget-styles" },
 		"getChronograph": { "method": "GET", "path": "/transition/:id" },
 		"putChronograph": { "method": "PUT", "path": "/transitions/:id" },
 		"deleteChronograph": { "method": "DELETE", "path": "/transitions/:id" },

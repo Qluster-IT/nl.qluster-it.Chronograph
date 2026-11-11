@@ -100,6 +100,7 @@ describe('Widget icon autocomplete', () => {
 	});
 
 	it('renders autocomplete selections, None and legacy dropdown values', () => {
+		const styleScript = fs.readFileSync(path.join(__dirname, '..', 'assets', 'js', 'chronograph-widget-style.js'), 'utf8');
 		const script = fs.readFileSync(path.join(__dirname, '..', 'assets', 'js', 'chronograph-widget.js'), 'utf8');
 		function render(icon, type = 'timer', iconColor) {
 			let controller;
@@ -113,6 +114,7 @@ describe('Widget icon autocomplete', () => {
 				Promise,
 				Date
 			};
+			vm.runInNewContext(styleScript, context);
 			vm.runInNewContext(script, context);
 			context.onHomeyReady(homey);
 			controller(scope, () => {}, () => {});
@@ -120,9 +122,10 @@ describe('Widget icon autocomplete', () => {
 		}
 
 		const selected = searchIcons('github', 'None').find(item => item.id === 'fab:github');
-		assert.strictEqual(render(selected).iconClass, 'fa-brands fa-github');
-		assert.strictEqual(render(selected).iconImage, '');
-		assert.strictEqual(render(searchIcons('clock', 'None').find(item => item.id === 'far:clock')).iconClass, 'fa-regular fa-clock');
+		assert.strictEqual(render(selected).iconClass, '');
+		assert.strictEqual(render(selected).iconImage, selected.image);
+		assert.strictEqual(render(searchIcons('clock', 'None').find(item => item.id === 'far:clock')).iconClass, '');
+		assert.strictEqual(render({ id: 'fab:github' }).iconClass, 'fa-brands fa-github');
 		for (const [type, name] of [['timer', 'clock'], ['stopwatch', 'stopwatch'], ['transition', 'shuffle']]) {
 			assert.strictEqual(render({ id: 'fas:' + name }, type).iconClass, render(undefined, type).iconClass);
 		}
@@ -140,18 +143,20 @@ describe('Widget icon autocomplete', () => {
 		assert.strictEqual(render({ image: legacySvg + '")' }, 'timer', 'red').iconMask, '');
 	});
 
-	it('defines the same icon color palette and setting order for each widget', () => {
+	it('defines the same design selectors and legacy color styling for each widget', () => {
 		const colors = ['blue', 'red', 'orange', 'yellow', 'green', 'purple', 'teal', 'cyan', 'indigo', 'pink', 'brown', 'grey'];
 		const css = fs.readFileSync(path.join(__dirname, '..', 'assets', 'css', 'chronograph-widget.css'), 'utf8');
 		for (const type of ['timer', 'stopwatch', 'transition']) {
 			const compose = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'widgets', type, 'widget.compose.json'), 'utf8'));
 			const ids = compose.settings.map(setting => setting.id);
 			assert.strictEqual(ids.indexOf('icon'), ids.indexOf('layout') + 1);
-			assert.strictEqual(ids.indexOf('iconColor'), ids.indexOf('icon') + 1);
-			const setting = compose.settings.find(item => item.id === 'iconColor');
-			assert.strictEqual(setting.value, 'blue');
-			assert.deepStrictEqual(setting.values.map(item => item.id), colors);
+			assert.strictEqual(ids.indexOf('designStyle'), ids.indexOf('icon') + 1);
+			assert.strictEqual(ids.indexOf('colorScheme'), ids.indexOf('designStyle') + 1);
+			assert.deepStrictEqual(ids.filter(id => /color/i.test(id)), ['colorScheme']);
+			assert.strictEqual(compose.settings.find(item => item.id === 'designStyle').type, 'autocomplete');
+			assert.strictEqual(compose.settings.find(item => item.id === 'colorScheme').type, 'autocomplete');
 			const html = fs.readFileSync(path.join(__dirname, '..', 'widgets', type, 'public', 'index.html'), 'utf8');
+			assert.ok(!html.includes('assets/css/bootstrap.min.css'));
 			assert.ok(html.includes('ng-attr-data-button-color="{{ iconColor }}"'));
 			assert.ok(html.includes("'mask-image': iconMask"));
 			for (const color of colors) assert.ok(css.includes('[data-button-color="' + color + '"]'));
