@@ -275,29 +275,32 @@ describe('Chronograph realtime updates', () => {
 });
 
 describe('App notifications', () => {
-	it('sends once and retries after a delivery failure', async () => {
+	it('attempts the API migration notification once whether delivery succeeds or fails', async () => {
 		const module = { exports: {} };
 		vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8'), {
 			module,
 			require: id => id === 'homey' ? { App: class {} } : {}
 		});
 		const notify = module.exports.prototype._notifyNameBasedApi;
-		const settings = {};
-		const errors = [];
-		let attempts = 0;
-		const app = { homey: {
-			settings: { get: key => settings[key], set: (key, value) => { settings[key] = value; } },
-			__: key => key,
-			notifications: { async createNotification() { attempts++; if (attempts === 1) throw new Error('offline'); } },
-			error: (...args) => errors.push(args)
-		} };
-		await notify.call(app);
-		assert.strictEqual(settings.nameBasedApiNotificationSent, undefined);
-		assert.strictEqual(errors.length, 1);
-		await notify.call(app);
-		await notify.call(app);
-		assert.strictEqual(attempts, 2);
-		assert.strictEqual(settings.nameBasedApiNotificationSent, true);
+		for (const fail of [false, true]) {
+			const settings = {};
+			const errors = [];
+			const excerpts = [];
+			const app = { homey: {
+				settings: { get: key => settings[key], set: (key, value) => { settings[key] = value; } },
+				__: key => key,
+				notifications: { async createNotification({ excerpt }) {
+					excerpts.push(excerpt);
+					if (fail) throw new Error('offline');
+				} },
+				error: (...args) => errors.push(args)
+			} };
+			await notify.call(app);
+			await notify.call(app);
+			assert.deepStrictEqual(excerpts, ['name_based_api_notice']);
+			assert.strictEqual(settings.nameBasedApiNotificationSent, true);
+			assert.strictEqual(errors.length, fail ? 1 : 0);
+		}
 	});
 
 	it('attempts the widget announcement once, independently of the API notice, even after failure', async () => {

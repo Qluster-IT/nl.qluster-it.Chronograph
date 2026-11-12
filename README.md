@@ -85,6 +85,10 @@ Application image by [Agê Barros](https://unsplash.com/@agebarros?utm_source=un
 
 ## Changelog
 
+### v3.0.3
+
+* Prevented retries of the API migration notification after a delivery failure.
+
 ### v3.0.2
 
 * Added a one-time notification introducing dashboard widgets and the app settings designer.

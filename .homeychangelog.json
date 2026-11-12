@@ -1183,5 +1183,20 @@
     "ru": "Добавлено одноразовое уведомление о виджетах панели управления и редакторе в настройках приложения.",
     "ko": "대시보드 위젯과 앱 설정의 디자이너를 소개하는 일회성 알림을 추가했습니다.",
     "ar": "أُضيف إشعار لمرة واحدة للتعريف بأدوات لوحة التحكم والمصمم في إعدادات التطبيق."
+  },
+  "3.0.3": {
+    "en": "The API migration notification is no longer retried after a delivery failure.",
+    "nl": "De melding over de API-migratie wordt na een mislukte bezorging niet opnieuw verstuurd.",
+    "da": "Meddelelsen om API-migreringen forsøges ikke længere sendt igen efter en leveringsfejl.",
+    "de": "Die Benachrichtigung zur API-Migration wird nach einem Zustellungsfehler nicht erneut gesendet.",
+    "es": "La notificación de migración de la API ya no se vuelve a enviar si falla la entrega.",
+    "fr": "La notification de migration de l'API n'est plus renvoyée après un échec de livraison.",
+    "it": "La notifica sulla migrazione dell'API non viene più inviata nuovamente dopo un errore di consegna.",
+    "no": "Varslet om API-migreringen sendes ikke på nytt etter en leveringsfeil.",
+    "sv": "Aviseringen om API-migreringen skickas inte på nytt efter ett leveransfel.",
+    "pl": "Powiadomienie o migracji API nie jest już ponawiane po nieudanym dostarczeniu.",
+    "ru": "Уведомление о переходе на новый API больше не отправляется повторно после ошибки доставки.",
+    "ko": "API 마이그레이션 알림 전송에 실패해도 다시 시도하지 않습니다.",
+    "ar": "لم يعد يُعاد إرسال إشعار ترحيل واجهة برمجة التطبيقات بعد فشل تسليمه."
   }
 }
