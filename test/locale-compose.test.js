@@ -45,7 +45,8 @@ describe('Homey Compose locales', () => {
 			assert.ok(fs.readFileSync(path.join(root, readme), 'utf8').includes('Chronograph'), `${language}: app store description brand`);
 			assert.ok(!/[?\uFFFD]/.test(source.name_based_api_notice), `${language}: API notice`);
 			assert.ok(!/[?\uFFFD]/.test(settings.widget_icon_none), `${language}: widget icon label`);
-			assert.strictEqual(changelog[version][language].split('\n').pop(), source.name_based_api_notice, language);
+			assert.ok(typeof changelog[version][language] === 'string' && changelog[version][language].trim(), `${language}: current changelog`);
+			assert.strictEqual(changelog['3.0.0'][language].split('\n').pop(), source.name_based_api_notice, language);
 			assert.ok(!changelog['2.3.1'][language].includes(source.name_based_api_notice), language);
 			assert.ok(!Object.prototype.hasOwnProperty.call(source, 'settings'), language);
 			assert.deepStrictEqual(Object.keys(source).sort(), Object.keys(reference).sort(), language);

@@ -85,6 +85,10 @@ Application image by [Agê Barros](https://unsplash.com/@agebarros?utm_source=un
 
 ## Changelog
 
+### v3.0.1
+
+* Added a designer preview for one-, two-, and three-column multi-widget layouts.
+
 ### v3.0.0
 
 * Added a multi-Chronograph widget with individually configurable tiles and up to three columns.

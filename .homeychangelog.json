@@ -1153,5 +1153,20 @@
     "ru": "Создавайте собственные макеты и цветовые схемы в редакторе виджетов. Отображайте до десяти хронографов в одном виджете. Улучшены переводы.\nПовышена производительность приложения и виджетов и снижено потребление ресурсов.\nДобавлена поддержка Better Logic Library (BLL) в текстовых полях карточек Flow.\nДобавлен триггер Flow для каждого интервала.\nAPI Chronograph изменился: используйте имена вместо идентификаторов. Обновите скрипты и интеграции; см. вики API.",
     "ko": "위젯 디자이너에서 사용자 지정 레이아웃과 색상 구성을 만들 수 있습니다. 위젯 하나에 크로노그래프를 최대 열 개까지 표시합니다. 번역을 개선했습니다.\n앱과 위젯의 성능을 개선하고 리소스 사용량을 줄였습니다.\nFlow 카드의 텍스트 필드에 Better Logic Library(BLL) 지원을 추가했습니다.\n일정 간격마다 실행되는 Flow 트리거를 추가했습니다.\nChronograph API가 변경되었습니다. ID 대신 이름을 사용하세요. 스크립트와 연동을 업데이트하고 API 위키를 참조하세요.",
     "ar": "أنشئ تخطيطات ومخططات ألوان مخصصة باستخدام مصمم الأدوات. اعرض ما يصل إلى عشرة كرونوغرافات في أداة واحدة. تم تحسين الترجمات.\nتحسين أداء التطبيق والأدوات وتقليل استهلاك الموارد.\nأُضيف دعم Better Logic Library (BLL) في الحقول النصية لبطاقات Flow.\nأُضيف مشغّل Flow لكل فترة زمنية.\nتغيرت واجهة Chronograph: استخدم الأسماء بدلاً من المعرّفات. حدّث البرامج النصية والتكاملات؛ راجع ويكي API."
+  },
+  "3.0.1": {
+    "en": "Added a designer preview for one-, two-, and three-column multi-widget layouts.",
+    "nl": "Een ontwerpvoorbeeld toegevoegd voor multiwidgetindelingen met één, twee of drie kolommen.",
+    "da": "Tilføjet en designforhåndsvisning til multiwidgetlayouts med én, to eller tre kolonner.",
+    "de": "Eine Designvorschau für Multi-Widget-Layouts mit einer, zwei oder drei Spalten hinzugefügt.",
+    "es": "Se añadió una vista previa del diseño para widgets múltiples de una, dos o tres columnas.",
+    "fr": "Ajout d'un aperçu du design pour les widgets multiples à une, deux ou trois colonnes.",
+    "it": "Aggiunta un'anteprima del design per i widget multipli a una, due o tre colonne.",
+    "no": "Lagt til forhåndsvisning av design for multiwidgetoppsett med én, to eller tre kolonner.",
+    "sv": "Lagt till förhandsvisning av design för multiwidgetlayouter med en, två eller tre kolumner.",
+    "pl": "Dodano podgląd projektu widżetu wielokrotnego z jedną, dwiema lub trzema kolumnami.",
+    "ru": "Добавлен предпросмотр дизайна мультивиджета с одним, двумя или тремя столбцами.",
+    "ko": "1개, 2개 또는 3개 열로 구성된 다중 위젯 디자인 미리보기를 추가했습니다.",
+    "ar": "أُضيفت معاينة للتصميم لتخطيطات الأداة المتعددة بعمود واحد أو عمودين أو ثلاثة أعمدة."
   }
 }
