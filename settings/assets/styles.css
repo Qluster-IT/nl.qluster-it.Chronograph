@@ -381,11 +381,31 @@ body {
 }
 
 .style-grouped-preview {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	gap: 4px;
 	min-width: 0;
 	container-type: inline-size;
+}
+
+.style-grouped-preview[data-row-spanning="true"] {
+	display: grid;
+	column-gap: 0;
+	row-gap: 0;
+	align-content: start;
+}
+
+.style-grouped-preview[data-row-spanning="true"] .style-preview-row {
+	display: contents;
+}
+
+.style-grouped-preview[data-row-spanning="true"] .style-preview-group {
+	padding-right: 8px;
+}
+
+.style-grouped-preview[data-row-spanning="true"] .style-preview-group[data-row-span]:not([data-row-span="1"]) .style-widget-progress {
+	align-self: stretch;
 }
 
 .style-preview-layer > .style-grouped-preview {
@@ -513,10 +533,9 @@ body {
 .style-widget-element.style-widget-fields > span,
 .style-widget-element.style-widget-fields [ng-include] { display: block; min-width: 0; }
 .style-widget-field-row {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(min(100%, 68px), 1fr));
-	gap: 6px;
+	display: contents;
 }
+.style-widget-field-row > span { min-width: 0; }
 .style-widget-field {
 	box-sizing: border-box;
 	width: 100%;
@@ -591,6 +610,13 @@ body {
 .style-preview-compact .style-grouped-preview .style-widget-progress .style-progress[data-direction="bottom-top"],
 .style-preview-compact .style-grouped-preview .style-widget-progress .style-progress[data-direction="top-bottom"] {
 	height: 48px;
+}
+
+.style-preview .style-grouped-preview .style-preview-group[data-row-span]:not([data-row-span="1"]) .style-widget-progress .style-progress[data-direction="bottom-top"],
+.style-preview .style-grouped-preview .style-preview-group[data-row-span]:not([data-row-span="1"]) .style-widget-progress .style-progress[data-direction="top-bottom"] {
+	width: var(--element-size);
+	min-width: var(--element-size);
+	height: 100%;
 }
 
 @container (max-width: 299px) {
@@ -671,7 +697,7 @@ body {
 	cursor: pointer;
 }
 .style-row-selected { border-color: var(--chronograph-primary); }
-.style-group-editor-row > .style-row-select,
+.style-group-editor-row > .style-row-select[draggable="true"],
 .style-group-number[draggable="true"] { cursor: grab; touch-action: none; }
 .style-widget-select { display: block; width: 100%; }
 .style-row-rules { display: grid; gap: 8px; margin: 12px 0; border: 0; padding: 0; }
@@ -684,6 +710,22 @@ body {
 	padding: 3px;
 	border: 1px dashed rgba(128, 128, 128, 0.55);
 	border-radius: 4px;
+}
+
+.style-column-row-span,
+.style-row-span-continuation {
+	display: block;
+	font-size: 10px;
+	color: var(--homey-text-color-light, #777982);
+}
+
+.style-row-span-continuations {
+	grid-column: 2 / -1;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px 12px;
+	border-left: 2px solid var(--chronograph-primary);
+	padding-left: 5px;
 }
 
 .style-group-drop-target {
@@ -744,10 +786,10 @@ body {
 	font-size: 11px;
 	text-align: left;
 	text-overflow: ellipsis;
-	cursor: grab;
-	touch-action: none;
+	cursor: pointer;
 }
 
+.style-group-element[draggable="true"] { cursor: grab; touch-action: none; }
 .style-touch-dragging { opacity: 0.4; }
 .style-touch-drag-ghost {
 	position: fixed;

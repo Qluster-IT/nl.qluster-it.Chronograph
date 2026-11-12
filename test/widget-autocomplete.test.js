@@ -25,7 +25,12 @@ describe('Widget chronograph autocomplete', () => {
 			'settings.style_scheme_blossom': 'Blossom',
 			'settings.style_scheme_sky': 'Sky',
 			'settings.style_scheme_amber': 'Amber',
-			'settings.style_builtin_label': 'Built-in'
+			'settings.style_design_centered': 'Centered',
+			'settings.style_design_dashboard': 'Dashboard',
+			'settings.style_design_focus': 'Focus',
+			'settings.style_design_vertical': 'Vertical',
+			'settings.style_builtin_label': 'Built-in',
+			'settings.style_custom_label': 'Custom'
 		};
 		const app = { homey: {
 			__: key => names[key],
@@ -40,17 +45,43 @@ describe('Widget chronograph autocomplete', () => {
 		for (const type of ['timer', 'stopwatch', 'transition']) {
 			const results = await listeners[type + ':colorScheme']('');
 			assert.deepStrictEqual(Array.from(results, item => item.id), [
-				'builtin:amber', 'builtin:blossom', 'builtin:current', 'builtin:forest', 'builtin:ocean',
+				'builtin:current', 'builtin:amber', 'builtin:blossom', 'builtin:forest', 'builtin:ocean',
 				'builtin:sky', 'builtin:sunset', 'builtin:twilight', 'custom', 'ocean-copy'
 			]);
-			assert.strictEqual(results.find(item => item.id === 'builtin:ocean').name, 'Ocean (Built-in)');
+			assert.strictEqual(results.find(item => item.id === 'builtin:ocean').name, 'Ocean');
+			assert.strictEqual(results.find(item => item.id === 'builtin:ocean').description, 'Built-in');
 			assert.strictEqual(results.find(item => item.id === 'ocean-copy').name, 'Ocean');
+			assert.strictEqual(results.find(item => item.id === 'ocean-copy').description, 'Custom');
 			assert.strictEqual(results.find(item => item.id === 'builtin:ocean').data.id, 'builtin:ocean');
 			assert.deepStrictEqual(Array.from(await listeners[type + ':colorScheme']('OCE'), item => item.id), ['builtin:ocean', 'ocean-copy']);
+			assert.deepStrictEqual(Array.from(await listeners[type + ':colorScheme']('ocean (built-in)'), item => item.id), ['builtin:ocean']);
 			const designs = await listeners[type + ':designStyle']('');
-			assert.deepStrictEqual(Array.from(designs, item => item.id), ['builtin:current', 'design']);
-			assert.strictEqual(designs[0].name, 'Default (Built-in)');
-			assert.strictEqual(designs[1].name, 'A design');
+			assert.deepStrictEqual(Array.from(designs, item => item.id), ['builtin:current', 'builtin:centered', 'builtin:dashboard', 'builtin:focus', 'builtin:vertical', 'design']);
+			assert.strictEqual(designs[0].name, 'Default');
+			assert.strictEqual(designs[0].description, 'Built-in');
+			assert.strictEqual(designs[5].name, 'A design');
+			assert.strictEqual(designs[5].description, 'Custom');
+			assert.deepStrictEqual(Array.from(await listeners[type + ':designStyle']('dash'), item => item.id), ['builtin:dashboard']);
+			names['settings.style_current'] = 'Zzz';
+			assert.strictEqual((await listeners[type + ':designStyle'](''))[0].id, 'builtin:current');
+			assert.strictEqual((await listeners[type + ':colorScheme'](''))[0].id, 'builtin:current');
+			const localeDir = path.join(__dirname, '..', '.homeycompose', 'locales');
+			for (const file of fs.readdirSync(localeDir).filter(file => file.endsWith('.settings.json'))) {
+				const translations = JSON.parse(fs.readFileSync(path.join(localeDir, file), 'utf8'));
+				for (const key of Object.keys(names)) names[key] = translations[key.replace('settings.', '')];
+				assert.strictEqual((await listeners[type + ':designStyle'](''))[0].id, 'builtin:current', file);
+				assert.strictEqual((await listeners[type + ':colorScheme'](''))[0].id, 'builtin:current', file);
+			}
+			Object.assign(names, {
+				'settings.style_scheme_ocean': 'Ocean', 'settings.style_scheme_forest': 'Forest',
+				'settings.style_scheme_sunset': 'Sunset', 'settings.style_scheme_twilight': 'Twilight',
+				'settings.style_scheme_blossom': 'Blossom', 'settings.style_scheme_sky': 'Sky',
+				'settings.style_scheme_amber': 'Amber', 'settings.style_design_centered': 'Centered',
+				'settings.style_design_dashboard': 'Dashboard', 'settings.style_design_focus': 'Focus',
+				'settings.style_design_vertical': 'Vertical',
+				'settings.style_builtin_label': 'Built-in', 'settings.style_custom_label': 'Custom'
+			});
+			names['settings.style_current'] = 'Default';
 		}
 	});
 

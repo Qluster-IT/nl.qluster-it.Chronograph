@@ -134,12 +134,17 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			});
 		});
 		['rowVisibility', 'rowColumns', 'columnSpans', 'columnAlignments', 'columnVerticalAlignments',
-			'columnDirections', 'columnWidths', 'rowAlignments', 'rowTopPadding'].forEach(function (key) {
+			'columnDirections', 'columnWidths', 'columnRowSpans', 'rowAlignments', 'rowTopPadding'].forEach(function (key) {
 			var rows = style[key] && style[key][size];
 			if (!rows) return;
 			var moved = {};
 			Object.keys(rows).forEach(function (row) { moved[destination(Number(row))] = rows[row]; });
 			style[key][size] = moved;
+		});
+		Object.keys(style.columnRowSpans && style.columnRowSpans[size] || {}).forEach(function (row) {
+			style.columnRowSpans[size][row] = style.columnRowSpans[size][row].map(function (span) {
+				return Math.min(span, 6 - Number(row));
+			});
 		});
 	}
 
@@ -209,6 +214,19 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 		return columnValues(style, 'columnWidths', size, row, 'span');
 	}
 
+	function columnRowSpans(style, size, row) {
+		return columnValues(style, 'columnRowSpans', size, row, 1);
+	}
+
+	function setColumnRowSpan(style, size, row, column, span) {
+		var values = columnRowSpans(style, size, row);
+		if (!style.groups || sizes.indexOf(size) === -1 || rowKeys.indexOf(String(row)) === -1
+			|| !Number.isInteger(column) || column < 1 || column > values.length
+			|| !Number.isInteger(span) || span < 1 || span > 6 - row) throw new RangeError('Invalid column row span');
+		values[column - 1] = span;
+		storeColumnValues(style, 'columnRowSpans', size, row, values);
+	}
+
 	function setColumnValue(style, key, size, row, column, value, options, defaultValue) {
 		var values = columnValues(style, key, size, row, defaultValue);
 		if (!Number.isInteger(column) || column < 1 || column > values.length
@@ -255,7 +273,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 				if (positions[id].row === row) positions[id].group = destination(positions[id].group);
 			});
 		});
-		['columnSpans', 'columnAlignments', 'columnVerticalAlignments', 'columnDirections', 'columnWidths']
+		['columnSpans', 'columnAlignments', 'columnVerticalAlignments', 'columnDirections', 'columnWidths', 'columnRowSpans']
 			.forEach(function (key) {
 				var values = style[key] && style[key][size] && style[key][size][row];
 				if (!values) return;
@@ -285,6 +303,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 		var verticalAlignments = columnVerticalAlignments(style, size, row);
 		var directions = columnDirections(style, size, row);
 		var widths = columnWidths(style, size, row);
+		var rowSpans = columnRowSpans(style, size, row);
 		var index = column - 1;
 		if (!Number.isInteger(index) || index < 0 || index >= spans.length
 			|| !Number.isInteger(span) || span < 1 || span > 4) {
@@ -329,6 +348,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			verticalAlignments = kept.map(function (i) { return verticalAlignments[i]; });
 			directions = kept.map(function (i) { return directions[i]; });
 			widths = kept.map(function (i) { return widths[i]; });
+			rowSpans = kept.map(function (i) { return rowSpans[i]; });
 			spans[spans.length - 1] += removedSpan;
 			index = selectedIndex;
 			if (!style.rowColumns) style.rowColumns = {};
@@ -338,6 +358,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			storeColumnValues(style, 'columnVerticalAlignments', size, row, verticalAlignments);
 			storeColumnValues(style, 'columnDirections', size, row, directions);
 			storeColumnValues(style, 'columnWidths', size, row, widths);
+			storeColumnValues(style, 'columnRowSpans', size, row, rowSpans);
 		}
 		var difference = span - spans[index];
 		var others = [];
@@ -406,6 +427,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 		var verticalAlignments = columnVerticalAlignments(style, size, row);
 		var directions = columnDirections(style, size, row);
 		var widths = columnWidths(style, size, row);
+		var rowSpans = columnRowSpans(style, size, row);
 		if (count < spans.length) {
 			var removed = spans.splice(count);
 			spans[count - 1] += removed.reduce(function (sum, span) { return sum + span; }, 0);
@@ -432,6 +454,9 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 		widths = widths.slice(0, count);
 		while (widths.length < count) widths.push('span');
 		storeColumnValues(style, 'columnWidths', size, row, widths);
+		rowSpans = rowSpans.slice(0, count);
+		while (rowSpans.length < count) rowSpans.push(1);
+		storeColumnValues(style, 'columnRowSpans', size, row, rowSpans);
 		[layout.elements].concat(Object.keys(layout.overrides).map(function (state) {
 			return layout.overrides[state];
 		})).forEach(function (positions) {
@@ -658,6 +683,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			|| !validStartFieldsVisibility(style.startFieldsVisibility) || !validRowVisibility(style.rowVisibility)
 			|| !validForegroundColors(style.foregroundColors) || !validForegroundOverrides(style.foregroundOverrides)
 			|| !validHeightModes(style.heightModes)
+			|| !validInputFieldRows(style.inputFieldRows)
 			|| !validElementSizes(style.elementSizes)
 			|| (style.allowShrink !== undefined && typeof style.allowShrink !== 'boolean')
 			|| !validProgressSettings(style)
@@ -665,7 +691,8 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			|| !validColumnValues(style, 'columnAlignments', ['left', 'center', 'right', 'stretch'])
 			|| !validColumnValues(style, 'columnVerticalAlignments', ['top', 'middle', 'bottom'])
 			|| !validColumnValues(style, 'columnDirections', ['horizontal', 'vertical'])
-			|| !validColumnValues(style, 'columnWidths', ['span', 'content'])) return false;
+			|| !validColumnValues(style, 'columnWidths', ['span', 'content'])
+			|| !validColumnRowSpans(style)) return false;
 		return validOverrides(style.overrides) && validGroups(style.groups) && validColorOverrides(style.colorOverrides) && sizes.every(function (size) {
 			var cells = style.layouts[size];
 			return Array.isArray(cells) && cells.length === 12
@@ -676,6 +703,21 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 		}) && backgroundKeys.every(function (key) {
 			return backgroundIds.indexOf(style.colors[key]) !== -1;
 		});
+	}
+
+	function validColumnRowSpans(style) {
+		var value = style.columnRowSpans;
+		if (value === undefined) return true;
+		return !!style.groups && !!value && typeof value === 'object' && !Array.isArray(value)
+			&& Object.keys(value).every(function (size) {
+				var rows = value[size];
+				return sizes.indexOf(size) !== -1 && rows && typeof rows === 'object' && !Array.isArray(rows)
+					&& Object.keys(rows).every(function (row) {
+						return rowKeys.indexOf(row) !== -1 && Array.isArray(rows[row])
+							&& rows[row].length === rowColumns(style, size, row)
+							&& rows[row].every(function (span) { return Number.isInteger(span) && span >= 1 && span <= 6 - Number(row); });
+					});
+			});
 	}
 
 	function validProgressSettings(style) {
@@ -698,6 +740,18 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 		return value === undefined || (value && typeof value === 'object' && !Array.isArray(value)
 			&& Object.keys(value).every(function (size) {
 				return sizes.indexOf(size) !== -1 && ['auto', 'minimum', 'minimum-without-inputs'].indexOf(value[size]) !== -1;
+			}));
+	}
+
+	function validInputFieldRows(value) {
+		return value === undefined || (value && typeof value === 'object' && !Array.isArray(value)
+			&& Object.keys(value).every(function (size) {
+				var rows = value[size];
+				return sizes.indexOf(size) !== -1 && rows && typeof rows === 'object' && !Array.isArray(rows)
+					&& Object.keys(rows).every(function (type) {
+						return (type === 'timer' || type === 'transition') && Number.isInteger(rows[type])
+							&& rows[type] >= 1 && rows[type] <= (type === 'timer' ? 2 : 5);
+					});
 			}));
 	}
 
@@ -889,6 +943,8 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 		setColumnDirection: setColumnDirection,
 		columnWidths: columnWidths,
 		setColumnWidth: setColumnWidth,
+		columnRowSpans: columnRowSpans,
+		setColumnRowSpan: setColumnRowSpan,
 		resolveColor: resolveColor,
 		resolveForeground: resolveForeground,
 		foregroundOverride: foregroundOverride,
@@ -994,6 +1050,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			var touchDrag = styleTouchDrag(element[0]);
 
 			function dragStart(event) {
+				if (element[0].getAttribute('draggable') !== 'true') { event.preventDefault(); return; }
 				event.dataTransfer.effectAllowed = 'move';
 				event.dataTransfer.setData('application/x-chronograph-style-cell', attrs.styleGridCell);
 			}
@@ -1059,6 +1116,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 		link: function (scope, element, attrs) {
 			var touchDrag = styleTouchDrag(element[0]);
 			function dragStart(event) {
+				if (element[0].getAttribute('draggable') !== 'true') { event.preventDefault(); return; }
 				event.stopPropagation();
 				event.dataTransfer.effectAllowed = 'move';
 				event.dataTransfer.setData('application/x-chronograph-style-' + attrs.styleReorderDrag, attrs.styleReorderSource);
@@ -1210,6 +1268,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 		link: function (scope, element, attrs) {
 			var touchDrag = styleTouchDrag(element[0]);
 			function dragStart(event) {
+				if (element[0].getAttribute('draggable') !== 'true') { event.preventDefault(); return; }
 				styleGroupInsertion.start(attrs.styleGroupElement);
 				event.dataTransfer.effectAllowed = 'move';
 				event.dataTransfer.setData('application/x-chronograph-style-element', attrs.styleGroupElement);

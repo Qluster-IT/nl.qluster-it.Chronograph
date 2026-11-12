@@ -208,7 +208,8 @@ function onHomeyReady(Homey) {
 				$scope.designState = state;
 				$scope.designRows = widgetStyleRuntime.buildRows(activeDesign, $scope.layout, state, widgetType, hasDesignStartForm());
 				$scope.designEnabled = $scope.designRows.length > 0;
-				$scope.designLayers = [{ id: 'current', state: state, rows: $scope.designRows, measure: false }];
+				var current = widgetStyleRuntime.layoutSpanningRows($scope.designRows);
+				$scope.designLayers = [{ id: 'current', state: state, rows: current.rows, spanning: current.spanning, tracks: current.tracks, rowTracks: current.rowTracks, measure: false }];
 				var mode = activeDesign.heightModes && activeDesign.heightModes[$scope.layout] || 'auto';
 				if (mode === 'minimum' || mode === 'minimum-without-inputs') {
 					var states = mode === 'minimum'
@@ -218,12 +219,17 @@ function onHomeyReady(Homey) {
 							|| (scenario === 'inactive' && !isStopwatch && $scope.layout !== 'compact'
 								&& (!activeDesign.startFieldsVisibility || activeDesign.startFieldsVisibility[$scope.layout] === 'inactive'));
 						var scenarioState = scenario === 'inactive' && showForm ? 'starting' : scenario;
+						var scenarioRows = widgetStyleRuntime.buildRows(activeDesign, $scope.layout, scenarioState, widgetType, showForm,
+							mode === 'minimum-without-inputs');
+						var scenarioLayout = widgetStyleRuntime.layoutSpanningRows(scenarioRows);
 						$scope.designLayers.push({
 							id: scenario,
 							state: scenarioState,
 							measure: true,
-							rows: widgetStyleRuntime.buildRows(activeDesign, $scope.layout, scenarioState, widgetType, showForm,
-								mode === 'minimum-without-inputs')
+							rows: scenarioLayout.rows,
+							spanning: scenarioLayout.spanning,
+							tracks: scenarioLayout.tracks,
+							rowTracks: scenarioLayout.rowTracks
 						});
 					});
 				}
@@ -236,6 +242,9 @@ function onHomeyReady(Homey) {
 			};
 			$scope.designElementSize = function (element) {
 				return widgetStyleRuntime.elementSize(activeDesign, $scope.layout, element);
+			};
+			$scope.designFieldLayout = function () {
+				return widgetStyleRuntime.inputFieldLayout(activeDesign, $scope.layout, widgetType);
 			};
 			$scope.designAllowShrink = function () {
 				return !activeDesign || activeDesign.allowShrink !== false;
@@ -339,17 +348,17 @@ function onHomeyReady(Homey) {
 			}
 
 			function loadWidgetAppearance() {
+				var builtInDesign = widgetStyleRuntime.builtInDesign(designStyleId);
 				var builtInScheme = widgetStyleRuntime.builtInScheme(colorSchemeId);
-				var needsCollection = designStyleId !== 'builtin:current' || !builtInScheme;
+				var needsCollection = !builtInDesign || !builtInScheme;
 				if (!needsCollection) {
-					activeDesign = widgetStyleRuntime.currentDesign();
+					activeDesign = builtInDesign;
 					applyColorScheme(builtInScheme);
 					updateDesignRows();
 					return Promise.resolve();
 				}
 				return Homey.api('GET', '/widget-styles', {}).then(function (collection) {
-					var design = designStyleId !== 'builtin:current'
-						? widgetStyleRuntime.findStyle(collection, designStyleId) : widgetStyleRuntime.currentDesign();
+					var design = builtInDesign || widgetStyleRuntime.findStyle(collection, designStyleId);
 					var scheme = builtInScheme || widgetStyleRuntime.findScheme(collection, colorSchemeId);
 					if (designStyleId !== 'builtin:current' && !design) {
 						throw new Error('The selected widget design is no longer available.');

@@ -103,18 +103,19 @@
 						<option value="">{{ t('settings.style_select_placeholder') }}</option>
 						<optgroup label="{{ t('settings.style_built_in') }}">
 							<option value="builtin:current">{{ t('settings.style_current') }}</option>
+							<option ng-repeat="style in sortedStyleOptions(builtInDesigns) track by style.id" value="{{ style.id }}">{{ style.name }}</option>
 						</optgroup>
 						<optgroup label="{{ t('settings.style_custom') }}">
-							<option ng-repeat="style in widgetStyles.styles track by style.id" value="custom:{{ style.id }}">{{ style.name }}</option>
+							<option ng-repeat="style in sortedStyleOptions(widgetStyles.styles) track by style.id" value="custom:{{ style.id }}">{{ style.name }}</option>
 						</optgroup>
 					</select>
 					<select ng-if="editor.mode === 'color'" id="widget-style" class="form-select" ng-model="editor.selectedSchemeId">
 						<optgroup label="{{ t('settings.style_builtin_label') }}">
 							<option value="builtin:current">{{ t('settings.style_current') }}</option>
-							<option ng-repeat="scheme in builtInSchemes track by scheme.id" value="{{ scheme.id }}">{{ scheme.name }}</option>
+							<option ng-repeat="scheme in sortedStyleOptions(builtInSchemes) track by scheme.id" value="{{ scheme.id }}">{{ scheme.name }}</option>
 						</optgroup>
 						<optgroup label="{{ t('settings.style_custom_label') }}">
-							<option ng-repeat="scheme in widgetStyles.colorSchemes track by scheme.id" value="custom:{{ scheme.id }}">{{ scheme.name }}</option>
+							<option ng-repeat="scheme in sortedStyleOptions(widgetStyles.colorSchemes) track by scheme.id" value="custom:{{ scheme.id }}">{{ scheme.name }}</option>
 						</optgroup>
 					</select>
 					<div class="style-actions">
@@ -135,43 +136,45 @@
 				<div ng-if="getSelectedStyle() && getEditingItem()" class="style-design">
 					<label class="hy-nostyle" for="widget-style-name">{{ t('settings.style_name') }}</label>
 					<input class="hy-nostyle form-control" id="widget-style-name" type="text"
-						ng-model="getEditingItem().name" ng-disabled="editor.mode === 'color' && isBuiltInScheme()" maxlength="80" required>
-					<p class="help-text" ng-if="isBuiltInStyle()">{{ t(editor.mode === 'color' ? 'settings.style_scheme_builtin_hint' : 'settings.style_builtin_hint') }}</p>
+						ng-model="getEditingItem().name" ng-disabled="editor.mode === 'color' ? isBuiltInScheme() : isPresetDesign()" maxlength="80" required>
+					<p class="help-text" ng-if="isBuiltInStyle()">{{ t(editor.mode === 'color' ? 'settings.style_scheme_builtin_hint' : 'settings.style_design_builtin_hint') }}</p>
 
 					<div class="style-design-selectors">
 						<h3 ng-if="editor.mode === 'design'">{{ t('settings.style_design') }}</h3>
 						<label ng-if="editor.mode === 'design'" class="hy-nostyle style-progress-full-row"><input class="hy-nostyle" type="checkbox"
-							ng-model="allowDesignShrink" ng-model-options="{ getterSetter: true }" ng-disabled="savingSettings"> {{ t('settings.style_allow_shrink') }}</label>
-						<label ng-if="editor.mode === 'design'" class="hy-nostyle" for="style-height">{{ t('settings.style_height') }}</label>
+							ng-model="allowDesignShrink" ng-model-options="{ getterSetter: true }" ng-disabled="savingSettings || isPresetDesign()"> {{ t('settings.style_allow_shrink') }}</label>
+						<label ng-if="editor.mode === 'design'" class="hy-nostyle" for="style-height">{{ t('settings.style_height') }} ({{ t('settings.style_' + editor.previewSize) }})</label>
 						<select ng-if="editor.mode === 'design'" id="style-height" class="form-select" ng-model="heightMode"
-							ng-model-options="{ getterSetter: true }" ng-disabled="savingSettings">
+							ng-model-options="{ getterSetter: true }" ng-disabled="savingSettings || isPresetDesign()" aria-describedby="style-height-hint">
 							<option value="auto">{{ t('settings.style_height_auto') }}</option>
 							<option value="minimum-without-inputs">{{ t('settings.style_height_minimum_without_inputs') }}</option>
 							<option value="minimum">{{ t('settings.style_height_minimum_with_inputs') }}</option>
 						</select>
+						<p ng-if="editor.mode === 'design'" id="style-height-hint" class="help-text style-progress-full-row">{{ t('settings.style_height_size_hint') }}</p>
 						<label ng-if="editor.mode === 'design'" class="hy-nostyle" for="style-layout-mode">{{ t('settings.style_layout_mode') }}</label>
 						<select ng-if="editor.mode === 'design'" id="style-layout-mode" class="form-select" ng-model="editor.editStatus"
-							ng-options="option.value as option.label for option in layoutModes" ng-change="editor.selectedCell = null; refreshLayoutElement()"></select>
+							ng-options="option.value as option.label for option in layoutModes" ng-disabled="isPresetDesign()" ng-change="editor.selectedCell = null; refreshLayoutElement()"></select>
 						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button"
-							ng-if="editor.mode === 'design' && editor.editStatus" ng-click="clearStatusLayout()">{{ t('settings.style_reset_override') }}</button>
+							ng-if="editor.mode === 'design' && editor.editStatus && !isPresetDesign()" ng-click="clearStatusLayout()">{{ t('settings.style_reset_override') }}</button>
 						<h3>{{ t('settings.style_preview') }}</h3>
 						<label ng-if="editor.mode === 'design'" class="hy-nostyle" for="preview-scheme">{{ t('settings.style_color_schemes') }}</label>
 						<select ng-if="editor.mode === 'design'" id="preview-scheme" class="form-select" ng-model="editor.selectedSchemeId">
 							<optgroup label="{{ t('settings.style_builtin_label') }}">
 								<option value="builtin:current">{{ t('settings.style_current') }}</option>
-								<option ng-repeat="scheme in builtInSchemes track by scheme.id" value="{{ scheme.id }}">{{ scheme.name }}</option>
+								<option ng-repeat="scheme in sortedStyleOptions(builtInSchemes) track by scheme.id" value="{{ scheme.id }}">{{ scheme.name }}</option>
 							</optgroup>
 							<optgroup label="{{ t('settings.style_custom_label') }}">
-								<option ng-repeat="scheme in widgetStyles.colorSchemes track by scheme.id" value="custom:{{ scheme.id }}">{{ scheme.name }}</option>
+								<option ng-repeat="scheme in sortedStyleOptions(widgetStyles.colorSchemes) track by scheme.id" value="custom:{{ scheme.id }}">{{ scheme.name }}</option>
 							</optgroup>
 						</select>
 						<label ng-if="editor.mode === 'color'" class="hy-nostyle" for="preview-design">{{ t('settings.style_design_styles') }}</label>
 						<select ng-if="editor.mode === 'color'" id="preview-design" class="form-select" ng-model="editor.selectedStyleId" ng-change="refreshLayoutElement()">
 							<optgroup label="{{ t('settings.style_builtin_label') }}">
 								<option value="builtin:current">{{ t('settings.style_current') }}</option>
+								<option ng-repeat="style in sortedStyleOptions(builtInDesigns) track by style.id" value="{{ style.id }}">{{ style.name }}</option>
 							</optgroup>
 							<optgroup label="{{ t('settings.style_custom_label') }}">
-								<option ng-repeat="style in widgetStyles.styles track by style.id" value="custom:{{ style.id }}">{{ style.name }}</option>
+								<option ng-repeat="style in sortedStyleOptions(widgetStyles.styles) track by style.id" value="custom:{{ style.id }}">{{ style.name }}</option>
 							</optgroup>
 						</select>
 						<label class="hy-nostyle" for="preview-type">{{ t('settings.widget_type') }}</label>
@@ -207,10 +210,11 @@
 							</div>
 						</div>
 					</div>
+					<div ng-if="editor.mode !== 'design' || !isPresetDesign()">
 					<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button"
 						ng-if="editor.mode === 'design' && !getSelectedStyle().groups" ng-click="upgradeLayout()">{{ t('settings.style_upgrade') }}</button>
 					<div ng-if="editor.mode === 'design' && getSelectedStyle().groups">
-						<p class="help-text style-grid-hint">{{ t('settings.style_group_hint') }}</p>
+						<p class="help-text style-grid-hint">{{ t('settings.style_group_hint') }} {{ t('settings.style_select_before_drag') }}</p>
 						<div class="style-group-editor">
 							<button class="hy-nostyle style-row-select style-widget-select" type="button"
 								ng-click="selectWidgetBackground()" ng-class="{ 'style-row-selected': editor.selectedBackground }"
@@ -218,7 +222,7 @@
 							<div class="style-group-editor-row" ng-repeat="row in groupedRows(false) track by row.id" ng-click="selectVisibilityRow(row.id)"
 								style-reorder-drop="row" style-reorder-target="{{ row.id }}" ng-attr-data-style-reorder-row="{{ row.id }}">
 								<button type="button" class="hy-nostyle style-row-select" ng-click="$event.stopPropagation(); selectVisibilityRow(row.id)"
-									draggable="true" style-reorder-drag="row" style-reorder-source="{{ row.id }}" ng-attr-title="{{ t('settings.style_row_drag') }}"
+									ng-attr-draggable="{{ editor.selectedRow === row.id ? 'true' : 'false' }}" style-reorder-drag="row" style-reorder-source="{{ row.id }}" ng-attr-title="{{ t('settings.style_row_drag') }}"
 									ng-class="{ 'style-row-selected': editor.selectedRow === row.id }"
 									ng-attr-aria-pressed="{{ editor.selectedRow === row.id }}">{{ t('settings.style_row') }} {{ row.id }}</button>
 								<div class="style-group-slot" ng-repeat="group in row.groups track by group.id"
@@ -228,14 +232,20 @@
 									style-group-drop="{{ row.id }}:{{ group.id }}" ng-attr-data-style-group="{{ row.id }}:{{ group.id }}"
 									style-reorder-drop="column" style-reorder-target="{{ row.id }}:{{ group.id }}" ng-attr-data-style-reorder-column="{{ row.id }}:{{ group.id }}">
 									<button type="button" class="hy-nostyle style-group-number" ng-click="$event.stopPropagation(); selectColumn(row.id, group.id)"
-										draggable="true" style-reorder-drag="column" style-reorder-source="{{ row.id }}:{{ group.id }}" ng-attr-title="{{ t('settings.style_column_drag') }}"
+										ng-attr-draggable="{{ editor.selectedColumn.row === row.id && editor.selectedColumn.group === group.id ? 'true' : 'false' }}" style-reorder-drag="column" style-reorder-source="{{ row.id }}:{{ group.id }}" ng-attr-title="{{ t('settings.style_column_drag') }}"
 										ng-attr-aria-label="{{ t('settings.style_column') }} {{ row.id }}.{{ group.id }}"
 										ng-attr-aria-pressed="{{ editor.selectedColumn.row === row.id && editor.selectedColumn.group === group.id }}">{{ row.id }}.{{ group.id }}</button>
+									<span class="style-column-row-span" ng-if="group.rowSpan > 1">&#8597; {{ t('settings.style_column_row_span') }}: {{ group.rowSpan }}</span>
 									<button class="hy-nostyle style-group-element" type="button"
 										ng-repeat="element in group.elements track by element" style-group-element="{{ element }}" ng-attr-data-style-element="{{ element }}"
-										draggable="true"
+										ng-attr-draggable="{{ editor.selectedElement === element ? 'true' : 'false' }}"
 										ng-class="{ 'style-cell-selected': editor.selectedElement === element }"
 										ng-click="$event.stopPropagation(); selectLayoutElement(element)">{{ styleLabels[element] }}</button>
+								</div>
+								<div class="style-row-span-continuations" ng-if="spanningColumnsForRow(row.id).length">
+									<span class="style-row-span-continuation" ng-repeat="span in spanningColumnsForRow(row.id) track by $index">
+										&#8597; {{ t('settings.style_column') }} {{ span.row }}.{{ span.group }} ({{ row.id - span.row + 1 }}/{{ span.rowSpan }})
+									</span>
 								</div>
 							</div>
 							<div class="style-unused-row">
@@ -243,7 +253,7 @@
 								<div class="style-group-slot style-unused-slot" style-group-drop="0:1" data-style-group="0:1">
 									<button class="hy-nostyle style-group-element" type="button"
 										ng-repeat="element in unusedElements() track by element" style-group-element="{{ element }}" ng-attr-data-style-element="{{ element }}"
-										draggable="true" ng-class="{ 'style-cell-selected': editor.selectedElement === element }"
+										ng-attr-draggable="{{ editor.selectedElement === element ? 'true' : 'false' }}" ng-class="{ 'style-cell-selected': editor.selectedElement === element }"
 										ng-click="selectLayoutElement(element)">{{ styleLabels[element] }}</button>
 								</div>
 							</div>
@@ -254,6 +264,10 @@
 							<select id="style-column-span" class="form-select" ng-model="editor.columnSpan"
 								ng-options="value for value in availableColumnSpans()" ng-change="updateColumnSpan()"></select>
 							<p class="help-text">{{ t('settings.style_column_span_hint') }}</p>
+							<label class="hy-nostyle" for="style-column-row-span">{{ t('settings.style_column_row_span') }}</label>
+							<select id="style-column-row-span" class="form-select" ng-model="editor.columnRowSpan"
+								ng-options="value for value in availableColumnRowSpans()" ng-change="updateColumnRowSpan()"></select>
+							<p class="help-text">{{ t('settings.style_column_row_span_hint') }}</p>
 							<label class="hy-nostyle" for="style-column-alignment">{{ t('settings.style_column_alignment') }}</label>
 							<select id="style-column-alignment" class="form-select" ng-model="editor.columnAlignment" ng-change="updateColumnAlignment()">
 								<option value="left">{{ t('settings.style_align_left') }}</option>
@@ -277,6 +291,7 @@
 								<option value="span">{{ t('settings.style_width_span') }}</option>
 								<option value="content">{{ t('settings.style_width_content') }}</option>
 							</select>
+							<p ng-if="editor.columnRowSpan > 1" class="help-text">{{ t('settings.style_row_span_fit_hint') }}</p>
 						</fieldset>
 								<fieldset class="hy-nostyle style-row-rules" ng-if="editor.rowRule">
 									<legend>{{ t('settings.style_row_visibility') }} {{ editor.selectedRow }}</legend>
@@ -344,7 +359,19 @@
 							<p class="help-text style-progress-full-row" role="alert" ng-if="editor.elementSizeForm.$invalid">{{ t('settings.style_size_invalid') }}</p>
 						</div>
 					</fieldset>
-					<p class="help-text style-grid-hint" ng-if="editor.mode === 'design' && !getSelectedStyle().groups">{{ t('settings.style_drag_hint') }}</p>
+					<fieldset class="hy-nostyle style-progress-controls" ng-if="editor.mode === 'design' && editor.selectedElement === 'fields'">
+						<legend>{{ t('settings.style_field_rows') }} ({{ t('settings.style_' + editor.previewSize) }})</legend>
+						<div class="style-position-controls">
+							<label class="hy-nostyle" for="style-timer-field-rows">{{ t('settings.timers') }}</label>
+							<select id="style-timer-field-rows" class="form-select" ng-model="timerInputFieldRows"
+								ng-model-options="{ getterSetter: true }" ng-options="value for value in [1, 2]" ng-disabled="savingSettings"></select>
+							<label class="hy-nostyle" for="style-transition-field-rows">{{ t('settings.transitions') }}</label>
+							<select id="style-transition-field-rows" class="form-select" ng-model="transitionInputFieldRows"
+								ng-model-options="{ getterSetter: true }" ng-options="value for value in [1, 2, 3, 4, 5]" ng-disabled="savingSettings"></select>
+							<p class="help-text style-progress-full-row">{{ t('settings.style_field_rows_hint') }}</p>
+						</div>
+					</fieldset>
+					<p class="help-text style-grid-hint" ng-if="editor.mode === 'design' && !getSelectedStyle().groups">{{ t('settings.style_drag_hint') }} {{ t('settings.style_select_before_drag') }}</p>
 					<button ng-if="editor.mode === 'design' && !getSelectedStyle().groups" class="hy-nostyle style-row-select style-widget-select" type="button"
 						ng-click="selectWidgetBackground()" ng-class="{ 'style-row-selected': editor.selectedBackground }"
 						ng-attr-aria-pressed="{{ editor.selectedBackground }}">{{ t('settings.style_widget') }}</button>
@@ -353,7 +380,7 @@
 							<button class="hy-nostyle style-cell" type="button"
 								ng-repeat="element in getStyleCells() track by $index"
 								style-grid-cell="{{ $index }}" ng-attr-data-style-cell="{{ $index }}"
-								ng-attr-draggable="{{ element ? 'true' : 'false' }}"
+								ng-attr-draggable="{{ element && editor.selectedCell === $index ? 'true' : 'false' }}"
 								ng-class="{ 'style-cell-selected': editor.selectedCell === $index, 'style-cell-empty': !element }"
 								ng-click="selectStyleCell($index)"
 								ng-attr-aria-label="{{ element ? styleLabels[element] : t('settings.style_empty_cell') }}">
@@ -420,6 +447,7 @@
 						</fieldset>
 					</div>
 					</div>
+					</div>
 				</div>
 			</fieldset>
 		</section>
@@ -446,11 +474,14 @@
 	</main>
 
 	<script type="text/ng-template" id="grouped-preview.html">
-		<div class="style-grouped-preview">
-			<div class="style-preview-row" ng-repeat="row in groupedRows(true, previewScenario) track by row.id"
+		<div class="style-grouped-preview" ng-attr-data-row-spanning="{{ previewRowLayout(previewScenario).spanning }}"
+			ng-style="previewRowLayout(previewScenario).spanning ? { 'grid-template-columns': previewRowLayout(previewScenario).tracks, 'grid-template-rows': previewRowLayout(previewScenario).rowTracks } : {}">
+			<div class="style-preview-row" ng-repeat="row in previewRowLayout(previewScenario).rows track by row.id"
 				ng-attr-data-row-alignment="{{ row.alignment }}" ng-attr-data-preview-row="{{ row.id }}"
 				ng-style="{ 'grid-template-columns': row.tracks, 'padding-top': row.topPadding + 'px' }">
 				<div class="style-preview-group" ng-repeat="group in row.groups track by group.id"
+					ng-style="previewRowLayout(previewScenario).spanning ? { 'grid-column': group.gridColumn, 'grid-row': group.gridRow, 'padding-top': group.rowTopPadding + 'px' } : {}"
+					ng-attr-data-row-span="{{ group.rowSpan }}"
 					ng-attr-data-alignment="{{ group.alignment }}"
 					ng-attr-data-vertical-alignment="{{ group.verticalAlignment }}"
 					ng-attr-data-direction="{{ group.direction }}"
@@ -515,10 +546,13 @@
 		</div>
 	</script>
 	<script type="text/ng-template" id="preview-fields.html">
-		<span class="style-widget-fields">
+		<span class="style-widget-fields" ng-style="{ 'grid-template-columns': 'repeat(' + previewFieldLayout().columns + ', minmax(0, 1fr))' }">
 			<span class="style-widget-field-row">
+				<span ng-style="previewFieldLayout().positions[0]">
 				<input class="hy-nostyle style-widget-field" type="number" min="1" step="any"
 					ng-model="editor.previewValues.time" ng-attr-aria-label="{{ t('settings.widget_duration') }}">
+				</span>
+				<span ng-style="previewFieldLayout().positions[1]">
 				<select class="hy-nostyle style-widget-field" ng-model="editor.previewValues.unit"
 					ng-attr-aria-label="{{ t('settings.widget_unit') }}">
 					<option value="milliseconds">{{ t('settings.milliseconds') }}</option>
@@ -527,14 +561,21 @@
 					<option value="hours">{{ t('settings.hours') }}</option>
 					<option value="days">{{ t('settings.days') }}</option>
 				</select>
+				</span>
 			</span>
 			<span class="style-widget-field-row" ng-if="editor.previewType === 'transition'">
+				<span ng-style="previewFieldLayout().positions[2]">
 				<input class="hy-nostyle style-widget-field" type="number" step="any" ng-model="editor.previewValues.from"
 					ng-attr-placeholder="{{ t('settings.widget_from') }}" ng-attr-aria-label="{{ t('settings.widget_from') }}">
+				</span>
+				<span ng-style="previewFieldLayout().positions[3]">
 				<input class="hy-nostyle style-widget-field" type="number" step="any" ng-model="editor.previewValues.to"
 					ng-attr-placeholder="{{ t('settings.widget_to') }}" ng-attr-aria-label="{{ t('settings.widget_to') }}">
+				</span>
+				<span ng-style="previewFieldLayout().positions[4]">
 				<input class="hy-nostyle style-widget-field" type="number" min="2" step="1" ng-model="editor.previewValues.steps"
 					ng-attr-placeholder="{{ t('settings.widget_steps') }}" ng-attr-aria-label="{{ t('settings.widget_steps') }}">
+				</span>
 			</span>
 		</span>
 	</script>

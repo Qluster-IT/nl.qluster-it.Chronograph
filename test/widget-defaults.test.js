@@ -47,6 +47,48 @@ async function loadWidget(type, settings, defaults, widgetStyles) {
 }
 
 describe('Widget duration defaults', () => {
+	it('uses the shared spanning layout in actual and measured widget layers', async () => {
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		const design = runtime.currentDesign();
+		design.id = 'spanning';
+		design.groups.normal.elements.progress = { row: 1, group: 2, order: 1 };
+		design.rowColumns.normal[1] = 2;
+		design.columnSpans.normal[1] = [3, 1];
+		design.columnRowSpans = { normal: { 1: [1, 5] } };
+		for (const type of ['timer', 'transition', 'stopwatch']) {
+			const widget = await loadWidget(type, { layout: 'normal', designStyle: { id: design.id } }, {}, {
+				version: 2, styles: [design], colorSchemes: []
+			});
+			widget.state.active = true;
+			widget.state.running = true;
+			await widget.listeners.chronograph_event_multi();
+			assert.strictEqual(widget.scope.designLayers[0].spanning, type !== 'stopwatch');
+			assert.ok(widget.scope.designLayers.some(layer => layer.measure));
+			for (const layer of widget.scope.designLayers.filter(layer => layer.spanning)) {
+				assert.ok(layer.tracks);
+				const progress = layer.rows.flatMap(row => row.groups).find(group => group.elements.includes('progress'));
+				assert.ok(progress.gridColumn && progress.gridRow);
+			}
+		}
+	});
+
+	it('uses per-size field row overrides in timer and transition widgets', async () => {
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		const design = runtime.currentDesign();
+		design.id = 'field-rows';
+		design.inputFieldRows = { compact: { timer: 2, transition: 3 }, large: { transition: 1 } };
+		for (const type of ['timer', 'transition']) {
+			for (const layout of ['compact', 'normal', 'large']) {
+				const widget = await loadWidget(type, { layout, designStyle: { id: design.id } }, {}, {
+					version: 2, styles: [design], colorSchemes: []
+				});
+				const actual = widget.scope.designFieldLayout();
+				const expected = runtime.inputFieldLayout(design, layout, type);
+				assert.deepStrictEqual(JSON.parse(JSON.stringify(actual)), expected);
+			}
+		}
+	});
+
 	it('resolves design sizes independently and preserves legacy defaults', async () => {
 		const runtime = require('../assets/js/chronograph-widget-style.js');
 		assert.strictEqual(runtime.defaultElementSize('compact', 'duration'), 14);
@@ -129,6 +171,36 @@ describe('Widget duration defaults', () => {
 		assert.strictEqual(scope.iconMask, 'url("' + icon + '")');
 		assert.strictEqual(scope.designElementStyle('name').color, 'var(--homey-color-green, #71d51b)');
 		assert.strictEqual(requests.filter(request => request.url === '/widget-styles').length, 1);
+	});
+
+	it('renders built-in designs independently across types, sizes and states', async () => {
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		for (const preset of runtime.builtInDesignDefinitions) {
+			for (const type of ['timer', 'stopwatch', 'transition']) {
+				for (const layout of ['compact', 'normal', 'large']) {
+					const widget = await loadWidget(type, { layout, designStyle: { id: preset.id }, colorScheme: { id: 'builtin:ocean' } }, {});
+					assert.strictEqual(widget.scope.designEnabled, true, preset.id + ' ' + type + ' ' + layout);
+					assert.ok(!widget.requests.some(request => request.url === '/widget-styles'));
+					assert.strictEqual(widget.scope.designElementSize('duration'), runtime.elementSize(runtime.builtInDesign(preset.id), layout, 'duration'));
+					for (const running of [true, false]) {
+						widget.state.active = true;
+						widget.state.running = running;
+						await widget.listeners.chronograph_event_multi();
+						const elements = Array.from(widget.scope.designRows).flatMap(row => Array.from(row.groups).flatMap(group => Array.from(group.elements)));
+						assert.ok(elements.includes('duration'), preset.id + ' ' + type + ' ' + layout);
+						assert.ok(elements.includes(running ? 'pause' : 'play'));
+						assert.ok(elements.includes('stop'));
+						assert.strictEqual(elements.includes('progress'), type !== 'stopwatch');
+					}
+				}
+			}
+			const widget = await loadWidget('timer', { designStyle: { id: preset.id }, colorScheme: { id: 'custom' } }, {}, {
+				version: 2, styles: [], colorSchemes: [{ id: 'custom', colors: { icon: 'red' } }]
+			});
+			assert.strictEqual(widget.scope.designEnabled, true);
+			assert.strictEqual(widget.scope.iconColor, 'red');
+			assert.strictEqual(widget.requests.filter(request => request.url === '/widget-styles').length, 1);
+		}
 	});
 
 	it('renders built-in color schemes across widget types and sizes without loading saved styles', async () => {

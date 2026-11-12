@@ -233,14 +233,19 @@ class Application extends Homey.App {
 					if (settingId === 'colorScheme') widgetStyleRuntime.builtInSchemeDefinitions.forEach(item => {
 						builtIns.push({ id: item.id, name: this.homey.__(item.nameKey), data: { id: item.id } });
 					});
+					if (settingId === 'designStyle') widgetStyleRuntime.builtInDesignDefinitions.forEach(item => {
+						builtIns.push({ id: item.id, name: this.homey.__(item.nameKey), data: { id: item.id } });
+					});
 					const sortByName = (left, right) => left.name.localeCompare(right.name, undefined, { sensitivity: 'base', numeric: true });
 					const builtInLabel = this.homey.__('settings.style_builtin_label');
-					const defaults = builtIns.map(item => ({ ...item, name: `${item.name} (${builtInLabel})` }))
-						.filter(item => item.name.toLowerCase().includes(search))
-						.sort(sortByName);
+					const customLabel = this.homey.__('settings.style_custom_label');
+					const defaults = builtIns.map(item => ({ ...item, description: builtInLabel }))
+						.filter(item => `${item.name} (${item.description})`.toLowerCase().includes(search))
+						.sort((left, right) => Number(right.id === 'builtin:current')
+							- Number(left.id === 'builtin:current') || sortByName(left, right));
 					const custom = savedItems
 						.filter(item => item && typeof item.id === 'string' && typeof item.name === 'string')
-						.map(item => ({ id: item.id, name: item.name, data: { id: item.id } }))
+						.map(item => ({ id: item.id, name: item.name, description: customLabel, data: { id: item.id } }))
 						.filter(item => item.name.toLowerCase().includes(search))
 						.sort(sortByName);
 					return defaults.concat(custom);

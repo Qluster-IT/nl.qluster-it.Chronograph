@@ -37,14 +37,22 @@ The built-in Ocean, Forest, Sunset, Twilight, Blossom, Sky and Amber color
 schemes offer alternative accents and progress-bar colors; select them in the
 designer or in a widget's color scheme setting. Built-in color schemes are
 read-only; copy one to create a customizable scheme.
-Widget design and color-scheme selectors label built-in choices and list them
-above custom choices.
-In the designer, the built-in Default design is temporarily editable for testing.
-Its edits exist only until settings are reloaded and are not saved by the
-Save button. Copying it creates a custom design containing those edits, which
-can be saved. Choose a widget type, size and state
+Widget design and color-scheme selectors show a built-in or custom description
+beside each choice and list built-in choices first, with Default at the top.
+The designer's dropdowns also keep Default first and sort the remaining
+built-in and custom choices by their displayed names within each group.
+The Centered, Dashboard, Focus and Vertical designs provide alternative layouts; copy
+one to customize it. Centered aligns content in its columns, Dashboard places
+the status beside the name and the duration on its own row in Normal and
+Large sizes, Focus emphasizes the duration, and Vertical stacks content.
+The light and dark widget picker previews are abstract, text-free illustrations
+of the Default design. On Windows, regenerate them with
+`.\tools\development\generate-widget-previews.ps1`.
+Built-in designs and color schemes are read-only, including Default. Copy one
+to create an editable custom design or scheme. The preview controls remain
+interactive for testing without changing the saved design. Choose a widget type, size and state
 for the design preview. Confirming deletion removes a custom item immediately
-without saving other pending edits. Built-in designs and schemes cannot be deleted. Drag a row label
+without saving other pending edits. Built-in designs and schemes cannot be deleted. Select an item before dragging it. Drag a row label
 to reorder rows, or a column number to reorder columns within its row. Reordering applies to the selected
 size, moving the associated settings and element positions in every state;
 other sizes are unchanged. Arrange elements in rows and groups by dragging
@@ -67,7 +75,12 @@ height, and the status bar uses thickness. The app default is shown next to the
 input; leave it empty to use that default. The design-wide
 shrink option controls whether duration text and Large action buttons shrink on
 widgets narrower than 300 px. It is enabled for existing designs by default.
-Under Design, each size has a Height setting: Auto follows the current content.
+Select Start fields to set the number of input rows independently for timers
+(1–2) and transitions (1–5) for each design size. The app defaults are one
+timer row and two transition rows. The chosen row count stays fixed as the
+widget width changes, so very narrow fields may truncate their contents.
+Under Design, Height applies to the selected preview size and is configured
+separately for each size. Auto follows the current content.
 Minimum including input fields reserves space for the tallest preview state,
 including the start form. Minimum excluding input fields reserves space for
 inactive, paused and running states without input fields; the widget can grow
@@ -79,6 +92,11 @@ Select a row to align it at the top, middle, or bottom of available vertical
 space. This is most noticeable with Minimum required height when another row
 is hidden. Rows remain in order; when multiple rows request extra space, they
 share it rather than overlapping.
+Select a column to span additional rows for the selected size. The editor marks
+the spanning column and its continuation in each affected row. Hidden rows
+collapse, and columns in the affected rows fit into the remaining width.
+Spanning columns fit their content; other columns can also use fit-to-content
+width. Moving a row clips its spans to the remaining rows.
 Each row also has top padding from 0 to 100 px, configured independently for
 each widget size. Padding adds to the normal row spacing and moves with the row.
 The preview displays positions from the layout currently being edited: base

@@ -27,10 +27,10 @@ describe('Widget input layout', () => {
 		}
 	});
 
-	it('sizes fields within their columns and wraps them like the designer', () => {
-		const tracks = 'repeat(auto-fit, minmax(min(100%, 68px), 1fr))';
-		assert.ok(css.includes('grid-template-columns: ' + tracks));
-		assert.ok(previewCss.includes('grid-template-columns: ' + tracks));
+	it('uses the same fixed field grid in widget and designer', () => {
+		assert.ok(template.includes('designFieldLayout().columns'));
+		assert.ok(css.includes('.chronograph-design-fields .chronograph-transition-fields'));
+		assert.match(previewCss, /\.style-widget-field-row\s*\{\s*display:\s*contents;/);
 		assert.match(css, /\.chronograph-design-element-fields,\s*\.chronograph-design-element-progress\s*\{[^}]*width:\s*100%/s);
 		assert.match(css, /\.chronograph-widget \.form-control,\s*\.chronograph-widget \.form-select\s*\{[^}]*width:\s*100%/s);
 	});

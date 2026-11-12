@@ -1,10 +1,14 @@
 <section class="chronograph-design" ng-style="designBackgroundStyle()" ng-attr-data-allow-shrink="{{ designAllowShrink() }}">
 	<div class="chronograph-design-layer" ng-repeat="designLayer in designLayers track by designLayer.id"
 		ng-class="designLayer.measure ? 'chronograph-design-layer-measure' : 'chronograph-design-layer-current'"
+		ng-attr-data-row-spanning="{{ designLayer.spanning }}"
+		ng-style="designLayer.spanning ? { 'grid-template-columns': designLayer.tracks, 'grid-template-rows': designLayer.rowTracks } : {}"
 		ng-attr-aria-hidden="{{ designLayer.measure ? 'true' : undefined }}" ng-attr-inert="{{ designLayer.measure ? '' : undefined }}">
 	<div class="chronograph-design-row" ng-repeat="row in designLayer.rows track by row.id"
 		ng-attr-data-row-alignment="{{ row.alignment }}" ng-style="{ 'grid-template-columns': row.tracks, 'padding-top': row.topPadding + 'px' }">
 		<div class="chronograph-design-group" ng-repeat="group in row.groups track by group.id"
+			ng-style="designLayer.spanning ? { 'grid-column': group.gridColumn, 'grid-row': group.gridRow, 'padding-top': group.rowTopPadding + 'px' } : {}"
+			ng-attr-data-row-span="{{ group.rowSpan }}"
 			ng-attr-data-alignment="{{ group.alignment }}"
 			ng-attr-data-vertical-alignment="{{ group.verticalAlignment }}"
 			ng-attr-data-direction="{{ group.direction }}">
@@ -22,27 +26,32 @@
 				<p ng-switch-when="duration" class="chronograph-duration" aria-live="polite" ng-if="designLayer.state === 'running' || designLayer.state === 'paused'">
 					{{ formatDuration(selectedChronograph) }}
 				</p>
-				<div ng-switch-when="fields" class="chronograph-fields">
+				<div ng-switch-when="fields" class="chronograph-fields chronograph-design-fields"
+					ng-style="{ 'grid-template-columns': 'repeat(' + designFieldLayout().columns + ', minmax(0, 1fr))' }">
 					<div class="chronograph-duration-fields" ng-if="!isStopwatch">
+						<div ng-style="designFieldLayout().positions[0]">
 						<label class="visually-hidden" ng-attr-for="{{ designLayer.measure ? undefined : 'design-duration' }}">{{ labels.duration }}</label>
 						<input class="form-control" ng-attr-id="{{ designLayer.measure ? undefined : 'design-duration' }}" type="number" min="1" step="any"
 							ng-model="startValues.time" required>
+						</div>
+						<div ng-style="designFieldLayout().positions[1]">
 						<label class="visually-hidden" ng-attr-for="{{ designLayer.measure ? undefined : 'design-duration-unit' }}">{{ labels.unit }}</label>
 						<select class="form-select" ng-attr-id="{{ designLayer.measure ? undefined : 'design-duration-unit' }}" ng-model="startValues.unit"
 							ng-options="unit.id as unit.label for unit in units"></select>
+						</div>
 					</div>
 					<div class="chronograph-transition-fields" ng-if="isTransition">
-						<div>
+						<div ng-style="designFieldLayout().positions[2]">
 							<label class="visually-hidden" ng-attr-for="{{ designLayer.measure ? undefined : 'design-transition-from' }}">{{ labels.from }}</label>
 							<input class="form-control" ng-attr-id="{{ designLayer.measure ? undefined : 'design-transition-from' }}" type="number" step="any"
 								placeholder="{{ labels.from }}" ng-model="startValues.from" required>
 						</div>
-						<div>
+						<div ng-style="designFieldLayout().positions[3]">
 							<label class="visually-hidden" ng-attr-for="{{ designLayer.measure ? undefined : 'design-transition-to' }}">{{ labels.to }}</label>
 							<input class="form-control" ng-attr-id="{{ designLayer.measure ? undefined : 'design-transition-to' }}" type="number" step="any"
 								placeholder="{{ labels.to }}" ng-model="startValues.to" required>
 						</div>
-						<div>
+						<div ng-style="designFieldLayout().positions[4]">
 							<label class="visually-hidden" ng-attr-for="{{ designLayer.measure ? undefined : 'design-transition-steps' }}">{{ labels.steps }}</label>
 							<input class="form-control" ng-attr-id="{{ designLayer.measure ? undefined : 'design-transition-steps' }}" type="number" min="2" step="1"
 								placeholder="{{ labels.steps }}" ng-model="startValues.steps" required>

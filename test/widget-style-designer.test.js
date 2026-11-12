@@ -62,6 +62,123 @@ function loadSettings(widgetStyles, confirm, set, preview) {
 }
 
 describe('Widget style designer preview', () => {
+	it('persists column row spans independently per size and preserves them on reorder', () => {
+		const { scope, writes, editor } = loadSettings();
+		scope.createStyle(true);
+		scope.editor.previewSize = 'normal';
+		scope.selectColumn(1, 1);
+		assert.deepStrictEqual(Array.from(scope.availableColumnRowSpans()), [1, 2, 3, 4, 5]);
+		scope.editor.columnRowSpan = 4;
+		scope.updateColumnRowSpan();
+		assert.strictEqual(scope.groupedRows(false)[0].groups[0].rowSpan, 4);
+		scope.editor.previewSize = 'compact';
+		scope.selectColumn(2, 1);
+		scope.editor.columnRowSpan = 3;
+		scope.updateColumnRowSpan();
+		scope.moveDesignerRow(2, 3);
+		assert.strictEqual(scope.groupedRows(false)[2].groups[0].rowSpan, 3);
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
+		scope.saveSettings();
+		const reloaded = loadSettings(writes[0].value).scope;
+		reloaded.editor.selectedStyleId = 'custom:' + writes[0].value.styles[0].id;
+		reloaded.editor.previewSize = 'normal';
+		reloaded.selectColumn(1, 1);
+		assert.strictEqual(reloaded.editor.columnRowSpan, 4);
+		reloaded.editor.previewSize = 'compact';
+		reloaded.selectColumn(3, 1);
+		assert.strictEqual(reloaded.editor.columnRowSpan, 3);
+		assert.strictEqual(editor.isValidCollection(reloaded.widgetStyles), true);
+		writes[0].value.styles[0].columnRowSpans.normal[1][0] = 6;
+		assert.strictEqual(editor.isValidCollection(writes[0].value), false);
+	});
+
+	it('keeps row spans with surviving columns and clamps them when rows move', () => {
+		const { scope, editor } = loadSettings();
+		scope.createStyle(true);
+		const style = scope.getSelectedStyle();
+		editor.setRowColumns(style, 'normal', 1, 3);
+		editor.setColumnRowSpan(style, 'normal', 1, 2, 5);
+		editor.moveColumn(style, 'normal', 1, 2, 3);
+		assert.deepStrictEqual(Array.from(editor.columnRowSpans(style, 'normal', 1)), [1, 1, 5]);
+		editor.moveRow(style, 'normal', 1, 4);
+		assert.deepStrictEqual(Array.from(editor.columnRowSpans(style, 'normal', 4)), [1, 1, 2]);
+		editor.setRowColumns(style, 'normal', 4, 2);
+		assert.deepStrictEqual(Array.from(editor.columnRowSpans(style, 'normal', 4)), [1, 1]);
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
+	});
+
+	it('marks the origin and each continuation of a row-spanning column', () => {
+		const { scope } = loadSettings();
+		scope.createStyle(true);
+		scope.selectColumn(1, 1);
+		scope.editor.columnRowSpan = 4;
+		scope.updateColumnRowSpan();
+		const markers = scope.spanningColumnsForRow(3);
+		assert.deepStrictEqual(JSON.parse(JSON.stringify(markers)), [{ row: 1, group: 1, rowSpan: 4 }]);
+		assert.strictEqual(scope.spanningColumnsForRow(3), markers);
+		assert.strictEqual(scope.spanningColumnsForRow(5).length, 0);
+		assert.ok(html.includes('class="style-column-row-span"'));
+		assert.ok(html.includes('class="style-row-span-continuation"'));
+	});
+
+	it('requires the selected row, column, element or legacy cell before dragging', () => {
+		assert.ok(html.includes("editor.selectedRow === row.id ? 'true' : 'false'"));
+		assert.ok(html.includes("editor.selectedColumn.row === row.id && editor.selectedColumn.group === group.id ? 'true' : 'false'"));
+		assert.ok(html.includes("editor.selectedElement === element ? 'true' : 'false'"));
+		assert.ok(html.includes("element && editor.selectedCell === $index ? 'true' : 'false'"));
+		assert.strictEqual((editorScript.match(/getAttribute\('draggable'\) !== 'true'/g) || []).length, 4);
+	});
+
+	it('persists independent timer and transition field rows per design size', () => {
+		const { scope, writes, editor } = loadSettings();
+		scope.createStyle(true);
+		assert.strictEqual(scope.timerInputFieldRows(), 1);
+		assert.strictEqual(scope.transitionInputFieldRows(), 2);
+		scope.timerInputFieldRows(2);
+		scope.transitionInputFieldRows(3);
+		scope.editor.previewSize = 'compact';
+		assert.strictEqual(scope.timerInputFieldRows(), 1);
+		assert.strictEqual(scope.transitionInputFieldRows(), 2);
+		scope.transitionInputFieldRows(1);
+		scope.editor.previewSize = 'large';
+		scope.transitionInputFieldRows(5);
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
+		scope.saveSettings();
+		const saved = writes[0].value;
+		const reloaded = loadSettings(saved).scope;
+		reloaded.editor.selectedStyleId = 'custom:' + saved.styles[0].id;
+		for (const [size, timer, transition] of [['normal', 2, 3], ['compact', 1, 1], ['large', 1, 5]]) {
+			reloaded.editor.previewSize = size;
+			assert.strictEqual(reloaded.timerInputFieldRows(), timer);
+			assert.strictEqual(reloaded.transitionInputFieldRows(), transition);
+			reloaded.editor.previewType = 'transition';
+			assert.strictEqual(new Set(Array.from(reloaded.previewFieldLayout().positions, position => position['grid-row'])).size, transition);
+		}
+		saved.styles[0].inputFieldRows.normal.timer = 3;
+		assert.strictEqual(editor.isValidCollection(saved), false);
+		saved.styles[0].inputFieldRows.normal.timer = 1;
+		saved.styles[0].inputFieldRows.normal.transition = 0;
+		assert.strictEqual(editor.isValidCollection(saved), false);
+	});
+
+	it('labels height with the selected size and explains that height is per size', () => {
+		assert.ok(html.includes("t('settings.style_height') }} ({{ t('settings.style_' + editor.previewSize)"));
+		assert.ok(html.includes('aria-describedby="style-height-hint"'));
+		assert.ok(html.includes("t('settings.style_height_size_hint')"));
+	});
+
+	it('sorts all design and scheme dropdown groups by displayed name without changing saved order', () => {
+		const { scope } = loadSettings();
+		const items = [{ name: 'Zulu 2' }, { name: 'alpha 10' }, { name: 'Alpha 2' }];
+		assert.deepStrictEqual(Array.from(scope.sortedStyleOptions(items), item => item.name), ['Alpha 2', 'alpha 10', 'Zulu 2']);
+		assert.deepStrictEqual(items.map(item => item.name), ['Zulu 2', 'alpha 10', 'Alpha 2']);
+		items[0].name = 'Aardvark';
+		assert.strictEqual(scope.sortedStyleOptions(items)[0], items[0]);
+		for (const source of ['builtInDesigns', 'builtInSchemes', 'widgetStyles.styles', 'widgetStyles.colorSchemes']) {
+			assert.strictEqual(html.split('sortedStyleOptions(' + source + ')').length - 1, 2, source);
+		}
+	});
+
 	it('saves stretch column alignment independently per size', () => {
 		const { scope, writes, editor } = loadSettings();
 		scope.createStyle(true);
@@ -314,6 +431,32 @@ describe('Widget style designer preview', () => {
 		assert.ok(reloaded.widgetStyles.colorSchemes.every(scheme => scheme.colors.icon === 'red'));
 	});
 
+	it('previews built-in designs and saves editable, independent copies', () => {
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		const { scope, writes, editor } = loadSettings();
+		for (const preset of runtime.builtInDesignDefinitions) {
+			scope.selectEditorMode('design');
+			scope.editor.selectedStyleId = preset.id;
+			const selected = scope.getSelectedStyle();
+			assert.strictEqual(scope.isBuiltInStyle(), true);
+			assert.strictEqual(scope.isPresetDesign(), true);
+			assert.strictEqual(selected.name, preset.nameKey);
+			assert.deepStrictEqual(JSON.parse(JSON.stringify(selected.groups)), runtime.builtInDesign(preset.id).groups);
+			scope.deleteStyle();
+			assert.strictEqual(scope.getSelectedStyle(), selected);
+			scope.createStyle(true);
+			const copy = scope.getSelectedStyle();
+			assert.strictEqual(scope.isBuiltInStyle(), false);
+			assert.strictEqual(scope.isPresetDesign(), false);
+			copy.elementSizes.overrides.normal.duration = 25;
+			assert.notStrictEqual(selected.elementSizes.overrides.normal.duration, 25);
+			assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
+		}
+		scope.saveSettings();
+		const reloaded = loadSettings(writes[0].value).scope;
+		assert.strictEqual(reloaded.widgetStyles.styles.length, runtime.builtInDesignDefinitions.length);
+	});
+
 	it('keeps all built-in color schemes read-only while allowing editable copies', () => {
 		const runtime = require('../assets/js/chronograph-widget-style.js');
 		const { scope } = loadSettings();
@@ -347,9 +490,43 @@ describe('Widget style designer preview', () => {
 			assert.strictEqual(scope.getSelectedScheme().colors.play, 'red');
 			assert.strictEqual(scope.progressForeground(), 'red');
 		}
-		assert.ok(html.includes('ng-disabled="editor.mode === \'color\' && isBuiltInScheme()"'));
+		assert.ok(html.includes('ng-disabled="editor.mode === \'color\' ? isBuiltInScheme() : isPresetDesign()"'));
 		assert.ok(html.includes('class="hy-nostyle style-colors" ng-disabled="isBuiltInScheme()"'));
 		assert.ok(html.includes('class="hy-nostyle style-progress-controls" ng-disabled="isBuiltInScheme()"'));
+	});
+
+	it('keeps every built-in design unchanged while preview actions remain interactive', () => {
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		const { scope } = loadSettings();
+		for (const id of ['builtin:current', ...runtime.builtInDesignDefinitions.map(preset => preset.id)]) {
+			scope.selectEditorMode('design');
+			scope.editor.selectedStyleId = id;
+			scope.editor.selectedElement = 'duration';
+			const before = JSON.stringify(scope.getSelectedStyle());
+			for (const size of ['compact', 'normal', 'large']) {
+				scope.editor.previewSize = size;
+				scope.heightMode('auto');
+				scope.allowDesignShrink(false);
+				scope.overrideElementSize(99);
+				scope.timerInputFieldRows(2);
+				scope.transitionInputFieldRows(3);
+				scope.progressDirection('top-bottom');
+				scope.progressTimerMode('remaining');
+				scope.progressShowSteps(true);
+				scope.editor.previewType = 'timer';
+				for (const [action, expected] of [['start', 'running'], ['pause', 'paused'],
+					['play', 'running'], ['stop', 'inactive'], ['cancel', 'inactive']]) {
+					scope.previewAction(action);
+					assert.strictEqual(scope.editor.previewState, expected, `${id} ${size} ${action}`);
+				}
+			}
+			scope.selectEditorMode('color');
+			scope.progressDirection('top-bottom');
+			assert.strictEqual(JSON.stringify(scope.getSelectedStyle()), before, id);
+		}
+		assert.ok(html.includes('ng-if="editor.mode !== \'design\' || !isPresetDesign()"'));
+		assert.ok(html.includes("'settings.style_design_builtin_hint'"));
+		assert.ok(!html.includes("'settings.style_builtin_hint'"));
 	});
 
 	it('defaults to the timer preview', () => {
@@ -822,28 +999,31 @@ describe('Widget style designer preview', () => {
 		assert.deepStrictEqual(Array.from(editor.columnVerticalAlignments(style, 'large', 4)), ['middle', 'middle']);
 	});
 
-	it('edits the default design only in memory, and saves an explicit copy', () => {
+	it('keeps the default design read-only while allowing an editable copy', () => {
 		const { scope, writes } = loadSettings();
 		const builtIn = scope.getSelectedStyle();
-		scope.editor.previewState = 'inactive';
-		scope.editor.colorValues.icon = 'red';
-		scope.updateColorOverride('icon');
-		scope.selectLayoutElement('name');
-		scope.editor.position.row = 2;
-		scope.updateLayoutPosition();
-		assert.strictEqual(scope.getSelectedScheme().colors.icon, 'blue');
-		assert.strictEqual(builtIn.groups.normal.elements.name.row, 2);
+		const before = JSON.stringify(builtIn);
+		assert.strictEqual(scope.isPresetDesign(), true);
+		scope.heightMode('auto');
+		scope.allowDesignShrink(false);
+		scope.overrideElementSize(99);
+		scope.progressDirection('top-bottom');
+		scope.transitionInputFieldRows(3);
+		assert.strictEqual(JSON.stringify(builtIn), before);
 		assert.strictEqual(scope.isDirty(), false);
 		scope.saveSettings();
 		assert.strictEqual(writes.length, 0);
 
 		scope.createStyle(true);
+		scope.heightMode('auto');
+		assert.strictEqual(scope.heightMode(), 'auto');
 		scope.selectEditorMode('color');
 		scope.createStyle(true);
 		scope.saveSettings();
 		assert.strictEqual(writes.length, 1);
 		assert.strictEqual(writes[0].key, 'widgetStyles');
 		assert.strictEqual(writes[0].value.styles.length, 1);
+		assert.strictEqual(writes[0].value.styles[0].heightModes.normal, 'auto');
 		assert.strictEqual(writes[0].value.colorSchemes[0].colors.icon, 'blue');
 		assert.notStrictEqual(writes[0].value.styles[0].id, builtIn.id);
 		assert.strictEqual(loadSettings().scope.getSelectedScheme().colors.icon, 'blue');

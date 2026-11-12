@@ -127,11 +127,31 @@ body {
 }
 
 .chronograph-design-layer {
+	position: relative;
 	grid-area: 1 / 1;
 	display: flex;
 	flex-direction: column;
 	gap: 4px;
 	min-width: 0;
+}
+
+.chronograph-design-layer[data-row-spanning="true"] {
+	display: grid;
+	column-gap: 0;
+	row-gap: 0;
+	align-content: start;
+}
+
+.chronograph-design-layer[data-row-spanning="true"] .chronograph-design-row {
+	display: contents;
+}
+
+.chronograph-design-layer[data-row-spanning="true"] .chronograph-design-group {
+	padding-right: 8px;
+}
+
+.chronograph-design-layer[data-row-spanning="true"] .chronograph-design-group[data-row-span]:not([data-row-span="1"]) .chronograph-design-element-progress {
+	align-self: stretch;
 }
 
 .chronograph-design-layer-measure {
@@ -685,6 +705,16 @@ img.chronograph-icon {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(min(100%, 68px), 1fr));
 	gap: 6px;
+}
+
+.chronograph-design-fields .chronograph-duration-fields,
+.chronograph-design-fields .chronograph-transition-fields {
+	display: contents;
+}
+
+.chronograph-design-fields .chronograph-duration-fields > div,
+.chronograph-design-fields .chronograph-transition-fields > div {
+	min-width: 0;
 }
 
 .chronograph-widget .visually-hidden {
