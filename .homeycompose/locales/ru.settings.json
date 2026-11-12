@@ -231,6 +231,7 @@
 	"error_already_active": "Хронограф уже активен.",
 	"error_name_conflict": "Имя хронографа конфликтует с активным экземпляром.",
 	"error_duration_required": "Необходимо указать длительность.",
+	"widget_layout_automatic": "Автоматически",
 	"multiple_row_separator": "Разделение строк",
 	"multiple_separator_cards": "Карточки как виджеты",
 	"multiple_separator_line": "Линия",

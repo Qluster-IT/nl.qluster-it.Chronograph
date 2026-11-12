@@ -10645,8 +10645,26 @@
             "ko": "위젯을 간결하거나 넉넉한 레이아웃으로 표시합니다.",
             "ar": "اختر تخطيطًا مضغوطًا أو واسعًا للأداة."
           },
-          "value": "normal",
+          "value": "auto",
           "values": [
+            {
+              "id": "auto",
+              "title": {
+                "en": "Automatic",
+                "nl": "Automatisch",
+                "da": "Automatisk",
+                "de": "Automatisch",
+                "es": "Automático",
+                "fr": "Automatique",
+                "it": "Automatico",
+                "no": "Automatisk",
+                "sv": "Automatisk",
+                "pl": "Automatycznie",
+                "ru": "Автоматически",
+                "ko": "자동",
+                "ar": "تلقائي"
+              }
+            },
             {
               "id": "compact",
               "title": {
@@ -10973,8 +10991,26 @@
             "ko": "위젯을 간결하거나 넉넉한 레이아웃으로 표시합니다.",
             "ar": "اختر تخطيطًا مضغوطًا أو واسعًا للأداة."
           },
-          "value": "normal",
+          "value": "auto",
           "values": [
+            {
+              "id": "auto",
+              "title": {
+                "en": "Automatic",
+                "nl": "Automatisch",
+                "da": "Automatisk",
+                "de": "Automatisch",
+                "es": "Automático",
+                "fr": "Automatique",
+                "it": "Automatico",
+                "no": "Automatisk",
+                "sv": "Automatisk",
+                "pl": "Automatycznie",
+                "ru": "Автоматически",
+                "ko": "자동",
+                "ar": "تلقائي"
+              }
+            },
             {
               "id": "compact",
               "title": {
@@ -11301,8 +11337,26 @@
             "ko": "위젯을 간결하거나 넉넉한 레이아웃으로 표시합니다.",
             "ar": "اختر تخطيطًا مضغوطًا أو واسعًا للأداة."
           },
-          "value": "normal",
+          "value": "auto",
           "values": [
+            {
+              "id": "auto",
+              "title": {
+                "en": "Automatic",
+                "nl": "Automatisch",
+                "da": "Automatisk",
+                "de": "Automatisch",
+                "es": "Automático",
+                "fr": "Automatique",
+                "it": "Automatico",
+                "no": "Automatisk",
+                "sv": "Automatisk",
+                "pl": "Automatycznie",
+                "ru": "Автоматически",
+                "ko": "자동",
+                "ar": "تلقائي"
+              }
+            },
             {
               "id": "compact",
               "title": {
@@ -11629,8 +11683,26 @@
             "ko": "위젯을 간결하거나 넉넉한 레이아웃으로 표시합니다.",
             "ar": "اختر تخطيطًا مضغوطًا أو واسعًا للأداة."
           },
-          "value": "normal",
+          "value": "auto",
           "values": [
+            {
+              "id": "auto",
+              "title": {
+                "en": "Automatic",
+                "nl": "Automatisch",
+                "da": "Automatisk",
+                "de": "Automatisch",
+                "es": "Automático",
+                "fr": "Automatique",
+                "it": "Automatico",
+                "no": "Automatisk",
+                "sv": "Automatisk",
+                "pl": "Automatycznie",
+                "ru": "Автоматически",
+                "ko": "자동",
+                "ar": "تلقائي"
+              }
+            },
             {
               "id": "compact",
               "title": {
@@ -11957,8 +12029,26 @@
             "ko": "위젯을 간결하거나 넉넉한 레이아웃으로 표시합니다.",
             "ar": "اختر تخطيطًا مضغوطًا أو واسعًا للأداة."
           },
-          "value": "normal",
+          "value": "auto",
           "values": [
+            {
+              "id": "auto",
+              "title": {
+                "en": "Automatic",
+                "nl": "Automatisch",
+                "da": "Automatisk",
+                "de": "Automatisch",
+                "es": "Automático",
+                "fr": "Automatique",
+                "it": "Automatico",
+                "no": "Automatisk",
+                "sv": "Automatisk",
+                "pl": "Automatycznie",
+                "ru": "Автоматически",
+                "ko": "자동",
+                "ar": "تلقائي"
+              }
+            },
             {
               "id": "compact",
               "title": {
@@ -12285,8 +12375,26 @@
             "ko": "위젯을 간결하거나 넉넉한 레이아웃으로 표시합니다.",
             "ar": "اختر تخطيطًا مضغوطًا أو واسعًا للأداة."
           },
-          "value": "normal",
+          "value": "auto",
           "values": [
+            {
+              "id": "auto",
+              "title": {
+                "en": "Automatic",
+                "nl": "Automatisch",
+                "da": "Automatisk",
+                "de": "Automatisch",
+                "es": "Automático",
+                "fr": "Automatique",
+                "it": "Automatico",
+                "no": "Automatisk",
+                "sv": "Automatisk",
+                "pl": "Automatycznie",
+                "ru": "Автоматически",
+                "ko": "자동",
+                "ar": "تلقائي"
+              }
+            },
             {
               "id": "compact",
               "title": {
@@ -12613,8 +12721,26 @@
             "ko": "위젯을 간결하거나 넉넉한 레이아웃으로 표시합니다.",
             "ar": "اختر تخطيطًا مضغوطًا أو واسعًا للأداة."
           },
-          "value": "normal",
+          "value": "auto",
           "values": [
+            {
+              "id": "auto",
+              "title": {
+                "en": "Automatic",
+                "nl": "Automatisch",
+                "da": "Automatisk",
+                "de": "Automatisch",
+                "es": "Automático",
+                "fr": "Automatique",
+                "it": "Automatico",
+                "no": "Automatisk",
+                "sv": "Automatisk",
+                "pl": "Automatycznie",
+                "ru": "Автоматически",
+                "ko": "자동",
+                "ar": "تلقائي"
+              }
+            },
             {
               "id": "compact",
               "title": {
@@ -12941,8 +13067,26 @@
             "ko": "위젯을 간결하거나 넉넉한 레이아웃으로 표시합니다.",
             "ar": "اختر تخطيطًا مضغوطًا أو واسعًا للأداة."
           },
-          "value": "normal",
+          "value": "auto",
           "values": [
+            {
+              "id": "auto",
+              "title": {
+                "en": "Automatic",
+                "nl": "Automatisch",
+                "da": "Automatisk",
+                "de": "Automatisch",
+                "es": "Automático",
+                "fr": "Automatique",
+                "it": "Automatico",
+                "no": "Automatisk",
+                "sv": "Automatisk",
+                "pl": "Automatycznie",
+                "ru": "Автоматически",
+                "ko": "자동",
+                "ar": "تلقائي"
+              }
+            },
             {
               "id": "compact",
               "title": {
@@ -13269,8 +13413,26 @@
             "ko": "위젯을 간결하거나 넉넉한 레이아웃으로 표시합니다.",
             "ar": "اختر تخطيطًا مضغوطًا أو واسعًا للأداة."
           },
-          "value": "normal",
+          "value": "auto",
           "values": [
+            {
+              "id": "auto",
+              "title": {
+                "en": "Automatic",
+                "nl": "Automatisch",
+                "da": "Automatisk",
+                "de": "Automatisch",
+                "es": "Automático",
+                "fr": "Automatique",
+                "it": "Automatico",
+                "no": "Automatisk",
+                "sv": "Automatisk",
+                "pl": "Automatycznie",
+                "ru": "Автоматически",
+                "ko": "자동",
+                "ar": "تلقائي"
+              }
+            },
             {
               "id": "compact",
               "title": {
@@ -13597,8 +13759,26 @@
             "ko": "위젯을 간결하거나 넉넉한 레이아웃으로 표시합니다.",
             "ar": "اختر تخطيطًا مضغوطًا أو واسعًا للأداة."
           },
-          "value": "normal",
+          "value": "auto",
           "values": [
+            {
+              "id": "auto",
+              "title": {
+                "en": "Automatic",
+                "nl": "Automatisch",
+                "da": "Automatisk",
+                "de": "Automatisch",
+                "es": "Automático",
+                "fr": "Automatique",
+                "it": "Automatico",
+                "no": "Automatisk",
+                "sv": "Automatisk",
+                "pl": "Automatycznie",
+                "ru": "Автоматически",
+                "ko": "자동",
+                "ar": "تلقائي"
+              }
+            },
             {
               "id": "compact",
               "title": {

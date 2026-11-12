@@ -242,7 +242,8 @@
     "multiple_separator_line": "Línea",
     "multiple_separator_color": "Color de línea",
     "style_design_small": "Pequeño",
-    "style_design_tiny": "Muy pequeño"
+    "style_design_tiny": "Muy pequeño",
+    "widget_layout_automatic": "Automático"
   },
   "timer_not_running": "El temporizador __name__ no está en marcha.",
   "stopwatch_not_running": "El cronómetro __name__ no está en marcha.",

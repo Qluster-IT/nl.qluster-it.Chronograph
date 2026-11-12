@@ -242,7 +242,8 @@
     "multiple_separator_line": "Linie",
     "multiple_separator_color": "Linienfarbe",
     "style_design_small": "Klein",
-    "style_design_tiny": "Sehr klein"
+    "style_design_tiny": "Sehr klein",
+    "widget_layout_automatic": "Automatisch"
   },
   "timer_not_running": "Timer __name__ läuft nicht.",
   "stopwatch_not_running": "Stopuhr __name__ läuft nicht.",

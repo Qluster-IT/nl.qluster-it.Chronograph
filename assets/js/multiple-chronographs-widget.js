@@ -44,7 +44,7 @@ window.registerMultipleChronographsWidget = function (Homey) {
 				type = typeof type === 'string' ? type.toLowerCase() : '';
 				var name = selection.chronographName || (selection.data && selection.data.name) || selection.name;
 				var span = settings[prefix + 'ColumnSpan'];
-				span = span === undefined || span === null ? 1 : Number(span);
+				span = span === undefined || span === null || span === '' ? 1 : Number(span);
 				if (['timer', 'stopwatch', 'transition'].indexOf(type) === -1
 					|| typeof name !== 'string' || !name.trim()
 					|| !Number.isInteger(span) || span < 1 || span > 3) {
@@ -58,6 +58,10 @@ window.registerMultipleChronographsWidget = function (Homey) {
 					if (columns - span === 1) designStyle = 'builtin:small';
 					else if (columns - span === 2) designStyle = 'builtin:tiny';
 				}
+				var layout = settings[prefix + 'Layout'];
+				if (layout === undefined || layout === null || layout === '' || layout === 'auto') {
+					layout = span < columns ? 'compact' : 'normal';
+				}
 				$scope.entries.push({
 					slot: slot,
 					type: type,
@@ -67,7 +71,7 @@ window.registerMultipleChronographsWidget = function (Homey) {
 						alternativeName: settings[prefix + 'AlternativeName'],
 						designStyle: designStyle,
 						colorScheme: settings[prefix + 'ColorScheme'],
-						layout: settings[prefix + 'Layout'],
+						layout: layout,
 						icon: settings[prefix + 'Icon'],
 						showMilliseconds: settings[prefix + 'ShowMilliseconds']
 					}

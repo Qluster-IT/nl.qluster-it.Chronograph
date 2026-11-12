@@ -231,6 +231,7 @@
 	"error_already_active": "크로노그래프가 이미 활성 상태입니다.",
 	"error_name_conflict": "크로노그래프 이름이 활성 인스턴스와 충돌합니다.",
 	"error_duration_required": "시간을 입력해야 합니다.",
+	"widget_layout_automatic": "자동",
 	"multiple_row_separator": "행 구분",
 	"multiple_separator_cards": "위젯 스타일 카드",
 	"multiple_separator_line": "선",

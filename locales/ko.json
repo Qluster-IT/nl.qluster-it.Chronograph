@@ -242,7 +242,8 @@
     "multiple_separator_line": "선",
     "multiple_separator_color": "선 색상",
     "style_design_small": "작게",
-    "style_design_tiny": "아주 작게"
+    "style_design_tiny": "아주 작게",
+    "widget_layout_automatic": "자동"
   },
   "timer_not_running": "타이머 __name__이(가) 실행 중이 아닙니다.",
   "stopwatch_not_running": "스톱워치 __name__이(가) 실행 중이 아닙니다.",

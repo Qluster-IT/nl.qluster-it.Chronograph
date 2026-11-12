@@ -242,7 +242,8 @@
     "multiple_separator_line": "Ligne",
     "multiple_separator_color": "Couleur de la ligne",
     "style_design_small": "Petit",
-    "style_design_tiny": "Très petit"
+    "style_design_tiny": "Très petit",
+    "widget_layout_automatic": "Automatique"
   },
   "timer_not_running": "Le minuteur __name__ n’est pas en cours d’exécution.",
   "stopwatch_not_running": "Le chronomètre __name__ n’est pas en cours d’exécution.",

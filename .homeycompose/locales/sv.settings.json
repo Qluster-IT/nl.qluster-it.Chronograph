@@ -231,6 +231,7 @@
 	"error_already_active": "Kronografen är redan aktiv.",
 	"error_name_conflict": "Kronografnamnet står i konflikt med en aktiv instans.",
 	"error_duration_required": "En varaktighet krävs.",
+	"widget_layout_automatic": "Automatisk",
 	"multiple_row_separator": "Radavskiljare",
 	"multiple_separator_cards": "Widgetliknande kort",
 	"multiple_separator_line": "Linje",

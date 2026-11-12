@@ -231,6 +231,7 @@
 	"error_already_active": "Chronograaf is al actief.",
 	"error_name_conflict": "De chronograafnaam conflicteert met een actieve instantie.",
 	"error_duration_required": "Een duur is vereist.",
+	"widget_layout_automatic": "Automatisch",
 	"multiple_row_separator": "Rijscheiding",
 	"multiple_separator_cards": "Widgetachtige kaarten",
 	"multiple_separator_line": "Lijn",

@@ -75,6 +75,39 @@ async function loadWidget(settings, states) {
 }
 
 describe('Multiple Chronographs widget', () => {
+	it('chooses Compact for partial-width entries only when the layout is automatic', async () => {
+		const states = { 'timer:A': { name: 'A', active: false } };
+		for (const [columns, span, expected] of [
+			['1', '1', 'normal'], ['1', '3', 'normal'],
+			['2', '1', 'compact'], ['2', '2', 'normal'], ['2', '3', 'normal'],
+			['3', '1', 'compact'], ['3', '2', 'compact'], ['3', '3', 'normal']
+		]) {
+			for (const layout of [undefined, null, '', 'auto']) {
+				const widget = await loadWidget({ columns, chronograph1: { type: 'timer', name: 'A' },
+					chronograph1ColumnSpan: span, chronograph1Layout: layout }, states);
+				assert.strictEqual(widget.children[0].layout, expected);
+			}
+			for (const layout of ['compact', 'normal', 'large']) {
+				const widget = await loadWidget({ columns, chronograph1: { type: 'timer', name: 'A' },
+					chronograph1ColumnSpan: span, chronograph1Layout: layout }, states);
+				assert.strictEqual(widget.children[0].layout, layout);
+			}
+		}
+	});
+
+	it('uses one column and hides milliseconds when entry settings are unset', async () => {
+		for (const span of [undefined, null, '']) {
+			const widget = await loadWidget({ columns: '3', chronograph1: { type: 'timer', name: 'A' },
+				chronograph1ColumnSpan: span, chronograph1ShowMilliseconds: null }, {
+				'timer:A': { name: 'A', active: false }
+			});
+			assert.strictEqual(widget.parent.entries[0].span, 1);
+			assert.strictEqual(widget.children[0].layout, 'compact');
+			assert.strictEqual(widget.children[0].showMilliseconds, false);
+			assert.strictEqual(widget.parent.error, null);
+		}
+	});
+
 	it('chooses defaults from each effective span without overriding explicit designs', async () => {
 		const states = { 'timer:A': { name: 'A', active: false } };
 		for (const [columns, span, expected] of [
@@ -151,11 +184,18 @@ describe('Multiple Chronographs widget', () => {
 			for (const suffix of ['', 'ColumnSpan', 'AlternativeName', 'DesignStyle', 'ColorScheme', 'Layout', 'Icon', 'ShowMilliseconds']) {
 				const setting = manifest.settings.find(item => item.id === 'chronograph' + slot + suffix);
 				assert.ok(setting);
+				assert.ok(!Object.prototype.hasOwnProperty.call(setting, 'value'));
 				if (suffix) {
 					for (const title of Object.values(setting.title)) {
-						assert.ok(title.startsWith('↳ ' + slot + ' · '));
+						assert.ok(title.startsWith('\u00a0\u00a0\u00a0' + slot + ' · '));
 					}
 				}
+			}
+			const layout = manifest.settings.find(item => item.id === 'chronograph' + slot + 'Layout');
+			assert.deepStrictEqual(layout.values.map(value => value.id), ['auto', 'compact', 'normal', 'large']);
+			for (const language of Object.keys(layout.title)) {
+				const locale = require('../.homeycompose/locales/' + language + '.settings.json');
+				assert.strictEqual(layout.values[0].title[language], locale.widget_layout_automatic);
 			}
 		}
 		assert.ok(!manifest.settings.some(setting => /defaultDuration|defaultTransition/i.test(setting.id)));

@@ -242,7 +242,8 @@
     "multiple_separator_line": "Linia",
     "multiple_separator_color": "Kolor linii",
     "style_design_small": "Mały",
-    "style_design_tiny": "Bardzo mały"
+    "style_design_tiny": "Bardzo mały",
+    "widget_layout_automatic": "Automatycznie"
   },
   "timer_not_running": "Timer __name__ nie działa.",
   "stopwatch_not_running": "Stoper __name__ nie działa.",

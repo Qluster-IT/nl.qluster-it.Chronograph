@@ -242,7 +242,8 @@
     "multiple_separator_line": "خط",
     "multiple_separator_color": "لون الخط",
     "style_design_small": "صغير",
-    "style_design_tiny": "صغير جداً"
+    "style_design_tiny": "صغير جداً",
+    "widget_layout_automatic": "تلقائي"
   },
   "timer_not_running": "المؤقت __name__ غير قيد التشغيل.",
   "stopwatch_not_running": "ساعة الإيقاف __name__ غير قيد التشغيل.",

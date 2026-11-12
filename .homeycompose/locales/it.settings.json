@@ -231,6 +231,7 @@
 	"error_already_active": "Il cronografo è già attivo.",
 	"error_name_conflict": "Il nome del cronografo è in conflitto con un’istanza attiva.",
 	"error_duration_required": "È necessaria una durata.",
+	"widget_layout_automatic": "Automatico",
 	"multiple_row_separator": "Separazione delle righe",
 	"multiple_separator_cards": "Schede tipo widget",
 	"multiple_separator_line": "Linea",

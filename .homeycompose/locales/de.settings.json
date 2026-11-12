@@ -231,6 +231,7 @@
 	"error_already_active": "Chronograph ist bereits aktiv.",
 	"error_name_conflict": "Der Chronograph-Name steht im Konflikt mit einer aktiven Instanz.",
 	"error_duration_required": "Eine Dauer ist erforderlich.",
+	"widget_layout_automatic": "Automatisch",
 	"multiple_row_separator": "Zeilentrennung",
 	"multiple_separator_cards": "Widgetartige Karten",
 	"multiple_separator_line": "Linie",

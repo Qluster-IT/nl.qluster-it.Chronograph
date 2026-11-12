@@ -242,7 +242,8 @@
     "multiple_separator_line": "Linje",
     "multiple_separator_color": "Linjefarge",
     "style_design_small": "Liten",
-    "style_design_tiny": "Svært liten"
+    "style_design_tiny": "Svært liten",
+    "widget_layout_automatic": "Automatisk"
   },
   "timer_not_running": "Timeren __name__ kjører ikke.",
   "stopwatch_not_running": "Stoppeklokken __name__ kjører ikke.",

@@ -231,6 +231,7 @@
 	"error_already_active": "Chronograph is already active.",
 	"error_name_conflict": "Chronograph name conflicts with an active instance.",
 	"error_duration_required": "A duration is required.",
+	"widget_layout_automatic": "Automatic",
 	"multiple_row_separator": "Row separation",
 	"multiple_separator_cards": "Widget-style cards",
 	"multiple_separator_line": "Line",
