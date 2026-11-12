@@ -1,65 +1,53 @@
 {
-	"name": { "en": "Stopwatch", "nl": "Stopwatch" },
+	"name": {"en":"Stopwatch","nl":"Stopwatch","da":"Stopur","de":"Stoppuhr","es":"Cronómetro","fr":"Chronomètre","it":"Cronometro","no":"Stoppeklokke","sv":"Stoppur","pl":"Stoper","ru":"Секундомер","ko":"스톱워치","ar":"ساعة التوقيف"},
 	"settings": [
 		{
 			"id": "chronograph",
 			"type": "autocomplete",
-			"title": { "en": "Stopwatch", "nl": "Stopwatch" },
+			"title": {"en":"Stopwatch","nl":"Stopwatch","da":"Stopur","de":"Stoppuhr","es":"Cronómetro","fr":"Chronomètre","it":"Cronometro","no":"Stoppeklokke","sv":"Stoppur","pl":"Stoper","ru":"Секундомер","ko":"스톱워치","ar":"ساعة التوقيف"},
 			"hint": {"en":"Choose a configured stopwatch","nl":"Kies een ingestelde stopwatch","da":"Vælg en konfigureret stopur.","de":"Wähle einen eingerichteten Stoppuhr aus.","es":"Elige un cronómetro configurado.","fr":"Choisissez un chronomètre configuré.","it":"Seleziona un cronometro configurato.","no":"Velg en konfigurert stoppeklokke.","sv":"Välj ett konfigurerat stoppur.","pl":"Wybierz skonfigurowany stoper.","ru":"Выберите настроенный объект «секундомер».","ko":"설정된 스톱워치를 선택하세요.","ar":"اختر ساعة الإيقاف مُعدًا مسبقًا."}
 		},
 		{
 			"id": "alternativeName",
 			"type": "text",
-			"title": { "en": "Alternative name", "nl": "Alternatieve naam" },
+			"title": {"en":"Alternative name","nl":"Alternatieve naam","da":"Alternativt navn","de":"Alternativer Name","es":"Nombre alternativo","fr":"Nom alternatif","it":"Nome alternativo","no":"Alternativt navn","sv":"Alternativt namn","pl":"Nazwa alternatywna","ru":"Альтернативное имя","ko":"대체 이름","ar":"اسم بديل"},
 			"hint": {"en":"Optionally show a shorter name in the widget","nl":"Toon desgewenst een kortere naam in de widget","da":"Vis eventuelt et kortere navn i widgetten.","de":"Zeigt optional einen kürzeren Namen im Widget an.","es":"Muestra opcionalmente un nombre más corto en el widget.","fr":"Affiche éventuellement un nom plus court dans le widget.","it":"Mostra facoltativamente un nome più breve nel widget.","no":"Vis eventuelt et kortere navn i widgeten.","sv":"Visa valfritt ett kortare namn i widgeten.","pl":"Opcjonalnie wyświetl krótszą nazwę w widżecie.","ru":"При необходимости отображает в виджете короткое имя.","ko":"위젯에 더 짧은 이름을 표시할 수 있습니다.","ar":"اعرض اسمًا أقصر في الأداة عند الحاجة."},
 			"value": ""
 		},
 		{
 			"id": "designStyle",
 			"type": "autocomplete",
-			"title": {
-				"en": "Design Style",
-				"nl": "Ontwerpstijl"
-			},
-			"hint": {
-				"en": "Choose a widget design. Create your own in Chronograph App Settings under Widgets.",
-				"nl": "Kies een widgetontwerp. Maak je eigen ontwerp in de Chronograph-appinstellingen onder Widgets."
-			}
+			"title": {"en":"Design Style","nl":"Ontwerpstijl","da":"Designstil","de":"Designstil","es":"Estilo de diseño","fr":"Style de conception","it":"Stile di design","no":"Designstil","sv":"Designstil","pl":"Styl projektu","ru":"Стиль оформления","ko":"디자인 스타일","ar":"نمط التصميم"},
+			"hint": {"en":"Choose a widget design. Create your own in Chronograph App Settings under Widgets.","nl":"Kies een widgetontwerp. Maak je eigen ontwerp in de Chronograph-appinstellingen onder Widgets.","da":"Vælg et widgetdesign. Opret dit eget under Widgets i Chronographs appindstillinger.","de":"Wähle ein Widget-Design. Erstelle ein eigenes in den Chronograph-App-Einstellungen unter Widgets.","es":"Elige un diseño de widget. Crea uno propio en Ajustes de la aplicación Chronograph, en Widgets.","fr":"Choisissez un design de widget. Créez le vôtre dans les paramètres de l’application Chronograph, sous Widgets.","it":"Scegli un design per il widget. Creane uno nelle impostazioni dell’app Chronograph, sotto Widget.","no":"Velg et widgetdesign. Lag ditt eget under Widgeter i Chronographs appinnstillinger.","sv":"Välj en widgetdesign. Skapa en egen under Widgetar i Chronographs appinställningar.","pl":"Wybierz projekt widżetu. Utwórz własny w ustawieniach aplikacji Chronograph w sekcji Widżety.","ru":"Выберите дизайн виджета. Создайте свой в настройках приложения Chronograph в разделе виджетов.","ko":"위젯 디자인을 선택하세요. Chronograph 앱 설정의 위젯에서 직접 만들 수 있습니다.","ar":"اختر تصميمًا للأداة. أنشئ تصميمك في إعدادات تطبيق Chronograph ضمن الأدوات."}
 		},
 		{
 			"id": "colorScheme",
 			"type": "autocomplete",
-			"title": {
-				"en": "Color Scheme",
-				"nl": "Kleurenschema"
-			},
-			"hint": {
-				"en": "Choose a widget color scheme. Create your own in Chronograph App Settings under Widgets.",
-				"nl": "Kies een kleurenschema voor widgets. Maak je eigen schema in de Chronograph-appinstellingen onder Widgets."
-			}
+			"title": {"en":"Color Scheme","nl":"Kleurenschema","da":"Farveskema","de":"Farbschema","es":"Esquema de colores","fr":"Palette de couleurs","it":"Schema colori","no":"Fargeskjema","sv":"Färgschema","pl":"Schemat kolorów","ru":"Цветовая схема","ko":"색상 구성","ar":"مخطط الألوان"},
+			"hint": {"en":"Choose a widget color scheme. Create your own in Chronograph App Settings under Widgets.","nl":"Kies een kleurenschema voor widgets. Maak je eigen schema in de Chronograph-appinstellingen onder Widgets.","da":"Vælg et farveskema til widgetten. Opret dit eget under Widgets i Chronographs appindstillinger.","de":"Wähle ein Farbschema für das Widget. Erstelle ein eigenes in den Chronograph-App-Einstellungen unter Widgets.","es":"Elige un esquema de colores para el widget. Crea uno propio en Ajustes de la aplicación Chronograph, en Widgets.","fr":"Choisissez une palette de couleurs pour le widget. Créez la vôtre dans les paramètres de l’application Chronograph, sous Widgets.","it":"Scegli uno schema colori per il widget. Creane uno nelle impostazioni dell’app Chronograph, sotto Widget.","no":"Velg et fargeskjema for widgeten. Lag ditt eget under Widgeter i Chronographs appinnstillinger.","sv":"Välj ett färgschema för widgeten. Skapa ett eget under Widgetar i Chronographs appinställningar.","pl":"Wybierz schemat kolorów widżetu. Utwórz własny w ustawieniach aplikacji Chronograph w sekcji Widżety.","ru":"Выберите цветовую схему виджета. Создайте свою в настройках приложения Chronograph в разделе виджетов.","ko":"위젯 색상 구성을 선택하세요. Chronograph 앱 설정의 위젯에서 직접 만들 수 있습니다.","ar":"اختر مخطط ألوان للأداة. أنشئ مخططك في إعدادات تطبيق Chronograph ضمن الأدوات."}
 		},
 		{
 			"id": "layout",
 			"type": "dropdown",
-			"title": { "en": "Layout", "nl": "Indeling" },
+			"title": {"en":"Layout","nl":"Indeling","da":"Layout","de":"Layout","es":"Diseño","fr":"Disposition","it":"Layout","no":"Oppsett","sv":"Layout","pl":"Układ","ru":"Макет","ko":"레이아웃","ar":"التخطيط"},
 			"hint": {"en":"Choose how compact or spacious the widget looks","nl":"Kies hoe compact of ruim de widget wordt weergegeven","da":"Vælg, hvor kompakt eller rummelig widgetten skal være.","de":"Lege fest, wie kompakt oder großzügig das Widget dargestellt wird.","es":"Elige si el widget se muestra de forma compacta o espaciosa.","fr":"Choisissez une présentation compacte ou plus spacieuse du widget.","it":"Scegli se visualizzare il widget in modo compatto o più ampio.","no":"Velg hvor kompakt eller romslig widgeten skal vises.","sv":"Välj hur kompakt eller rymlig widgeten ska visas.","pl":"Wybierz kompaktowy lub bardziej przestronny układ widżetu.","ru":"Выберите компактный или более просторный виджет.","ko":"위젯을 간결하거나 넉넉한 레이아웃으로 표시합니다.","ar":"اختر تخطيطًا مضغوطًا أو واسعًا للأداة."},
 			"value": "normal",
 			"values": [
-				{ "id": "compact", "title": { "en": "Compact", "nl": "Compact" } },
-				{ "id": "normal", "title": { "en": "Normal", "nl": "Normaal" } },
-				{ "id": "large", "title": { "en": "Larger", "nl": "Groter" } }
+				{ "id": "compact", "title": {"en":"Compact","nl":"Compact","da":"Kompakt","de":"Kompakt","es":"Compacto","fr":"Compact","it":"Compatto","no":"Kompakt","sv":"Kompakt","pl":"Kompaktowy","ru":"Компактный","ko":"컴팩트","ar":"مضغوط"} },
+				{ "id": "normal", "title": {"en":"Normal","nl":"Normaal","da":"Normal","de":"Normal","es":"Normal","fr":"Normal","it":"Normale","no":"Normal","sv":"Normal","pl":"Normalny","ru":"Обычный","ko":"보통","ar":"عادي"} },
+				{ "id": "large", "title": {"en":"Larger","nl":"Groter","da":"Større","de":"Größer","es":"Más grande","fr":"Plus grand","it":"Più grande","no":"Større","sv":"Större","pl":"Większy","ru":"Крупнее","ko":"더 크게","ar":"أكبر"} }
 			]
 		},
 		{
 			"id": "icon",
 			"type": "autocomplete",
-			"title": { "en": "Icon", "nl": "Pictogram" },
+			"title": {"en":"Icon","nl":"Pictogram","da":"Ikon","de":"Symbol","es":"Icono","fr":"Icône","it":"Icona","no":"Ikon","sv":"Ikon","pl":"Ikona","ru":"Значок","ko":"아이콘","ar":"أيقونة"},
 			"hint": {"en":"Choose a Font Awesome icon to show beside the stopwatch name","nl":"Kies een Font Awesome-pictogram naast de stopwatchnaam","da":"Vælg et Font Awesome-ikon, der vises ved siden af stopursnavnet.","de":"Wähle ein Font-Awesome-Symbol neben dem Namen der Stoppuhr.","es":"Elige un icono de Font Awesome para mostrar junto al nombre del cronómetro.","fr":"Choisissez une icône Font Awesome à afficher à côté du nom du chronomètre.","it":"Scegli un’icona Font Awesome da mostrare accanto al nome del cronometro.","no":"Velg et Font Awesome-ikon som vises ved siden av stoppeklokkenavnet.","sv":"Välj en Font Awesome-ikon som visas bredvid stoppurets namn.","pl":"Wybierz ikonę Font Awesome wyświetlaną obok nazwy stopera.","ru":"Выберите значок Font Awesome для отображения рядом с названием секундомера.","ko":"스톱워치 이름 옆에 표시할 Font Awesome 아이콘을 선택하세요.","ar":"اختر أيقونة Font Awesome لعرضها بجوار اسم ساعة الإيقاف."}
 		},
 		{
 			"id": "showMilliseconds",
 			"type": "checkbox",
-			"title": { "en": "Show milliseconds", "nl": "Toon milliseconden" },
+			"title": {"en":"Show milliseconds","nl":"Toon milliseconden","da":"Vis millisekunder","de":"Millisekunden anzeigen","es":"Mostrar milisegundos","fr":"Afficher les millisecondes","it":"Mostra millisecondi","no":"Vis millisekunder","sv":"Visa millisekunder","pl":"Pokaż milisekundy","ru":"Показывать миллисекунды","ko":"밀리초 표시","ar":"إظهار أجزاء الثانية"},
 			"hint": {"en":"Include milliseconds in the displayed stopwatch value","nl":"Toon milliseconden bij de stopwatchwaarde","da":"Vis millisekunder i værdien for stopur.","de":"Millisekunden im angezeigten Wert für Stoppuhr anzeigen.","es":"Muestra los milisegundos en el valor del cronómetro.","fr":"Affiche les millisecondes dans la valeur du chronomètre.","it":"Mostra i millisecondi nel valore del cronometro.","no":"Vis millisekunder i verdien for stoppeklokke.","sv":"Visa millisekunder i värdet för stoppur.","pl":"Wyświetlaj milisekundy w wartości stoper.","ru":"Показывать миллисекунды в значении «секундомер».","ko":"스톱워치 값에 밀리초를 표시합니다.","ar":"اعرض أجزاء الثانية في قيمة ساعة الإيقاف."},
 			"value": false
 		}

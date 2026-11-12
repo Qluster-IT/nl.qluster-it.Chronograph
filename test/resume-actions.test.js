@@ -23,9 +23,12 @@ describe('Resume chronograph actions', () => {
 		for (const [kind] of types) {
 			const file = path.join(__dirname, '..', '.homeycompose', 'flow', 'actions', `1_${kind}_resume_existing.json`);
 			const card = JSON.parse(fs.readFileSync(file, 'utf8'));
+			const generated = require('../app.json').flow.actions.find(action => action.id === `${kind}_resume_existing`);
 			for (const language of languages) {
 				assert.ok(card.hint[language], `${kind}: ${language}`);
 				assert.ok(!/\{[^}]+\}/.test(card.hint[language]), `${kind}: ${language}`);
+				assert.ok(!/[?\uFFFD]/.test(card.hint[language]), `${kind}: ${language}`);
+				assert.strictEqual(generated.hint[language], card.hint[language], `${kind}: ${language}`);
 				assert.strictEqual(card.hint[language].split('\n').length, 4, `${kind}: ${language}`);
 			}
 			assert.ok(card.hint.en.includes('The Picker is leading when both are filled.'));

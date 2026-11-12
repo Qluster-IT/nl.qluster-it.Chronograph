@@ -14,7 +14,7 @@
 
 <body ng-app="chronographSettings" ng-controller="SettingsController">
 	<main class="settings-page container-fluid">
-		<nav class="settings-tabs nav nav-tabs" role="tablist" aria-label="Chronograph settings">
+		<nav class="settings-tabs nav nav-tabs" role="tablist" ng-attr-aria-label="{{ t('settings.settings_navigation') }}">
 			<button class="hy-nostyle settings-tab nav-link" type="button" role="tab"
 				ng-class="{ active: activeTab === 'chronographs' }"
 				ng-attr-aria-selected="{{ activeTab === 'chronographs' }}"
@@ -577,6 +577,7 @@
 			</span>
 		</span>
 	</script>
+	<script type="text/javascript" src="../assets/js/chronograph-errors.js"></script>
 	<script type="text/javascript" src="assets/settings.js"></script>
 	<script type="text/javascript" src="../assets/js/chronograph-widget-style.js"></script>
 	<script type="text/javascript" src="assets/widget-style-editor.js"></script>

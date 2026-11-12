@@ -7,6 +7,7 @@ const vm = require('vm');
 
 const script = fs.readFileSync(path.join(__dirname, '..', 'assets', 'js', 'chronograph-widget.js'), 'utf8');
 const styleScript = fs.readFileSync(path.join(__dirname, '..', 'assets', 'js', 'chronograph-widget-style.js'), 'utf8');
+const errorScript = fs.readFileSync(path.join(__dirname, '..', 'assets', 'js', 'chronograph-errors.js'), 'utf8');
 
 async function loadWidget(type, settings, defaults, widgetStyles) {
 	let controller;
@@ -37,16 +38,35 @@ async function loadWidget(type, settings, defaults, widgetStyles) {
 		Date
 	};
 	vm.runInNewContext(styleScript, context);
+	vm.runInNewContext(errorScript, context);
 	vm.runInNewContext(script, context);
 	context.onHomeyReady(homey);
 	const timeout = () => {};
 	timeout.cancel = () => {};
 	controller(scope, () => {}, timeout);
 	await new Promise(resolve => setImmediate(resolve));
-	return { scope, listeners, state, requests, setInvalidInput: input => { invalidInput = input; } };
+	return { scope, listeners, state, requests, homey, setInvalidInput: input => { invalidInput = input; } };
 }
 
 describe('Widget duration defaults', () => {
+	it('localizes known operation errors and preserves unknown errors', async () => {
+		const widget = await loadWidget('timer', {}, {});
+		for (const [message, expected] of [
+			['A duration is required', 'settings.error_duration_required'],
+			['Chronograph not found in app configuration', 'settings.error_not_configured'],
+			['Chronograph is not active', 'settings.error_not_active'],
+			['Chronograph is already active', 'settings.error_already_active'],
+			['Chronograph name conflicts with an active instance', 'settings.error_name_conflict'],
+			['Invalid transition steps', 'invalid_transition settings.widget_steps'],
+			['Unexpected external failure', 'Unexpected external failure']
+		]) {
+			widget.homey.api = () => Promise.reject(new Error(message));
+			widget.scope.start();
+			await new Promise(resolve => setImmediate(resolve));
+			assert.strictEqual(widget.scope.error, expected);
+		}
+	});
+
 	it('refreshes for changed Flow values of the selected chronograph only', async () => {
 		const widget = await loadWidget('timer', {}, { time: 5, unit: 'seconds' });
 		const initialRequests = widget.requests.length;
@@ -310,9 +330,12 @@ describe('Widget duration defaults', () => {
 	});
 
 	it('reports an unavailable selected design or scheme instead of treating it as Default', async () => {
-		for (const settings of [{ designStyle: { id: 'missing' } }, { colorScheme: { id: 'missing' } }]) {
+		for (const [settings, expected] of [
+			[{ designStyle: { id: 'missing' } }, 'settings.widget_design_unavailable'],
+			[{ colorScheme: { id: 'missing' } }, 'settings.widget_scheme_unavailable']
+		]) {
 			const { scope } = await loadWidget('timer', settings, {}, { version: 2, styles: [], colorSchemes: [] });
-			assert.match(scope.error, /selected widget (design|color scheme) is no longer available/);
+			assert.strictEqual(scope.error, expected);
 		}
 	});
 

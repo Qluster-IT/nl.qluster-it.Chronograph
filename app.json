@@ -1,7 +1,7 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "nl.fellownet.chronograph",
-  "version": "2.3.1",
+  "version": "3.0.0",
   "compatibility": ">=12.3.0",
   "sdk": 3,
   "name": {
@@ -69,6 +69,7 @@
     "url": "https://github.com/Qluster-IT/nl.qluster-it.Chronograph/issues"
   },
   "homeyCommunityTopicId": 18214,
+  "homepage": "https://github.com/Qluster-IT/nl.qluster-it.Chronograph/wiki",
   "permissions": [],
   "images": {
     "large": "/assets/images/large.png",
@@ -88,6 +89,9 @@
       },
       "githubSponsors": {
         "username": "XeroxQ"
+      },
+      "bunq": {
+        "username": "QlusterIT"
       }
     }
   },
@@ -5223,17 +5227,17 @@
         "hint": {
           "en": "Resumes an existing paused stopwatch with the selected name. It does not create a new one. If no matching stopwatch exists, the action reports an error.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
           "nl": "Hervat de bestaande gepauzeerde stopwatch met de gekozen naam. Er wordt geen nieuwe gestart. Als er geen stopwatch met die naam bestaat, geeft de actie een fout.\nJe kunt een naam kiezen, een naam typen en selecteren, of een naam in het naamveld typen.\nDe kiezer heeft voorrang als beide zijn ingevuld.\nDe naam verschijnt pas in de kiezer nadat de ingeschakelde Flow is opgeslagen.",
-          "da": "Genoptager den eksisterende stopur med det valgte navn, hvis den er sat på pause. Der startes ikke en ny. Hvis ingen stopur med navnet findes, giver handlingen en fejl.\nDu kan v?lge et navn, skrive og v?lge det eller skrive et navn i navnefeltet.\nV?lgeren har forrang, hvis begge felter er udfyldt.\nNavnet vises f?rst i v?lgeren, n?r det aktiverede Flow er gemt.",
-          "de": "Setzt die vorhandene pausierte Stoppuhr mit dem ausgewählten Namen fort. Es wird keine neue gestartet. Wenn keine passende Stoppuhr vorhanden ist, meldet die Aktion einen Fehler.\nDu kannst einen Namen ausw?hlen, ihn eingeben und ausw?hlen oder einen Namen in das Namensfeld eingeben.\nDie Auswahl hat Vorrang, wenn beide Felder ausgef?llt sind.\nDer Name erscheint erst nach dem Speichern des aktivierten Flows in der Auswahl.",
-          "es": "Reanuda el cronómetro existente en pausa con el nombre seleccionado. No inicia uno nuevo. Si no existe ningún cron?metro con ese nombre, la acción informa de un error.\nPuedes seleccionar un nombre, escribirlo y seleccionarlo, o escribir un nombre en el campo de nombre.\nEl selector tiene prioridad si ambos campos est?n rellenados.\nEl nombre aparecer? en el selector solo despu?s de guardar el Flow habilitado.",
-          "fr": "Reprend le chronomètre existant en pause portant le nom sélectionné. Aucun nouveau n’est démarré. Si aucun chronom?tre correspondant n’existe, l’action signale une erreur.\nVous pouvez s?lectionner un nom, le saisir puis le s?lectionner, ou saisir un nom dans le champ de nom.\nLe s?lecteur est prioritaire lorsque les deux champs sont remplis.\nLe nom n?appara?tra dans le s?lecteur qu?apr?s l?enregistrement du Flow activ?.",
-          "it": "Riprende il cronometro esistente in pausa con il nome selezionato. Non ne avvia uno nuovo. Se non esiste un cronometro con quel nome, l’azione segnala un errore.\nPuoi selezionare un nome, digitarlo e selezionarlo oppure scrivere un nome nel campo nome.\nIl selettore ha la precedenza se entrambi i campi sono compilati.\nIl nome apparir? nel selettore solo dopo aver salvato il Flow abilitato.",
-          "no": "Gjenopptar den eksisterende stoppeklokke med det valgte navnet hvis den er satt på pause. En ny startes ikke. Hvis ingen stoppeklokke med navnet finnes, rapporterer handlingen en feil.\nDu kan velge et navn, skrive det og velge det, eller skrive et navn i navnefeltet.\nVelgeren har forrang n?r begge feltene er fylt ut.\nNavnet vises f?rst i velgeren etter at den aktiverte Flowen er lagret.",
-          "sv": "Återupptar det befintliga pausade stoppur med det valda namnet. Inget nytt startas. Om inget stoppur med det namnet finns rapporterar åtgärden ett fel.\nDu kan v?lja ett namn, skriva och v?lja det, eller skriva ett namn i namnf?ltet.\nV?ljaren har f?retr?de n?r b?da f?lten ?r ifyllda.\nNamnet visas f?rst i v?ljaren n?r det aktiverade Flowet har sparats.",
-          "pl": "Wznawia istniejący wstrzymany stoper o wybranej nazwie. Nie uruchamia nowego. Jeśli nie istnieje stoper o tej nazwie, akcja zgłosi błąd.\nMo?esz wybra? nazw?, wpisa? j? i wybra? albo wpisa? nazw? w polu nazwy.\nWyb?r z listy ma pierwsze?stwo, gdy oba pola s? wype?nione.\nNazwa pojawi si? na li?cie dopiero po zapisaniu w??czonego Flow.",
-          "ru": "Возобновляет существующий приостановленный объект «секундомер» с выбранным именем. Новый объект не запускается. Если объект «??????????» с таким именем не найден, действие выдаст ошибку.\n?? ?????? ??????? ???, ?????? ? ??????? ??? ??? ?????? ??? ? ???? ?????.\n???? ????????? ??? ????, ????? ? ?????? ????? ?????????.\n??? ???????? ? ?????? ?????? ????? ?????????? ??????????? Flow.",
-          "ko": "선택한 이름의 기존 일시 정지된 스톱워치를 재개합니다. 새로 시작하지 않습니다. 해당 이름의 ????가 없으면 작업에서 오류를 보고합니다.\n??? ?????, ??? ? ?????, ?? ??? ?? ??? ? ????.\n? ??? ?? ??? ?? ??? ?? ?????.\n???? Flow? ???? ??? ???? ?????.",
-          "ar": "يستأنف ساعة الإيقاف الموجود والمتوقف مؤقتًا بالاسم المحدد، ولا يبدأ واحدًا جديدًا. إذا لم يوجد ???? ????? بهذا الاسم، فسيُبلغ الإجراء عن خطأ.\n????? ?????? ???? ?? ?????? ?? ???????? ?? ????? ??? ?? ??? ?????.\n???? ???????? ???????? ?? ??????? ??? ??? ???????.\n?? ???? ????? ?? ??????? ??? ??? ??? Flow ???????."
+          "da": "Genoptager den eksisterende stopur med det valgte navn, hvis den er sat på pause. Der startes ikke en ny. Hvis ingen stopur med navnet findes, giver handlingen en fejl.\nDu kan vælge et navn, skrive og vælge det eller skrive et navn i navnefeltet.\nVælgeren har forrang, hvis begge felter er udfyldt.\nNavnet vises først i vælgeren, når det aktiverede Flow er gemt.",
+          "de": "Setzt die vorhandene pausierte Stoppuhr mit dem ausgewählten Namen fort. Es wird keine neue gestartet. Wenn keine passende Stoppuhr vorhanden ist, meldet die Aktion einen Fehler.\nDu kannst einen Namen auswählen, ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDie Auswahl hat Vorrang, wenn beide Felder ausgefüllt sind.\nDer Name erscheint erst nach dem Speichern des aktivierten Flows in der Auswahl.",
+          "es": "Reanuda el cronómetro existente en pausa con el nombre seleccionado. No inicia uno nuevo. Si no existe ningún cronómetro con ese nombre, la acción informa de un error.\nPuedes seleccionar un nombre, escribirlo y seleccionarlo, o escribir un nombre en el campo de nombre.\nEl selector tiene prioridad si ambos campos están rellenados.\nEl nombre aparecerá en el selector solo después de guardar el Flow habilitado.",
+          "fr": "Reprend le chronomètre existant en pause portant le nom sélectionné. Aucun nouveau n’est démarré. Si aucun chronomètre correspondant n’existe, l’action signale une erreur.\nVous pouvez sélectionner un nom, le saisir puis le sélectionner, ou saisir un nom dans le champ de nom.\nLe sélecteur est prioritaire lorsque les deux champs sont remplis.\nLe nom n'apparaîtra dans le sélecteur qu'après l'enregistrement du Flow activé.",
+          "it": "Riprende il cronometro esistente in pausa con il nome selezionato. Non ne avvia uno nuovo. Se non esiste un cronometro con quel nome, l’azione segnala un errore.\nPuoi selezionare un nome, digitarlo e selezionarlo oppure scrivere un nome nel campo nome.\nIl selettore ha la precedenza se entrambi i campi sono compilati.\nIl nome apparirà nel selettore solo dopo aver salvato il Flow abilitato.",
+          "no": "Gjenopptar den eksisterende stoppeklokke med det valgte navnet hvis den er satt på pause. En ny startes ikke. Hvis ingen stoppeklokke med navnet finnes, rapporterer handlingen en feil.\nDu kan velge et navn, skrive det og velge det, eller skrive et navn i navnefeltet.\nVelgeren har forrang når begge feltene er fylt ut.\nNavnet vises først i velgeren etter at den aktiverte Flowen er lagret.",
+          "sv": "Återupptar det befintliga pausade stoppur med det valda namnet. Inget nytt startas. Om inget stoppur med det namnet finns rapporterar åtgärden ett fel.\nDu kan välja ett namn, skriva och välja det, eller skriva ett namn i namnfältet.\nVäljaren har företräde när båda fälten är ifyllda.\nNamnet visas först i väljaren när det aktiverade Flowet har sparats.",
+          "pl": "Wznawia istniejący wstrzymany stoper o wybranej nazwie. Nie uruchamia nowego. Jeśli nie istnieje stoper o tej nazwie, akcja zgłosi błąd.\nMożesz wybrać nazwę, wpisać ją i wybrać albo wpisać nazwę w polu nazwy.\nWybór z listy ma pierwszeństwo, gdy oba pola są wypełnione.\nNazwa pojawi się na liście dopiero po zapisaniu włączonego Flow.",
+          "ru": "Возобновляет существующий приостановленный секундомер с выбранным именем. Новый секундомер не запускается. Если секундомер с таким именем не найден, действие выдаст ошибку.\nМожно выбрать имя, ввести и выбрать его или ввести имя в поле имени.\nЕсли заполнены оба поля, выбор из списка имеет приоритет.\nИмя появится в списке только после сохранения включённого Flow.",
+          "ko": "선택한 이름의 기존 일시 정지된 스톱워치를 재개합니다. 새로 시작하지 않습니다. 해당 이름의 스톱워치가 없으면 작업에서 오류를 보고합니다.\n이름을 선택하거나 입력한 후 선택하거나 이름 입력란에 직접 입력할 수 있습니다.\n두 필드를 모두 입력한 경우 선택한 이름이 우선합니다.\n활성화된 Flow를 저장해야 선택 목록에 이름이 표시됩니다.",
+          "ar": "يستأنف ساعة الإيقاف الموجودة والمتوقفة مؤقتًا بالاسم المحدد، ولا يبدأ ساعة جديدة. إذا لم توجد ساعة إيقاف بهذا الاسم، فسيُبلغ الإجراء عن خطأ.\nيمكنك اختيار اسم، أو كتابته واختياره، أو إدخاله في حقل الاسم.\nتكون الأولوية للاسم المختار عند ملء الحقلين.\nلا يظهر الاسم في قائمة الاختيار إلا بعد حفظ Flow المفعّل."
         },
         "args": [
           {
@@ -5343,17 +5347,17 @@
         "hint": {
           "en": "Resumes an existing paused timer with the selected name. It does not create a new one. If no matching timer exists, the action reports an error.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
           "nl": "Hervat de bestaande gepauzeerde timer met de gekozen naam. Er wordt geen nieuwe gestart. Als er geen timer met die naam bestaat, geeft de actie een fout.\nJe kunt een naam kiezen, een naam typen en selecteren, of een naam in het naamveld typen.\nDe kiezer heeft voorrang als beide zijn ingevuld.\nDe naam verschijnt pas in de kiezer nadat de ingeschakelde Flow is opgeslagen.",
-          "da": "Genoptager den eksisterende timer med det valgte navn, hvis den er sat på pause. Der startes ikke en ny. Hvis ingen timer med navnet findes, giver handlingen en fejl.\nDu kan v?lge et navn, skrive og v?lge det eller skrive et navn i navnefeltet.\nV?lgeren har forrang, hvis begge felter er udfyldt.\nNavnet vises f?rst i v?lgeren, n?r det aktiverede Flow er gemt.",
-          "de": "Setzt den vorhandenen pausierten Timer mit dem ausgewählten Namen fort. Es wird kein neuer gestartet. Wenn kein passender Timer vorhanden ist, meldet die Aktion einen Fehler.\nDu kannst einen Namen ausw?hlen, ihn eingeben und ausw?hlen oder einen Namen in das Namensfeld eingeben.\nDie Auswahl hat Vorrang, wenn beide Felder ausgef?llt sind.\nDer Name erscheint erst nach dem Speichern des aktivierten Flows in der Auswahl.",
-          "es": "Reanuda el temporizador existente en pausa con el nombre seleccionado. No inicia uno nuevo. Si no existe ningún temporizador con ese nombre, la acción informa de un error.\nPuedes seleccionar un nombre, escribirlo y seleccionarlo, o escribir un nombre en el campo de nombre.\nEl selector tiene prioridad si ambos campos est?n rellenados.\nEl nombre aparecer? en el selector solo despu?s de guardar el Flow habilitado.",
-          "fr": "Reprend le minuteur existant en pause portant le nom sélectionné. Aucun nouveau n’est démarré. Si aucun minuteur correspondant n’existe, l’action signale une erreur.\nVous pouvez s?lectionner un nom, le saisir puis le s?lectionner, ou saisir un nom dans le champ de nom.\nLe s?lecteur est prioritaire lorsque les deux champs sont remplis.\nLe nom n?appara?tra dans le s?lecteur qu?apr?s l?enregistrement du Flow activ?.",
-          "it": "Riprende il timer esistente in pausa con il nome selezionato. Non ne avvia uno nuovo. Se non esiste un timer con quel nome, l’azione segnala un errore.\nPuoi selezionare un nome, digitarlo e selezionarlo oppure scrivere un nome nel campo nome.\nIl selettore ha la precedenza se entrambi i campi sono compilati.\nIl nome apparir? nel selettore solo dopo aver salvato il Flow abilitato.",
-          "no": "Gjenopptar den eksisterende timer med det valgte navnet hvis den er satt på pause. En ny startes ikke. Hvis ingen timer med navnet finnes, rapporterer handlingen en feil.\nDu kan velge et navn, skrive det og velge det, eller skrive et navn i navnefeltet.\nVelgeren har forrang n?r begge feltene er fylt ut.\nNavnet vises f?rst i velgeren etter at den aktiverte Flowen er lagret.",
-          "sv": "Återupptar det befintliga pausade timer med det valda namnet. Inget nytt startas. Om inget timer med det namnet finns rapporterar åtgärden ett fel.\nDu kan v?lja ett namn, skriva och v?lja det, eller skriva ett namn i namnf?ltet.\nV?ljaren har f?retr?de n?r b?da f?lten ?r ifyllda.\nNamnet visas f?rst i v?ljaren n?r det aktiverade Flowet har sparats.",
-          "pl": "Wznawia istniejący wstrzymany timer o wybranej nazwie. Nie uruchamia nowego. Jeśli nie istnieje timer o tej nazwie, akcja zgłosi błąd.\nMo?esz wybra? nazw?, wpisa? j? i wybra? albo wpisa? nazw? w polu nazwy.\nWyb?r z listy ma pierwsze?stwo, gdy oba pola s? wype?nione.\nNazwa pojawi si? na li?cie dopiero po zapisaniu w??czonego Flow.",
-          "ru": "Возобновляет существующий приостановленный объект «таймер» с выбранным именем. Новый объект не запускается. Если объект «??????» с таким именем не найден, действие выдаст ошибку.\n?? ?????? ??????? ???, ?????? ? ??????? ??? ??? ?????? ??? ? ???? ?????.\n???? ????????? ??? ????, ????? ? ?????? ????? ?????????.\n??? ???????? ? ?????? ?????? ????? ?????????? ??????????? Flow.",
-          "ko": "선택한 이름의 기존 일시 정지된 타이머를 재개합니다. 새로 시작하지 않습니다. 해당 이름의 ???가 없으면 작업에서 오류를 보고합니다.\n??? ?????, ??? ? ?????, ?? ??? ?? ??? ? ????.\n? ??? ?? ??? ?? ??? ?? ?????.\n???? Flow? ???? ??? ???? ?????.",
-          "ar": "يستأنف المؤقت الموجود والمتوقف مؤقتًا بالاسم المحدد، ولا يبدأ واحدًا جديدًا. إذا لم يوجد ???? بهذا الاسم، فسيُبلغ الإجراء عن خطأ.\n????? ?????? ???? ?? ?????? ?? ???????? ?? ????? ??? ?? ??? ?????.\n???? ???????? ???????? ?? ??????? ??? ??? ???????.\n?? ???? ????? ?? ??????? ??? ??? ??? Flow ???????."
+          "da": "Genoptager den eksisterende timer med det valgte navn, hvis den er sat på pause. Der startes ikke en ny. Hvis ingen timer med navnet findes, giver handlingen en fejl.\nDu kan vælge et navn, skrive og vælge det eller skrive et navn i navnefeltet.\nVælgeren har forrang, hvis begge felter er udfyldt.\nNavnet vises først i vælgeren, når det aktiverede Flow er gemt.",
+          "de": "Setzt den vorhandenen pausierten Timer mit dem ausgewählten Namen fort. Es wird kein neuer gestartet. Wenn kein passender Timer vorhanden ist, meldet die Aktion einen Fehler.\nDu kannst einen Namen auswählen, ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDie Auswahl hat Vorrang, wenn beide Felder ausgefüllt sind.\nDer Name erscheint erst nach dem Speichern des aktivierten Flows in der Auswahl.",
+          "es": "Reanuda el temporizador existente en pausa con el nombre seleccionado. No inicia uno nuevo. Si no existe ningún temporizador con ese nombre, la acción informa de un error.\nPuedes seleccionar un nombre, escribirlo y seleccionarlo, o escribir un nombre en el campo de nombre.\nEl selector tiene prioridad si ambos campos están rellenados.\nEl nombre aparecerá en el selector solo después de guardar el Flow habilitado.",
+          "fr": "Reprend le minuteur existant en pause portant le nom sélectionné. Aucun nouveau n’est démarré. Si aucun minuteur correspondant n’existe, l’action signale une erreur.\nVous pouvez sélectionner un nom, le saisir puis le sélectionner, ou saisir un nom dans le champ de nom.\nLe sélecteur est prioritaire lorsque les deux champs sont remplis.\nLe nom n'apparaîtra dans le sélecteur qu'après l'enregistrement du Flow activé.",
+          "it": "Riprende il timer esistente in pausa con il nome selezionato. Non ne avvia uno nuovo. Se non esiste un timer con quel nome, l’azione segnala un errore.\nPuoi selezionare un nome, digitarlo e selezionarlo oppure scrivere un nome nel campo nome.\nIl selettore ha la precedenza se entrambi i campi sono compilati.\nIl nome apparirà nel selettore solo dopo aver salvato il Flow abilitato.",
+          "no": "Gjenopptar den eksisterende timer med det valgte navnet hvis den er satt på pause. En ny startes ikke. Hvis ingen timer med navnet finnes, rapporterer handlingen en feil.\nDu kan velge et navn, skrive det og velge det, eller skrive et navn i navnefeltet.\nVelgeren har forrang når begge feltene er fylt ut.\nNavnet vises først i velgeren etter at den aktiverte Flowen er lagret.",
+          "sv": "Återupptar det befintliga pausade timer med det valda namnet. Inget nytt startas. Om inget timer med det namnet finns rapporterar åtgärden ett fel.\nDu kan välja ett namn, skriva och välja det, eller skriva ett namn i namnfältet.\nVäljaren har företräde när båda fälten är ifyllda.\nNamnet visas först i väljaren när det aktiverade Flowet har sparats.",
+          "pl": "Wznawia istniejący wstrzymany timer o wybranej nazwie. Nie uruchamia nowego. Jeśli nie istnieje timer o tej nazwie, akcja zgłosi błąd.\nMożesz wybrać nazwę, wpisać ją i wybrać albo wpisać nazwę w polu nazwy.\nWybór z listy ma pierwszeństwo, gdy oba pola są wypełnione.\nNazwa pojawi się na liście dopiero po zapisaniu włączonego Flow.",
+          "ru": "Возобновляет существующий приостановленный таймер с выбранным именем. Новый таймер не запускается. Если таймер с таким именем не найден, действие выдаст ошибку.\nМожно выбрать имя, ввести и выбрать его или ввести имя в поле имени.\nЕсли заполнены оба поля, выбор из списка имеет приоритет.\nИмя появится в списке только после сохранения включённого Flow.",
+          "ko": "선택한 이름의 기존 일시 정지된 타이머를 재개합니다. 새로 시작하지 않습니다. 해당 이름의 타이머가 없으면 작업에서 오류를 보고합니다.\n이름을 선택하거나 입력한 후 선택하거나 이름 입력란에 직접 입력할 수 있습니다.\n두 필드를 모두 입력한 경우 선택한 이름이 우선합니다.\n활성화된 Flow를 저장해야 선택 목록에 이름이 표시됩니다.",
+          "ar": "يستأنف المؤقت الموجود والمتوقف مؤقتًا بالاسم المحدد، ولا يبدأ مؤقتًا جديدًا. إذا لم يوجد مؤقت بهذا الاسم، فسيُبلغ الإجراء عن خطأ.\nيمكنك اختيار اسم، أو كتابته واختياره، أو إدخاله في حقل الاسم.\nتكون الأولوية للاسم المختار عند ملء الحقلين.\nلا يظهر الاسم في قائمة الاختيار إلا بعد حفظ Flow المفعّل."
         },
         "args": [
           {
@@ -5463,17 +5467,17 @@
         "hint": {
           "en": "Resumes an existing paused transition with the selected name. It does not create a new one. If no matching transition exists, the action reports an error.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
           "nl": "Hervat de bestaande gepauzeerde transitie met de gekozen naam. Er wordt geen nieuwe gestart. Als er geen transitie met die naam bestaat, geeft de actie een fout.\nJe kunt een naam kiezen, een naam typen en selecteren, of een naam in het naamveld typen.\nDe kiezer heeft voorrang als beide zijn ingevuld.\nDe naam verschijnt pas in de kiezer nadat de ingeschakelde Flow is opgeslagen.",
-          "da": "Genoptager den eksisterende overgang med det valgte navn, hvis den er sat på pause. Der startes ikke en ny. Hvis ingen overgang med navnet findes, giver handlingen en fejl.\nDu kan v?lge et navn, skrive og v?lge det eller skrive et navn i navnefeltet.\nV?lgeren har forrang, hvis begge felter er udfyldt.\nNavnet vises f?rst i v?lgeren, n?r det aktiverede Flow er gemt.",
-          "de": "Setzt den vorhandenen pausierten Übergang mit dem ausgewählten Namen fort. Es wird kein neuer gestartet. Wenn kein passender ?bergang vorhanden ist, meldet die Aktion einen Fehler.\nDu kannst einen Namen ausw?hlen, ihn eingeben und ausw?hlen oder einen Namen in das Namensfeld eingeben.\nDie Auswahl hat Vorrang, wenn beide Felder ausgef?llt sind.\nDer Name erscheint erst nach dem Speichern des aktivierten Flows in der Auswahl.",
-          "es": "Reanuda el transición existente en pausa con el nombre seleccionado. No inicia uno nuevo. Si no existe ningún transici?n con ese nombre, la acción informa de un error.\nPuedes seleccionar un nombre, escribirlo y seleccionarlo, o escribir un nombre en el campo de nombre.\nEl selector tiene prioridad si ambos campos est?n rellenados.\nEl nombre aparecer? en el selector solo despu?s de guardar el Flow habilitado.",
-          "fr": "Reprend la transition existante en pause portant le nom sélectionné. Aucun nouveau n’est démarré. Si aucune transition correspondante n’existe, l’action signale une erreur.\nVous pouvez s?lectionner un nom, le saisir puis le s?lectionner, ou saisir un nom dans le champ de nom.\nLe s?lecteur est prioritaire lorsque les deux champs sont remplis.\nLe nom n?appara?tra dans le s?lecteur qu?apr?s l?enregistrement du Flow activ?.",
-          "it": "Riprende la transizione esistente in pausa con il nome selezionato. Non ne avvia uno nuovo. Se non esiste una transizione con quel nome, l’azione segnala un errore.\nPuoi selezionare un nome, digitarlo e selezionarlo oppure scrivere un nome nel campo nome.\nIl selettore ha la precedenza se entrambi i campi sono compilati.\nIl nome apparir? nel selettore solo dopo aver salvato il Flow abilitato.",
-          "no": "Gjenopptar den eksisterende overgang med det valgte navnet hvis den er satt på pause. En ny startes ikke. Hvis ingen overgang med navnet finnes, rapporterer handlingen en feil.\nDu kan velge et navn, skrive det og velge det, eller skrive et navn i navnefeltet.\nVelgeren har forrang n?r begge feltene er fylt ut.\nNavnet vises f?rst i velgeren etter at den aktiverte Flowen er lagret.",
-          "sv": "Återupptar det befintliga pausade övergång med det valda namnet. Inget nytt startas. Om inget ?verg?ng med det namnet finns rapporterar åtgärden ett fel.\nDu kan v?lja ett namn, skriva och v?lja det, eller skriva ett namn i namnf?ltet.\nV?ljaren har f?retr?de n?r b?da f?lten ?r ifyllda.\nNamnet visas f?rst i v?ljaren n?r det aktiverade Flowet har sparats.",
-          "pl": "Wznawia istniejący wstrzymany przejście o wybranej nazwie. Nie uruchamia nowego. Jeśli nie istnieje przej?cie o tej nazwie, akcja zgłosi błąd.\nMo?esz wybra? nazw?, wpisa? j? i wybra? albo wpisa? nazw? w polu nazwy.\nWyb?r z listy ma pierwsze?stwo, gdy oba pola s? wype?nione.\nNazwa pojawi si? na li?cie dopiero po zapisaniu w??czonego Flow.",
-          "ru": "Возобновляет существующий приостановленный объект «переход» с выбранным именем. Новый объект не запускается. Если объект «???????» с таким именем не найден, действие выдаст ошибку.\n?? ?????? ??????? ???, ?????? ? ??????? ??? ??? ?????? ??? ? ???? ?????.\n???? ????????? ??? ????, ????? ? ?????? ????? ?????????.\n??? ???????? ? ?????? ?????? ????? ?????????? ??????????? Flow.",
-          "ko": "선택한 이름의 기존 일시 정지된 전환를 재개합니다. 새로 시작하지 않습니다. 해당 이름의 ??가 없으면 작업에서 오류를 보고합니다.\n??? ?????, ??? ? ?????, ?? ??? ?? ??? ? ????.\n? ??? ?? ??? ?? ??? ?? ?????.\n???? Flow? ???? ??? ???? ?????.",
-          "ar": "يستأنف الانتقال الموجود والمتوقف مؤقتًا بالاسم المحدد، ولا يبدأ واحدًا جديدًا. إذا لم يوجد ?????? بهذا الاسم، فسيُبلغ الإجراء عن خطأ.\n????? ?????? ???? ?? ?????? ?? ???????? ?? ????? ??? ?? ??? ?????.\n???? ???????? ???????? ?? ??????? ??? ??? ???????.\n?? ???? ????? ?? ??????? ??? ??? ??? Flow ???????."
+          "da": "Genoptager den eksisterende overgang med det valgte navn, hvis den er sat på pause. Der startes ikke en ny. Hvis ingen overgang med navnet findes, giver handlingen en fejl.\nDu kan vælge et navn, skrive og vælge det eller skrive et navn i navnefeltet.\nVælgeren har forrang, hvis begge felter er udfyldt.\nNavnet vises først i vælgeren, når det aktiverede Flow er gemt.",
+          "de": "Setzt den vorhandenen pausierten Übergang mit dem ausgewählten Namen fort. Es wird kein neuer gestartet. Wenn kein passender Übergang vorhanden ist, meldet die Aktion einen Fehler.\nDu kannst einen Namen auswählen, ihn eingeben und auswählen oder einen Namen in das Namensfeld eingeben.\nDie Auswahl hat Vorrang, wenn beide Felder ausgefüllt sind.\nDer Name erscheint erst nach dem Speichern des aktivierten Flows in der Auswahl.",
+          "es": "Reanuda el transición existente en pausa con el nombre seleccionado. No inicia uno nuevo. Si no existe ningún transición con ese nombre, la acción informa de un error.\nPuedes seleccionar un nombre, escribirlo y seleccionarlo, o escribir un nombre en el campo de nombre.\nEl selector tiene prioridad si ambos campos están rellenados.\nEl nombre aparecerá en el selector solo después de guardar el Flow habilitado.",
+          "fr": "Reprend la transition existante en pause portant le nom sélectionné. Aucun nouveau n’est démarré. Si aucune transition correspondante n’existe, l’action signale une erreur.\nVous pouvez sélectionner un nom, le saisir puis le sélectionner, ou saisir un nom dans le champ de nom.\nLe sélecteur est prioritaire lorsque les deux champs sont remplis.\nLe nom n'apparaîtra dans le sélecteur qu'après l'enregistrement du Flow activé.",
+          "it": "Riprende la transizione esistente in pausa con il nome selezionato. Non ne avvia uno nuovo. Se non esiste una transizione con quel nome, l’azione segnala un errore.\nPuoi selezionare un nome, digitarlo e selezionarlo oppure scrivere un nome nel campo nome.\nIl selettore ha la precedenza se entrambi i campi sono compilati.\nIl nome apparirà nel selettore solo dopo aver salvato il Flow abilitato.",
+          "no": "Gjenopptar den eksisterende overgang med det valgte navnet hvis den er satt på pause. En ny startes ikke. Hvis ingen overgang med navnet finnes, rapporterer handlingen en feil.\nDu kan velge et navn, skrive det og velge det, eller skrive et navn i navnefeltet.\nVelgeren har forrang når begge feltene er fylt ut.\nNavnet vises først i velgeren etter at den aktiverte Flowen er lagret.",
+          "sv": "Återupptar det befintliga pausade övergång med det valda namnet. Inget nytt startas. Om inget övergång med det namnet finns rapporterar åtgärden ett fel.\nDu kan välja ett namn, skriva och välja det, eller skriva ett namn i namnfältet.\nVäljaren har företräde när båda fälten är ifyllda.\nNamnet visas först i väljaren när det aktiverade Flowet har sparats.",
+          "pl": "Wznawia istniejący wstrzymany przejście o wybranej nazwie. Nie uruchamia nowego. Jeśli nie istnieje przejście o tej nazwie, akcja zgłosi błąd.\nMożesz wybrać nazwę, wpisać ją i wybrać albo wpisać nazwę w polu nazwy.\nWybór z listy ma pierwszeństwo, gdy oba pola są wypełnione.\nNazwa pojawi się na liście dopiero po zapisaniu włączonego Flow.",
+          "ru": "Возобновляет существующий приостановленный переход с выбранным именем. Новый переход не запускается. Если переход с таким именем не найден, действие выдаст ошибку.\nМожно выбрать имя, ввести и выбрать его или ввести имя в поле имени.\nЕсли заполнены оба поля, выбор из списка имеет приоритет.\nИмя появится в списке только после сохранения включённого Flow.",
+          "ko": "선택한 이름의 기존 일시 정지된 전환을 재개합니다. 새로 시작하지 않습니다. 해당 이름의 전환이 없으면 작업에서 오류를 보고합니다.\n이름을 선택하거나 입력한 후 선택하거나 이름 입력란에 직접 입력할 수 있습니다.\n두 필드를 모두 입력한 경우 선택한 이름이 우선합니다.\n활성화된 Flow를 저장해야 선택 목록에 이름이 표시됩니다.",
+          "ar": "يستأنف الانتقال الموجود والمتوقف مؤقتًا بالاسم المحدد، ولا يبدأ انتقالًا جديدًا. إذا لم يوجد انتقال بهذا الاسم، فسيُبلغ الإجراء عن خطأ.\nيمكنك اختيار اسم، أو كتابته واختياره، أو إدخاله في حقل الاسم.\nتكون الأولوية للاسم المختار عند ملء الحقلين.\nلا يظهر الاسم في قائمة الاختيار إلا بعد حفظ Flow المفعّل."
         },
         "args": [
           {
@@ -9785,7 +9789,18 @@
     "stopwatch": {
       "name": {
         "en": "Stopwatch",
-        "nl": "Stopwatch"
+        "nl": "Stopwatch",
+        "da": "Stopur",
+        "de": "Stoppuhr",
+        "es": "Cronómetro",
+        "fr": "Chronomètre",
+        "it": "Cronometro",
+        "no": "Stoppeklokke",
+        "sv": "Stoppur",
+        "pl": "Stoper",
+        "ru": "Секундомер",
+        "ko": "스톱워치",
+        "ar": "ساعة التوقيف"
       },
       "settings": [
         {
@@ -9793,7 +9808,18 @@
           "type": "autocomplete",
           "title": {
             "en": "Stopwatch",
-            "nl": "Stopwatch"
+            "nl": "Stopwatch",
+            "da": "Stopur",
+            "de": "Stoppuhr",
+            "es": "Cronómetro",
+            "fr": "Chronomètre",
+            "it": "Cronometro",
+            "no": "Stoppeklokke",
+            "sv": "Stoppur",
+            "pl": "Stoper",
+            "ru": "Секундомер",
+            "ko": "스톱워치",
+            "ar": "ساعة التوقيف"
           },
           "hint": {
             "en": "Choose a configured stopwatch",
@@ -9816,7 +9842,18 @@
           "type": "text",
           "title": {
             "en": "Alternative name",
-            "nl": "Alternatieve naam"
+            "nl": "Alternatieve naam",
+            "da": "Alternativt navn",
+            "de": "Alternativer Name",
+            "es": "Nombre alternativo",
+            "fr": "Nom alternatif",
+            "it": "Nome alternativo",
+            "no": "Alternativt navn",
+            "sv": "Alternativt namn",
+            "pl": "Nazwa alternatywna",
+            "ru": "Альтернативное имя",
+            "ko": "대체 이름",
+            "ar": "اسم بديل"
           },
           "hint": {
             "en": "Optionally show a shorter name in the widget",
@@ -9840,11 +9877,33 @@
           "type": "autocomplete",
           "title": {
             "en": "Design Style",
-            "nl": "Ontwerpstijl"
+            "nl": "Ontwerpstijl",
+            "da": "Designstil",
+            "de": "Designstil",
+            "es": "Estilo de diseño",
+            "fr": "Style de conception",
+            "it": "Stile di design",
+            "no": "Designstil",
+            "sv": "Designstil",
+            "pl": "Styl projektu",
+            "ru": "Стиль оформления",
+            "ko": "디자인 스타일",
+            "ar": "نمط التصميم"
           },
           "hint": {
             "en": "Choose a widget design. Create your own in Chronograph App Settings under Widgets.",
-            "nl": "Kies een widgetontwerp. Maak je eigen ontwerp in de Chronograph-appinstellingen onder Widgets."
+            "nl": "Kies een widgetontwerp. Maak je eigen ontwerp in de Chronograph-appinstellingen onder Widgets.",
+            "da": "Vælg et widgetdesign. Opret dit eget under Widgets i Chronographs appindstillinger.",
+            "de": "Wähle ein Widget-Design. Erstelle ein eigenes in den Chronograph-App-Einstellungen unter Widgets.",
+            "es": "Elige un diseño de widget. Crea uno propio en Ajustes de la aplicación Chronograph, en Widgets.",
+            "fr": "Choisissez un design de widget. Créez le vôtre dans les paramètres de l’application Chronograph, sous Widgets.",
+            "it": "Scegli un design per il widget. Creane uno nelle impostazioni dell’app Chronograph, sotto Widget.",
+            "no": "Velg et widgetdesign. Lag ditt eget under Widgeter i Chronographs appinnstillinger.",
+            "sv": "Välj en widgetdesign. Skapa en egen under Widgetar i Chronographs appinställningar.",
+            "pl": "Wybierz projekt widżetu. Utwórz własny w ustawieniach aplikacji Chronograph w sekcji Widżety.",
+            "ru": "Выберите дизайн виджета. Создайте свой в настройках приложения Chronograph в разделе виджетов.",
+            "ko": "위젯 디자인을 선택하세요. Chronograph 앱 설정의 위젯에서 직접 만들 수 있습니다.",
+            "ar": "اختر تصميمًا للأداة. أنشئ تصميمك في إعدادات تطبيق Chronograph ضمن الأدوات."
           }
         },
         {
@@ -9852,11 +9911,33 @@
           "type": "autocomplete",
           "title": {
             "en": "Color Scheme",
-            "nl": "Kleurenschema"
+            "nl": "Kleurenschema",
+            "da": "Farveskema",
+            "de": "Farbschema",
+            "es": "Esquema de colores",
+            "fr": "Palette de couleurs",
+            "it": "Schema colori",
+            "no": "Fargeskjema",
+            "sv": "Färgschema",
+            "pl": "Schemat kolorów",
+            "ru": "Цветовая схема",
+            "ko": "색상 구성",
+            "ar": "مخطط الألوان"
           },
           "hint": {
             "en": "Choose a widget color scheme. Create your own in Chronograph App Settings under Widgets.",
-            "nl": "Kies een kleurenschema voor widgets. Maak je eigen schema in de Chronograph-appinstellingen onder Widgets."
+            "nl": "Kies een kleurenschema voor widgets. Maak je eigen schema in de Chronograph-appinstellingen onder Widgets.",
+            "da": "Vælg et farveskema til widgetten. Opret dit eget under Widgets i Chronographs appindstillinger.",
+            "de": "Wähle ein Farbschema für das Widget. Erstelle ein eigenes in den Chronograph-App-Einstellungen unter Widgets.",
+            "es": "Elige un esquema de colores para el widget. Crea uno propio en Ajustes de la aplicación Chronograph, en Widgets.",
+            "fr": "Choisissez une palette de couleurs pour le widget. Créez la vôtre dans les paramètres de l’application Chronograph, sous Widgets.",
+            "it": "Scegli uno schema colori per il widget. Creane uno nelle impostazioni dell’app Chronograph, sotto Widget.",
+            "no": "Velg et fargeskjema for widgeten. Lag ditt eget under Widgeter i Chronographs appinnstillinger.",
+            "sv": "Välj ett färgschema för widgeten. Skapa ett eget under Widgetar i Chronographs appinställningar.",
+            "pl": "Wybierz schemat kolorów widżetu. Utwórz własny w ustawieniach aplikacji Chronograph w sekcji Widżety.",
+            "ru": "Выберите цветовую схему виджета. Создайте свою в настройках приложения Chronograph в разделе виджетов.",
+            "ko": "위젯 색상 구성을 선택하세요. Chronograph 앱 설정의 위젯에서 직접 만들 수 있습니다.",
+            "ar": "اختر مخطط ألوان للأداة. أنشئ مخططك في إعدادات تطبيق Chronograph ضمن الأدوات."
           }
         },
         {
@@ -9864,7 +9945,18 @@
           "type": "dropdown",
           "title": {
             "en": "Layout",
-            "nl": "Indeling"
+            "nl": "Indeling",
+            "da": "Layout",
+            "de": "Layout",
+            "es": "Diseño",
+            "fr": "Disposition",
+            "it": "Layout",
+            "no": "Oppsett",
+            "sv": "Layout",
+            "pl": "Układ",
+            "ru": "Макет",
+            "ko": "레이아웃",
+            "ar": "التخطيط"
           },
           "hint": {
             "en": "Choose how compact or spacious the widget looks",
@@ -9887,21 +9979,54 @@
               "id": "compact",
               "title": {
                 "en": "Compact",
-                "nl": "Compact"
+                "nl": "Compact",
+                "da": "Kompakt",
+                "de": "Kompakt",
+                "es": "Compacto",
+                "fr": "Compact",
+                "it": "Compatto",
+                "no": "Kompakt",
+                "sv": "Kompakt",
+                "pl": "Kompaktowy",
+                "ru": "Компактный",
+                "ko": "컴팩트",
+                "ar": "مضغوط"
               }
             },
             {
               "id": "normal",
               "title": {
                 "en": "Normal",
-                "nl": "Normaal"
+                "nl": "Normaal",
+                "da": "Normal",
+                "de": "Normal",
+                "es": "Normal",
+                "fr": "Normal",
+                "it": "Normale",
+                "no": "Normal",
+                "sv": "Normal",
+                "pl": "Normalny",
+                "ru": "Обычный",
+                "ko": "보통",
+                "ar": "عادي"
               }
             },
             {
               "id": "large",
               "title": {
                 "en": "Larger",
-                "nl": "Groter"
+                "nl": "Groter",
+                "da": "Større",
+                "de": "Größer",
+                "es": "Más grande",
+                "fr": "Plus grand",
+                "it": "Più grande",
+                "no": "Større",
+                "sv": "Större",
+                "pl": "Większy",
+                "ru": "Крупнее",
+                "ko": "더 크게",
+                "ar": "أكبر"
               }
             }
           ]
@@ -9911,7 +10036,18 @@
           "type": "autocomplete",
           "title": {
             "en": "Icon",
-            "nl": "Pictogram"
+            "nl": "Pictogram",
+            "da": "Ikon",
+            "de": "Symbol",
+            "es": "Icono",
+            "fr": "Icône",
+            "it": "Icona",
+            "no": "Ikon",
+            "sv": "Ikon",
+            "pl": "Ikona",
+            "ru": "Значок",
+            "ko": "아이콘",
+            "ar": "أيقونة"
           },
           "hint": {
             "en": "Choose a Font Awesome icon to show beside the stopwatch name",
@@ -9934,7 +10070,18 @@
           "type": "checkbox",
           "title": {
             "en": "Show milliseconds",
-            "nl": "Toon milliseconden"
+            "nl": "Toon milliseconden",
+            "da": "Vis millisekunder",
+            "de": "Millisekunden anzeigen",
+            "es": "Mostrar milisegundos",
+            "fr": "Afficher les millisecondes",
+            "it": "Mostra millisecondi",
+            "no": "Vis millisekunder",
+            "sv": "Visa millisekunder",
+            "pl": "Pokaż milisekundy",
+            "ru": "Показывать миллисекунды",
+            "ko": "밀리초 표시",
+            "ar": "إظهار أجزاء الثانية"
           },
           "hint": {
             "en": "Include milliseconds in the displayed stopwatch value",
@@ -9981,7 +10128,18 @@
     "timer": {
       "name": {
         "en": "Timer",
-        "nl": "Timer"
+        "nl": "Timer",
+        "da": "Timer",
+        "de": "Timer",
+        "es": "Temporizador",
+        "fr": "Minuteur",
+        "it": "Timer",
+        "no": "Timer",
+        "sv": "Timer",
+        "pl": "Stoper",
+        "ru": "Таймер",
+        "ko": "타이머",
+        "ar": "مؤقت"
       },
       "settings": [
         {
@@ -9989,7 +10147,18 @@
           "type": "autocomplete",
           "title": {
             "en": "Timer",
-            "nl": "Timer"
+            "nl": "Timer",
+            "da": "Timer",
+            "de": "Timer",
+            "es": "Temporizador",
+            "fr": "Minuteur",
+            "it": "Timer",
+            "no": "Timer",
+            "sv": "Timer",
+            "pl": "Stoper",
+            "ru": "Таймер",
+            "ko": "타이머",
+            "ar": "مؤقت"
           },
           "hint": {
             "en": "Choose a configured timer",
@@ -10012,7 +10181,18 @@
           "type": "text",
           "title": {
             "en": "Alternative name",
-            "nl": "Alternatieve naam"
+            "nl": "Alternatieve naam",
+            "da": "Alternativt navn",
+            "de": "Alternativer Name",
+            "es": "Nombre alternativo",
+            "fr": "Nom alternatif",
+            "it": "Nome alternativo",
+            "no": "Alternativt navn",
+            "sv": "Alternativt namn",
+            "pl": "Nazwa alternatywna",
+            "ru": "Альтернативное имя",
+            "ko": "대체 이름",
+            "ar": "اسم بديل"
           },
           "hint": {
             "en": "Optionally show a shorter name in the widget",
@@ -10036,11 +10216,33 @@
           "type": "autocomplete",
           "title": {
             "en": "Design Style",
-            "nl": "Ontwerpstijl"
+            "nl": "Ontwerpstijl",
+            "da": "Designstil",
+            "de": "Designstil",
+            "es": "Estilo de diseño",
+            "fr": "Style de conception",
+            "it": "Stile di design",
+            "no": "Designstil",
+            "sv": "Designstil",
+            "pl": "Styl projektu",
+            "ru": "Стиль оформления",
+            "ko": "디자인 스타일",
+            "ar": "نمط التصميم"
           },
           "hint": {
             "en": "Choose a widget design. Create your own in Chronograph App Settings under Widgets.",
-            "nl": "Kies een widgetontwerp. Maak je eigen ontwerp in de Chronograph-appinstellingen onder Widgets."
+            "nl": "Kies een widgetontwerp. Maak je eigen ontwerp in de Chronograph-appinstellingen onder Widgets.",
+            "da": "Vælg et widgetdesign. Opret dit eget under Widgets i Chronographs appindstillinger.",
+            "de": "Wähle ein Widget-Design. Erstelle ein eigenes in den Chronograph-App-Einstellungen unter Widgets.",
+            "es": "Elige un diseño de widget. Crea uno propio en Ajustes de la aplicación Chronograph, en Widgets.",
+            "fr": "Choisissez un design de widget. Créez le vôtre dans les paramètres de l’application Chronograph, sous Widgets.",
+            "it": "Scegli un design per il widget. Creane uno nelle impostazioni dell’app Chronograph, sotto Widget.",
+            "no": "Velg et widgetdesign. Lag ditt eget under Widgeter i Chronographs appinnstillinger.",
+            "sv": "Välj en widgetdesign. Skapa en egen under Widgetar i Chronographs appinställningar.",
+            "pl": "Wybierz projekt widżetu. Utwórz własny w ustawieniach aplikacji Chronograph w sekcji Widżety.",
+            "ru": "Выберите дизайн виджета. Создайте свой в настройках приложения Chronograph в разделе виджетов.",
+            "ko": "위젯 디자인을 선택하세요. Chronograph 앱 설정의 위젯에서 직접 만들 수 있습니다.",
+            "ar": "اختر تصميمًا للأداة. أنشئ تصميمك في إعدادات تطبيق Chronograph ضمن الأدوات."
           }
         },
         {
@@ -10048,11 +10250,33 @@
           "type": "autocomplete",
           "title": {
             "en": "Color Scheme",
-            "nl": "Kleurenschema"
+            "nl": "Kleurenschema",
+            "da": "Farveskema",
+            "de": "Farbschema",
+            "es": "Esquema de colores",
+            "fr": "Palette de couleurs",
+            "it": "Schema colori",
+            "no": "Fargeskjema",
+            "sv": "Färgschema",
+            "pl": "Schemat kolorów",
+            "ru": "Цветовая схема",
+            "ko": "색상 구성",
+            "ar": "مخطط الألوان"
           },
           "hint": {
             "en": "Choose a widget color scheme. Create your own in Chronograph App Settings under Widgets.",
-            "nl": "Kies een kleurenschema voor widgets. Maak je eigen schema in de Chronograph-appinstellingen onder Widgets."
+            "nl": "Kies een kleurenschema voor widgets. Maak je eigen schema in de Chronograph-appinstellingen onder Widgets.",
+            "da": "Vælg et farveskema til widgetten. Opret dit eget under Widgets i Chronographs appindstillinger.",
+            "de": "Wähle ein Farbschema für das Widget. Erstelle ein eigenes in den Chronograph-App-Einstellungen unter Widgets.",
+            "es": "Elige un esquema de colores para el widget. Crea uno propio en Ajustes de la aplicación Chronograph, en Widgets.",
+            "fr": "Choisissez une palette de couleurs pour le widget. Créez la vôtre dans les paramètres de l’application Chronograph, sous Widgets.",
+            "it": "Scegli uno schema colori per il widget. Creane uno nelle impostazioni dell’app Chronograph, sotto Widget.",
+            "no": "Velg et fargeskjema for widgeten. Lag ditt eget under Widgeter i Chronographs appinnstillinger.",
+            "sv": "Välj ett färgschema för widgeten. Skapa ett eget under Widgetar i Chronographs appinställningar.",
+            "pl": "Wybierz schemat kolorów widżetu. Utwórz własny w ustawieniach aplikacji Chronograph w sekcji Widżety.",
+            "ru": "Выберите цветовую схему виджета. Создайте свою в настройках приложения Chronograph в разделе виджетов.",
+            "ko": "위젯 색상 구성을 선택하세요. Chronograph 앱 설정의 위젯에서 직접 만들 수 있습니다.",
+            "ar": "اختر مخطط ألوان للأداة. أنشئ مخططك في إعدادات تطبيق Chronograph ضمن الأدوات."
           }
         },
         {
@@ -10060,7 +10284,18 @@
           "type": "dropdown",
           "title": {
             "en": "Layout",
-            "nl": "Indeling"
+            "nl": "Indeling",
+            "da": "Layout",
+            "de": "Layout",
+            "es": "Diseño",
+            "fr": "Disposition",
+            "it": "Layout",
+            "no": "Oppsett",
+            "sv": "Layout",
+            "pl": "Układ",
+            "ru": "Макет",
+            "ko": "레이아웃",
+            "ar": "التخطيط"
           },
           "hint": {
             "en": "Choose how compact or spacious the widget looks",
@@ -10083,21 +10318,54 @@
               "id": "compact",
               "title": {
                 "en": "Compact",
-                "nl": "Compact"
+                "nl": "Compact",
+                "da": "Kompakt",
+                "de": "Kompakt",
+                "es": "Compacto",
+                "fr": "Compact",
+                "it": "Compatto",
+                "no": "Kompakt",
+                "sv": "Kompakt",
+                "pl": "Kompaktowy",
+                "ru": "Компактный",
+                "ko": "컴팩트",
+                "ar": "مضغوط"
               }
             },
             {
               "id": "normal",
               "title": {
                 "en": "Normal",
-                "nl": "Normaal"
+                "nl": "Normaal",
+                "da": "Normal",
+                "de": "Normal",
+                "es": "Normal",
+                "fr": "Normal",
+                "it": "Normale",
+                "no": "Normal",
+                "sv": "Normal",
+                "pl": "Normalny",
+                "ru": "Обычный",
+                "ko": "보통",
+                "ar": "عادي"
               }
             },
             {
               "id": "large",
               "title": {
                 "en": "Larger",
-                "nl": "Groter"
+                "nl": "Groter",
+                "da": "Større",
+                "de": "Größer",
+                "es": "Más grande",
+                "fr": "Plus grand",
+                "it": "Più grande",
+                "no": "Større",
+                "sv": "Större",
+                "pl": "Większy",
+                "ru": "Крупнее",
+                "ko": "더 크게",
+                "ar": "أكبر"
               }
             }
           ]
@@ -10107,7 +10375,18 @@
           "type": "autocomplete",
           "title": {
             "en": "Icon",
-            "nl": "Pictogram"
+            "nl": "Pictogram",
+            "da": "Ikon",
+            "de": "Symbol",
+            "es": "Icono",
+            "fr": "Icône",
+            "it": "Icona",
+            "no": "Ikon",
+            "sv": "Ikon",
+            "pl": "Ikona",
+            "ru": "Значок",
+            "ko": "아이콘",
+            "ar": "أيقونة"
           },
           "hint": {
             "en": "Choose a Font Awesome icon to show beside the timer name",
@@ -10130,7 +10409,18 @@
           "type": "checkbox",
           "title": {
             "en": "Show milliseconds",
-            "nl": "Toon milliseconden"
+            "nl": "Toon milliseconden",
+            "da": "Vis millisekunder",
+            "de": "Millisekunden anzeigen",
+            "es": "Mostrar milisegundos",
+            "fr": "Afficher les millisecondes",
+            "it": "Mostra millisecondi",
+            "no": "Vis millisekunder",
+            "sv": "Visa millisekunder",
+            "pl": "Pokaż milisekundy",
+            "ru": "Показывать миллисекунды",
+            "ko": "밀리초 표시",
+            "ar": "إظهار أجزاء الثانية"
           },
           "hint": {
             "en": "Include milliseconds in the displayed timer value",
@@ -10154,22 +10444,33 @@
           "type": "number",
           "title": {
             "en": "Default duration",
-            "nl": "Standaardduur"
+            "nl": "Standaardduur",
+            "da": "Standardvarighed",
+            "de": "Standarddauer",
+            "es": "Duración predeterminada",
+            "fr": "Durée par défaut",
+            "it": "Durata predefinita",
+            "no": "Standard varighet",
+            "sv": "Standardvaraktighet",
+            "pl": "Domyślny czas",
+            "ru": "Длительность по умолчанию",
+            "ko": "기본 시간",
+            "ar": "المدة الافتراضية"
           },
           "hint": {
             "en": "Set to 0 to use the last duration saved from a Flow or the API, if available. Otherwise, enter a duration of at least 1.",
             "nl": "Stel in op 0 om, indien beschikbaar, de laatst opgeslagen duur uit een Flow of de API te gebruiken. Voer anders een duur van minimaal 1 in.",
-            "da": "Indstil til 0 for at bruge den senest gemte varighed fra et Flow eller API?et, hvis den findes. Indtast ellers en varighed p? mindst 1.",
-            "de": "Auf 0 setzen, um die zuletzt aus einem Flow oder der API gespeicherte Dauer zu verwenden, falls verf?gbar. Andernfalls eine Dauer von mindestens 1 eingeben.",
-            "es": "Establece 0 para usar la ?ltima duraci?n guardada desde un Flow o la API, si est? disponible. De lo contrario, introduce una duraci?n de al menos 1.",
-            "fr": "D?finissez 0 pour utiliser la derni?re dur?e enregistr?e depuis un Flow ou l?API, si elle est disponible. Sinon, saisissez une dur?e d?au moins 1.",
-            "it": "Imposta 0 per usare l?ultima durata salvata da un Flow o dall?API, se disponibile. Altrimenti, inserisci una durata di almeno 1.",
-            "no": "Sett til 0 for ? bruke den sist lagrede varigheten fra en Flow eller API-et, hvis den finnes. Angi ellers en varighet p? minst 1.",
-            "sv": "Ange 0 f?r att anv?nda den senast sparade varaktigheten fr?n ett Flow eller API:et, om den finns. Ange annars en varaktighet p? minst 1.",
-            "pl": "Ustaw 0, aby u?y? ostatniego czasu zapisanego z Flow lub API, je?li jest dost?pny. W przeciwnym razie wpisz czas wynosz?cy co najmniej 1.",
-            "ru": "??????? 0, ????? ???????????? ????????? ????????????, ??????????? ?? Flow ??? API, ???? ??? ????????. ????? ??????? ???????????? ?? ????? 1.",
-            "ko": "0?? ???? Flow ?? API?? ????? ??? ??? ?? ?? ?? ?????. ??? ??? 1 ??? ??? ?????.",
-            "ar": "???? ?????? ??? 0 ???????? ??? ??? ?????? ?? Flow ?? ????? API ?? ?????. ???? ????? ??? ?? ??? ?? 1."
+            "da": "Indstil til 0 for at bruge den senest gemte varighed fra et Flow eller API'et, hvis den findes. Indtast ellers en varighed på mindst 1.",
+            "de": "Auf 0 setzen, um die zuletzt aus einem Flow oder der API gespeicherte Dauer zu verwenden, falls verfügbar. Andernfalls eine Dauer von mindestens 1 eingeben.",
+            "es": "Establece 0 para usar la última duración guardada desde un Flow o la API, si está disponible. De lo contrario, introduce una duración de al menos 1.",
+            "fr": "Définissez 0 pour utiliser la dernière durée enregistrée depuis un Flow ou l'API, si elle est disponible. Sinon, saisissez une durée d'au moins 1.",
+            "it": "Imposta 0 per usare l'ultima durata salvata da un Flow o dall'API, se disponibile. Altrimenti, inserisci una durata di almeno 1.",
+            "no": "Sett til 0 for å bruke den sist lagrede varigheten fra en Flow eller API-et, hvis den finnes. Angi ellers en varighet på minst 1.",
+            "sv": "Ange 0 för att använda den senast sparade varaktigheten från ett Flow eller API:et, om den finns. Ange annars en varaktighet på minst 1.",
+            "pl": "Ustaw 0, aby użyć ostatniego czasu zapisanego z Flow lub API, jeśli jest dostępny. W przeciwnym razie wpisz czas wynoszący co najmniej 1.",
+            "ru": "Укажите 0, чтобы использовать последнюю длительность, сохранённую из Flow или API, если она доступна. Иначе укажите длительность не менее 1.",
+            "ko": "0으로 설정하면 가능한 경우 Flow 또는 API에서 마지막으로 저장한 시간을 사용합니다. 그렇지 않으면 1 이상의 시간을 입력하세요.",
+            "ar": "اضبط القيمة على 0 لاستخدام آخر مدة محفوظة من Flow أو API إن توفرت. وإلا فأدخل مدة لا تقل عن 1."
           },
           "value": 0,
           "min": 0
@@ -10179,7 +10480,18 @@
           "type": "dropdown",
           "title": {
             "en": "Default duration unit",
-            "nl": "Standaardeenheid voor duur"
+            "nl": "Standaardeenheid voor duur",
+            "da": "Standardenhed for varighed",
+            "de": "Standardeinheit für die Dauer",
+            "es": "Unidad de duración predeterminada",
+            "fr": "Unité de durée par défaut",
+            "it": "Unità di durata predefinita",
+            "no": "Standardenhet for varighet",
+            "sv": "Standardenhet för varaktighet",
+            "pl": "Domyślna jednostka czasu",
+            "ru": "Единица длительности по умолчанию",
+            "ko": "기본 시간 단위",
+            "ar": "وحدة المدة الافتراضية"
           },
           "hint": {
             "en": "Unit for the default duration. Automatic uses the saved Flow or API unit when available, otherwise minutes.",
@@ -10220,35 +10532,90 @@
               "id": "milliseconds",
               "title": {
                 "en": "Milliseconds",
-                "nl": "Milliseconden"
+                "nl": "Milliseconden",
+                "da": "Millisekunder",
+                "de": "Millisekunden",
+                "es": "Milisegundos",
+                "fr": "Millisecondes",
+                "it": "Millisecondi",
+                "no": "Millisekunder",
+                "sv": "Millisekunder",
+                "pl": "Milisekundy",
+                "ru": "Миллисекунды",
+                "ko": "밀리초",
+                "ar": "مللي ثانية"
               }
             },
             {
               "id": "seconds",
               "title": {
                 "en": "Seconds",
-                "nl": "Seconden"
+                "nl": "Seconden",
+                "da": "Sekunder",
+                "de": "Sekunden",
+                "es": "Segundos",
+                "fr": "Secondes",
+                "it": "Secondi",
+                "no": "Sekunder",
+                "sv": "Sekunder",
+                "pl": "Sekundy",
+                "ru": "Секунды",
+                "ko": "초",
+                "ar": "ثوانٍ"
               }
             },
             {
               "id": "minutes",
               "title": {
                 "en": "Minutes",
-                "nl": "Minuten"
+                "nl": "Minuten",
+                "da": "Minutter",
+                "de": "Minuten",
+                "es": "Minutos",
+                "fr": "Minutes",
+                "it": "Minuti",
+                "no": "Minutter",
+                "sv": "Minuter",
+                "pl": "Minuty",
+                "ru": "Минуты",
+                "ko": "분",
+                "ar": "دقائق"
               }
             },
             {
               "id": "hours",
               "title": {
                 "en": "Hours",
-                "nl": "Uren"
+                "nl": "Uren",
+                "da": "Timer",
+                "de": "Stunden",
+                "es": "Horas",
+                "fr": "Heures",
+                "it": "Ore",
+                "no": "Timer",
+                "sv": "Timmar",
+                "pl": "Godziny",
+                "ru": "Часы",
+                "ko": "시간",
+                "ar": "ساعات"
               }
             },
             {
               "id": "days",
               "title": {
                 "en": "Days",
-                "nl": "Dagen"
+                "nl": "Dagen",
+                "da": "Dage",
+                "de": "Tage",
+                "es": "Días",
+                "fr": "Jours",
+                "it": "Giorni",
+                "no": "Dager",
+                "sv": "Dagar",
+                "pl": "Dni",
+                "ru": "Дни",
+                "ko": "일",
+                "ar": "أيام"
               }
             }
           ]
@@ -10281,7 +10648,18 @@
     "transition": {
       "name": {
         "en": "Transition",
-        "nl": "Transitie"
+        "nl": "Transitie",
+        "da": "Overgang",
+        "de": "Übergang",
+        "es": "Transición",
+        "fr": "Transition",
+        "it": "Transizione",
+        "no": "Overgang",
+        "sv": "Övergång",
+        "pl": "Przejście",
+        "ru": "Переход",
+        "ko": "전환",
+        "ar": "انتقال"
       },
       "settings": [
         {
@@ -10289,7 +10667,18 @@
           "type": "autocomplete",
           "title": {
             "en": "Transition",
-            "nl": "Transitie"
+            "nl": "Transitie",
+            "da": "Overgang",
+            "de": "Übergang",
+            "es": "Transición",
+            "fr": "Transition",
+            "it": "Transizione",
+            "no": "Overgang",
+            "sv": "Övergång",
+            "pl": "Przejście",
+            "ru": "Переход",
+            "ko": "전환",
+            "ar": "انتقال"
           },
           "hint": {
             "en": "Choose a configured transition",
@@ -10312,7 +10701,18 @@
           "type": "text",
           "title": {
             "en": "Alternative name",
-            "nl": "Alternatieve naam"
+            "nl": "Alternatieve naam",
+            "da": "Alternativt navn",
+            "de": "Alternativer Name",
+            "es": "Nombre alternativo",
+            "fr": "Nom alternatif",
+            "it": "Nome alternativo",
+            "no": "Alternativt navn",
+            "sv": "Alternativt namn",
+            "pl": "Nazwa alternatywna",
+            "ru": "Альтернативное имя",
+            "ko": "대체 이름",
+            "ar": "اسم بديل"
           },
           "hint": {
             "en": "Optionally show a shorter name in the widget",
@@ -10336,11 +10736,33 @@
           "type": "autocomplete",
           "title": {
             "en": "Design Style",
-            "nl": "Ontwerpstijl"
+            "nl": "Ontwerpstijl",
+            "da": "Designstil",
+            "de": "Designstil",
+            "es": "Estilo de diseño",
+            "fr": "Style de conception",
+            "it": "Stile di design",
+            "no": "Designstil",
+            "sv": "Designstil",
+            "pl": "Styl projektu",
+            "ru": "Стиль оформления",
+            "ko": "디자인 스타일",
+            "ar": "نمط التصميم"
           },
           "hint": {
             "en": "Choose a widget design. Create your own in Chronograph App Settings under Widgets.",
-            "nl": "Kies een widgetontwerp. Maak je eigen ontwerp in de Chronograph-appinstellingen onder Widgets."
+            "nl": "Kies een widgetontwerp. Maak je eigen ontwerp in de Chronograph-appinstellingen onder Widgets.",
+            "da": "Vælg et widgetdesign. Opret dit eget under Widgets i Chronographs appindstillinger.",
+            "de": "Wähle ein Widget-Design. Erstelle ein eigenes in den Chronograph-App-Einstellungen unter Widgets.",
+            "es": "Elige un diseño de widget. Crea uno propio en Ajustes de la aplicación Chronograph, en Widgets.",
+            "fr": "Choisissez un design de widget. Créez le vôtre dans les paramètres de l’application Chronograph, sous Widgets.",
+            "it": "Scegli un design per il widget. Creane uno nelle impostazioni dell’app Chronograph, sotto Widget.",
+            "no": "Velg et widgetdesign. Lag ditt eget under Widgeter i Chronographs appinnstillinger.",
+            "sv": "Välj en widgetdesign. Skapa en egen under Widgetar i Chronographs appinställningar.",
+            "pl": "Wybierz projekt widżetu. Utwórz własny w ustawieniach aplikacji Chronograph w sekcji Widżety.",
+            "ru": "Выберите дизайн виджета. Создайте свой в настройках приложения Chronograph в разделе виджетов.",
+            "ko": "위젯 디자인을 선택하세요. Chronograph 앱 설정의 위젯에서 직접 만들 수 있습니다.",
+            "ar": "اختر تصميمًا للأداة. أنشئ تصميمك في إعدادات تطبيق Chronograph ضمن الأدوات."
           }
         },
         {
@@ -10348,11 +10770,33 @@
           "type": "autocomplete",
           "title": {
             "en": "Color Scheme",
-            "nl": "Kleurenschema"
+            "nl": "Kleurenschema",
+            "da": "Farveskema",
+            "de": "Farbschema",
+            "es": "Esquema de colores",
+            "fr": "Palette de couleurs",
+            "it": "Schema colori",
+            "no": "Fargeskjema",
+            "sv": "Färgschema",
+            "pl": "Schemat kolorów",
+            "ru": "Цветовая схема",
+            "ko": "색상 구성",
+            "ar": "مخطط الألوان"
           },
           "hint": {
             "en": "Choose a widget color scheme. Create your own in Chronograph App Settings under Widgets.",
-            "nl": "Kies een kleurenschema voor widgets. Maak je eigen schema in de Chronograph-appinstellingen onder Widgets."
+            "nl": "Kies een kleurenschema voor widgets. Maak je eigen schema in de Chronograph-appinstellingen onder Widgets.",
+            "da": "Vælg et farveskema til widgetten. Opret dit eget under Widgets i Chronographs appindstillinger.",
+            "de": "Wähle ein Farbschema für das Widget. Erstelle ein eigenes in den Chronograph-App-Einstellungen unter Widgets.",
+            "es": "Elige un esquema de colores para el widget. Crea uno propio en Ajustes de la aplicación Chronograph, en Widgets.",
+            "fr": "Choisissez une palette de couleurs pour le widget. Créez la vôtre dans les paramètres de l’application Chronograph, sous Widgets.",
+            "it": "Scegli uno schema colori per il widget. Creane uno nelle impostazioni dell’app Chronograph, sotto Widget.",
+            "no": "Velg et fargeskjema for widgeten. Lag ditt eget under Widgeter i Chronographs appinnstillinger.",
+            "sv": "Välj ett färgschema för widgeten. Skapa ett eget under Widgetar i Chronographs appinställningar.",
+            "pl": "Wybierz schemat kolorów widżetu. Utwórz własny w ustawieniach aplikacji Chronograph w sekcji Widżety.",
+            "ru": "Выберите цветовую схему виджета. Создайте свою в настройках приложения Chronograph в разделе виджетов.",
+            "ko": "위젯 색상 구성을 선택하세요. Chronograph 앱 설정의 위젯에서 직접 만들 수 있습니다.",
+            "ar": "اختر مخطط ألوان للأداة. أنشئ مخططك في إعدادات تطبيق Chronograph ضمن الأدوات."
           }
         },
         {
@@ -10360,7 +10804,18 @@
           "type": "dropdown",
           "title": {
             "en": "Layout",
-            "nl": "Indeling"
+            "nl": "Indeling",
+            "da": "Layout",
+            "de": "Layout",
+            "es": "Diseño",
+            "fr": "Disposition",
+            "it": "Layout",
+            "no": "Oppsett",
+            "sv": "Layout",
+            "pl": "Układ",
+            "ru": "Макет",
+            "ko": "레이아웃",
+            "ar": "التخطيط"
           },
           "hint": {
             "en": "Choose how compact or spacious the widget looks",
@@ -10383,21 +10838,54 @@
               "id": "compact",
               "title": {
                 "en": "Compact",
-                "nl": "Compact"
+                "nl": "Compact",
+                "da": "Kompakt",
+                "de": "Kompakt",
+                "es": "Compacto",
+                "fr": "Compact",
+                "it": "Compatto",
+                "no": "Kompakt",
+                "sv": "Kompakt",
+                "pl": "Kompaktowy",
+                "ru": "Компактный",
+                "ko": "컴팩트",
+                "ar": "مضغوط"
               }
             },
             {
               "id": "normal",
               "title": {
                 "en": "Normal",
-                "nl": "Normaal"
+                "nl": "Normaal",
+                "da": "Normal",
+                "de": "Normal",
+                "es": "Normal",
+                "fr": "Normal",
+                "it": "Normale",
+                "no": "Normal",
+                "sv": "Normal",
+                "pl": "Normalny",
+                "ru": "Обычный",
+                "ko": "보통",
+                "ar": "عادي"
               }
             },
             {
               "id": "large",
               "title": {
                 "en": "Larger",
-                "nl": "Groter"
+                "nl": "Groter",
+                "da": "Større",
+                "de": "Größer",
+                "es": "Más grande",
+                "fr": "Plus grand",
+                "it": "Più grande",
+                "no": "Større",
+                "sv": "Större",
+                "pl": "Większy",
+                "ru": "Крупнее",
+                "ko": "더 크게",
+                "ar": "أكبر"
               }
             }
           ]
@@ -10407,7 +10895,18 @@
           "type": "autocomplete",
           "title": {
             "en": "Icon",
-            "nl": "Pictogram"
+            "nl": "Pictogram",
+            "da": "Ikon",
+            "de": "Symbol",
+            "es": "Icono",
+            "fr": "Icône",
+            "it": "Icona",
+            "no": "Ikon",
+            "sv": "Ikon",
+            "pl": "Ikona",
+            "ru": "Значок",
+            "ko": "아이콘",
+            "ar": "أيقونة"
           },
           "hint": {
             "en": "Choose a Font Awesome icon to show beside the transition name",
@@ -10430,7 +10929,18 @@
           "type": "checkbox",
           "title": {
             "en": "Show milliseconds",
-            "nl": "Toon milliseconden"
+            "nl": "Toon milliseconden",
+            "da": "Vis millisekunder",
+            "de": "Millisekunden anzeigen",
+            "es": "Mostrar milisegundos",
+            "fr": "Afficher les millisecondes",
+            "it": "Mostra millisecondi",
+            "no": "Vis millisekunder",
+            "sv": "Visa millisekunder",
+            "pl": "Pokaż milisekundy",
+            "ru": "Показывать миллисекунды",
+            "ko": "밀리초 표시",
+            "ar": "إظهار أجزاء الثانية"
           },
           "hint": {
             "en": "Include milliseconds in the displayed transition value",
@@ -10454,22 +10964,33 @@
           "type": "number",
           "title": {
             "en": "Default duration",
-            "nl": "Standaardduur"
+            "nl": "Standaardduur",
+            "da": "Standardvarighed",
+            "de": "Standarddauer",
+            "es": "Duración predeterminada",
+            "fr": "Durée par défaut",
+            "it": "Durata predefinita",
+            "no": "Standard varighet",
+            "sv": "Standardvaraktighet",
+            "pl": "Domyślny czas",
+            "ru": "Длительность по умолчанию",
+            "ko": "기본 시간",
+            "ar": "المدة الافتراضية"
           },
           "hint": {
             "en": "Set to 0 to use the last duration saved from a Flow or the API, if available. Otherwise, enter a duration of at least 1.",
             "nl": "Stel in op 0 om, indien beschikbaar, de laatst opgeslagen duur uit een Flow of de API te gebruiken. Voer anders een duur van minimaal 1 in.",
-            "da": "Indstil til 0 for at bruge den senest gemte varighed fra et Flow eller API?et, hvis den findes. Indtast ellers en varighed p? mindst 1.",
-            "de": "Auf 0 setzen, um die zuletzt aus einem Flow oder der API gespeicherte Dauer zu verwenden, falls verf?gbar. Andernfalls eine Dauer von mindestens 1 eingeben.",
-            "es": "Establece 0 para usar la ?ltima duraci?n guardada desde un Flow o la API, si est? disponible. De lo contrario, introduce una duraci?n de al menos 1.",
-            "fr": "D?finissez 0 pour utiliser la derni?re dur?e enregistr?e depuis un Flow ou l?API, si elle est disponible. Sinon, saisissez une dur?e d?au moins 1.",
-            "it": "Imposta 0 per usare l?ultima durata salvata da un Flow o dall?API, se disponibile. Altrimenti, inserisci una durata di almeno 1.",
-            "no": "Sett til 0 for ? bruke den sist lagrede varigheten fra en Flow eller API-et, hvis den finnes. Angi ellers en varighet p? minst 1.",
-            "sv": "Ange 0 f?r att anv?nda den senast sparade varaktigheten fr?n ett Flow eller API:et, om den finns. Ange annars en varaktighet p? minst 1.",
-            "pl": "Ustaw 0, aby u?y? ostatniego czasu zapisanego z Flow lub API, je?li jest dost?pny. W przeciwnym razie wpisz czas wynosz?cy co najmniej 1.",
-            "ru": "??????? 0, ????? ???????????? ????????? ????????????, ??????????? ?? Flow ??? API, ???? ??? ????????. ????? ??????? ???????????? ?? ????? 1.",
-            "ko": "0?? ???? Flow ?? API?? ????? ??? ??? ?? ?? ?? ?????. ??? ??? 1 ??? ??? ?????.",
-            "ar": "???? ?????? ??? 0 ???????? ??? ??? ?????? ?? Flow ?? ????? API ?? ?????. ???? ????? ??? ?? ??? ?? 1."
+            "da": "Indstil til 0 for at bruge den senest gemte varighed fra et Flow eller API'et, hvis den findes. Indtast ellers en varighed på mindst 1.",
+            "de": "Auf 0 setzen, um die zuletzt aus einem Flow oder der API gespeicherte Dauer zu verwenden, falls verfügbar. Andernfalls eine Dauer von mindestens 1 eingeben.",
+            "es": "Establece 0 para usar la última duración guardada desde un Flow o la API, si está disponible. De lo contrario, introduce una duración de al menos 1.",
+            "fr": "Définissez 0 pour utiliser la dernière durée enregistrée depuis un Flow ou l'API, si elle est disponible. Sinon, saisissez une durée d'au moins 1.",
+            "it": "Imposta 0 per usare l'ultima durata salvata da un Flow o dall'API, se disponibile. Altrimenti, inserisci una durata di almeno 1.",
+            "no": "Sett til 0 for å bruke den sist lagrede varigheten fra en Flow eller API-et, hvis den finnes. Angi ellers en varighet på minst 1.",
+            "sv": "Ange 0 för att använda den senast sparade varaktigheten från ett Flow eller API:et, om den finns. Ange annars en varaktighet på minst 1.",
+            "pl": "Ustaw 0, aby użyć ostatniego czasu zapisanego z Flow lub API, jeśli jest dostępny. W przeciwnym razie wpisz czas wynoszący co najmniej 1.",
+            "ru": "Укажите 0, чтобы использовать последнюю длительность, сохранённую из Flow или API, если она доступна. Иначе укажите длительность не менее 1.",
+            "ko": "0으로 설정하면 가능한 경우 Flow 또는 API에서 마지막으로 저장한 시간을 사용합니다. 그렇지 않으면 1 이상의 시간을 입력하세요.",
+            "ar": "اضبط القيمة على 0 لاستخدام آخر مدة محفوظة من Flow أو API إن توفرت. وإلا فأدخل مدة لا تقل عن 1."
           },
           "value": 0,
           "min": 0
@@ -10479,7 +11000,18 @@
           "type": "dropdown",
           "title": {
             "en": "Default duration unit",
-            "nl": "Standaardeenheid voor duur"
+            "nl": "Standaardeenheid voor duur",
+            "da": "Standardenhed for varighed",
+            "de": "Standardeinheit für die Dauer",
+            "es": "Unidad de duración predeterminada",
+            "fr": "Unité de durée par défaut",
+            "it": "Unità di durata predefinita",
+            "no": "Standardenhet for varighet",
+            "sv": "Standardenhet för varaktighet",
+            "pl": "Domyślna jednostka czasu",
+            "ru": "Единица длительности по умолчанию",
+            "ko": "기본 시간 단위",
+            "ar": "وحدة المدة الافتراضية"
           },
           "hint": {
             "en": "Unit for the default duration. Automatic uses the saved Flow or API unit when available, otherwise minutes.",
@@ -10520,35 +11052,90 @@
               "id": "milliseconds",
               "title": {
                 "en": "Milliseconds",
-                "nl": "Milliseconden"
+                "nl": "Milliseconden",
+                "da": "Millisekunder",
+                "de": "Millisekunden",
+                "es": "Milisegundos",
+                "fr": "Millisecondes",
+                "it": "Millisecondi",
+                "no": "Millisekunder",
+                "sv": "Millisekunder",
+                "pl": "Milisekundy",
+                "ru": "Миллисекунды",
+                "ko": "밀리초",
+                "ar": "مللي ثانية"
               }
             },
             {
               "id": "seconds",
               "title": {
                 "en": "Seconds",
-                "nl": "Seconden"
+                "nl": "Seconden",
+                "da": "Sekunder",
+                "de": "Sekunden",
+                "es": "Segundos",
+                "fr": "Secondes",
+                "it": "Secondi",
+                "no": "Sekunder",
+                "sv": "Sekunder",
+                "pl": "Sekundy",
+                "ru": "Секунды",
+                "ko": "초",
+                "ar": "ثوانٍ"
               }
             },
             {
               "id": "minutes",
               "title": {
                 "en": "Minutes",
-                "nl": "Minuten"
+                "nl": "Minuten",
+                "da": "Minutter",
+                "de": "Minuten",
+                "es": "Minutos",
+                "fr": "Minutes",
+                "it": "Minuti",
+                "no": "Minutter",
+                "sv": "Minuter",
+                "pl": "Minuty",
+                "ru": "Минуты",
+                "ko": "분",
+                "ar": "دقائق"
               }
             },
             {
               "id": "hours",
               "title": {
                 "en": "Hours",
-                "nl": "Uren"
+                "nl": "Uren",
+                "da": "Timer",
+                "de": "Stunden",
+                "es": "Horas",
+                "fr": "Heures",
+                "it": "Ore",
+                "no": "Timer",
+                "sv": "Timmar",
+                "pl": "Godziny",
+                "ru": "Часы",
+                "ko": "시간",
+                "ar": "ساعات"
               }
             },
             {
               "id": "days",
               "title": {
                 "en": "Days",
-                "nl": "Dagen"
+                "nl": "Dagen",
+                "da": "Dage",
+                "de": "Tage",
+                "es": "Días",
+                "fr": "Jours",
+                "it": "Giorni",
+                "no": "Dager",
+                "sv": "Dagar",
+                "pl": "Dni",
+                "ru": "Дни",
+                "ko": "일",
+                "ar": "أيام"
               }
             }
           ]
@@ -10558,7 +11145,18 @@
           "type": "number",
           "title": {
             "en": "Default transition start value",
-            "nl": "Standaard beginwaarde transitie"
+            "nl": "Standaard beginwaarde transitie",
+            "da": "Standardstartværdi for overgang",
+            "de": "Standardstartwert des Übergangs",
+            "es": "Valor inicial predeterminado de la transición",
+            "fr": "Valeur initiale par défaut de la transition",
+            "it": "Valore iniziale predefinito della transizione",
+            "no": "Standard startverdi for overgang",
+            "sv": "Förvalt startvärde för övergång",
+            "pl": "Domyślna wartość początkowa przejścia",
+            "ru": "Начальное значение перехода по умолчанию",
+            "ko": "기본 전환 시작 값",
+            "ar": "قيمة بداية الانتقال الافتراضية"
           },
           "hint": {
             "en": "Set the starting value, or use 0 or leave empty to use the last saved Flow or API value.",
@@ -10582,7 +11180,18 @@
           "type": "number",
           "title": {
             "en": "Default transition end value",
-            "nl": "Standaard eindwaarde transitie"
+            "nl": "Standaard eindwaarde transitie",
+            "da": "Standardslutværdi for overgang",
+            "de": "Standardendwert des Übergangs",
+            "es": "Valor final predeterminado de la transición",
+            "fr": "Valeur finale par défaut de la transition",
+            "it": "Valore finale predefinito della transizione",
+            "no": "Standard sluttverdi for overgang",
+            "sv": "Förvalt slutvärde för övergång",
+            "pl": "Domyślna wartość końcowa przejścia",
+            "ru": "Конечное значение перехода по умолчанию",
+            "ko": "기본 전환 종료 값",
+            "ar": "قيمة نهاية الانتقال الافتراضية"
           },
           "hint": {
             "en": "Set the ending value, or use 0 or leave empty to use the last saved Flow or API value.",
@@ -10606,7 +11215,18 @@
           "type": "number",
           "title": {
             "en": "Default transition steps",
-            "nl": "Standaardstappen transitie"
+            "nl": "Standaardstappen transitie",
+            "da": "Standardtrin for overgang",
+            "de": "Standardschritte des Übergangs",
+            "es": "Pasos predeterminados de la transición",
+            "fr": "Étapes par défaut de la transition",
+            "it": "Passaggi predefiniti della transizione",
+            "no": "Standard antall overgangstrinn",
+            "sv": "Förvalt antal övergångssteg",
+            "pl": "Domyślna liczba kroków przejścia",
+            "ru": "Шаги перехода по умолчанию",
+            "ko": "기본 전환 단계 수",
+            "ar": "خطوات الانتقال الافتراضية"
           },
           "hint": {
             "en": "Set the number of steps (at least 2), or leave empty to use the last saved Flow or API value.",

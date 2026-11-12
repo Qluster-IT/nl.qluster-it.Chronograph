@@ -235,5 +235,5 @@
   "name_required": "Vous devez (taper et) choisir un nom ou entrer un nom.",
   "existing": "Existant",
   "new": "Nouveau",
-  "name_based_api_notice": "L?API Chronograph a chang? : utilisez des noms plut?t que des identifiants. Mettez ? jour vos scripts et int?grations ; consultez le wiki API."
+  "name_based_api_notice": "L'API Chronograph a changé : utilisez des noms plutôt que des identifiants. Mettez à jour vos scripts et intégrations ; consultez le wiki API."
 }

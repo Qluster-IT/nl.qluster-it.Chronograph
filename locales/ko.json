@@ -190,7 +190,7 @@
     "roundOfDurationsFlowcards": "'[x]의 지속 시간 가져오기' 플로우카드의 숫자 반올림.",
     "save": "저장",
     "saved": "저장되었습니다.",
-    "widget_icon_none": "??",
+    "widget_icon_none": "없음",
     "style_allow_shrink": "좁은 위젯에서 요소 축소 허용",
     "style_element_size": "요소 크기",
     "style_size_base": "기본 크기 (px)",
@@ -235,5 +235,5 @@
   "name_required": "이름을 입력하거나 선택해야 합니다.",
   "existing": "기존의",
   "new": "새로운",
-  "name_based_api_notice": "Chronograph API? ???????. ID ?? ??? ?????. ????? ??? ?????? API ??? ?????."
+  "name_based_api_notice": "Chronograph API가 변경되었습니다. ID 대신 이름을 사용하세요. 스크립트와 연동을 업데이트하고 API 위키를 참조하세요."
 }

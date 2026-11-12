@@ -73,7 +73,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		$scope.decimalsAvailable = false;
 
 		function showError(error) {
-			Homey.alert(error && error.message ? error.message : String(error));
+			Homey.alert(window.chronographErrorMessage(Homey, error));
 		}
 
 		function setConfiguredChronographs(value) {

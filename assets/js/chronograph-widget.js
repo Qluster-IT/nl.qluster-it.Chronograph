@@ -361,10 +361,10 @@ function onHomeyReady(Homey) {
 					var design = builtInDesign || widgetStyleRuntime.findStyle(collection, designStyleId);
 					var scheme = builtInScheme || widgetStyleRuntime.findScheme(collection, colorSchemeId);
 					if (designStyleId !== 'builtin:current' && !design) {
-						throw new Error('The selected widget design is no longer available.');
+						throw new Error(Homey.__('settings.widget_design_unavailable'));
 					}
 					if (colorSchemeId !== 'builtin:current' && !scheme) {
-						throw new Error('The selected widget color scheme is no longer available.');
+						throw new Error(Homey.__('settings.widget_scheme_unavailable'));
 					}
 					$scope.$applyAsync(function () {
 						activeDesign = design || null;
@@ -372,7 +372,7 @@ function onHomeyReady(Homey) {
 						updateDesignRows();
 					});
 				}).catch(function (error) {
-					styleError = error && error.message ? error.message : String(error);
+					styleError = window.chronographErrorMessage(Homey, error);
 					$scope.$applyAsync(function () {
 						activeDesign = null;
 						applyColorScheme(null);
@@ -412,7 +412,7 @@ function onHomeyReady(Homey) {
 						if (destroyed) return;
 						$scope.$applyAsync(function () {
 							$scope.loading = false;
-							$scope.error = error.message || String(error);
+							$scope.error = window.chronographErrorMessage(Homey, error);
 						});
 					});
 			}
@@ -500,7 +500,7 @@ function onHomeyReady(Homey) {
 					.catch(function (error) {
 						$scope.$applyAsync(function () {
 							$scope.busy = false;
-							$scope.error = error.message || String(error);
+							$scope.error = window.chronographErrorMessage(Homey, error);
 						});
 					});
 			};
@@ -546,7 +546,7 @@ function onHomeyReady(Homey) {
 				}).catch(function (error) {
 					$scope.$applyAsync(function () {
 						$scope.busy = false;
-						$scope.error = error.message || String(error);
+						$scope.error = window.chronographErrorMessage(Homey, error);
 					});
 				});
 			};
@@ -568,7 +568,7 @@ function onHomeyReady(Homey) {
 				}).catch(function (error) {
 					$scope.$applyAsync(function () {
 						$scope.busy = false;
-						$scope.error = error.message || String(error);
+						$scope.error = window.chronographErrorMessage(Homey, error);
 					});
 				});
 			};

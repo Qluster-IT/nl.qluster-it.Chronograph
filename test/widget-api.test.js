@@ -66,6 +66,30 @@ describe('Chronograph widget API', () => {
 		Chronograph.homey = originalHomey;
 	});
 
+	it('provides all Homey languages for widget names and settings', () => {
+		const languages = ['en', 'nl', 'da', 'de', 'es', 'fr', 'it', 'no', 'sv', 'pl', 'ru', 'ko', 'ar'];
+		const generated = require('../app.json').widgets;
+		for (const type of ['timer', 'stopwatch', 'transition']) {
+			const compose = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'widgets', type, 'widget.compose.json'), 'utf8'));
+			function check(translations, generatedTranslations, label) {
+				assert.deepStrictEqual(generatedTranslations, translations, `${type}: ${label}`);
+				for (const language of languages) {
+					assert.ok(typeof translations[language] === 'string' && translations[language].trim(), `${type}: ${label}: ${language}`);
+				}
+			}
+			check(compose.name, generated[type].name, 'name');
+			for (const setting of compose.settings) {
+				const actual = generated[type].settings.find(item => item.id === setting.id);
+				check(setting.title, actual.title, `${setting.id} title`);
+				if (setting.hint) check(setting.hint, actual.hint, `${setting.id} hint`);
+				for (const option of setting.values || []) {
+					const generatedOption = actual.values.find(item => item.id === option.id);
+					check(option.title, generatedOption.title, `${setting.id} ${option.id}`);
+				}
+			}
+		}
+	});
+
 	it('exposes only the saved widget style collection to widgets', async () => {
 		const collection = { version: 2, styles: [{ id: 'design', name: 'Design' }], colorSchemes: [] };
 		savedStartArgs.widgetStyles = collection;
@@ -258,6 +282,11 @@ describe('Chronograph widget API', () => {
 			assert.strictEqual(duration.value, 0);
 			assert.strictEqual(duration.min, 0);
 			assert.strictEqual(duration.pattern, undefined);
+			const generated = require('../app.json').widgets[type].settings.find(setting => setting.id === 'defaultDuration');
+			for (const [language, hint] of Object.entries(duration.hint)) {
+				assert.ok(!/[?\uFFFD]/.test(hint), `${type}: ${language}`);
+				assert.strictEqual(generated.hint[language], hint, `${type}: ${language}`);
+			}
 			const unit = compose.settings.find(setting => setting.id === 'defaultDurationUnit');
 			assert.strictEqual(unit.value, 'auto');
 			assert.ok(unit.values.some(value => value.id === 'auto'));

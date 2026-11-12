@@ -7,6 +7,7 @@ const vm = require('vm');
 
 const root = path.join(__dirname, '..');
 const runtimeScript = fs.readFileSync(path.join(root, 'assets', 'js', 'chronograph-widget-style.js'), 'utf8');
+const errorScript = fs.readFileSync(path.join(root, 'assets', 'js', 'chronograph-errors.js'), 'utf8');
 const editorScript = fs.readFileSync(path.join(root, 'settings', 'assets', 'widget-style-editor.js'), 'utf8');
 const settingsScript = fs.readFileSync(path.join(root, 'settings', 'assets', 'settings.js'), 'utf8');
 const html = fs.readFileSync(path.join(root, 'settings', 'index.html'), 'utf8');
@@ -28,6 +29,7 @@ function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns) {
 	};
 	const context = { angular, window: { chronographSettingsPreview: preview } };
 	vm.runInNewContext(runtimeScript, context);
+	vm.runInNewContext(errorScript, context);
 	vm.runInNewContext(editorScript, context);
 	vm.runInNewContext(settingsScript, context);
 	const scope = {
@@ -63,6 +65,21 @@ function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns) {
 }
 
 describe('Widget style designer preview', () => {
+	it('localizes chronograph operation errors in settings and preserves unknown errors', () => {
+		const { scope, homey } = loadSettings();
+		const chronograph = { name: 'Test', data: { type: 'Timer' }, running: true };
+		let alert;
+		homey.alert = message => { alert = message; };
+		for (const [message, expected] of [
+			['Chronograph is not active', 'settings.error_not_active'],
+			['Unexpected external failure', 'Unexpected external failure']
+		]) {
+			homey.api = (method, url, data, callback) => callback(new Error(message));
+			scope.toggleChronograph(chronograph);
+			assert.strictEqual(alert, expected);
+		}
+	});
+
 	it('reserves span units in covered rows and restores them when the span ends', () => {
 		const { scope, editor, writes } = loadSettings();
 		scope.createStyle(true);

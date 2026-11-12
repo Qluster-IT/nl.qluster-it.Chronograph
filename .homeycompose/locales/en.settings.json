@@ -220,5 +220,13 @@
 	"style_size_override": "Override for this size",
 	"style_size_current": "Size override (px)",
 	"style_size_hint": "Text and icon sizes use font size; buttons and fields use height; the status bar uses thickness. Enter a value from 4 to 100 px.",
-	"style_size_invalid": "Enter a whole number from 4 to 100."
+	"style_size_invalid": "Enter a whole number from 4 to 100.",
+	"settings_navigation": "Chronograph settings",
+	"widget_design_unavailable": "The selected widget design is no longer available.",
+	"widget_scheme_unavailable": "The selected widget color scheme is no longer available.",
+	"error_not_configured": "Chronograph not found in app configuration.",
+	"error_not_active": "Chronograph is not active.",
+	"error_already_active": "Chronograph is already active.",
+	"error_name_conflict": "Chronograph name conflicts with an active instance.",
+	"error_duration_required": "A duration is required."
 }

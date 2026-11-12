@@ -8,5 +8,5 @@
 	"name_required": "Musisz wpisać i wybrać nazwę lub wprowadzić nazwę.",
 	"existing": "Istniejący",
 	"new": "Nowy",
-	"name_based_api_notice": "API Chronograph zmieni?o si?: u?ywaj nazw zamiast identyfikator?w. Zaktualizuj skrypty i integracje; zobacz wiki API."
+	"name_based_api_notice": "API Chronograph zmieniło się: używaj nazw zamiast identyfikatorów. Zaktualizuj skrypty i integracje; zobacz wiki API."
 }

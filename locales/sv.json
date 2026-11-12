@@ -235,5 +235,5 @@
   "name_required": "Du behöver (skriva och) välja ett namn eller ange ett namn.",
   "existing": "Befintlig",
   "new": "Ny",
-  "name_based_api_notice": "Chronograph-API:et har ?ndrats: anv?nd namn i st?llet f?r ID:n. Uppdatera skript och integrationer; se API-wikin."
+  "name_based_api_notice": "Chronograph-API:et har ändrats: använd namn i stället för ID:n. Uppdatera skript och integrationer; se API-wikin."
 }
