@@ -240,7 +240,9 @@
     "multiple_row_separator": "Separación de filas",
     "multiple_separator_cards": "Tarjetas como widgets",
     "multiple_separator_line": "Línea",
-    "multiple_separator_color": "Color de línea"
+    "multiple_separator_color": "Color de línea",
+    "style_design_small": "Pequeño",
+    "style_design_tiny": "Muy pequeño"
   },
   "timer_not_running": "El temporizador __name__ no está en marcha.",
   "stopwatch_not_running": "El cronómetro __name__ no está en marcha.",

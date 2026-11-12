@@ -240,7 +240,9 @@
     "multiple_row_separator": "Radskille",
     "multiple_separator_cards": "Widgetlignende kort",
     "multiple_separator_line": "Linje",
-    "multiple_separator_color": "Linjefarge"
+    "multiple_separator_color": "Linjefarge",
+    "style_design_small": "Liten",
+    "style_design_tiny": "Svært liten"
   },
   "timer_not_running": "Timeren __name__ kjører ikke.",
   "stopwatch_not_running": "Stoppeklokken __name__ kjører ikke.",

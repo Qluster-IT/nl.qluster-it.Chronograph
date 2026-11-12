@@ -67,6 +67,8 @@
 	"style_design_dashboard": "Dashboard",
 	"style_design_focus": "Focus",
 	"style_design_vertical": "Verticaal",
+	"style_design_small": "Klein",
+	"style_design_tiny": "Zeer klein",
 	"style_design_builtin_hint": "Ingebouwde ontwerpen kunnen niet worden aangepast. Maak een kopie om dit ontwerp aan te passen.",
 	"style_builtin_hint": "Tijdens ontwikkeling kun je deze standaardstijl tijdelijk aanpassen. Wijzigingen worden niet opgeslagen en verdwijnen bij herladen. Een kopie kan wel worden opgeslagen.",
 	"style_starting": "Startformulier geopend",

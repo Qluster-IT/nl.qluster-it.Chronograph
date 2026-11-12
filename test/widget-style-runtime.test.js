@@ -4,6 +4,51 @@ const assert = require('assert');
 const widgetStyle = require('../assets/js/chronograph-widget-style.js');
 
 describe('Widget style runtime', () => {
+	it('shows only one start control for inactive stopwatches in every built-in layout', () => {
+		for (const preset of ['builtin:current', ...widgetStyle.builtInDesignDefinitions.map(item => item.id)]) {
+			for (const size of ['compact', 'normal', 'large']) {
+				const elements = widgetStyle.buildRows(widgetStyle.builtInDesign(preset), size, 'inactive', 'stopwatch', false)
+					.flatMap(row => row.groups.flatMap(group => group.elements));
+				assert.deepStrictEqual(elements.filter(element => element === 'play' || element === 'start'),
+					[size === 'compact' ? 'play' : 'start'], `${preset} ${size}`);
+			}
+		}
+	});
+
+	it('stacks narrow layouts and their start fields while retaining state controls', () => {
+		for (const [id, durationRow] of [['builtin:small', 2], ['builtin:tiny', 3]]) {
+			const design = widgetStyle.builtInDesign(id);
+			for (const size of ['compact', 'normal', 'large']) {
+				assert.strictEqual(widgetStyle.inputFieldRows(design, size, 'timer'), 2);
+				assert.strictEqual(widgetStyle.inputFieldRows(design, size, 'transition'), 5);
+				for (const type of ['timer', 'transition', 'stopwatch']) {
+					for (const state of ['running', 'paused']) {
+						const rows = widgetStyle.buildRows(design, size, state, type, false);
+						const elements = row => rows.find(item => item.id === row).groups.flatMap(group => group.elements);
+						assert.ok(elements(1).includes('name'));
+						assert.ok(elements(2).includes('status'));
+						assert.ok(elements(durationRow).includes('duration'));
+						assert.deepStrictEqual(elements(4), [state === 'running' ? 'pause' : 'play', 'stop']);
+						if (type !== 'stopwatch') {
+							assert.deepStrictEqual(rows[rows.length - 1].groups[0].elements, ['progress']);
+						} else {
+							assert.strictEqual(rows[rows.length - 1].id, 4);
+						}
+					}
+					if (type !== 'stopwatch') {
+						const rows = widgetStyle.buildRows(design, size, 'starting', type, true);
+						assert.deepStrictEqual(rows.find(row => row.id === 3).groups[0].elements, ['fields']);
+						const actions = rows.find(row => row.id === 4).groups[0];
+						assert.deepStrictEqual(actions.elements,
+							size === 'compact' ? ['start', 'cancel'] : ['start']);
+						assert.strictEqual(actions.wrap, size === 'compact');
+						assert.strictEqual(actions.narrowStart, true);
+					}
+				}
+			}
+		}
+	});
+
 	it('reserves the compact default start column for both buttons', () => {
 		for (const type of ['timer', 'transition']) {
 			const rows = widgetStyle.buildRows(widgetStyle.currentDesign(), 'compact', 'starting', type, true);

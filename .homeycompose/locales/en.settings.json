@@ -67,6 +67,8 @@
 	"style_design_dashboard": "Dashboard",
 	"style_design_focus": "Focus",
 	"style_design_vertical": "Vertical",
+	"style_design_small": "Small",
+	"style_design_tiny": "Tiny",
 	"style_design_builtin_hint": "Built-in designs cannot be edited. Copy this design to customize it.",
 	"style_builtin_hint": "During development, edits to this default style are temporary and are not saved. They are lost when settings reload. A copy can be saved.",
 	"style_starting": "Start form open",

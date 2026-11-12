@@ -67,6 +67,8 @@
 	"style_design_dashboard": "Tableau de bord",
 	"style_design_focus": "Priorité",
 	"style_design_vertical": "Vertical",
+	"style_design_small": "Petit",
+	"style_design_tiny": "Très petit",
 	"style_design_builtin_hint": "Les designs intégrés ne peuvent pas être modifiés. Copiez ce design pour le personnaliser.",
 	"style_builtin_hint": "Pendant le développement, les modifications de ce style par défaut sont temporaires et ne sont pas enregistrées. Elles sont perdues au rechargement des paramètres. Une copie peut être enregistrée.",
 	"style_starting": "Formulaire de démarrage ouvert",

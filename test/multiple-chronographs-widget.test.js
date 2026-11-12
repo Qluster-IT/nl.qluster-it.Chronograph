@@ -75,6 +75,68 @@ async function loadWidget(settings, states) {
 }
 
 describe('Multiple Chronographs widget', () => {
+	it('chooses defaults from each effective span without overriding explicit designs', async () => {
+		const states = { 'timer:A': { name: 'A', active: false } };
+		for (const [columns, span, expected] of [
+			['1', '1', null], ['1', '2', null], ['1', '3', null],
+			['2', '1', 'builtin:small'], ['2', '2', null], ['2', '3', null],
+			['3', '1', 'builtin:tiny'], ['3', '2', 'builtin:small'], ['3', '3', null]
+		]) {
+			for (const selection of [undefined, null, '', {}, { id: '' }]) {
+				const widget = await loadWidget({ columns, chronograph1: { type: 'timer', name: 'A' },
+					chronograph1ColumnSpan: span, chronograph1DesignStyle: selection }, states);
+				const actual = widget.parent.entries[0].settings.designStyle;
+				assert.strictEqual(actual, expected === null ? selection : expected);
+				assert.strictEqual(widget.parent.entries[0].span, Math.min(Number(columns), Number(span)));
+			}
+			for (const selection of ['builtin:current', 'builtin:tiny', { id: 'builtin:current' }, { data: { id: 'custom' } }]) {
+				const widget = await loadWidget({ columns, chronograph1: { type: 'timer', name: 'A' },
+					chronograph1ColumnSpan: span, chronograph1DesignStyle: selection }, states);
+				assert.strictEqual(widget.parent.entries[0].settings.designStyle, selection);
+			}
+		}
+	});
+
+	it('uses Tiny, Small and Default independently in a three-column widget', async () => {
+		const widget = await loadWidget({
+			columns: '3',
+			chronograph1: { type: 'timer', name: 'A' }, chronograph1ColumnSpan: '1',
+			chronograph2: { type: 'timer', name: 'B' }, chronograph2ColumnSpan: '2',
+			chronograph3: { type: 'timer', name: 'C' }, chronograph3ColumnSpan: '3'
+		}, {
+			'timer:A': { name: 'A', type: 'Timer', active: true, running: true },
+			'timer:B': { name: 'B', type: 'Timer', active: true, running: true },
+			'timer:C': { name: 'C', type: 'Timer', active: true, running: true }
+		});
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		for (const [index, id] of ['builtin:tiny', 'builtin:small', 'builtin:current'].entries()) {
+			const rows = runtime.buildRows(runtime.builtInDesign(id), 'normal', 'running', 'timer', false);
+			assert.deepStrictEqual(JSON.parse(JSON.stringify(widget.children[index].designRows)), rows);
+		}
+	});
+
+	it('renders the selected narrow default and opens and cancels its compact start form', async () => {
+		for (const [columns, expectedDurationRow] of [['2', 2], ['3', 3]]) {
+			const state = { name: 'A', type: 'Timer', active: false, defaults: { time: 5, unit: 'minutes' } };
+			const widget = await loadWidget({ columns, chronograph1: { type: 'timer', name: 'A' },
+				chronograph1Layout: 'compact' }, { 'timer:A': state });
+			const child = widget.children[0];
+			assert.ok(child.designRows.some(row => row.groups.some(group => group.elements.includes('play'))));
+			child.beginStart();
+			assert.ok(child.designRows.some(row => row.groups.some(group => group.elements.includes('fields'))));
+			assert.ok(child.designRows.some(row => row.groups.some(group => group.elements.includes('cancel'))));
+			child.cancelStart();
+			assert.ok(!child.designRows.some(row => row.groups.some(group => group.elements.includes('fields'))));
+			state.active = true;
+			state.running = true;
+			widget.listeners.chronograph_event_multi();
+			await new Promise(resolve => setImmediate(resolve));
+			assert.ok(child.designRows.find(row => row.id === expectedDurationRow)
+				.groups.some(group => group.elements.includes('duration')));
+			assert.ok(child.designRows.some(row => row.groups.some(group => group.elements.includes('pause'))));
+		}
+	});
+
 	it('defines ten independently configured slots and only the required scoped routes', () => {
 		const { id, ...generated } = require('../app.json').widgets.multiple_chronographs;
 		if (id !== undefined) assert.strictEqual(id, 'multiple_chronographs');

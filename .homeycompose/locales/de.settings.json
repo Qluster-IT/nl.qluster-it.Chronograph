@@ -67,6 +67,8 @@
 	"style_design_dashboard": "Übersicht",
 	"style_design_focus": "Fokus",
 	"style_design_vertical": "Vertikal",
+	"style_design_small": "Klein",
+	"style_design_tiny": "Sehr klein",
 	"style_design_builtin_hint": "Integrierte Designs können nicht bearbeitet werden. Erstelle eine Kopie, um dieses Design anzupassen.",
 	"style_builtin_hint": "Während der Entwicklung sind Änderungen an diesem Standardstil vorübergehend und werden nicht gespeichert. Beim Neuladen der Einstellungen gehen sie verloren. Eine Kopie kann gespeichert werden.",
 	"style_starting": "Startformular geöffnet",

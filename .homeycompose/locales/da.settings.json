@@ -67,6 +67,8 @@
 	"style_design_dashboard": "Oversigt",
 	"style_design_focus": "Fokus",
 	"style_design_vertical": "Lodret",
+	"style_design_small": "Lille",
+	"style_design_tiny": "Meget lille",
 	"style_design_builtin_hint": "Indbyggede design kan ikke redigeres. Kopiér dette design for at tilpasse det.",
 	"style_builtin_hint": "Under udviklingen er ændringer af denne standardstil midlertidige og gemmes ikke. De går tabt, når indstillingerne genindlæses. En kopi kan gemmes.",
 	"style_starting": "Startformular åben",

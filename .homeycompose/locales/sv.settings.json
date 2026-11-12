@@ -67,6 +67,8 @@
 	"style_design_dashboard": "Översikt",
 	"style_design_focus": "Fokus",
 	"style_design_vertical": "Vertikal",
+	"style_design_small": "Liten",
+	"style_design_tiny": "Mycket liten",
 	"style_design_builtin_hint": "Inbyggda designer kan inte redigeras. Kopiera designen för att anpassa den.",
 	"style_builtin_hint": "Under utveckling är ändringar av denna standardstil tillfälliga och sparas inte. De försvinner när inställningarna läses in igen. En kopia kan sparas.",
 	"style_starting": "Startformulär öppet",

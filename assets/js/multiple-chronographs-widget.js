@@ -52,14 +52,20 @@ window.registerMultipleChronographsWidget = function (Homey) {
 					$scope.error = Homey.__('settings.multiple_invalid_settings');
 					continue;
 				}
+				span = Math.min(columns, span);
+				var designStyle = settings[prefix + 'DesignStyle'];
+				if (!window.ChronographWidgetStyle.settingId(designStyle)) {
+					if (columns - span === 1) designStyle = 'builtin:small';
+					else if (columns - span === 2) designStyle = 'builtin:tiny';
+				}
 				$scope.entries.push({
 					slot: slot,
 					type: type,
-					span: Math.min(columns, span),
+					span: span,
 					settings: {
 						chronograph: { name: name },
 						alternativeName: settings[prefix + 'AlternativeName'],
-						designStyle: settings[prefix + 'DesignStyle'],
+						designStyle: designStyle,
 						colorScheme: settings[prefix + 'ColorScheme'],
 						layout: settings[prefix + 'Layout'],
 						icon: settings[prefix + 'Icon'],

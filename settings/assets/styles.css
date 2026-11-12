@@ -436,6 +436,7 @@ body {
 	align-items: center;
 	gap: 8px;
 }
+.style-preview-group-wrap[data-direction="horizontal"] { flex-wrap: wrap; }
 .style-preview-group[data-direction="horizontal"][data-alignment="center"] { justify-content: center; justify-content: safe center; }
 .style-preview-group[data-direction="horizontal"][data-alignment="right"] { justify-content: flex-end; justify-content: safe flex-end; }
 .style-preview-group[data-direction="horizontal"][data-vertical-alignment="top"] { align-items: flex-start; }

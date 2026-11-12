@@ -240,7 +240,9 @@
     "multiple_row_separator": "Séparation des lignes",
     "multiple_separator_cards": "Cartes de type widget",
     "multiple_separator_line": "Ligne",
-    "multiple_separator_color": "Couleur de la ligne"
+    "multiple_separator_color": "Couleur de la ligne",
+    "style_design_small": "Petit",
+    "style_design_tiny": "Très petit"
   },
   "timer_not_running": "Le minuteur __name__ n’est pas en cours d’exécution.",
   "stopwatch_not_running": "Le chronomètre __name__ n’est pas en cours d’exécution.",

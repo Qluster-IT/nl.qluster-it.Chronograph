@@ -237,7 +237,9 @@
     "multiple_row_separator": "Rijscheiding",
     "multiple_separator_cards": "Widgetachtige kaarten",
     "multiple_separator_line": "Lijn",
-    "multiple_separator_color": "Lijnkleur"
+    "multiple_separator_color": "Lijnkleur",
+    "style_design_small": "Klein",
+    "style_design_tiny": "Zeer klein"
   },
   "timer_not_running": "Timer __name__ loopt niet.",
   "stopwatch_not_running": "Stopwatch __name__ loopt niet.",

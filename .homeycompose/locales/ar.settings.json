@@ -67,6 +67,8 @@
 	"style_design_dashboard": "لوحة المعلومات",
 	"style_design_focus": "تركيز",
 	"style_design_vertical": "عمودي",
+	"style_design_small": "صغير",
+	"style_design_tiny": "صغير جداً",
 	"style_design_builtin_hint": "لا يمكن تعديل التصاميم المضمنة. انسخ هذا التصميم لتخصيصه.",
 	"style_builtin_hint": "أثناء التطوير، تكون تعديلات النمط الافتراضي مؤقتة ولا تُحفظ. تُفقد عند إعادة تحميل الإعدادات. يمكن حفظ نسخة.",
 	"style_starting": "نموذج البدء مفتوح",

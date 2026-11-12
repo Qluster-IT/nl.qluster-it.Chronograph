@@ -7,6 +7,7 @@
 	<div class="chronograph-design-row" ng-repeat="row in designLayer.rows track by row.id"
 		ng-attr-data-row-alignment="{{ row.alignment }}" ng-style="{ 'grid-template-columns': row.tracks, 'padding-top': row.topPadding + 'px' }">
 		<div class="chronograph-design-group" ng-repeat="group in row.groups track by group.id"
+			ng-class="{ 'chronograph-design-group-wrap': group.wrap, 'chronograph-design-group-narrow-start': group.narrowStart }"
 			ng-style="designLayer.spanning ? { 'grid-column': group.gridColumn, 'grid-row': group.gridRow, 'padding-top': group.rowTopPadding + 'px' } : {}"
 			ng-attr-data-row-span="{{ group.rowSpan }}"
 			ng-attr-data-grid-last="{{ group.gridEnd >= 0.999999999 ? 'true' : undefined }}"

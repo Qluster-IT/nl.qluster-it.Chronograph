@@ -240,7 +240,9 @@
     "multiple_row_separator": "Separazione delle righe",
     "multiple_separator_cards": "Schede tipo widget",
     "multiple_separator_line": "Linea",
-    "multiple_separator_color": "Colore della linea"
+    "multiple_separator_color": "Colore della linea",
+    "style_design_small": "Piccolo",
+    "style_design_tiny": "Molto piccolo"
   },
   "timer_not_running": "Il timer __name__ non è in esecuzione.",
   "stopwatch_not_running": "Il cronometro __name__ non è in esecuzione.",

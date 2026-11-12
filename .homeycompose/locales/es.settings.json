@@ -67,6 +67,8 @@
 	"style_design_dashboard": "Panel",
 	"style_design_focus": "Enfoque",
 	"style_design_vertical": "Vertical",
+	"style_design_small": "Pequeño",
+	"style_design_tiny": "Muy pequeño",
 	"style_design_builtin_hint": "Los diseños integrados no se pueden editar. Copia este diseño para personalizarlo.",
 	"style_builtin_hint": "Durante el desarrollo, los cambios en este estilo predeterminado son temporales y no se guardan. Se pierden al recargar los ajustes. Se puede guardar una copia.",
 	"style_starting": "Formulario de inicio abierto",

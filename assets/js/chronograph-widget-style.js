@@ -280,14 +280,56 @@
 		{ id: 'builtin:centered', nameKey: 'settings.style_design_centered' },
 		{ id: 'builtin:dashboard', nameKey: 'settings.style_design_dashboard' },
 		{ id: 'builtin:focus', nameKey: 'settings.style_design_focus' },
-		{ id: 'builtin:vertical', nameKey: 'settings.style_design_vertical' }
+		{ id: 'builtin:vertical', nameKey: 'settings.style_design_vertical' },
+		{ id: 'builtin:small', nameKey: 'settings.style_design_small' },
+		{ id: 'builtin:tiny', nameKey: 'settings.style_design_tiny' }
 	];
+
+	function narrowDesign(design, tiny) {
+		design.wrapNarrowElements = true;
+		design.inputFieldRows = {};
+		['compact', 'normal', 'large'].forEach(function (size) {
+			function position(row, group, order) { return { row: row, group: group, order: order }; }
+			design.groups[size] = { elements: {
+				icon: position(1, 1, 1), name: position(1, 1, 2),
+				status: position(2, 1, 1), duration: position(tiny ? 3 : 2, 1, tiny ? 1 : 2),
+				progress: position(5, 1, 1), fields: position(3, 1, 1),
+				play: position(4, 1, 1), pause: position(4, 1, 1), stop: position(4, 1, 2),
+				start: size === 'compact' ? position(0, 1, 1) : position(4, 1, 1),
+				cancel: size === 'compact' ? position(4, 1, 2) : position(0, 1, 1)
+			}, overrides: size === 'compact' ? { starting: { start: position(4, 1, 1) } } : {} };
+			design.rowColumns[size] = { 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 };
+			design.columnSpans[size] = { 1: [4], 2: [4], 3: [4], 4: [4], 5: [4] };
+			design.columnWidths[size] = { 1: ['span'], 2: ['span'],
+				3: ['span'], 4: ['span'], 5: ['span'] };
+			design.columnAlignments[size] = {};
+			design.columnDirections[size] = {};
+			design.columnVerticalAlignments[size] = {};
+			design.rowAlignments[size] = {};
+			design.rowVisibility[size] = {
+				1: { states: ['inactive', 'running', 'paused'], actions: {}, startForm: true },
+				2: { states: ['inactive', 'running', 'paused'], actions: {}, startForm: true },
+				3: { states: ['running', 'paused'], actions: {}, startForm: true },
+				4: { states: ['inactive', 'running', 'paused'], actions: {}, startForm: true },
+				5: { states: ['running', 'paused'], actions: {}, startForm: false }
+			};
+			design.inputFieldRows[size] = { timer: 2, transition: 5 };
+			design.heightModes[size] = 'minimum-without-inputs';
+			design.elementSizes.overrides[size] = {
+				icon: 16, name: size === 'large' ? 16 : 14, status: 12,
+				duration: size === 'large' ? 18 : size === 'normal' ? 16 : 14,
+				play: 28, pause: 28, stop: 28, cancel: 28, start: 32, fields: 32, progress: 6
+			};
+		});
+	}
 
 	function builtInDesign(id) {
 		if (id === 'builtin:current') return currentDesign();
 		if (!builtInDesignDefinitions.some(function (item) { return item.id === id; })) return undefined;
 		var design = currentDesign();
-		if (id === 'builtin:centered') {
+		if (id === 'builtin:small' || id === 'builtin:tiny') {
+			narrowDesign(design, id === 'builtin:tiny');
+		} else if (id === 'builtin:centered') {
 			['compact', 'normal', 'large'].forEach(function (size) {
 				Object.keys(design.rowColumns[size]).forEach(function (row) {
 					design.columnAlignments[size][row] = Array(design.rowColumns[size][row]).fill('center');
@@ -527,6 +569,10 @@
 				return {
 					id: groupId,
 					span: rowSpans[groupIndex] || 1,
+					narrowStart: style.wrapNarrowElements === true && elements.indexOf('start') !== -1,
+					wrap: style.wrapNarrowElements === true && elements.length === 2
+						&& ((elements.indexOf('start') !== -1 && elements.indexOf('cancel') !== -1)
+							|| (elements.indexOf('status') !== -1 && elements.indexOf('duration') !== -1)),
 					alignment: rowAlignments[groupIndex] || 'left',
 					verticalAlignment: rowVerticalAlignments[groupIndex] || 'middle',
 					direction: rowDirections[groupIndex] || 'horizontal',

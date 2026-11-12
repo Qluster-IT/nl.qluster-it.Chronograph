@@ -67,6 +67,8 @@
 	"style_design_dashboard": "Panel",
 	"style_design_focus": "Wyróżniony",
 	"style_design_vertical": "Pionowy",
+	"style_design_small": "Mały",
+	"style_design_tiny": "Bardzo mały",
 	"style_design_builtin_hint": "Nie można edytować wbudowanych projektów. Skopiuj projekt, aby go dostosować.",
 	"style_builtin_hint": "Podczas tworzenia zmiany tego stylu domyślnego są tymczasowe i nie są zapisywane. Zostaną utracone po ponownym wczytaniu ustawień. Można zapisać kopię.",
 	"style_starting": "Otwarty formularz uruchamiania",

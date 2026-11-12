@@ -67,6 +67,8 @@
 	"style_design_dashboard": "대시보드",
 	"style_design_focus": "강조",
 	"style_design_vertical": "세로",
+	"style_design_small": "작게",
+	"style_design_tiny": "아주 작게",
 	"style_design_builtin_hint": "기본 디자인은 수정할 수 없습니다. 디자인을 복사하여 원하는 대로 수정하세요.",
 	"style_builtin_hint": "개발 중 이 기본 스타일의 변경 사항은 임시이며 저장되지 않습니다. 설정을 다시 불러오면 사라집니다. 복사본은 저장할 수 있습니다.",
 	"style_starting": "시작 양식 열림",

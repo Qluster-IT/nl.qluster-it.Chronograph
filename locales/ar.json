@@ -240,7 +240,9 @@
     "multiple_row_separator": "فاصل الصفوف",
     "multiple_separator_cards": "بطاقات بنمط الأدوات",
     "multiple_separator_line": "خط",
-    "multiple_separator_color": "لون الخط"
+    "multiple_separator_color": "لون الخط",
+    "style_design_small": "صغير",
+    "style_design_tiny": "صغير جداً"
   },
   "timer_not_running": "المؤقت __name__ غير قيد التشغيل.",
   "stopwatch_not_running": "ساعة الإيقاف __name__ غير قيد التشغيل.",

@@ -240,7 +240,9 @@
     "multiple_row_separator": "Разделение строк",
     "multiple_separator_cards": "Карточки как виджеты",
     "multiple_separator_line": "Линия",
-    "multiple_separator_color": "Цвет линии"
+    "multiple_separator_color": "Цвет линии",
+    "style_design_small": "Маленький",
+    "style_design_tiny": "Очень маленький"
   },
   "timer_not_running": "Таймер __name__ не запущен.",
   "stopwatch_not_running": "Секундомер __name__ не запущен.",

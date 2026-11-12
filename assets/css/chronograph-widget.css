@@ -182,6 +182,18 @@ body {
 	min-width: 0;
 }
 
+.chronograph-design-group-wrap[data-direction="horizontal"] {
+	flex-wrap: wrap;
+}
+
+.chronograph-widget .chronograph-design-group-narrow-start .chronograph-start-button {
+	max-width: 100%;
+	overflow: hidden;
+	padding-right: 6px;
+	padding-left: 6px;
+	white-space: nowrap;
+}
+
 .chronograph-design-group[data-alignment="center"] {
 	justify-content: center;
 	justify-content: safe center;

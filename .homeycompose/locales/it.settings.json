@@ -67,6 +67,8 @@
 	"style_design_dashboard": "Pannello",
 	"style_design_focus": "In evidenza",
 	"style_design_vertical": "Verticale",
+	"style_design_small": "Piccolo",
+	"style_design_tiny": "Molto piccolo",
 	"style_design_builtin_hint": "I design integrati non possono essere modificati. Copia questo design per personalizzarlo.",
 	"style_builtin_hint": "Durante lo sviluppo, le modifiche a questo stile predefinito sono temporanee e non vengono salvate. Si perdono quando le impostazioni vengono ricaricate. È possibile salvare una copia.",
 	"style_starting": "Modulo di avvio aperto",

@@ -784,6 +784,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			|| !validInputFieldRows(style.inputFieldRows)
 			|| !validElementSizes(style.elementSizes)
 			|| (style.allowShrink !== undefined && typeof style.allowShrink !== 'boolean')
+			|| (style.wrapNarrowElements !== undefined && typeof style.wrapNarrowElements !== 'boolean')
 			|| !validProgressSettings(style)
 			|| !validRowColumns(style.rowColumns) || !validRowAlignments(style) || !validRowTopPadding(style) || !validColumnSpans(style)
 			|| !validColumnValues(style, 'columnAlignments', ['left', 'center', 'right', 'stretch'])

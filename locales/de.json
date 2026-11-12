@@ -240,7 +240,9 @@
     "multiple_row_separator": "Zeilentrennung",
     "multiple_separator_cards": "Widgetartige Karten",
     "multiple_separator_line": "Linie",
-    "multiple_separator_color": "Linienfarbe"
+    "multiple_separator_color": "Linienfarbe",
+    "style_design_small": "Klein",
+    "style_design_tiny": "Sehr klein"
   },
   "timer_not_running": "Timer __name__ läuft nicht.",
   "stopwatch_not_running": "Stopuhr __name__ läuft nicht.",

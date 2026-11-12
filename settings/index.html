@@ -477,6 +477,7 @@
 				ng-attr-data-row-alignment="{{ row.alignment }}" ng-attr-data-preview-row="{{ row.id }}"
 				ng-style="{ 'grid-template-columns': row.tracks, 'padding-top': row.topPadding + 'px' }">
 				<div class="style-preview-group" ng-repeat="group in row.groups track by group.id"
+					ng-class="{ 'style-preview-group-wrap': group.wrap }"
 					ng-style="previewRowLayout(previewScenario).spanning ? { 'grid-column': group.gridColumn, 'grid-row': group.gridRow, 'padding-top': group.rowTopPadding + 'px' } : {}"
 					ng-attr-data-row-span="{{ group.rowSpan }}"
 					ng-attr-data-grid-last="{{ group.gridEnd >= 0.999999999 ? 'true' : undefined }}"
