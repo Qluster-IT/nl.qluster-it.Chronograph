@@ -46,7 +46,8 @@ The Centered, Dashboard, Focus and Vertical designs provide alternative layouts;
 one to customize it. Centered places the duration between the action columns in
 Normal and Large sizes, Dashboard places
 the status beside the name and the duration on its own row in Normal and
-Large sizes, Focus emphasizes the duration, and Vertical stacks content.
+Large sizes, Focus emphasizes the duration, and Vertical stacks content. In
+Compact size, Vertical places the status bar alongside the content across rows.
 The light and dark widget picker previews are abstract, text-free illustrations
 of the Default design. On Windows, regenerate them with
 `.\tools\development\generate-widget-previews.ps1`.
@@ -95,8 +96,8 @@ Select a row to align it at the top, middle, or bottom of available vertical
 space. This is most noticeable with Minimum required height when another row
 is hidden. Rows remain in order; when multiple rows request extra space, they
 share it rather than overlapping.
-Select a column to span additional rows for the selected size. The editor marks
-the spanning column and its continuation in each affected row. Hidden rows
+Select a column to span additional rows for the selected size. The editor shows
+the column extending across the affected rows. Hidden rows
 collapse, and columns in the affected rows fit into the remaining width.
 Spanning columns fit their content; other columns can also use fit-to-content
 width. Moving a row clips its spans to the remaining rows.

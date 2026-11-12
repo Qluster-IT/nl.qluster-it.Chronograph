@@ -677,6 +677,15 @@ body {
 	gap: 4px;
 }
 
+.style-group-editor-grid {
+	display: grid;
+	gap: 4px;
+}
+
+.style-group-editor-grid.style-editor-spanning .style-group-editor-row {
+	display: contents;
+}
+
 .style-unused-row {
 	display: grid;
 	grid-template-columns: auto minmax(0, 1fr);
@@ -712,20 +721,10 @@ body {
 	border-radius: 4px;
 }
 
-.style-column-row-span,
-.style-row-span-continuation {
+.style-column-row-span {
 	display: block;
 	font-size: 10px;
 	color: var(--homey-text-color-light, #777982);
-}
-
-.style-row-span-continuations {
-	grid-column: 2 / -1;
-	display: flex;
-	flex-wrap: wrap;
-	gap: 4px 12px;
-	border-left: 2px solid var(--chronograph-primary);
-	padding-left: 5px;
 }
 
 .style-group-drop-target {

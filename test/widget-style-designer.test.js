@@ -108,18 +108,19 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
 	});
 
-	it('marks the origin and each continuation of a row-spanning column', () => {
+	it('displays the actual column across all spanned rows', () => {
 		const { scope } = loadSettings();
 		scope.createStyle(true);
 		scope.selectColumn(1, 1);
 		scope.editor.columnRowSpan = 4;
 		scope.updateColumnRowSpan();
-		const markers = scope.spanningColumnsForRow(3);
-		assert.deepStrictEqual(JSON.parse(JSON.stringify(markers)), [{ row: 1, group: 1, rowSpan: 4 }]);
-		assert.strictEqual(scope.spanningColumnsForRow(3), markers);
-		assert.strictEqual(scope.spanningColumnsForRow(5).length, 0);
+		const layout = scope.designerRowLayout();
+		assert.strictEqual(layout.spanning, true);
+		assert.strictEqual(layout.rows[0].groups[0].gridRow, '1 / 5');
+		assert.strictEqual(scope.designerRowLayout(), layout);
 		assert.ok(html.includes('class="style-column-row-span"'));
-		assert.ok(html.includes('class="style-row-span-continuation"'));
+		assert.ok(!html.includes('class="style-row-span-continuation"'));
+		assert.ok(html.includes("'grid-row': group.gridRow"));
 	});
 
 	it('requires the selected row, column, element or legacy cell before dragging', () => {

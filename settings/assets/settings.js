@@ -28,7 +28,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		var savedPreviewBuiltIns;
 		var previewBuiltInsLoaded = false;
 		var groupedRowsCache = {};
-		var spanContinuationsCache = new WeakMap();
+		var designerRowLayouts = new WeakMap();
 		var colorOptionsCache = {};
 		var startFormTimer;
 		var Homey;
@@ -701,23 +701,43 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			return groupedRowsCache.editor ? groupedRowsCache.editor.unused : [];
 		};
 
-		$scope.spanningColumnsForRow = function (rowId) {
+		$scope.designerRowLayout = function () {
 			var rows = $scope.groupedRows(false);
-			var cached = spanContinuationsCache.get(rows);
-			if (!cached) {
-				cached = {};
-				spanContinuationsCache.set(rows, cached);
+			var cached = designerRowLayouts.get(rows);
+			if (cached) return cached;
+			var editorRows = rows.map(function (row) {
+				return Object.assign({}, row, {
+					alignment: 'top',
+					groups: row.groups.map(function (group) {
+						return Object.assign({}, group, { elements: group.elements.length ? group.elements : [''] });
+					})
+				});
+			});
+			var layout = sizeRuntime.layoutSpanningRows(editorRows);
+			if (layout.spanning) {
+				var boundaries = [0, 1];
+				layout.rows.forEach(function (row) {
+					row.groups.forEach(function (group) { boundaries.push(group.gridStart, group.gridEnd); });
+				});
+				boundaries = Array.from(new Set(boundaries)).sort(function (a, b) { return a - b; });
+				layout = Object.assign({}, layout, {
+					tracks: boundaries.slice(1).map(function (end, index) {
+						return 'minmax(0, ' + (end - boundaries[index]) + 'fr)';
+					}).join(' ')
+				});
 			}
-			if (cached[rowId]) return cached[rowId];
-			cached[rowId] = rows.reduce(function (result, row) {
-				row.groups.forEach(function (group) {
-					if (row.id < rowId && row.id + group.rowSpan > rowId) {
-						result.push({ row: row.id, group: group.id, rowSpan: group.rowSpan });
+			layout.rows.forEach(function (row, index) {
+				row.groups.forEach(function (group, groupIndex) {
+					group.elements = rows[index].groups[groupIndex].elements;
+					if (layout.spanning) {
+						group.editorGridColumn = group.gridColumn.split(' / ').map(function (line) {
+							return Number(line) + 1;
+						}).join(' / ');
 					}
 				});
-				return result;
-			}, []);
-			return cached[rowId];
+			});
+			designerRowLayouts.set(rows, layout);
+			return layout;
 		};
 
 		$scope.previewRowLayout = function (scenario) {

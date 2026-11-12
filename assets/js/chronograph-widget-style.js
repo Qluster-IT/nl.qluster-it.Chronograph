@@ -331,6 +331,16 @@
 			design.rowVisibility.compact[4].states = [];
 			design.rowVisibility.compact[4].hideAfterSeconds = 10;
 			design.groups.compact.elements.cancel = { row: 4, group: 2, order: 2 };
+			design.groups.compact.elements.icon.group = 2;
+			design.groups.compact.elements.name.group = 2;
+			design.groups.compact.elements.progress.row = 1;
+			design.rowColumns.compact[1] = 2;
+			design.columnSpans.compact[1] = [1, 3];
+			design.columnWidths.compact[1] = ['span', 'span'];
+			design.columnAlignments.compact[1] = ['left', 'left'];
+			design.columnDirections.compact[1] = ['horizontal', 'horizontal'];
+			design.columnVerticalAlignments.compact[1] = ['middle', 'middle'];
+			design.columnRowSpans = { compact: { 1: [5, 1] } };
 			['compact', 'normal', 'large'].forEach(function (size) {
 				design.progressSettings[size].direction = 'bottom-top';
 			});
