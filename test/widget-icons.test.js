@@ -8,6 +8,23 @@ const zlib = require('zlib');
 const { searchIcons } = require('../lib/widget-icons.js');
 
 describe('Widget icon autocomplete', () => {
+	it('loads icon files only on the first autocomplete search', () => {
+		let reads = 0;
+		const module = { exports: {} };
+		vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'lib', 'widget-icons.js'), 'utf8'), {
+			module,
+			__dirname: path.join(__dirname, '..', 'lib'),
+			require: id => id === 'fs'
+				? { readFileSync: (...args) => { reads++; return fs.readFileSync(...args); } }
+				: require(id)
+		});
+		assert.strictEqual(reads, 0);
+		assert.ok(module.exports.searchIcons('stopwatch', 'None').length);
+		assert.strictEqual(reads, 2);
+		module.exports.searchIcons('clock', 'None');
+		assert.strictEqual(reads, 2);
+	});
+
 	it('puts None and the three defaults first', () => {
 		const results = searchIcons('', 'Geen');
 		assert.deepStrictEqual(results.slice(0, 4).map(item => item.id), [

@@ -3886,6 +3886,10 @@
 			"method": "GET",
 			"path": "/widget-styles"
 		},
+		"getChronographs": {
+			"method": "POST",
+			"path": "/chronographs"
+		},
 		"getTimer": {
 			"method": "GET",
 			"path": "/timer/:name"

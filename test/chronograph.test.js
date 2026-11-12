@@ -6,12 +6,16 @@ const NativeDate = global.Date;
 const nativeSetTimeout = global.setTimeout;
 const nativeClearTimeout = global.clearTimeout;
 let now = 0;
+let wallOffset = 0;
 let nextTimeoutId = 0;
 let timeouts = [];
+let originalUpdateTimeout;
+let originalUpdatesEnabled;
 
 const clock = {
 	reset() {
 		now = 1000000;
+		wallOffset = 0;
 		nextTimeoutId = 0;
 		timeouts = [];
 	},
@@ -23,6 +27,12 @@ const clock = {
 	clearTimeout(id) {
 		timeouts = timeouts.filter(timeout => timeout.id !== id);
 	},
+	shiftWall(delay) {
+		wallOffset += delay;
+	},
+	elapseWithoutCallbacks(delay) {
+		now += delay;
+	},
 	tick(delay) {
 		const end = now + delay;
 		let executions = 0;
@@ -31,7 +41,7 @@ const clock = {
 			const timeout = timeouts[0];
 			if (!timeout || timeout.at > end) break;
 			timeouts.shift();
-			now = timeout.at;
+			now = Math.max(now, timeout.at);
 			timeout.callback();
 			if (++executions > 10000) throw new Error('Fake timer loop exceeded its execution limit');
 		}
@@ -41,11 +51,11 @@ const clock = {
 
 class TestDate extends NativeDate {
 	constructor(...args) {
-		super(...(args.length ? args : [now]));
+		super(...(args.length ? args : [now + wallOffset]));
 	}
 
 	static now() {
-		return now;
+		return now + wallOffset;
 	}
 }
 
@@ -72,6 +82,10 @@ Chronograph.events.on('split', () => events.split = !!events.split ? events.spli
 
 describe('Chronograph', () => {
 	beforeEach(() => {
+		originalUpdateTimeout = Chronograph._updateTimeout;
+		originalUpdatesEnabled = Chronograph._updatesEnabled;
+		Chronograph._updateTimeout = null;
+		Chronograph._updatesEnabled = false;
 		clock.reset();
 		global.Date = TestDate;
 		Chronograph.homey = {
@@ -86,6 +100,8 @@ describe('Chronograph', () => {
 		clock.reset();
 		global.Date = NativeDate;
 		Chronograph.homey = { setTimeout: nativeSetTimeout, clearTimeout: nativeClearTimeout };
+		Chronograph._updateTimeout = originalUpdateTimeout;
+		Chronograph._updatesEnabled = originalUpdatesEnabled;
 	});
 
 	it('should be properly initialized', function() {
@@ -403,6 +419,234 @@ describe('Chronograph', () => {
 			events = {};
 			done();
 		}, 1050);
+	});
+
+	it('schedules fractional splits and simultaneous target splits in order', function() {
+		const timer = new Chronograph(500, 'precise splits', 1, 'seconds');
+		const fired = [];
+		const onSplit = (item, split) => {
+			if (item === timer) fired.push([split.data, Date.now()]);
+		};
+		const onFinished = item => {
+			if (item === timer) fired.push(['finished', Date.now()]);
+		};
+		Chronograph.events.on('split', onSplit);
+		Chronograph.events.on('finished', onFinished);
+		try {
+			timer.addSplit(0.25, 'seconds', 'quarter');
+			timer.addSplit(1, 'seconds', 'first');
+			timer.addSplit(1, 'seconds', 'second');
+			timer.start();
+			clock.tick(249);
+			assert.deepStrictEqual(fired, []);
+			clock.tick(1);
+			assert.deepStrictEqual(fired, [['quarter', 1000250]]);
+			clock.tick(750);
+			assert.deepStrictEqual(fired, [
+				['quarter', 1000250], ['second', 1001000], ['first', 1001000], ['finished', 1001000]
+			]);
+		} finally {
+			Chronograph.events.removeListener('split', onSplit);
+			Chronograph.events.removeListener('finished', onFinished);
+		}
+	});
+
+	it('generates transition splits precisely and repeats them after a backward adjustment', async function() {
+		const fired = [];
+		const onSplit = (item, split) => {
+			if (item.getName() === 'lazy transition') fired.push([split.time, Date.now()]);
+		};
+		Chronograph.events.on('split', onSplit);
+		try {
+			await Chronograph.transition_startRunListener({ __: key => key },
+				{ name: 'lazy transition', time: 1.5, unit: 'seconds', from: 0, to: 10, steps: 4 },
+				{ persistFlowValues: false });
+			const transition = Chronograph.all().find(item => item.getName() === 'lazy transition');
+			assert.strictEqual(transition._splits.length, 0);
+			clock.tick(500);
+			transition.pause();
+			transition.adjust(-0.5, 'seconds');
+			transition.resume();
+			clock.tick(1000);
+			assert.deepStrictEqual(fired, [[500, 1000500], [500, 1001000], [1000, 1001500]]);
+			clock.tick(500);
+			assert.strictEqual(Chronograph.get(transition.getId()), false);
+		} finally {
+			Chronograph.events.removeListener('split', onSplit);
+		}
+	});
+
+	it('keeps transition scheduling memory independent of the number of steps', async function() {
+		await Chronograph.transition_startRunListener({ __: key => key },
+			{ name: 'many steps', time: 3600, unit: 'seconds', from: 0, to: 1, steps: 10000 },
+			{ persistFlowValues: false });
+		const transition = Chronograph.all().find(item => item.getName() === 'many steps');
+		assert.strictEqual(transition._splits.length, 0);
+		assert.strictEqual(transition._orderedSplits.length, 0);
+		assert.strictEqual(transition._transitionSplits.count, 9998);
+	});
+
+	it('fires fractional transition steps at the first whole millisecond after each deadline', async function() {
+		const fired = [];
+		const onSplit = (item, split) => {
+			if (item.getName() === 'fractional transition') fired.push([split.time, Date.now()]);
+		};
+		Chronograph.events.on('split', onSplit);
+		try {
+			await Chronograph.transition_startRunListener({ __: key => key },
+				{ name: 'fractional transition', time: 1, unit: 'seconds', from: 0, to: 1, steps: 4 },
+				{ persistFlowValues: false });
+			clock.tick(333);
+			assert.strictEqual(fired.length, 0);
+			clock.tick(1);
+			clock.tick(333);
+			assert.deepStrictEqual(fired, [[1000 / 3, 1000334], [2 * 1000 / 3, 1000667]]);
+		} finally {
+			Chronograph.events.removeListener('split', onSplit);
+		}
+	});
+
+	it('stops periodic updates while idle and resumes them when a chronograph runs', function() {
+		const updates = [];
+		Chronograph.homey.api = { realtime: (event, data) => {
+			updates.push({ event, data });
+			return Promise.resolve();
+		} };
+		Chronograph._resetUpdateTimeout();
+		assert.strictEqual(timeouts.length, 0);
+
+		const timer = new Chronograph(706, 'idle updates', 60, 'seconds');
+		timer.start();
+		clock.tick(1000);
+		assert.strictEqual(updates.length, 1);
+		timer.pause();
+		clock.tick(1000);
+		assert.strictEqual(updates.length, 1);
+		assert.strictEqual(timeouts.length, 0);
+
+		timer.resume();
+		clock.tick(1000);
+		assert.strictEqual(updates.length, 2);
+		timer.stop();
+		clock.tick(1000);
+		assert.strictEqual(timeouts.length, 0);
+	});
+
+	it('does not rescan unrelated chronographs when a deadline approaches or fires', function() {
+		let unrelatedReads = 0;
+		for (let i = 0; i < 20; i++) {
+			const timer = new Chronograph(600 + i, 'long timer', 1, 'hours');
+			timer.addSplit(30, 'minutes');
+			timer.start();
+			const getDuration = timer.getDuration.bind(timer);
+			timer.getDuration = () => {
+				unrelatedReads++;
+				return getDuration();
+			};
+		}
+		const shortTimer = new Chronograph(700, 'short timer', 10, 'seconds');
+		shortTimer.start();
+		clock.tick(9999);
+		assert.ok(shortTimer.isRunning());
+		clock.tick(1);
+		assert.strictEqual(Chronograph.get(700), false);
+		assert.strictEqual(unrelatedReads, 0);
+	});
+
+	it('reschedules splits changed by a split listener', function() {
+		const timer = new Chronograph(701, 'reentrant splits', 2, 'seconds');
+		const fired = [];
+		const onSplit = (item, split) => {
+			if (item !== timer) return;
+			fired.push([split.data, Date.now()]);
+			if (split.data === 'first') {
+				timer.addSplit(0.4, 'seconds', 'added');
+				timer.pause();
+			}
+		};
+		Chronograph.events.on('split', onSplit);
+		try {
+			timer.addSplit(0.25, 'seconds', 'first');
+			timer.start();
+			clock.tick(250);
+			assert.strictEqual(timer.isRunning(), false);
+			clock.tick(1000);
+			assert.strictEqual(fired.length, 1);
+			timer.resume();
+			clock.tick(149);
+			assert.strictEqual(fired.length, 1);
+			clock.tick(1);
+			assert.deepStrictEqual(fired, [['first', 1000250], ['added', 1001400]]);
+		} finally {
+			Chronograph.events.removeListener('split', onSplit);
+		}
+	});
+
+	it('processes overdue splits before finishing after a delayed callback', function() {
+		const timer = new Chronograph(705, 'delayed timer', 1, 'seconds');
+		const fired = [];
+		const onSplit = (item, split) => {
+			if (item === timer) fired.push(split.data);
+		};
+		const onFinished = item => {
+			if (item === timer) fired.push('finished');
+		};
+		Chronograph.events.on('split', onSplit);
+		Chronograph.events.on('finished', onFinished);
+		try {
+			timer.addSplit(0.25, 'seconds', 'first');
+			timer.addSplit(0.5, 'seconds', 'second');
+			timer.addSplit(1, 'seconds', 'target');
+			timer.start();
+			clock.elapseWithoutCallbacks(1500);
+			clock.tick(0);
+			assert.deepStrictEqual(fired, ['first', 'second', 'target', 'finished']);
+			assert.strictEqual(timer.getDuration(), 1000);
+		} finally {
+			Chronograph.events.removeListener('split', onSplit);
+			Chronograph.events.removeListener('finished', onFinished);
+		}
+	});
+
+	it('ignores stale callbacks after pausing or replacing a chronograph', function() {
+		const timer = new Chronograph(702, 'original', 1, 'seconds');
+		timer.start();
+		const staleBeforePause = timeouts[0].callback;
+		clock.tick(100);
+		timer.pause();
+		timer.resume();
+		staleBeforePause();
+		assert.ok(timer.isRunning());
+		const staleBeforeReplace = timeouts[0].callback;
+		const replacement = new Chronograph(702, 'replacement', 2, 'seconds');
+		replacement.start();
+		staleBeforeReplace();
+		clock.tick(900);
+		assert.strictEqual(Chronograph.get(702), replacement);
+		clock.tick(1100);
+		assert.strictEqual(Chronograph.get(702), false);
+	});
+
+	it('rechecks long deadlines after forward and backward wall-clock changes', function() {
+		const forward = new Chronograph(703, 'forward clock', 60, 'seconds');
+		forward.start();
+		clock.tick(10000);
+		clock.shiftWall(50000);
+		clock.tick(19999);
+		assert.ok(forward.isRunning());
+		clock.tick(1);
+		assert.strictEqual(Chronograph.get(703), false);
+
+		const backward = new Chronograph(704, 'backward clock', 30, 'seconds');
+		backward.start();
+		clock.tick(10000);
+		clock.shiftWall(-10000);
+		clock.tick(20000);
+		assert.ok(backward.isRunning());
+		clock.tick(9999);
+		assert.ok(backward.isRunning());
+		clock.tick(1);
+		assert.strictEqual(Chronograph.get(704), false);
 	});
 
 	it('should schedule elapsed and remaining timer splits at their correct points', function() {

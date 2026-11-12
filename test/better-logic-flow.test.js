@@ -26,13 +26,13 @@ try {
 }
 
 describe('Better Logic Flow arguments', () => {
-	let homey, cards, settings, originalHomey, originalLibrary, originalReady, originalTimeout, originalUpdateTimeout;
+	let homey, cards, settings, originalHomey, originalLibrary, originalReady, originalUpdateTimeout, originalUpdatesEnabled;
 	let previousSplitListeners;
 
 	beforeEach(() => {
 		originalHomey = Chronograph.homey;
-		originalTimeout = Chronograph._timeout;
 		originalUpdateTimeout = Chronograph._updateTimeout;
+		originalUpdatesEnabled = Chronograph._updatesEnabled;
 		originalLibrary = BL._L;
 		originalReady = BL.isReady;
 		previousSplitListeners = new Set(Chronograph.events.listeners('split'));
@@ -57,8 +57,8 @@ describe('Better Logic Flow arguments', () => {
 			__: key => key, setTimeout: () => 1, clearTimeout() {}
 		};
 		Chronograph.homey = homey;
-		Chronograph._timeout = null;
 		Chronograph._updateTimeout = null;
+		Chronograph._updatesEnabled = false;
 	});
 
 	afterEach(() => {
@@ -67,8 +67,8 @@ describe('Better Logic Flow arguments', () => {
 			.filter(listener => !previousSplitListeners.has(listener))
 			.forEach(listener => Chronograph.events.removeListener('split', listener));
 		Chronograph.homey = originalHomey;
-		Chronograph._timeout = originalTimeout;
 		Chronograph._updateTimeout = originalUpdateTimeout;
+		Chronograph._updatesEnabled = originalUpdatesEnabled;
 		BL._L = originalLibrary;
 		BL.isReady = originalReady;
 	});

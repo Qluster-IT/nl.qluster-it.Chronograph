@@ -100,26 +100,32 @@ describe('Chronograph realtime updates', () => {
 	let homey;
 	let originalHomey;
 	let originalUpdateTimeout;
-	let originalTimeout;
+	let originalUpdatesEnabled;
 	let listeners;
 	let events;
+	let writes;
+	let Application;
 	const name = 'Realtime test';
 	const monitoredEvents = ['created', 'started', 'resumed', 'paused', 'updated', 'removed', 'flow_values_changed'];
 
 	beforeEach(() => {
 		originalHomey = Chronograph.homey;
 		originalUpdateTimeout = Chronograph._updateTimeout;
-		originalTimeout = Chronograph._timeout;
+		originalUpdatesEnabled = Chronograph._updatesEnabled;
 		listeners = Object.fromEntries(monitoredEvents.map(event => [event, Chronograph.events.listeners(event)]));
 		events = [];
+		writes = [];
 		const settings = {};
 		const app = {
 			chronographs: { timer: [{ name }], transition: [{ name }], stopwatch: [{ name }] },
-			saveChronographs() {}
+			saveChronographs() { this.homey.settings.set('chronographs', this.chronographs); }
 		};
 		homey = {
 			app,
-			settings: { get: key => settings[key], set: (key, value) => { settings[key] = value; } },
+			settings: { get: key => settings[key], set: (key, value) => {
+				writes.push(key);
+				settings[key] = JSON.parse(JSON.stringify(value));
+			} },
 			api: { realtime: (event, data) => {
 				events.push({ event, data: JSON.parse(JSON.stringify(data)) });
 				return Promise.resolve();
@@ -131,8 +137,8 @@ describe('Chronograph realtime updates', () => {
 		};
 		app.homey = homey;
 		Chronograph.homey = homey;
-		Chronograph._timeout = null;
 		Chronograph._updateTimeout = null;
+		Chronograph._updatesEnabled = false;
 		const module = { exports: {} };
 		vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8'), {
 			module,
@@ -140,10 +146,12 @@ describe('Chronograph realtime updates', () => {
 				if (id === 'homey') return { App: class {} };
 				if (id === './lib/chronograph.js') return Chronograph;
 				if (id === './lib/utils.js') return require('../lib/utils.js');
+				if (id === './lib/flow-arguments.js') return require('../lib/flow-arguments.js');
 				return {};
 			}
 		});
-		module.exports.prototype._installEventHandlers.call(app);
+		Application = module.exports;
+		Application.prototype._installEventHandlers.call(app);
 	});
 
 	afterEach(() => {
@@ -157,8 +165,8 @@ describe('Chronograph realtime updates', () => {
 			}
 		}
 		Chronograph.homey = originalHomey;
-		Chronograph._timeout = originalTimeout;
 		Chronograph._updateTimeout = originalUpdateTimeout;
+		Chronograph._updatesEnabled = originalUpdatesEnabled;
 	});
 
 	it('omits Flow values from lifecycle and periodic updates without changing saved snapshots', async () => {
@@ -201,6 +209,68 @@ describe('Chronograph realtime updates', () => {
 			{ type: ChronographType.TIMER, name, flowValues: { time: 11, unit: 'seconds' } },
 			{ type: ChronographType.STOPWATCH, name, flowValues: {} }
 		]);
+	});
+
+	it('broadcasts running updates without writing settings or changing the last action', async () => {
+		await api.postTimer({ homey, body: { name, time: 30, unit: 'seconds' } });
+		const timer = Chronograph.get(Utils.generateId(ChronographType.TIMER, name));
+		const savedSnapshot = JSON.stringify(homey.settings.get('chronographs_active'));
+		const lastAction = homey.app.chronographs.timer[0].action;
+		writes.length = 0;
+		events.length = 0;
+
+		for (let i = 0; i < 5; i++) Chronograph._resetUpdateTimeout();
+		assert.deepStrictEqual(writes, []);
+		assert.strictEqual(homey.app.chronographs.timer[0].action, lastAction);
+		assert.strictEqual(JSON.stringify(homey.settings.get('chronographs_active')), savedSnapshot);
+		const updates = events.filter(event => event.event === 'chronograph_event_multi');
+		assert.strictEqual(updates.length, 5);
+		assert.strictEqual(updates[0].data[0].name, name);
+		assert.strictEqual(updates[0].data[0].running, true);
+
+		timer.pause();
+		assert.ok(writes.includes('chronographs_active'));
+		assert.strictEqual(homey.settings.get('chronographs_active')[timer.getId()].running, false);
+	});
+
+	it('writes Flow defaults only when the values change', async () => {
+		await api.postTimer({ homey, body: { name, time: 30, unit: 'seconds' } });
+		writes.length = 0;
+		assert.strictEqual(Chronograph._saveFlowValues(homey, ChronographType.TIMER, name,
+			{ time: 30, unit: 'seconds' }), false);
+		assert.deepStrictEqual(writes, []);
+		assert.strictEqual(Chronograph._saveFlowValues(homey, ChronographType.TIMER, name,
+			{ time: 31, unit: 'seconds' }), true);
+		assert.deepStrictEqual(writes, ['chronographs']);
+		assert.deepStrictEqual(homey.settings.get('chronographs').timer[0].flowValues,
+			{ time: 31, unit: 'seconds' });
+	});
+
+	it('restores running and paused timers from lifecycle snapshots without periodic writes', async () => {
+		await api.postTimer({ homey, body: { name, time: 30, unit: 'seconds' } });
+		const id = Utils.generateId(ChronographType.TIMER, name);
+		const original = Chronograph.get(id);
+		Chronograph._resetUpdateTimeout();
+		const running = JSON.parse(JSON.stringify(homey.settings.get('chronographs_active')[id]));
+		running.now -= 5000;
+		original.stop(true);
+		homey.settings.set('chronographs_active', { [id]: running });
+
+		await Application.prototype._restoreChronographs.call(homey.app);
+		const restored = Chronograph.get(id);
+		assert.ok(restored.isRunning());
+		assert.ok(restored.getDuration() >= 5000 && restored.getDuration() < 6000);
+		assert.strictEqual(restored.getTargetDuration(), 30000);
+
+		restored.pause();
+		const paused = JSON.parse(JSON.stringify(homey.settings.get('chronographs_active')[id]));
+		paused.now -= 5000;
+		restored.stop(true);
+		homey.settings.set('chronographs_active', { [id]: paused });
+		await Application.prototype._restoreChronographs.call(homey.app);
+		const restoredPaused = Chronograph.get(id);
+		assert.strictEqual(restoredPaused.isRunning(), false);
+		assert.strictEqual(restoredPaused.getDuration(), paused.duration);
 	});
 });
 

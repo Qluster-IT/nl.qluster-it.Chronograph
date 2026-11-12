@@ -11,6 +11,9 @@ window.registerMultipleChronographsWidget = function (Homey) {
 			var observer;
 			var lastHeight = 0;
 			var destroyed = false;
+			var pendingRefresh = null;
+			var clockInterval = null;
+			var runningSlots = {};
 			$scope.entries = [];
 			$scope.rows = [];
 			$scope.error = null;
@@ -117,6 +120,41 @@ window.registerMultipleChronographsWidget = function (Homey) {
 				tileReady: function () {
 					pending--;
 					if (!pending) markReady();
+				},
+				refresh: function (entry) {
+					if (!pendingRefresh) {
+						var selections = $scope.entries.map(function (item) {
+							return { type: item.type, name: item.settings.chronograph.name };
+						});
+						var request = Homey.api('POST', '/chronographs', { chronographs: selections });
+						pendingRefresh = request;
+						request.then(function () {
+							if (pendingRefresh === request) pendingRefresh = null;
+						}, function () {
+							if (pendingRefresh === request) pendingRefresh = null;
+						});
+					}
+					return pendingRefresh.then(function (results) {
+						var result = Array.isArray(results) && results[$scope.entries.indexOf(entry)];
+						if (!result || (!result.chronograph && !result.error)) {
+							throw new Error('Invalid multiple chronographs response');
+						}
+						if (result.error) throw new Error(result.error);
+						return result.chronograph;
+					});
+				},
+				invalidateRefresh: function () {
+					pendingRefresh = null;
+				},
+				setRunning: function (entry, running) {
+					if (running) runningSlots[entry.slot] = true;
+					else delete runningSlots[entry.slot];
+					if (!destroyed && Object.keys(runningSlots).length && !clockInterval) {
+						clockInterval = $interval(function () { $scope.$broadcast('multipleChronographsClock'); }, 250);
+					} else if (!Object.keys(runningSlots).length && clockInterval) {
+						$interval.cancel(clockInterval);
+						clockInterval = null;
+					}
 				}
 			};
 			if (!pending) $scope.$evalAsync(markReady);
@@ -128,7 +166,6 @@ window.registerMultipleChronographsWidget = function (Homey) {
 			Homey.on('chronograph_event', function (event) { $scope.$broadcast('multipleChronographsRealtime', [event]); });
 			Homey.on('chronograph_flow_values_changed', function (event) { $scope.$broadcast('multipleChronographsFlowValues', event); });
 			var refreshInterval = $interval(function () { $scope.$broadcast('multipleChronographsRefresh'); }, 5000);
-			var clockInterval = $interval(function () { $scope.$broadcast('multipleChronographsClock'); }, 250);
 			$scope.$on('$destroy', function () {
 				destroyed = true;
 				$interval.cancel(refreshInterval);

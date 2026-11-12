@@ -605,7 +605,7 @@ class Application extends Homey.App {
 						type = type[1];
 					}
 					let chrono = (Chronograph.homey.app.chronographs[type] || []).find(x => x.name == raw.name);
-					if (chrono) {
+					if (chrono && chrono.action !== raw.now) {
 						chrono.action = raw.now;
 						Chronograph.homey.app.saveChronographs();
 					}
@@ -666,11 +666,7 @@ class Application extends Homey.App {
 
 				if (raw.data.type == ChronographType.TRANSITION) {
 					chronograph.setData('steps', raw.data.steps);
-					let steps = raw.data.steps - 1;
-					let stepDuration = chronograph.getTargetDuration() / steps;
-					while (--steps > 0) {
-						chronograph.addSplit(steps * stepDuration, 'milliseconds');
-					}
+					chronograph._setTransitionSplits(raw.data.steps);
 				}
 
 				// Move to exact duration, taking the offline time into account.

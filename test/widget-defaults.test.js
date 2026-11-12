@@ -13,6 +13,7 @@ async function loadWidget(type, settings, defaults, widgetStyles) {
 	let controller;
 	const listeners = {};
 	const requests = [];
+	const intervals = [];
 	let invalidInput = null;
 	const state = { active: false, running: false, defaults };
 	const module = { controller: (name, definition) => { controller = definition[definition.length - 1]; } };
@@ -43,12 +44,31 @@ async function loadWidget(type, settings, defaults, widgetStyles) {
 	context.onHomeyReady(homey);
 	const timeout = () => {};
 	timeout.cancel = () => {};
-	controller(scope, () => {}, timeout);
+	const interval = (fn, delay) => {
+		const task = { fn, delay };
+		intervals.push(task);
+		return task;
+	};
+	interval.cancel = task => { if (task) task.cancelled = true; };
+	controller(scope, interval, timeout);
 	await new Promise(resolve => setImmediate(resolve));
-	return { scope, listeners, state, requests, homey, setInvalidInput: input => { invalidInput = input; } };
+	return { scope, listeners, state, requests, intervals, homey, setInvalidInput: input => { invalidInput = input; } };
 }
 
 describe('Widget duration defaults', () => {
+	it('updates the display clock only while the selected chronograph is running', async () => {
+		const widget = await loadWidget('timer', {}, {});
+		const activeClocks = () => widget.intervals.filter(interval => interval.delay === 250 && !interval.cancelled);
+		assert.strictEqual(activeClocks().length, 0);
+		widget.state.active = true;
+		widget.state.running = true;
+		await widget.listeners.chronograph_event({ name: 'test', data: { type: 'Timer' } });
+		assert.strictEqual(activeClocks().length, 1);
+		widget.state.running = false;
+		await widget.listeners.chronograph_event({ name: 'test', data: { type: 'Timer' } });
+		assert.strictEqual(activeClocks().length, 0);
+	});
+
 	it('localizes known operation errors and preserves unknown errors', async () => {
 		const widget = await loadWidget('timer', {}, {});
 		for (const [message, expected] of [

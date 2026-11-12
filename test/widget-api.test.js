@@ -115,6 +115,21 @@ describe('Chronograph widget API', () => {
 		await assert.rejects(multipleWidgetApi.getTimer({ homey, params: { name: 'Widget API transition' } }));
 	});
 
+	it('returns independent results for a bounded batch of selected chronographs', async () => {
+		const results = await multipleWidgetApi.getChronographs({ homey, body: { chronographs: [
+			{ type: 'timer', name: 'Widget API timer' },
+			{ type: 'stopwatch', name: 'Widget API stopwatch' },
+			{ type: 'timer', name: 'Missing' },
+			{ type: 'other', name: 'Widget API timer' }
+		] } });
+		assert.strictEqual(results[0].chronograph.name, 'Widget API timer');
+		assert.strictEqual(results[1].chronograph.type, 'Stopwatch');
+		assert.strictEqual(results[2].error, 'Chronograph not found in app configuration');
+		assert.strictEqual(results[3].error, 'Unsupported chronograph type');
+		await assert.rejects(multipleWidgetApi.getChronographs({ homey, body: { chronographs: Array(11).fill({}) } }),
+			/Invalid chronograph selections/);
+	});
+
 	it('gets the selected configured and active chronograph', async () => {
 		const timer = new Chronograph(chronographId, 'Widget API timer', 30, 'seconds');
 		timer.setData('type', ChronographType.TIMER);
@@ -398,7 +413,8 @@ describe('Chronograph widget API', () => {
 		app._restoreChronographs();
 		const restored = Chronograph.get(id);
 		assert.strictEqual(restored.getData('steps'), 4);
-		assert.deepStrictEqual(restored._splits.map(split => split.time), [8000, 4000]);
+		assert.strictEqual(restored._transitionSplits.count, 2);
+		assert.strictEqual(restored._transitionSplits.interval, 4000);
 		assert.strictEqual(snapshot.data.steps, 4);
 		const result = await transitionWidgetApi.getChronograph({ homey, params: { name: 'Widget API transition' } });
 		assert.strictEqual(result.steps, 4);

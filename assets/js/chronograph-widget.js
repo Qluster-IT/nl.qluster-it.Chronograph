@@ -395,6 +395,7 @@ function onHomeyReady(Homey) {
 			function applyState(chronograph) {
 				var wasActive = $scope.selectedChronograph && $scope.selectedChronograph.active;
 				$scope.selectedChronograph = applyChronographUpdate(chronograph);
+				syncClock();
 				if (chronograph.active) $scope.cancelStart();
 				if (chronograph.defaults) {
 					var savedValuesKey = JSON.stringify(chronograph.defaults);
@@ -408,7 +409,7 @@ function onHomeyReady(Homey) {
 				$scope.error = styleError;
 			}
 
-			function refresh() {
+			function refresh(direct) {
 				if (!selectedName) {
 					$scope.loading = false;
 					markReady();
@@ -416,7 +417,10 @@ function onHomeyReady(Homey) {
 				}
 
 				var version = ++refreshVersion;
-				return Homey.api('GET', '/' + widgetType + '/' + encodeURIComponent(selectedName), {})
+				var request = multipleEntry && direct !== true
+					? $scope.multipleWidget.refresh($scope.widgetEntry)
+					: Homey.api('GET', '/' + widgetType + '/' + encodeURIComponent(selectedName), {});
+				return request
 					.then(function (chronograph) {
 						if (destroyed || version !== refreshVersion) return;
 						$scope.$applyAsync(function () {
@@ -462,6 +466,20 @@ function onHomeyReady(Homey) {
 				$scope.clock = Date.now();
 			}
 
+			function syncClock() {
+				var running = !!($scope.selectedChronograph
+					&& $scope.selectedChronograph.active && $scope.selectedChronograph.running);
+				if (multipleEntry) {
+					$scope.multipleWidget.setRunning($scope.widgetEntry, running);
+				} else if (running && !durationInterval) {
+					updateDurations();
+					durationInterval = $interval(updateDurations, 250);
+				} else if (!running && durationInterval) {
+					$interval.cancel(durationInterval);
+					durationInterval = null;
+				}
+			}
+
 			function scheduleHeightUpdate() {
 				if (!widgetReady || !window.requestAnimationFrame || !Homey.setHeight) return;
 
@@ -503,6 +521,7 @@ function onHomeyReady(Homey) {
 				}
 
 				$scope.busy = true;
+				if (multipleEntry) $scope.multipleWidget.invalidateRefresh();
 				$scope.error = null;
 				expectedRealtime = { active: true, running: true };
 				deferredRealtime = false;
@@ -518,7 +537,7 @@ function onHomeyReady(Homey) {
 							});
 							return;
 						}
-						return refresh();
+						return refresh(true);
 					})
 					.then(function () {
 						$scope.$applyAsync(function () {
@@ -562,6 +581,7 @@ function onHomeyReady(Homey) {
 				if (!$scope.selectedChronograph || !$scope.selectedChronograph.active || $scope.busy) return;
 
 				$scope.busy = true;
+				if (multipleEntry) $scope.multipleWidget.invalidateRefresh();
 				$scope.error = null;
 				expectedRealtime = { active: true, running: !$scope.selectedChronograph.running };
 				deferredRealtime = false;
@@ -572,6 +592,7 @@ function onHomeyReady(Homey) {
 					$scope.$applyAsync(function () {
 						++refreshVersion;
 						$scope.selectedChronograph = applyChronographUpdate(Object.assign({ active: true }, updated));
+						syncClock();
 						updateDesignRows();
 						finishOperation(true);
 					});
@@ -587,6 +608,7 @@ function onHomeyReady(Homey) {
 				if (!$scope.selectedChronograph || !$scope.selectedChronograph.active || $scope.busy) return;
 
 				$scope.busy = true;
+				if (multipleEntry) $scope.multipleWidget.invalidateRefresh();
 				$scope.error = null;
 				expectedRealtime = { active: false, running: false };
 				deferredRealtime = false;
@@ -596,6 +618,7 @@ function onHomeyReady(Homey) {
 						++refreshVersion;
 						$scope.selectedChronograph.active = false;
 						$scope.selectedChronograph.running = false;
+						syncClock();
 						applySavedDefaults($scope.selectedChronograph.defaults);
 						$scope.showStartForm = false;
 						updateDesignRows();
@@ -611,6 +634,7 @@ function onHomeyReady(Homey) {
 
 			$scope.$on('$destroy', function () {
 				destroyed = true;
+				if (multipleEntry) $scope.multipleWidget.setRunning($scope.widgetEntry, false);
 				$interval.cancel(refreshInterval);
 				$interval.cancel(durationInterval);
 				$timeout.cancel(startFormTimeout);
@@ -624,17 +648,17 @@ function onHomeyReady(Homey) {
 
 			function refreshSavedValues(event) {
 				if (event && event.name === selectedName && typeof event.type === 'string'
-					&& event.type.toLowerCase() === widgetType) return refresh();
+					&& event.type.toLowerCase() === widgetType) return refresh(true);
 			}
 			function finishOperation(succeeded) {
 				$scope.busy = false;
 				expectedRealtime = null;
 				var shouldRefresh = deferredRealtime && succeeded;
 				deferredRealtime = false;
-				if (shouldRefresh) refresh();
+				if (shouldRefresh) refresh(true);
 			}
 			function refreshRealtime(events, periodic) {
-				if (!Array.isArray(events)) return refresh();
+				if (!Array.isArray(events)) return refresh(true);
 				if (events.some(function (event) {
 					if (!event || event.name !== selectedName || !event.data
 						|| typeof event.data.type !== 'string' || event.data.type.toLowerCase() !== widgetType) return false;
@@ -652,10 +676,10 @@ function onHomeyReady(Homey) {
 						&& (!isTransition || event.data.steps === current.steps)
 						&& Math.abs(event.duration - (current.duration + Date.now() - current.updatedAt)) < 2000) return false;
 					return true;
-				})) return refresh();
+				})) return refresh(true);
 			}
 			if (multipleEntry) {
-				$scope.$on('multipleChronographsRefresh', refresh);
+				$scope.$on('multipleChronographsRefresh', function () { refresh(); });
 				$scope.$on('multipleChronographsRealtime', function (event, values, periodic) { refreshRealtime(values, periodic); });
 				$scope.$on('multipleChronographsFlowValues', function (event, values) { refreshSavedValues(values); });
 				$scope.$on('multipleChronographsClock', updateDurations);
@@ -668,7 +692,6 @@ function onHomeyReady(Homey) {
 				if (!selectedName) return;
 				if (!multipleEntry) {
 					refreshInterval = $interval(refresh, 5000);
-					durationInterval = $interval(updateDurations, 250);
 				}
 				markReady();
 			});
