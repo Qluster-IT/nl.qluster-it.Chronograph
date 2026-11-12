@@ -219,7 +219,12 @@
     "style_design_vertical": "Vertikal",
     "style_progress_placement": "Platzierung",
     "style_progress_in_row": "In der Zeile",
-    "style_progress_side": "Seitlich über alle Zeilen"
+    "style_progress_side": "Seitlich über alle Zeilen",
+    "style_column_row_span": "Zeilen übergreifen",
+    "style_select_before_drag": "Wähle ein Element aus, bevor du es ziehst.",
+    "style_preview_builtin_hint": "Nur lokale Vorschau: Änderungen an Vorlagen werden in diesem Browser gespeichert, nicht in der App.",
+    "style_row_span_fit_hint": "Über mehrere sichtbare Zeilen passt sich diese Spalte unabhängig von der Breiteneinstellung an den Inhalt an.",
+    "style_column_row_span_hint": "Einschließlich dieser Zeile. Ausgeblendete Zeilen entfallen; andere Spalten nutzen den verbleibenden Platz."
   },
   "timer_not_running": "Timer __name__ läuft nicht.",
   "stopwatch_not_running": "Stopuhr __name__ läuft nicht.",

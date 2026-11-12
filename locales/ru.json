@@ -219,7 +219,12 @@
     "style_design_vertical": "Вертикальный",
     "style_progress_placement": "Расположение",
     "style_progress_in_row": "В строке",
-    "style_progress_side": "Сбоку, вдоль всех строк"
+    "style_progress_side": "Сбоку, вдоль всех строк",
+    "style_column_row_span": "Количество строк",
+    "style_select_before_drag": "Выберите элемент перед перетаскиванием.",
+    "style_preview_builtin_hint": "Только локальный просмотр: изменения встроенных настроек сохраняются в браузере, а не в приложении.",
+    "style_row_span_fit_hint": "При охвате видимых строк ширина столбца соответствует содержимому независимо от настройки ширины.",
+    "style_column_row_span_hint": "Включая эту строку. Скрытые строки сворачиваются, а другие столбцы занимают оставшееся место."
   },
   "timer_not_running": "Таймер __name__ не запущен.",
   "stopwatch_not_running": "Секундомер __name__ не запущен.",

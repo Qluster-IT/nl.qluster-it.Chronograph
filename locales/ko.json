@@ -219,7 +219,12 @@
     "style_design_vertical": "세로",
     "style_progress_placement": "배치",
     "style_progress_in_row": "행 안",
-    "style_progress_side": "모든 행에 걸쳐 옆에 표시"
+    "style_progress_side": "모든 행에 걸쳐 옆에 표시",
+    "style_column_row_span": "차지할 행 수",
+    "style_select_before_drag": "끌기 전에 항목을 선택하세요.",
+    "style_preview_builtin_hint": "로컬 미리보기 전용: 기본 설정 변경 사항은 앱이 아닌 이 브라우저에 저장됩니다.",
+    "style_row_span_fit_hint": "표시된 여러 행에 걸친 열은 너비 설정과 관계없이 콘텐츠에 맞춰집니다.",
+    "style_column_row_span_hint": "이 행을 포함합니다. 숨겨진 행은 접히고 다른 열은 남은 공간에 맞춰집니다."
   },
   "timer_not_running": "타이머 __name__이(가) 실행 중이 아닙니다.",
   "stopwatch_not_running": "스톱워치 __name__이(가) 실행 중이 아닙니다.",

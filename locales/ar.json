@@ -219,7 +219,12 @@
     "style_design_vertical": "عمودي",
     "style_progress_placement": "الموضع",
     "style_progress_in_row": "داخل الصف",
-    "style_progress_side": "على الجانب عبر جميع الصفوف"
+    "style_progress_side": "على الجانب عبر جميع الصفوف",
+    "style_column_row_span": "عدد الصفوف الممتدة",
+    "style_select_before_drag": "حدد العنصر قبل سحبه.",
+    "style_preview_builtin_hint": "للمعاينة المحلية فقط: تُحفظ تعديلات الإعدادات المضمنة في هذا المتصفح، وليس في التطبيق.",
+    "style_row_span_fit_hint": "عند الامتداد عبر صفوف ظاهرة، يتناسب عرض العمود مع المحتوى بغض النظر عن إعداد العرض.",
+    "style_column_row_span_hint": "يشمل هذا الصف. تُطوى الصفوف المخفية وتستخدم الأعمدة الأخرى المساحة المتبقية."
   },
   "timer_not_running": "المؤقت __name__ غير قيد التشغيل.",
   "stopwatch_not_running": "ساعة الإيقاف __name__ غير قيد التشغيل.",

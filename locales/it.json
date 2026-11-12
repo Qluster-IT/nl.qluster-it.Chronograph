@@ -219,7 +219,12 @@
     "style_design_vertical": "Verticale",
     "style_progress_placement": "Posizione",
     "style_progress_in_row": "Nella riga",
-    "style_progress_side": "Sul lato, su tutte le righe"
+    "style_progress_side": "Sul lato, su tutte le righe",
+    "style_column_row_span": "Righe occupate",
+    "style_select_before_drag": "Seleziona un elemento prima di trascinarlo.",
+    "style_preview_builtin_hint": "Solo anteprima locale: le modifiche ai modelli sono salvate in questo browser, non nell’app.",
+    "style_row_span_fit_hint": "Su più righe visibili, questa colonna si adatta al contenuto indipendentemente dalla larghezza impostata.",
+    "style_column_row_span_hint": "Include questa riga. Le righe nascoste si riducono e le altre colonne usano lo spazio rimanente."
   },
   "timer_not_running": "Il timer __name__ non è in esecuzione.",
   "stopwatch_not_running": "Il cronometro __name__ non è in esecuzione.",

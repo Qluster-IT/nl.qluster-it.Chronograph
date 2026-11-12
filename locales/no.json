@@ -219,7 +219,12 @@
     "style_design_vertical": "Vertikal",
     "style_progress_placement": "Plassering",
     "style_progress_in_row": "I raden",
-    "style_progress_side": "På siden, over alle rader"
+    "style_progress_side": "På siden, over alle rader",
+    "style_column_row_span": "Antall rader",
+    "style_select_before_drag": "Velg et element før du drar det.",
+    "style_preview_builtin_hint": "Kun lokal forhåndsvisning: endringer i standarder lagres i denne nettleseren, ikke i appen.",
+    "style_row_span_fit_hint": "Når kolonnen spenner over synlige rader, tilpasses den innholdet uavhengig av breddeinnstillingen.",
+    "style_column_row_span_hint": "Inkluderer denne raden. Skjulte rader faller bort, og andre kolonner bruker den resterende plassen."
   },
   "timer_not_running": "Timeren __name__ kjører ikke.",
   "stopwatch_not_running": "Stoppeklokken __name__ kjører ikke.",

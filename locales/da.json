@@ -219,7 +219,12 @@
     "style_design_vertical": "Lodret",
     "style_progress_placement": "Placering",
     "style_progress_in_row": "I rækken",
-    "style_progress_side": "På siden, over alle rækker"
+    "style_progress_side": "På siden, over alle rækker",
+    "style_column_row_span": "Antal rækker",
+    "style_select_before_drag": "Vælg et element, før du trækker det.",
+    "style_preview_builtin_hint": "Kun lokal forhåndsvisning: ændringer af standarder gemmes i denne browser, ikke i appen.",
+    "style_row_span_fit_hint": "Når kolonnen spænder over synlige rækker, tilpasses den indholdet uanset breddeindstillingen.",
+    "style_column_row_span_hint": "Inkluderer denne række. Skjulte rækker bortfalder, og andre kolonner bruger den resterende plads."
   },
   "timer_not_running": "Timeren __name__ kører ikke.",
   "stopwatch_not_running": "Stopuret __name__ kører ikke.",

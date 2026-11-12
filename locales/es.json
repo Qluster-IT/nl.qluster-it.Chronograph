@@ -219,7 +219,12 @@
     "style_design_vertical": "Vertical",
     "style_progress_placement": "Ubicación",
     "style_progress_in_row": "En la fila",
-    "style_progress_side": "Al lado, en todas las filas"
+    "style_progress_side": "Al lado, en todas las filas",
+    "style_column_row_span": "Filas ocupadas",
+    "style_select_before_drag": "Selecciona un elemento antes de arrastrarlo.",
+    "style_preview_builtin_hint": "Solo vista local: los cambios de los ajustes integrados se guardan en este navegador, no en la aplicación.",
+    "style_row_span_fit_hint": "Al ocupar varias filas visibles, esta columna se ajusta al contenido independientemente del ancho elegido.",
+    "style_column_row_span_hint": "Incluye esta fila. Las filas ocultas se contraen y las demás columnas ocupan el espacio restante."
   },
   "timer_not_running": "El temporizador __name__ no está en marcha.",
   "stopwatch_not_running": "El cronómetro __name__ no está en marcha.",
