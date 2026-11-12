@@ -187,7 +187,7 @@ describe('Multiple Chronographs widget', () => {
 				assert.ok(!Object.prototype.hasOwnProperty.call(setting, 'value'));
 				if (suffix) {
 					for (const title of Object.values(setting.title)) {
-						assert.ok(title.startsWith('\u00a0\u00a0\u00a0' + slot + ' · '));
+						assert.match(title, /^\u00a0{3}(?!\d+ · ).+/);
 					}
 				}
 			}
