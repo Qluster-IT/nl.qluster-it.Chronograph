@@ -14,6 +14,7 @@
 		"ko": "여러 Chronograph",
 		"ar": "عدة Chronograph"
 	},
+	"transparent": true,
 	"settings": [
 		{
 			"id": "columns",

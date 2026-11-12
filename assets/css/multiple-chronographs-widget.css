@@ -1,3 +1,8 @@
+body[data-separator="cards"] {
+	padding: 0;
+	background-color: transparent;
+}
+
 .multiple-chronographs-rows {
 	display: flex;
 	flex-direction: column;
@@ -11,11 +16,17 @@
 	min-width: 0;
 }
 
-.multiple-chronographs-rows[data-separator="cards"] .multiple-chronographs-grid {
-	padding: 12px;
-	border: 1px solid color-mix(in srgb, var(--homey-text-color, #202127) 15%, transparent);
-	border-radius: 12px;
-	background: color-mix(in srgb, var(--homey-text-color, #202127) 5%, transparent);
+.multiple-chronographs-rows[data-separator="cards"] .multiple-chronographs-grid,
+body[data-separator="cards"] .multiple-chronographs > .chronograph-message,
+body[data-separator="cards"] .multiple-chronographs > .chronograph-error {
+	padding: var(--homey-su-4, 16px);
+	border-radius: 16px;
+	background: var(--homey-background-color, #fff);
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+body[data-separator="cards"] .multiple-chronographs > .chronograph-error + .multiple-chronographs-rows {
+	margin-top: 8px;
 }
 
 .multiple-chronographs-rows[data-separator="line"] .multiple-chronographs-grid + .multiple-chronographs-grid {

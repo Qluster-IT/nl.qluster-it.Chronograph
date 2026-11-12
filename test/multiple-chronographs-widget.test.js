@@ -79,6 +79,7 @@ describe('Multiple Chronographs widget', () => {
 		const { id, ...generated } = require('../app.json').widgets.multiple_chronographs;
 		if (id !== undefined) assert.strictEqual(id, 'multiple_chronographs');
 		assert.deepStrictEqual(generated, manifest);
+		assert.strictEqual(manifest.transparent, true);
 		assert.strictEqual(manifest.settings.length, 83);
 		assert.deepStrictEqual(manifest.settings[0].values.map(value => value.id), ['1', '2', '3']);
 		assert.deepStrictEqual(manifest.settings.find(setting => setting.id === 'rowSeparator').values.map(value => value.id),
@@ -122,6 +123,14 @@ describe('Multiple Chronographs widget', () => {
 			[[[1, 2]], [[3, 2], [4, 1]], [[10, 3]]]);
 		assert.strictEqual(widget.parent.rowSeparator, 'none');
 		assert.strictEqual(widget.parent.rowSeparatorColor, 'currentColor');
+	});
+
+	it('uses the full transparent frame and Homey background only for card separation', () => {
+		const html = fs.readFileSync(path.join(root, 'widgets', 'multiple_chronographs', 'public', 'index.html'), 'utf8');
+		const css = fs.readFileSync(path.join(root, 'assets', 'css', 'multiple-chronographs-widget.css'), 'utf8');
+		assert.match(html, /<body[^>]*ng-attr-data-separator="\{\{ rowSeparator \}\}"/);
+		assert.match(css, /body\[data-separator="cards"\]\s*\{[^}]*padding:\s*0;[^}]*background-color:\s*transparent/s);
+		assert.match(css, /\[data-separator="cards"\] \.multiple-chronographs-grid[^}]*padding:\s*var\(--homey-su-4,\s*16px\)[^}]*background:\s*var\(--homey-background-color,\s*#fff\)/s);
 	});
 
 	it('uses the selected separator and validates its color', async () => {

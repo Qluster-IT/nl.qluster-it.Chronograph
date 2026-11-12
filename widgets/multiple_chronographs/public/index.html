@@ -10,7 +10,7 @@
 	<link rel="stylesheet" href="../../assets/css/chronograph-widget.css">
 	<link rel="stylesheet" href="../../assets/css/multiple-chronographs-widget.css">
 </head>
-<body class="homey-widget" ng-controller="MultipleChronographsController">
+<body class="homey-widget" ng-controller="MultipleChronographsController" ng-attr-data-separator="{{ rowSeparator }}">
 	<main class="multiple-chronographs">
 		<p class="chronograph-error" role="alert" ng-if="error">{{ error }}</p>
 		<p class="chronograph-message" ng-if="!entries.length && !error">{{ emptyMessage }}</p>
