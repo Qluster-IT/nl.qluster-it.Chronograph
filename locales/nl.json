@@ -254,5 +254,6 @@
   "name_required": "U moet een naam (typen en) kiezen of een naam invoeren.",
   "existing": "Bestaand",
   "new": "Nieuw",
-  "name_based_api_notice": "De Chronograph-API is gewijzigd: gebruik namen in plaats van ID's. Werk je scripts en integraties bij; zie de API-wiki."
+  "name_based_api_notice": "De Chronograph-API is gewijzigd: gebruik namen in plaats van ID's. Werk je scripts en integraties bij; zie de API-wiki.",
+  "widget_features_notice": "Chronograph heeft nu dashboardwidgets! Open de appinstellingen om chronografen te beheren en widgetindelingen en kleurenschema's te ontwerpen."
 }
