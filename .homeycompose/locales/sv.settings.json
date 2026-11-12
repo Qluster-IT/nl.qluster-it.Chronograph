@@ -228,5 +228,9 @@
 	"error_not_active": "Kronografen är inte aktiv.",
 	"error_already_active": "Kronografen är redan aktiv.",
 	"error_name_conflict": "Kronografnamnet står i konflikt med en aktiv instans.",
-	"error_duration_required": "En varaktighet krävs."
+	"error_duration_required": "En varaktighet krävs.",
+	"multiple_invalid_settings": "Vissa widgetinställningar är ogiltiga. Kontrollera widgetinställningarna.",
+	"widget_type_timer": "Timer",
+	"widget_type_stopwatch": "Stoppur",
+	"widget_type_transition": "Övergång"
 }

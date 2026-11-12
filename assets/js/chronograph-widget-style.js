@@ -331,17 +331,19 @@
 			design.rowVisibility.compact[4].states = [];
 			design.rowVisibility.compact[4].hideAfterSeconds = 10;
 			design.groups.compact.elements.cancel = { row: 4, group: 2, order: 2 };
-			design.groups.compact.elements.icon.group = 2;
-			design.groups.compact.elements.name.group = 2;
-			design.groups.compact.elements.progress.row = 1;
-			design.rowColumns.compact[1] = 2;
-			design.columnSpans.compact[1] = [1, 3];
-			design.columnWidths.compact[1] = ['span', 'span'];
-			design.columnAlignments.compact[1] = ['left', 'left'];
-			design.columnDirections.compact[1] = ['horizontal', 'horizontal'];
-			design.columnVerticalAlignments.compact[1] = ['middle', 'middle'];
-			design.columnRowSpans = { compact: { 1: [5, 1] } };
+			design.columnRowSpans = {};
 			['compact', 'normal', 'large'].forEach(function (size) {
+				design.groups[size].elements.icon.group = 2;
+				design.groups[size].elements.name.group = 2;
+				design.groups[size].elements.progress.row = 1;
+				design.rowVisibility[size][5].states = [];
+				design.rowColumns[size][1] = 2;
+				design.columnSpans[size] = { 1: [1, 3], 2: [3], 3: [2, 1], 4: [2, 1], 5: [3] };
+				design.columnWidths[size][1] = [size === 'compact' ? 'span' : 'content', 'span'];
+				design.columnAlignments[size][1] = ['left', 'left'];
+				design.columnDirections[size][1] = ['horizontal', 'horizontal'];
+				design.columnVerticalAlignments[size][1] = ['middle', 'middle'];
+				design.columnRowSpans[size] = { 1: [5, 1] };
 				design.progressSettings[size].direction = 'bottom-top';
 			});
 		}
@@ -434,15 +436,22 @@
 				group.gridColumn = (boundaries.indexOf(group.gridStart) + 1) + ' / ' + (boundaries.indexOf(group.gridEnd) + 1);
 			});
 		});
-		var tracks = boundaries.slice(1).map(function (end, index) {
+		var trackDefinitions = boundaries.slice(1).map(function (end, index) {
 			var start = boundaries[index];
 			var content = result.some(function (row) {
 				return row.groups.some(function (group) {
 					return group.fitContent && group.elements.length && group.gridStart <= start && group.gridEnd >= end;
 				});
 			});
-			if (content) return 'minmax(0, max-content)';
-			return 'minmax(0, ' + (end - boundaries[index]) + 'fr)';
+			return { content: content, weight: end - start };
+		});
+		// Fractional tracks totaling less than 1fr leave part of the grid unused.
+		var flexibleWeight = trackDefinitions.reduce(function (sum, track) {
+			return sum + (track.content ? 0 : track.weight);
+		}, 0);
+		var tracks = trackDefinitions.map(function (track) {
+			if (track.content) return 'minmax(0, max-content)';
+			return 'minmax(0, ' + (track.weight / flexibleWeight) + 'fr)';
 		}).join(' ');
 		var layout = { rows: result, spanning: true, tracks: tracks, rowTracks: rowTracks.join(' ') };
 		rowSpanCache.set(rows, layout);

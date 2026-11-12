@@ -206,35 +206,29 @@ class Application extends Homey.App {
 	}
 
 	_registerChronographWidgetAutocomplete() {
-		['timer', 'transition', 'stopwatch'].forEach(type => {
-			const widget = this.homey.dashboards.getWidget(type);
-			widget.registerSettingAutocompleteListener('icon', async query => {
+		const types = ['timer', 'transition', 'stopwatch'];
+		const searchChronographs = (type, query) => {
+			const chronographType = ChronographType[type.toUpperCase()];
+			const search = (query || '').toLowerCase();
+			return (this.chronographs && this.chronographs[type] || [])
+				.map(chronograph => typeof chronograph === 'string' ? { name: chronograph } : chronograph)
+				.filter(chronograph => chronograph.name && chronograph.name.toLowerCase().includes(search))
+				.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base', numeric: true }))
+				.map(chronograph => ({
+					name: chronograph.name,
+					id: chronograph.name,
+					type,
+					chronographName: chronograph.name,
+					data: { type: chronographType, name: chronograph.name }
+				}));
+		};
+		const registerAppearance = (widget, prefix) => {
+			widget.registerSettingAutocompleteListener(prefix ? prefix + 'Icon' : 'icon', async query => {
 				return searchIcons(query, this.homey.__('settings.widget_icon_none'));
 			});
-			widget.registerSettingAutocompleteListener('chronograph', async (query) => {
-				const chronographType = ChronographType[type.toUpperCase()];
-				const search = (query || '').toLowerCase();
-				return (this.chronographs && this.chronographs[type] || [])
-					.map(chronograph => typeof chronograph === 'string' ? { name: chronograph } : chronograph)
-					.filter(chronograph => chronograph.name && chronograph.name.toLowerCase().includes(search))
-					.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base', numeric: true }))
-					.map(chronograph => {
-						/** @type {ChronographWidgetAutocompleteItem} */
-						const item = {
-							name: chronograph.name,
-							id: chronograph.name,
-							type,
-							chronographName: chronograph.name,
-							data: {
-								type: chronographType,
-								name: chronograph.name
-							}
-						};
-						return item;
-					});
-			});
 			['designStyle', 'colorScheme'].forEach(settingId => {
-				widget.registerSettingAutocompleteListener(settingId, async query => {
+				const registeredId = prefix ? prefix + settingId[0].toUpperCase() + settingId.slice(1) : settingId;
+				widget.registerSettingAutocompleteListener(registeredId, async query => {
 					const collection = this.homey.settings.get('widgetStyles') || {};
 					const key = settingId === 'designStyle' ? 'styles'
 						: collection.version === 1 ? 'styles' : 'colorSchemes';
@@ -263,7 +257,24 @@ class Application extends Homey.App {
 					return defaults.concat(custom);
 				});
 			});
+		};
+		types.forEach(type => {
+			const widget = this.homey.dashboards.getWidget(type);
+			widget.registerSettingAutocompleteListener('chronograph', async query => searchChronographs(type, query));
+			registerAppearance(widget, '');
 		});
+		const widget = this.homey.dashboards.getWidget('multiple_chronographs');
+		for (let slot = 1; slot <= 10; slot++) {
+			const prefix = 'chronograph' + slot;
+			widget.registerSettingAutocompleteListener(prefix, async query => types.flatMap(type =>
+				searchChronographs(type, query).map(item => ({
+					...item,
+					id: JSON.stringify([type, item.chronographName]),
+					description: this.homey.__('settings.widget_type_' + type)
+				}))).sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base', numeric: true })
+					|| a.type.localeCompare(b.type)));
+			registerAppearance(widget, prefix);
+		}
 	}
 
 	setRoundOfDurationsFlowcards() {

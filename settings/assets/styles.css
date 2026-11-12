@@ -400,7 +400,7 @@ body {
 	display: contents;
 }
 
-.style-grouped-preview[data-row-spanning="true"] .style-preview-group {
+.style-grouped-preview[data-row-spanning="true"] .style-preview-group:not([data-grid-last="true"]) {
 	padding-right: 8px;
 }
 
@@ -719,12 +719,6 @@ body {
 	padding: 3px;
 	border: 1px dashed rgba(128, 128, 128, 0.55);
 	border-radius: 4px;
-}
-
-.style-column-row-span {
-	display: block;
-	font-size: 10px;
-	color: var(--homey-text-color-light, #777982);
 }
 
 .style-group-drop-target {

@@ -237,7 +237,6 @@
 										ng-attr-draggable="{{ editor.selectedColumn.row === row.id && editor.selectedColumn.group === group.id ? 'true' : 'false' }}" style-reorder-drag="column" style-reorder-source="{{ row.id }}:{{ group.id }}" ng-attr-title="{{ t('settings.style_column_drag') }}"
 										ng-attr-aria-label="{{ t('settings.style_column') }} {{ row.id }}.{{ group.id }}"
 										ng-attr-aria-pressed="{{ editor.selectedColumn.row === row.id && editor.selectedColumn.group === group.id }}">{{ row.id }}.{{ group.id }}</button>
-									<span class="style-column-row-span" ng-if="group.rowSpan > 1">&#8597; {{ t('settings.style_column_row_span') }}: {{ group.rowSpan }}</span>
 									<button class="hy-nostyle style-group-element" type="button"
 										ng-repeat="element in group.elements track by element" style-group-element="{{ element }}" ng-attr-data-style-element="{{ element }}"
 										ng-attr-draggable="{{ editor.selectedElement === element ? 'true' : 'false' }}"
@@ -480,6 +479,7 @@
 				<div class="style-preview-group" ng-repeat="group in row.groups track by group.id"
 					ng-style="previewRowLayout(previewScenario).spanning ? { 'grid-column': group.gridColumn, 'grid-row': group.gridRow, 'padding-top': group.rowTopPadding + 'px' } : {}"
 					ng-attr-data-row-span="{{ group.rowSpan }}"
+					ng-attr-data-grid-last="{{ group.gridEnd >= 0.999999999 ? 'true' : undefined }}"
 					ng-attr-data-alignment="{{ group.alignment }}"
 					ng-attr-data-vertical-alignment="{{ group.verticalAlignment }}"
 					ng-attr-data-direction="{{ group.direction }}"

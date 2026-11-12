@@ -228,5 +228,9 @@
 	"error_not_active": "Chronograf nie jest aktywny.",
 	"error_already_active": "Chronograf jest już aktywny.",
 	"error_name_conflict": "Nazwa chronografu koliduje z aktywną instancją.",
-	"error_duration_required": "Czas trwania jest wymagany."
+	"error_duration_required": "Czas trwania jest wymagany.",
+	"multiple_invalid_settings": "Niektóre ustawienia widżetu są nieprawidłowe. Sprawdź ustawienia widżetu.",
+	"widget_type_timer": "Stoper",
+	"widget_type_stopwatch": "Stoper",
+	"widget_type_transition": "Przejście"
 }

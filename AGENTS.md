@@ -4,6 +4,7 @@
 
 - Follow the existing Homey SDK 3 and Homey Compose conventions. Treat `.homeycompose/` as the source for composed app configuration.
 - Add or change translations in `.homeycompose/locales/`; settings keys belong in `<language>.settings.json`. Keep the committed root `locales/<language>.json` files as empty objects; Homey Compose fills them when building.
+- Never translate the brand name "Chronograph".
 - In Dutch, translate the Chronograph type "transition" as "transitie" (plural "transities"), not "overgang" or "overgangen".
 - Do not mention deprecated devices or Flow cards in user-facing documentation.
 - Keep changes focused, preserve existing app behavior, and update directly related documentation and tests.

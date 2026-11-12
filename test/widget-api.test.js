@@ -10,6 +10,7 @@ const appApi = require('../api.js');
 const widgetApi = require('../widgets/timer/api.js');
 const stopwatchWidgetApi = require('../widgets/stopwatch/api.js');
 const transitionWidgetApi = require('../widgets/transition/api.js');
+const multipleWidgetApi = require('../widgets/multiple_chronographs/api.js');
 
 describe('Chronograph widget API', () => {
 	let chronographId;
@@ -69,12 +70,15 @@ describe('Chronograph widget API', () => {
 	it('provides all Homey languages for widget names and settings', () => {
 		const languages = ['en', 'nl', 'da', 'de', 'es', 'fr', 'it', 'no', 'sv', 'pl', 'ru', 'ko', 'ar'];
 		const generated = require('../app.json').widgets;
-		for (const type of ['timer', 'stopwatch', 'transition']) {
+		for (const type of ['timer', 'stopwatch', 'transition', 'multiple_chronographs']) {
 			const compose = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'widgets', type, 'widget.compose.json'), 'utf8'));
 			function check(translations, generatedTranslations, label) {
 				assert.deepStrictEqual(generatedTranslations, translations, `${type}: ${label}`);
 				for (const language of languages) {
 					assert.ok(typeof translations[language] === 'string' && translations[language].trim(), `${type}: ${label}: ${language}`);
+					if (translations.en.includes('Chronograph')) {
+						assert.ok(translations[language].includes('Chronograph'), `${type}: ${label}: ${language}: brand`);
+					}
 				}
 			}
 			check(compose.name, generated[type].name, 'name');
@@ -100,6 +104,15 @@ describe('Chronograph widget API', () => {
 			styles: [],
 			colorSchemes: []
 		});
+	});
+
+	it('uses each existing type-specific API for the multiple widget', async () => {
+		for (const [type, name] of [['Timer', 'Widget API timer'], ['Stopwatch', 'Widget API stopwatch'], ['Transition', 'Widget API transition']]) {
+			const result = await multipleWidgetApi['get' + type]({ homey, params: { name } });
+			assert.strictEqual(result.type, type);
+			assert.strictEqual(result.name, name);
+		}
+		await assert.rejects(multipleWidgetApi.getTimer({ homey, params: { name: 'Widget API transition' } }));
 	});
 
 	it('gets the selected configured and active chronograph', async () => {

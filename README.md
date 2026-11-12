@@ -79,11 +79,192 @@ Application image by [Agê Barros](https://unsplash.com/@agebarros?utm_source=un
 
 ## Changelog
 
-### v2.3.0
+### v3.0.0
+
+* Added a multi-Chronograph widget with individually configurable tiles and up to three columns.
+* Create custom widget layouts and color schemes with the widget designer.
+* Improved translations.
+* The Chronograph API now uses names instead of IDs. Update your scripts and integrations; see the [API wiki](https://github.com/Qluster-IT/nl.qluster-it.Chronograph/wiki).
+
+### v2.3.1
 
 * Added customizable timer, stopwatch and transition dashboard widgets with controls and Flow/API defaults.
 * Clarified that the timer split Flow card uses remaining duration.
 * Added a Flow card for elapsed timer duration.
+
+### v2.2.4
+
+* Moved the source code and issues from Bitbucket to GitHub.
+
+### v2.2.3
+
+* Added milliseconds to the delay condition Flow card.
+
+### v2.2.2
+
+* Translated the app into all supported languages.
+
+### v2.1.10
+
+* Fixed a timer start error caused by incorrect splits.
+
+### v2.1.9
+
+* Fixed more issues reported in the error log.
+
+### v2.1.7
+
+* Fixed a potential bug in the notification used to prevent a crash.
+
+### v2.1.5
+
+* Improved Flow card hints.
+
+### v2.1.3
+
+* Test version: attempted to resolve a stopwatch start bug.
+
+### v2.1.2
+
+* Fixed an API bug related to the SDK3 migration.
+
+### v2.1.0
+
+* Improved Flow descriptions, hints and argument descriptions.
+
+### v2.0.12
+
+* Improved descriptions for the elapsed and remaining duration Flow cards.
+
+### v2.0.11
+
+* Fixed saving the rounding setting for duration Flow cards.
+
+### v2.0.10
+
+* Fixed errors in timer and stopwatch splits.
+
+### v2.0.5
+
+* Fixed incorrect information returned by the API for all chronographs.
+
+### v2.0.4
+
+* Added the last-used time to chronographs in app settings.
+* Added a name tag to duration Flow cards.
+
+### v2.0.2
+
+* Added the ability to create and select chronographs by name within Flow cards.
+
+### v1.6.15
+
+* Fixed chronograph updates sent to other apps so they are sent every second, not only on start and stop.
+
+### v1.6.14
+
+* Improved performance when no chronographs are running.
+
+### v1.6.13
+
+* Addressed startup issues on older models with many chronographs.
+
+### v1.6.12
+
+* Continued attempts to resolve the reported issue.
+
+### v1.6.9
+
+* Fixed issues and improved error handling and logging for installations with many chronographs.
+
+### v1.6.4
+
+* Fixed an older crash report.
+
+### v1.6.0
+
+* Added support for other apps to listen to chronograph changes.
+* Changed the Get All APIs to return JSON instead of stringified responses.
+
+### v1.5.5
+
+* Fixed an error when retrieving a transition's duration.
+
+### v1.5.4
+
+* Added inactive chronographs to app settings.
+
+### v1.5.3
+
+* Duration Flow cards round results to two decimals or fewer, configurable in app settings.
+
+### v1.5.2
+
+* Fixed an error when retrieving a stopwatch's duration.
+
+### v1.4.11
+
+* Fixed crash reports.
+
+### v1.4.8
+
+* Fixed bugs and made minor description adjustments.
+
+### v1.4.7
+
+* Added `HH:mm:ss`, `mm:ss` and `HH:mm` text tags to duration Flow cards.
+
+### v1.4.5
+
+* Improved German translations.
+
+### v1.4.4
+
+* Improved the SDK3 implementation.
+
+### v1.4.3
+
+* Added Flow cards to retrieve elapsed and remaining durations of timers, stopwatches and transitions.
+
+### v1.4.2
+
+* Added support for Homey Pro (Early 2023).
+
+### v1.4.1
+
+* Documented the 89-second maximum for the delay condition Flow card.
+
+### v1.4.0
+
+* Added wildcard support to chronograph names in running condition Flow cards.
+
+### v1.3.5
+
+* Added Patreon and GitHub Sponsors contribution options.
+
+### v1.3.4
+
+* Fixed controls in app settings.
+
+### v1.3.2
+
+* Corrected hints for timer and transition adjustment Flow cards.
+
+### v1.2.3
+
+* Added a source code link.
+
+### v1.2.2
+
+* Fixed existing issues.
+
+### v1.2.1
+
+* Fixed an SDK3 bug.
+
+### v1.2.0
+
+* Rewrote the app for SDK3.
 
 ### v1.1.2
 

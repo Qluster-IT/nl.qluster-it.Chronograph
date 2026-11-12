@@ -8,7 +8,7 @@ const zlib = require('zlib');
 describe('Widget store previews', () => {
 	it('provides transparent 1024px light and dark PNGs for every widget', () => {
 		const previews = new Set();
-		for (const type of ['timer', 'stopwatch', 'transition']) {
+		for (const type of ['timer', 'stopwatch', 'transition', 'multiple_chronographs']) {
 			for (const theme of ['light', 'dark']) {
 				const image = fs.readFileSync(path.join(__dirname, '..', 'widgets', type, `preview-${theme}.png`));
 				assert.strictEqual(image.subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
@@ -28,6 +28,6 @@ describe('Widget store previews', () => {
 				previews.add(image.toString('base64'));
 			}
 		}
-		assert.strictEqual(previews.size, 6);
+		assert.strictEqual(previews.size, 8);
 	});
 });

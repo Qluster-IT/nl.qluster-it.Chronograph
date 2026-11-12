@@ -7,6 +7,39 @@ const vm = require('vm');
 const { Utils, ChronographType } = require('../lib/utils.js');
 
 describe('Widget chronograph autocomplete', () => {
+	it('offers all types with distinct identities and appearance selectors in each multiple-widget slot', async () => {
+		const module = { exports: {} };
+		vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8'), {
+			module,
+			require: id => id === 'homey' ? { App: class {} }
+				: id === './lib/utils.js' ? require('../lib/utils.js')
+					: id === './assets/js/chronograph-widget-style.js' ? require('../assets/js/chronograph-widget-style.js') : {}
+		});
+		const listeners = {};
+		const app = {
+			chronographs: { timer: [{ name: 'Same' }], transition: [{ name: 'Same' }], stopwatch: [{ name: 'Other' }] },
+			homey: {
+				__: key => key, settings: { get: () => ({}) },
+				dashboards: { getWidget: id => ({ registerSettingAutocompleteListener: (setting, listener) => {
+					listeners[id + ':' + setting] = listener;
+				} }) }
+			}
+		};
+		module.exports.prototype._registerChronographWidgetAutocomplete.call(app);
+		for (const slot of [1, 10]) {
+			const prefix = 'multiple_chronographs:chronograph' + slot;
+			const matches = await listeners[prefix]('same');
+			assert.deepStrictEqual(Array.from(matches, item => item.type), ['timer', 'transition']);
+			assert.notStrictEqual(matches[0].id, matches[1].id);
+			assert.strictEqual(matches[0].chronographName, 'Same');
+			assert.strictEqual(matches[1].data.name, 'Same');
+			assert.strictEqual(matches[0].description, 'settings.widget_type_timer');
+			assert.strictEqual((await listeners[prefix + 'DesignStyle'](''))[0].id, 'builtin:current');
+			assert.strictEqual((await listeners[prefix + 'ColorScheme'](''))[0].id, 'builtin:current');
+			assert.strictEqual(typeof listeners[prefix + 'Icon'], 'function');
+		}
+	});
+
 	it('offers localized built-in color schemes and filters them without affecting designs', async () => {
 		const runtime = require('../assets/js/chronograph-widget-style.js');
 		const module = { exports: {} };

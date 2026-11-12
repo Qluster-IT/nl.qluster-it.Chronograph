@@ -1,3 +1,5 @@
+param([switch]$MultipleOnly)
+
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Drawing
 
@@ -39,6 +41,7 @@ function DrawStroke($graphics, $color, $width, $points) {
 }
 
 foreach ($theme in @('light', 'dark')) {
+	if ($MultipleOnly) { continue }
 	$card = [System.Drawing.ColorTranslator]::FromHtml($(if ($theme -eq 'light') { '#ffffff' } else { '#252832' }))
 	$primary = [System.Drawing.ColorTranslator]::FromHtml($(if ($theme -eq 'light') { '#343943' } else { '#ecedf1' }))
 	$muted = [System.Drawing.ColorTranslator]::FromHtml($(if ($theme -eq 'light') { '#aeb6c4' } else { '#767e90' }))
@@ -89,5 +92,29 @@ foreach ($theme in @('light', 'dark')) {
 			$graphics.Dispose()
 			$bitmap.Dispose()
 		}
+	}
+}
+
+foreach ($theme in @('light', 'dark')) {
+	$bitmap = New-Object System.Drawing.Bitmap(1024, 1024, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+	$graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+	try {
+		$graphics.Clear([System.Drawing.Color]::Transparent)
+		$graphics.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
+		$locations = @(
+			@('timer', 0, 0),
+			@('stopwatch', 512, 0),
+			@('transition', 256, 448)
+		)
+		foreach ($location in $locations) {
+			$source = [System.Drawing.Image]::FromFile((Join-Path $root "widgets\$($location[0])\preview-$theme.png"))
+			try { $graphics.DrawImage($source, [int]$location[1], [int]$location[2], 512, 512) }
+			finally { $source.Dispose() }
+		}
+		$target = Join-Path $root "widgets\multiple_chronographs\preview-$theme.png"
+		$bitmap.Save($target, [System.Drawing.Imaging.ImageFormat]::Png)
+	} finally {
+		$graphics.Dispose()
+		$bitmap.Dispose()
 	}
 }

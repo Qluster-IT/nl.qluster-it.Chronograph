@@ -228,5 +228,9 @@
 	"error_not_active": "Chronograph ist nicht aktiv.",
 	"error_already_active": "Chronograph ist bereits aktiv.",
 	"error_name_conflict": "Der Chronograph-Name steht im Konflikt mit einer aktiven Instanz.",
-	"error_duration_required": "Eine Dauer ist erforderlich."
+	"error_duration_required": "Eine Dauer ist erforderlich.",
+	"multiple_invalid_settings": "Einige Widget-Einstellungen sind ungültig. Bitte überprüfe die Widget-Einstellungen.",
+	"widget_type_timer": "Timer",
+	"widget_type_stopwatch": "Stoppuhr",
+	"widget_type_transition": "Übergang"
 }

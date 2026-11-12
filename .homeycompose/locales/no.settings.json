@@ -228,5 +228,9 @@
 	"error_not_active": "Kronografen er ikke aktiv.",
 	"error_already_active": "Kronografen er allerede aktiv.",
 	"error_name_conflict": "Kronografnavnet er i konflikt med en aktiv instans.",
-	"error_duration_required": "En varighet er påkrevd."
+	"error_duration_required": "En varighet er påkrevd.",
+	"multiple_invalid_settings": "Noen widgetinnstillinger er ugyldige. Kontroller widgetinnstillingene.",
+	"widget_type_timer": "Timer",
+	"widget_type_stopwatch": "Stoppeklokke",
+	"widget_type_transition": "Overgang"
 }

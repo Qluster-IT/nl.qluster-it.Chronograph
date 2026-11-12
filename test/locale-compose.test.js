@@ -38,6 +38,11 @@ describe('Homey Compose locales', () => {
 			const source = JSON.parse(fs.readFileSync(path.join(sourceDir, file), 'utf8'));
 			const settings = JSON.parse(fs.readFileSync(path.join(sourceDir, `${language}.settings.json`), 'utf8'));
 			const placeholder = JSON.parse(fs.readFileSync(path.join(root, 'locales', file), 'utf8'));
+			assert.strictEqual(require('../.homeycompose/app.json').name[language], 'Chronograph', `${language}: app name`);
+			assert.ok(source.name_based_api_notice.includes('Chronograph'), `${language}: API notice brand`);
+			assert.ok(settings.settings_navigation.includes('Chronograph'), `${language}: settings navigation brand`);
+			const readme = language === 'en' ? 'README.txt' : `README.${language}.txt`;
+			assert.ok(fs.readFileSync(path.join(root, readme), 'utf8').includes('Chronograph'), `${language}: app store description brand`);
 			assert.ok(!/[?\uFFFD]/.test(source.name_based_api_notice), `${language}: API notice`);
 			assert.ok(!/[?\uFFFD]/.test(settings.widget_icon_none), `${language}: widget icon label`);
 			assert.strictEqual(changelog[version][language].split('\n').pop(), source.name_based_api_notice, language);

@@ -4,29 +4,40 @@ const assert = require('assert');
 const widgetStyle = require('../assets/js/chronograph-widget-style.js');
 
 describe('Widget style runtime', () => {
-	it('uses the designed compact Vertical layout with a row-spanning status bar', () => {
+	it('fills the available width beside content-sized spanning columns in the Vertical start form', () => {
 		const design = widgetStyle.builtInDesign('builtin:vertical');
-		const positions = design.groups.compact.elements;
-		assert.deepStrictEqual(positions.progress, { row: 1, group: 1, order: 1 });
-		assert.strictEqual(positions.icon.group, 2);
-		assert.strictEqual(positions.name.group, 2);
-		assert.strictEqual(design.rowColumns.compact[1], 2);
-		assert.deepStrictEqual(design.columnSpans.compact[1], [1, 3]);
-		assert.deepStrictEqual(design.columnWidths.compact[1], ['span', 'span']);
-		assert.deepStrictEqual(design.columnAlignments.compact[1], ['left', 'left']);
-		assert.deepStrictEqual(design.columnDirections.compact[1], ['horizontal', 'horizontal']);
-		assert.deepStrictEqual(design.columnVerticalAlignments.compact[1], ['middle', 'middle']);
-		assert.deepStrictEqual(design.columnRowSpans, { compact: { 1: [5, 1] } });
-		for (const type of ['timer', 'transition']) {
-			for (const state of ['running', 'paused']) {
-				const rows = widgetStyle.buildRows(design, 'compact', state, type, false);
-				const layout = widgetStyle.layoutSpanningRows(rows);
-				assert.strictEqual(layout.spanning, true);
-				const progress = layout.rows[0].groups[0];
-				assert.deepStrictEqual(progress.elements, ['progress']);
-				assert.strictEqual(progress.rowSpan, 5);
-				assert.strictEqual(progress.fitContent, true);
-				assert.ok(layout.rows[0].groups[1].elements.includes('name'));
+		for (const size of ['normal', 'large']) {
+			for (const type of ['timer', 'transition']) {
+				const layout = widgetStyle.layoutSpanningRows(widgetStyle.buildRows(design, size, 'starting', type, true));
+				assert.strictEqual(layout.tracks, 'minmax(0, max-content) minmax(0, 1fr) minmax(0, max-content)');
+			}
+		}
+	});
+
+	it('uses the designed Vertical layout with a row-spanning status bar at every size', () => {
+		const design = widgetStyle.builtInDesign('builtin:vertical');
+		for (const size of ['compact', 'normal', 'large']) {
+			const positions = design.groups[size].elements;
+			assert.deepStrictEqual(positions.progress, { row: 1, group: 1, order: 1 });
+			assert.strictEqual(positions.icon.group, 2);
+			assert.strictEqual(positions.name.group, 2);
+			assert.strictEqual(design.rowColumns[size][1], 2);
+			assert.deepStrictEqual(design.columnSpans[size], { 1: [1, 3], 2: [3], 3: [2, 1], 4: [2, 1], 5: [3] });
+			assert.deepStrictEqual(design.columnWidths[size][1], [size === 'compact' ? 'span' : 'content', 'span']);
+			assert.deepStrictEqual(design.columnRowSpans[size][1], [5, 1]);
+			assert.deepStrictEqual(design.rowVisibility[size][5].states, []);
+			for (const type of ['timer', 'transition']) {
+				for (const state of ['running', 'paused']) {
+					const rows = widgetStyle.buildRows(design, size, state, type, false);
+					const layout = widgetStyle.layoutSpanningRows(rows);
+					assert.strictEqual(layout.spanning, true);
+					assert.ok(!rows.some(row => row.id === 5));
+					const progress = layout.rows[0].groups[0];
+					assert.deepStrictEqual(progress.elements, ['progress']);
+					assert.strictEqual(progress.rowSpan, 5);
+					assert.strictEqual(progress.fitContent, true);
+					assert.ok(layout.rows[0].groups[1].elements.includes('name'));
+				}
 			}
 		}
 	});

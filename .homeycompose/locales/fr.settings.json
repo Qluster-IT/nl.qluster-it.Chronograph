@@ -228,5 +228,9 @@
 	"error_not_active": "Le chronographe n’est pas actif.",
 	"error_already_active": "Le chronographe est déjà actif.",
 	"error_name_conflict": "Le nom du chronographe entre en conflit avec une instance active.",
-	"error_duration_required": "Une durée est requise."
+	"error_duration_required": "Une durée est requise.",
+	"multiple_invalid_settings": "Certains paramètres du widget sont invalides. Vérifiez les paramètres du widget.",
+	"widget_type_timer": "Minuteur",
+	"widget_type_stopwatch": "Chronomètre",
+	"widget_type_transition": "Transition"
 }

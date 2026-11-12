@@ -228,5 +228,9 @@
 	"error_not_active": "Chronograaf is niet actief.",
 	"error_already_active": "Chronograaf is al actief.",
 	"error_name_conflict": "De chronograafnaam conflicteert met een actieve instantie.",
-	"error_duration_required": "Een duur is vereist."
+	"error_duration_required": "Een duur is vereist.",
+	"multiple_invalid_settings": "Sommige widgetinstellingen zijn ongeldig. Controleer de widgetinstellingen.",
+	"widget_type_timer": "Timer",
+	"widget_type_stopwatch": "Stopwatch",
+	"widget_type_transition": "Transitie"
 }

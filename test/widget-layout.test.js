@@ -8,8 +8,18 @@ const root = path.join(__dirname, '..');
 const css = fs.readFileSync(path.join(root, 'assets', 'css', 'chronograph-widget.css'), 'utf8');
 const previewCss = fs.readFileSync(path.join(root, 'settings', 'assets', 'styles.css'), 'utf8');
 const template = fs.readFileSync(path.join(root, 'assets', 'templates', 'chronograph-widget-design.html'), 'utf8');
+const preview = fs.readFileSync(path.join(root, 'settings', 'index.html'), 'utf8');
 
 describe('Widget input layout', () => {
+	it('keeps spanning column gaps without padding the right edge in widgets or previews', () => {
+		for (const markup of [template, preview]) {
+			assert.ok(markup.includes('ng-attr-data-grid-last="{{ group.gridEnd >= 0.999999999'));
+		}
+		for (const sheet of [css, previewCss]) {
+			assert.match(sheet, /\[data-row-spanning="true"\][^{]*:not\(\[data-grid-last="true"\]\)\s*\{[^}]*padding-right:\s*8px/s);
+		}
+	});
+
 	it('keeps text elements together unless the column is stretched', () => {
 		assert.match(css, /\.chronograph-design-element-name,\s*\.chronograph-design-element-status,\s*\.chronograph-design-element-duration\s*\{[^}]*flex:\s*0 1 auto/s);
 		assert.match(css, /\.chronograph-design \.chronograph-icon\s*\{[^}]*margin-right:\s*0/s);
@@ -23,7 +33,7 @@ describe('Widget input layout', () => {
 	it('keeps form labels accessible but out of the grid', () => {
 		assert.match(css, /\.chronograph-widget \.visually-hidden\s*\{[^}]*position:\s*absolute;[^}]*clip:\s*rect\(0,\s*0,\s*0,\s*0\)/s);
 		for (const id of ['design-duration', 'design-duration-unit', 'design-transition-from', 'design-transition-to', 'design-transition-steps']) {
-			assert.ok(template.includes("designLayer.measure ? undefined : '" + id + "'"), id);
+			assert.ok(template.includes("designLayer.measure ? undefined : widgetInputPrefix + '" + id + "'"), id);
 		}
 	});
 

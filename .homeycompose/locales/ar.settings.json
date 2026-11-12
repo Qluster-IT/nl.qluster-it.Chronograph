@@ -228,5 +228,9 @@
 	"error_not_active": "الكرونوغراف غير نشط.",
 	"error_already_active": "الكرونوغراف نشط بالفعل.",
 	"error_name_conflict": "يتعارض اسم الكرونوغراف مع مثيل نشط.",
-	"error_duration_required": "المدة مطلوبة."
+	"error_duration_required": "المدة مطلوبة.",
+	"multiple_invalid_settings": "بعض إعدادات الأداة غير صالحة. يرجى التحقق من إعدادات الأداة.",
+	"widget_type_timer": "مؤقت",
+	"widget_type_stopwatch": "ساعة التوقيف",
+	"widget_type_transition": "انتقال"
 }

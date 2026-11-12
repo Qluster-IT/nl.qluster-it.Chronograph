@@ -1,0 +1,11 @@
+.multiple-chronographs-grid {
+	display: grid;
+	grid-auto-flow: row;
+	gap: 8px;
+	min-width: 0;
+}
+
+.multiple-chronographs-grid .chronograph-widget {
+	min-width: 0;
+	overflow-x: auto;
+}

@@ -1,0 +1,104 @@
+'use strict';
+
+window.registerMultipleChronographsWidget = function (Homey) {
+	angular.module('chronographWidget').controller('MultipleChronographsController', [
+		'$scope', '$interval',
+		function ($scope, $interval) {
+			var settings = Homey.getSettings() || {};
+			var columns = settings.columns === undefined || settings.columns === null ? 1 : Number(settings.columns);
+			var pending = 0;
+			var ready = false;
+			var observer;
+			var lastHeight = 0;
+			var destroyed = false;
+			$scope.entries = [];
+			$scope.error = null;
+			$scope.emptyMessage = Homey.__('settings.widget_select_chronograph');
+
+			if (!Number.isInteger(columns) || columns < 1 || columns > 3) {
+				console.error('Invalid multiple chronographs column count', settings.columns);
+				$scope.error = Homey.__('settings.multiple_invalid_settings');
+				columns = 1;
+			}
+			$scope.columns = columns;
+
+			for (var slot = 1; slot <= 10; slot++) {
+				var prefix = 'chronograph' + slot;
+				var selection = settings[prefix];
+				if (!selection) continue;
+				var type = selection.type || (selection.data && selection.data.type);
+				type = typeof type === 'string' ? type.toLowerCase() : '';
+				var name = selection.chronographName || (selection.data && selection.data.name) || selection.name;
+				var span = settings[prefix + 'ColumnSpan'];
+				span = span === undefined || span === null ? 1 : Number(span);
+				if (['timer', 'stopwatch', 'transition'].indexOf(type) === -1
+					|| typeof name !== 'string' || !name.trim()
+					|| !Number.isInteger(span) || span < 1 || span > 3) {
+					console.error('Invalid multiple chronographs selection or column span', slot, selection, span);
+					$scope.error = Homey.__('settings.multiple_invalid_settings');
+					continue;
+				}
+				$scope.entries.push({
+					slot: slot,
+					type: type,
+					span: Math.min(columns, span),
+					settings: {
+						chronograph: { name: name },
+						alternativeName: settings[prefix + 'AlternativeName'],
+						designStyle: settings[prefix + 'DesignStyle'],
+						colorScheme: settings[prefix + 'ColorScheme'],
+						layout: settings[prefix + 'Layout'],
+						icon: settings[prefix + 'Icon'],
+						showMilliseconds: settings[prefix + 'ShowMilliseconds']
+					}
+				});
+			}
+			pending = $scope.entries.length;
+
+			function resize() {
+				if (!ready || destroyed || !window.requestAnimationFrame || !Homey.setHeight) return;
+				window.requestAnimationFrame(function () {
+					if (destroyed) return;
+					var main = document.querySelector('main');
+					var bodyStyle = window.getComputedStyle(document.body);
+					var height = Math.ceil(main.getBoundingClientRect().height
+						+ parseFloat(bodyStyle.paddingTop) + parseFloat(bodyStyle.paddingBottom));
+					if (!height || height === lastHeight) return;
+					lastHeight = height;
+					Homey.setHeight(height).catch(function (error) {
+						console.error('Unable to resize multiple Chronographs widget', error);
+					});
+				});
+			}
+
+			function markReady() {
+				if (ready) return;
+				ready = true;
+				Homey.ready();
+				resize();
+			}
+
+			$scope.multipleWidget = {
+				tileReady: function () {
+					pending--;
+					if (!pending) markReady();
+				}
+			};
+			if (!pending) $scope.$evalAsync(markReady);
+			if (window.ResizeObserver) {
+				observer = new window.ResizeObserver(resize);
+				observer.observe(document.querySelector('main'));
+			}
+			Homey.on('chronograph_event_multi', function () { $scope.$broadcast('multipleChronographsRefresh'); });
+			Homey.on('chronograph_flow_values_changed', function (event) { $scope.$broadcast('multipleChronographsFlowValues', event); });
+			var refreshInterval = $interval(function () { $scope.$broadcast('multipleChronographsRefresh'); }, 5000);
+			var clockInterval = $interval(function () { $scope.$broadcast('multipleChronographsClock'); }, 250);
+			$scope.$on('$destroy', function () {
+				destroyed = true;
+				$interval.cancel(refreshInterval);
+				$interval.cancel(clockInterval);
+				if (observer) observer.disconnect();
+			});
+		}
+	]);
+};

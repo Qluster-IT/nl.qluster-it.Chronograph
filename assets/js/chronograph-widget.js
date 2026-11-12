@@ -5,7 +5,8 @@ function onHomeyReady(Homey) {
 		'$scope',
 		'$interval',
 		'$timeout',
-		function ($scope, $interval, $timeout) {
+		'$element',
+		function ($scope, $interval, $timeout, $element) {
 		var refreshInterval;
 		var durationInterval;
 		var startFormTimeout;
@@ -13,7 +14,8 @@ function onHomeyReady(Homey) {
 			var destroyed = false;
 			var widgetReady = false;
 			var lastHeight = 0;
-			var settings = Homey.getSettings() || {};
+			var multipleEntry = $scope.widgetEntry;
+			var settings = multipleEntry ? multipleEntry.settings : Homey.getSettings() || {};
 		var widgetStyleRuntime = window.ChronographWidgetStyle;
 		var designStyleId = widgetStyleRuntime.settingId(settings.designStyle) || 'builtin:current';
 		var colorSchemeId = widgetStyleRuntime.settingId(settings.colorScheme) || 'builtin:current';
@@ -21,7 +23,8 @@ function onHomeyReady(Homey) {
 		var activeColorScheme;
 		var activeDesignScheme = widgetStyleRuntime.currentScheme();
 		var styleError = null;
-		var widgetType = document.body.getAttribute('data-chronograph-type');
+		var widgetType = multipleEntry ? multipleEntry.type : document.body.getAttribute('data-chronograph-type');
+			$scope.widgetInputPrefix = multipleEntry ? 'chronograph-' + multipleEntry.slot + '-' : '';
 			var defaultIcons = { timer: 'clock', stopwatch: 'stopwatch', transition: 'shuffle' };
 			var selectedIcon = settings.icon;
 			$scope.iconClass = '';
@@ -325,8 +328,12 @@ function onHomeyReady(Homey) {
 			function markReady() {
 				if (widgetReady) return;
 				widgetReady = true;
-				Homey.ready();
-				scheduleHeightUpdate();
+				if (multipleEntry) {
+					$scope.multipleWidget.tileReady();
+				} else {
+					Homey.ready();
+					scheduleHeightUpdate();
+				}
 			}
 
 			function applySavedDefaults(defaults) {
@@ -478,7 +485,8 @@ function onHomeyReady(Homey) {
 			$scope.start = function () {
 				if (!$scope.selectedChronograph || $scope.selectedChronograph.active || $scope.busy) return;
 				if ($scope.designEnabled) {
-					var invalidInput = document.querySelector('.chronograph-design-layer-current input:invalid');
+					var container = multipleEntry ? $element[0] : document;
+					var invalidInput = container.querySelector('.chronograph-design-layer-current input:invalid');
 					if (invalidInput) {
 						invalidInput.reportValidity();
 						return;
@@ -581,25 +589,35 @@ function onHomeyReady(Homey) {
 				if (resizeObserver) resizeObserver.disconnect();
 			});
 
-			if (window.ResizeObserver) {
+			if (!multipleEntry && window.ResizeObserver) {
 				resizeObserver = new window.ResizeObserver(scheduleHeightUpdate);
 				resizeObserver.observe(document.querySelector('main'));
 			}
 
-			Homey.on('chronograph_event_multi', refresh);
-			Homey.on('chronograph_flow_values_changed', function (event) {
+			function refreshSavedValues(event) {
 				if (event && event.name === selectedName && typeof event.type === 'string'
 					&& event.type.toLowerCase() === widgetType) return refresh();
-			});
+			}
+			if (multipleEntry) {
+				$scope.$on('multipleChronographsRefresh', refresh);
+				$scope.$on('multipleChronographsFlowValues', function (event, values) { refreshSavedValues(values); });
+				$scope.$on('multipleChronographsClock', updateDurations);
+			} else {
+				Homey.on('chronograph_event_multi', refresh);
+				Homey.on('chronograph_flow_values_changed', refreshSavedValues);
+			}
 			loadWidgetAppearance().then(refresh).then(function () {
 				if (!selectedName) return;
-				refreshInterval = $interval(refresh, 5000);
-				durationInterval = $interval(updateDurations, 250);
+				if (!multipleEntry) {
+					refreshInterval = $interval(refresh, 5000);
+					durationInterval = $interval(updateDurations, 250);
+				}
 				markReady();
 			});
 		}
 	]);
 
+	if (window.registerMultipleChronographsWidget) window.registerMultipleChronographsWidget(Homey);
 	angular.bootstrap(document, ['chronographWidget']);
 }
 

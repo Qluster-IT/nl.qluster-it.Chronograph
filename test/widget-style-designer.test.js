@@ -252,7 +252,8 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(layout.spanning, true);
 		assert.strictEqual(layout.rows[0].groups[0].gridRow, '1 / 5');
 		assert.strictEqual(scope.designerRowLayout(), layout);
-		assert.ok(html.includes('class="style-column-row-span"'));
+		assert.ok(!html.includes('class="style-column-row-span"'));
+		assert.ok(html.includes('id="style-column-row-span"'));
 		assert.ok(!html.includes('class="style-row-span-continuation"'));
 		assert.ok(html.includes("'grid-row': group.gridRow"));
 	});

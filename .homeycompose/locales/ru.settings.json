@@ -228,5 +228,9 @@
 	"error_not_active": "Хронограф не активен.",
 	"error_already_active": "Хронограф уже активен.",
 	"error_name_conflict": "Имя хронографа конфликтует с активным экземпляром.",
-	"error_duration_required": "Необходимо указать длительность."
+	"error_duration_required": "Необходимо указать длительность.",
+	"multiple_invalid_settings": "Некоторые настройки виджета недействительны. Проверьте настройки виджета.",
+	"widget_type_timer": "Таймер",
+	"widget_type_stopwatch": "Секундомер",
+	"widget_type_transition": "Переход"
 }

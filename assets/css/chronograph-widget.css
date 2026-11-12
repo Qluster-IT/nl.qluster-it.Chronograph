@@ -146,7 +146,7 @@ body {
 	display: contents;
 }
 
-.chronograph-design-layer[data-row-spanning="true"] .chronograph-design-group {
+.chronograph-design-layer[data-row-spanning="true"] .chronograph-design-group:not([data-grid-last="true"]) {
 	padding-right: 8px;
 }
 
