@@ -293,6 +293,20 @@
 					design.columnAlignments[size][row] = Array(design.rowColumns[size][row]).fill('center');
 				});
 			});
+			['normal', 'large'].forEach(function (size) {
+				var positions = design.groups[size].elements;
+				positions.duration.group = 2;
+				positions.play.group = 3;
+				positions.pause.group = 1;
+				positions.stop.group = 3;
+				design.rowColumns[size][3] = 3;
+				design.columnSpans[size][3] = [1, 2, 1];
+				design.columnWidths[size][3] = ['content', 'span', 'content'];
+				design.columnAlignments[size][3] = ['left', 'center', 'center'];
+				design.columnDirections[size][3] = ['horizontal', 'horizontal', 'horizontal'];
+				design.columnVerticalAlignments[size][3] = ['middle', 'middle', 'middle'];
+			});
+			design.columnRowSpans = { normal: { 3: [1, 1, 1] }, large: { 3: [1, 1, 1] } };
 		} else if (id === 'builtin:dashboard') {
 			['normal', 'large'].forEach(function (size) {
 				var positions = design.groups[size].elements;

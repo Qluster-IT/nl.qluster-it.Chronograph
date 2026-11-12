@@ -4,6 +4,26 @@ const assert = require('assert');
 const widgetStyle = require('../assets/js/chronograph-widget-style.js');
 
 describe('Widget style runtime', () => {
+	it('uses the designed centered layout in normal and large sizes', () => {
+		const design = widgetStyle.builtInDesign('builtin:centered');
+		for (const size of ['normal', 'large']) {
+			const positions = design.groups[size].elements;
+			assert.deepStrictEqual([positions.pause.group, positions.duration.group, positions.play.group, positions.stop.group], [1, 2, 3, 3]);
+			assert.strictEqual(design.rowColumns[size][3], 3);
+			assert.deepStrictEqual(design.columnSpans[size][3], [1, 2, 1]);
+			assert.deepStrictEqual(design.columnWidths[size][3], ['content', 'span', 'content']);
+			assert.deepStrictEqual(design.columnAlignments[size][3], ['left', 'center', 'center']);
+			assert.deepStrictEqual(design.columnDirections[size][3], ['horizontal', 'horizontal', 'horizontal']);
+			assert.deepStrictEqual(design.columnVerticalAlignments[size][3], ['middle', 'middle', 'middle']);
+			assert.deepStrictEqual(design.columnRowSpans[size][3], [1, 1, 1]);
+			for (const state of ['running', 'paused']) {
+				const row = widgetStyle.buildRows(design, size, state, 'timer', false).find(item => item.id === 3);
+				assert.deepStrictEqual(row.groups.map(group => group.elements),
+					state === 'running' ? [['pause'], ['duration'], ['stop']] : [[], ['duration'], ['play', 'stop']]);
+			}
+		}
+	});
+
 	it('spans any column across configured visible rows without overlapping other columns', () => {
 		const group = (id, span, rowSpan, elements) => ({ id, span, rowSpan, elements });
 		const rows = [

@@ -530,9 +530,38 @@ describe('Widget style designer preview', () => {
 			scope.progressDirection('top-bottom');
 			assert.strictEqual(JSON.stringify(scope.getSelectedStyle()), before, id);
 		}
-		assert.ok(html.includes('ng-if="editor.mode !== \'design\' || !isDesignReadOnly()"'));
+		assert.ok(html.includes('ng-if="editor.mode === \'design\' ? !isDesignReadOnly() : !isSchemeReadOnly()"'));
 		assert.ok(html.includes("'settings.style_design_builtin_hint'"));
 		assert.ok(!html.includes("'settings.style_builtin_hint'"));
+	});
+
+	it('shows editing-only controls only for editable designs and schemes', () => {
+		const { scope } = loadSettings();
+		assert.strictEqual(scope.isDesignReadOnly(), true);
+		assert.strictEqual(scope.isSchemeReadOnly(), true);
+		scope.createStyle(true);
+		assert.strictEqual(scope.isDesignReadOnly(), false);
+		scope.selectEditorMode('color');
+		scope.createStyle(true);
+		assert.strictEqual(scope.isSchemeReadOnly(), false);
+		const preview = loadSettings(null, null, null, true).scope;
+		assert.strictEqual(preview.isDesignReadOnly(), false);
+		assert.strictEqual(preview.isSchemeReadOnly(), false);
+
+		const designOnly = 'ng-if="editor.mode === \'design\' && !isDesignReadOnly()"';
+		for (const marker of ['settings.style_design', 'for="style-height"',
+			'id="style-height"', 'id="style-height-hint"', 'for="style-layout-mode"', 'id="style-layout-mode"']) {
+			const tag = html.split('\n').find(line => line.includes(marker) && line.includes(designOnly));
+			assert.ok(tag, marker);
+		}
+		assert.ok(html.includes(designOnly + ' class="hy-nostyle style-progress-full-row"><input'));
+		const nameCondition = 'ng-if="editor.mode === \'color\' ? !isSchemeReadOnly() : !isDesignReadOnly()"';
+		assert.ok(html.split('\n').some(line => line.includes(nameCondition) && line.includes('for="widget-style-name"')));
+		assert.ok(html.split('\n').some(line => line.includes(nameCondition) && line.includes('id="widget-style-name"')));
+		assert.ok(html.includes('ng-if="editor.mode === \'design\' ? !isDesignReadOnly() : !isSchemeReadOnly()"'));
+		for (const id of ['preview-scheme', 'preview-design', 'preview-type', 'preview-size', 'preview-state']) {
+			assert.ok(html.includes('id="' + id + '"'), id);
+		}
 	});
 
 	it('edits and saves built-in designs and schemes only in the local preview', () => {

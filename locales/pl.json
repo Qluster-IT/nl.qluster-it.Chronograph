@@ -60,7 +60,7 @@
     "style_start_fields_inactive": "Always when inactive",
     "style_start_fields_play": "After pressing Play",
     "style_upgrade": "Enable grouped layout editing",
-    "style_group_hint": "Select the Widget bar, a row, column, or element to see its available options. Drag row labels and column numbers to reorder rows and columns. Drag elements into groups. Elements in a group appear together. Layouts are shared by widget types.",
+    "style_group_hint": "Select the Widget bar, a row, column, or element to see its available options. Select a row, column, or element before dragging it. Drag row labels or column headers to reorder rows and columns, and drag elements into groups. Elements in a group appear together. Layouts are shared by widget types.",
     "style_element": "Element",
     "style_row": "Row",
     "style_unused": "Unused",

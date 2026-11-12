@@ -60,7 +60,7 @@
     "style_start_fields_inactive": "Altijd wanneer niet actief",
     "style_start_fields_play": "Na drukken op Start",
     "style_upgrade": "Groepsindeling bewerken inschakelen",
-    "style_group_hint": "Selecteer de Widget-balk, een rij, kolom of element om de beschikbare opties te bekijken. Sleep rijnamen en kolomnummers om rijen en kolommen te verplaatsen. Sleep elementen naar groepen. Elementen in een groep staan bij elkaar. De indelingen worden gedeeld door alle widgettypen.",
+    "style_group_hint": "Selecteer de Widget-balk, een rij, kolom of element om de beschikbare opties te bekijken. Selecteer een rij, kolom of element voordat je deze sleept. Sleep rijnamen of kolomkoppen om rijen en kolommen te verplaatsen en sleep elementen naar groepen. Elementen in een groep staan bij elkaar. De indelingen worden gedeeld door alle widgettypen.",
     "style_element": "Element",
     "style_row": "Rij",
     "style_unused": "Ongebruikt",

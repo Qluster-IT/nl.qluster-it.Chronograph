@@ -134,25 +134,25 @@
 				</div>
 
 				<div ng-if="getSelectedStyle() && getEditingItem()" class="style-design">
-					<label class="hy-nostyle" for="widget-style-name">{{ t('settings.style_name') }}</label>
-					<input class="hy-nostyle form-control" id="widget-style-name" type="text"
+					<label ng-if="editor.mode === 'color' ? !isSchemeReadOnly() : !isDesignReadOnly()" class="hy-nostyle" for="widget-style-name">{{ t('settings.style_name') }}</label>
+					<input ng-if="editor.mode === 'color' ? !isSchemeReadOnly() : !isDesignReadOnly()" class="hy-nostyle form-control" id="widget-style-name" type="text"
 						ng-model="getEditingItem().name" ng-disabled="editor.mode === 'color' ? isSchemeReadOnly() : isDesignReadOnly()" maxlength="80" required>
 					<p class="help-text" ng-if="isBuiltInStyle()">{{ t(localPreview ? 'settings.style_preview_builtin_hint' : (editor.mode === 'color' ? 'settings.style_scheme_builtin_hint' : 'settings.style_design_builtin_hint')) }}</p>
 
 					<div class="style-design-selectors">
-						<h3 ng-if="editor.mode === 'design'">{{ t('settings.style_design') }}</h3>
-						<label ng-if="editor.mode === 'design'" class="hy-nostyle style-progress-full-row"><input class="hy-nostyle" type="checkbox"
+						<h3 ng-if="editor.mode === 'design' && !isDesignReadOnly()">{{ t('settings.style_design') }}</h3>
+						<label ng-if="editor.mode === 'design' && !isDesignReadOnly()" class="hy-nostyle style-progress-full-row"><input class="hy-nostyle" type="checkbox"
 							ng-model="allowDesignShrink" ng-model-options="{ getterSetter: true }" ng-disabled="savingSettings || isDesignReadOnly()"> {{ t('settings.style_allow_shrink') }}</label>
-						<label ng-if="editor.mode === 'design'" class="hy-nostyle" for="style-height">{{ t('settings.style_height') }} ({{ t('settings.style_' + editor.previewSize) }})</label>
-						<select ng-if="editor.mode === 'design'" id="style-height" class="form-select" ng-model="heightMode"
+						<label ng-if="editor.mode === 'design' && !isDesignReadOnly()" class="hy-nostyle" for="style-height">{{ t('settings.style_height') }} ({{ t('settings.style_' + editor.previewSize) }})</label>
+						<select ng-if="editor.mode === 'design' && !isDesignReadOnly()" id="style-height" class="form-select" ng-model="heightMode"
 							ng-model-options="{ getterSetter: true }" ng-disabled="savingSettings || isDesignReadOnly()" aria-describedby="style-height-hint">
 							<option value="auto">{{ t('settings.style_height_auto') }}</option>
 							<option value="minimum-without-inputs">{{ t('settings.style_height_minimum_without_inputs') }}</option>
 							<option value="minimum">{{ t('settings.style_height_minimum_with_inputs') }}</option>
 						</select>
-						<p ng-if="editor.mode === 'design'" id="style-height-hint" class="help-text style-progress-full-row">{{ t('settings.style_height_size_hint') }}</p>
-						<label ng-if="editor.mode === 'design'" class="hy-nostyle" for="style-layout-mode">{{ t('settings.style_layout_mode') }}</label>
-						<select ng-if="editor.mode === 'design'" id="style-layout-mode" class="form-select" ng-model="editor.editStatus"
+						<p ng-if="editor.mode === 'design' && !isDesignReadOnly()" id="style-height-hint" class="help-text style-progress-full-row">{{ t('settings.style_height_size_hint') }}</p>
+						<label ng-if="editor.mode === 'design' && !isDesignReadOnly()" class="hy-nostyle" for="style-layout-mode">{{ t('settings.style_layout_mode') }}</label>
+						<select ng-if="editor.mode === 'design' && !isDesignReadOnly()" id="style-layout-mode" class="form-select" ng-model="editor.editStatus"
 							ng-options="option.value as option.label for option in layoutModes" ng-disabled="isDesignReadOnly()" ng-change="editor.selectedCell = null; refreshLayoutElement()"></select>
 						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button"
 							ng-if="editor.mode === 'design' && editor.editStatus && !isDesignReadOnly()" ng-click="clearStatusLayout()">{{ t('settings.style_reset_override') }}</button>
@@ -210,7 +210,7 @@
 							</div>
 						</div>
 					</div>
-					<div ng-if="editor.mode !== 'design' || !isDesignReadOnly()">
+					<div ng-if="editor.mode === 'design' ? !isDesignReadOnly() : !isSchemeReadOnly()">
 					<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button"
 						ng-if="editor.mode === 'design' && !getSelectedStyle().groups" ng-click="upgradeLayout()">{{ t('settings.style_upgrade') }}</button>
 					<div ng-if="editor.mode === 'design' && getSelectedStyle().groups">

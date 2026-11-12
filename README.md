@@ -19,6 +19,7 @@ Adds precise timer, stopwatch and transition functionality to Homey.
 * Choose a searchable Font Awesome Free icon for each dashboard widget, or select None.
 * Set a timer or transition widget's default duration to 0 to use the last duration saved by a Flow or API start, if available.
 * Transition widget default start, end and step values use the last saved Flow or API values when set to 0 or left empty.
+* A Flow resume card also saves these values when it starts a chronograph that is not already active; resuming an existing one leaves them unchanged.
 
 ## Widget style designer
 
@@ -42,7 +43,8 @@ beside each choice and list built-in choices first, with Default at the top.
 The designer's dropdowns also keep Default first and sort the remaining
 built-in and custom choices by their displayed names within each group.
 The Centered, Dashboard, Focus and Vertical designs provide alternative layouts; copy
-one to customize it. Centered aligns content in its columns, Dashboard places
+one to customize it. Centered places the duration between the action columns in
+Normal and Large sizes, Dashboard places
 the status beside the name and the duration on its own row in Normal and
 Large sizes, Focus emphasizes the duration, and Vertical stacks content.
 The light and dark widget picker previews are abstract, text-free illustrations
@@ -50,7 +52,8 @@ of the Default design. On Windows, regenerate them with
 `.\tools\development\generate-widget-previews.ps1`.
 On Homey, built-in designs and color schemes are read-only, including Default. Copy one
 to create an editable custom design or scheme. The preview controls remain
-interactive for testing without changing the saved design. Choose a widget type, size and state
+interactive for testing without changing the saved design, while editing-only
+fields are hidden for read-only presets. Choose a widget type, size and state
 for the design preview. Confirming deletion removes a custom item immediately
 without saving other pending edits. Built-in designs and schemes cannot be deleted. Select an item before dragging it. Drag a row label
 to reorder rows, or the top of a column to reorder columns within its row. Reordering applies to the selected
