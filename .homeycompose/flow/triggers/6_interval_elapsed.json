@@ -1,0 +1,164 @@
+{
+  "id": "interval_elapsed",
+  "title": {
+    "en": "Every interval",
+    "nl": "Elk interval",
+    "da": "Hvert interval",
+    "de": "Jedes Intervall",
+    "es": "Cada intervalo",
+    "fr": "À chaque intervalle",
+    "it": "A ogni intervallo",
+    "no": "Hvert intervall",
+    "sv": "Varje intervall",
+    "pl": "Co określony czas",
+    "ru": "Через каждый интервал",
+    "ko": "일정 간격마다",
+    "ar": "كل فترة"
+  },
+  "titleFormatted": {
+    "en": "Every [[amount]] [[unit]]",
+    "nl": "Elke [[amount]] [[unit]]",
+    "da": "Hvert [[amount]] [[unit]]",
+    "de": "Alle [[amount]] [[unit]]",
+    "es": "Cada [[amount]] [[unit]]",
+    "fr": "Toutes les [[amount]] [[unit]]",
+    "it": "Ogni [[amount]] [[unit]]",
+    "no": "Hvert [[amount]] [[unit]]",
+    "sv": "Varje [[amount]] [[unit]]",
+    "pl": "Co [[amount]] [[unit]]",
+    "ru": "Каждые [[amount]] [[unit]]",
+    "ko": "[[amount]] [[unit]]마다",
+    "ar": "كل [[amount]] [[unit]]"
+  },
+  "hint": {
+    "en": "Enter a fixed whole number. Flows with the same interval share a schedule. If an interval expires while the app is stopped, it triggers once after startup and then begins a new interval.",
+    "nl": "Vul een vast geheel getal in. Flows met hetzelfde interval delen een schema. Als een interval verloopt terwijl de app is gestopt, wordt de Flow na het opstarten één keer gestart en begint een nieuw interval.",
+    "da": "Indtast et fast heltal. Flows med samme interval deler en tidsplan. Hvis et interval udløber, mens appen er stoppet, udløses det én gang efter opstart, og et nyt interval begynder.",
+    "de": "Gib eine feste ganze Zahl ein. Flows mit demselben Intervall teilen sich einen Zeitplan. Läuft ein Intervall bei gestoppter App ab, wird es nach dem Start einmal ausgelöst und ein neues Intervall beginnt.",
+    "es": "Introduce un número entero fijo. Los Flows con el mismo intervalo comparten una programación. Si un intervalo vence mientras la aplicación está detenida, se activa una vez al iniciarse y comienza un nuevo intervalo.",
+    "fr": "Saisissez un nombre entier fixe. Les Flows ayant le même intervalle partagent un calendrier. Si un intervalle expire lorsque l'application est arrêtée, il se déclenche une fois au démarrage, puis un nouvel intervalle commence.",
+    "it": "Inserisci un numero intero fisso. I Flow con lo stesso intervallo condividono una pianificazione. Se un intervallo scade mentre l'app è arrestata, si attiva una volta all'avvio e inizia un nuovo intervallo.",
+    "no": "Skriv inn et fast heltall. Flow-er med samme intervall deler en tidsplan. Hvis et intervall utløper mens appen er stoppet, utløses det én gang etter oppstart, og et nytt intervall begynner.",
+    "sv": "Ange ett fast heltal. Flow med samma intervall delar ett schema. Om ett intervall löper ut medan appen är stoppad utlöses det en gång vid start och ett nytt intervall börjar.",
+    "pl": "Wpisz stałą liczbę całkowitą. Flow o tym samym interwale korzystają ze wspólnego harmonogramu. Jeśli interwał upłynie, gdy aplikacja jest zatrzymana, zostanie uruchomiony raz po starcie i rozpocznie się nowy interwał.",
+    "ru": "Введите постоянное целое число. Flow с одинаковым интервалом используют общее расписание. Если интервал истёк, пока приложение было остановлено, он сработает один раз после запуска, затем начнётся новый интервал.",
+    "ko": "고정된 정수를 입력하세요. 간격이 같은 Flow는 일정을 공유합니다. 앱이 중지된 동안 간격이 만료되면 시작 후 한 번 실행되고 새 간격이 시작됩니다.",
+    "ar": "أدخل عددًا صحيحًا ثابتًا. تشترك تدفقات Flow ذات الفترة نفسها في جدول واحد. إذا انتهت فترة أثناء توقف التطبيق، تُفعّل مرة واحدة بعد بدء التشغيل ثم تبدأ فترة جديدة."
+  },
+  "args": [
+    {
+      "name": "amount",
+      "type": "number",
+      "min": 1,
+      "step": 1,
+      "title": {
+        "en": "Amount",
+        "nl": "Aantal",
+        "da": "Antal",
+        "de": "Anzahl",
+        "es": "Cantidad",
+        "fr": "Nombre",
+        "it": "Quantità",
+        "no": "Antall",
+        "sv": "Antal",
+        "pl": "Liczba",
+        "ru": "Количество",
+        "ko": "수량",
+        "ar": "العدد"
+      }
+    },
+    {
+      "name": "unit",
+      "type": "dropdown",
+      "title": {
+        "en": "Unit",
+        "nl": "Eenheid",
+        "da": "Enhed",
+        "de": "Einheit",
+        "es": "Unidad",
+        "fr": "Unité",
+        "it": "Unità",
+        "no": "Enhet",
+        "sv": "Enhet",
+        "pl": "Jednostka",
+        "ru": "Единица",
+        "ko": "단위",
+        "ar": "الوحدة"
+      },
+      "values": [
+        {
+          "id": "seconds",
+          "label": {
+            "en": "seconds",
+            "nl": "seconden",
+            "da": "sekunder",
+            "de": "Sekunden",
+            "es": "segundos",
+            "fr": "secondes",
+            "it": "secondi",
+            "no": "sekunder",
+            "sv": "sekunder",
+            "pl": "sekund",
+            "ru": "секунд",
+            "ko": "초",
+            "ar": "ثوانٍ"
+          }
+        },
+        {
+          "id": "minutes",
+          "label": {
+            "en": "minutes",
+            "nl": "minuten",
+            "da": "minutter",
+            "de": "Minuten",
+            "es": "minutos",
+            "fr": "minutes",
+            "it": "minuti",
+            "no": "minutter",
+            "sv": "minuter",
+            "pl": "minut",
+            "ru": "минут",
+            "ko": "분",
+            "ar": "دقائق"
+          }
+        },
+        {
+          "id": "hours",
+          "label": {
+            "en": "hours",
+            "nl": "uren",
+            "da": "timer",
+            "de": "Stunden",
+            "es": "horas",
+            "fr": "heures",
+            "it": "ore",
+            "no": "timer",
+            "sv": "timmar",
+            "pl": "godzin",
+            "ru": "часов",
+            "ko": "시간",
+            "ar": "ساعات"
+          }
+        },
+        {
+          "id": "days",
+          "label": {
+            "en": "days",
+            "nl": "dagen",
+            "da": "dage",
+            "de": "Tage",
+            "es": "días",
+            "fr": "jours",
+            "it": "giorni",
+            "no": "dager",
+            "sv": "dagar",
+            "pl": "dni",
+            "ru": "дней",
+            "ko": "일",
+            "ar": "أيام"
+          }
+        }
+      ]
+    }
+  ]
+}

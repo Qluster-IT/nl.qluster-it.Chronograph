@@ -56,6 +56,7 @@ const TransitionSplit = require('./lib/transition/triggers/transition_split.js')
 const TransitionFinished = require('./lib/transition/triggers/transition_finished.js');
 const TransitionStopped = require('./lib/transition/triggers/transition_stopped.js');
 const TransitionPaused = require('./lib/transition/triggers/transition_paused.js');
+const IntervalElapsed = require('./lib/generic/triggers/interval_elapsed.js');
 
 /**
  * Lowercase key used to group configured chronographs by kind.
@@ -538,6 +539,7 @@ class Application extends Homey.App {
 			"delay_passed": new DelayPassed("delay_passed", this.homey),
 
 			// Triggers.
+			"interval_elapsed": new IntervalElapsed('interval_elapsed', this.homey)
 		};
 	}
 
