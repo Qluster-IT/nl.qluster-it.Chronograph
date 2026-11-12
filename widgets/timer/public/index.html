@@ -3,11 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="../../assets/css/fontawesome.min.css">
-	<link rel="stylesheet" href="../../assets/css/solid.min.css">
-	<link rel="stylesheet" href="../../assets/css/regular.min.css">
-	<link rel="stylesheet" href="../../assets/css/brands.min.css">
-	<link rel="stylesheet" href="../../assets/css/chronograph-widget.css">
+	<link rel="stylesheet" href="../../assets/css/widget-bundle.css">
 </head>
 <body class="homey-widget" data-chronograph-type="timer" ng-attr-data-widget-color="{{ getWidgetColor() }}" ng-controller="ChronographWidgetController" ng-class="{
 	'chronograph-vivid-running': selectedChronograph && getWidgetColor() !== 'none'
@@ -67,9 +63,6 @@
 		<p class="chronograph-message" ng-if="!loading && !selectedChronograph">{{ labels.selectChronograph }}</p>
 		<p class="chronograph-error" role="alert" ng-if="error">{{ error }}</p>
 	</main>
-	<script src="../../assets/js/angular.min.js"></script>
-	<script src="../../assets/js/chronograph-widget-style.js"></script>
-	<script src="../../assets/js/chronograph-errors.js"></script>
-	<script src="../../assets/js/chronograph-widget.js"></script>
+	<script src="../../assets/js/widget-bundle.js"></script>
 </body>
 </html>

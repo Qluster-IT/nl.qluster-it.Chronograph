@@ -3,12 +3,49 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
+const vm = require('vm');
 
 const root = path.join(__dirname, '..');
 const css = fs.readFileSync(path.join(root, 'assets', 'css', 'chronograph-widget.css'), 'utf8');
 const previewCss = fs.readFileSync(path.join(root, 'settings', 'assets', 'styles.css'), 'utf8');
 const template = fs.readFileSync(path.join(root, 'assets', 'templates', 'chronograph-widget-design.html'), 'utf8');
 const preview = fs.readFileSync(path.join(root, 'settings', 'index.html'), 'utf8');
+
+describe('Widget asset bundles', () => {
+	it('ships up-to-date shared assets and caches the design template', () => {
+		const bundles = require('../tools/development/build-widget-assets.js')();
+		for (const [file, content] of Object.entries(bundles)) {
+			assert.strictEqual(fs.readFileSync(path.join(root, ...file.split('/')), 'utf8').replace(/\r\n/g, '\n'), content,
+				file + ' is stale; run npm run build:widget-assets');
+		}
+		const angular = fs.readFileSync(path.join(root, 'assets', 'js', 'angular.min.js'), 'utf8')
+			.replace(/\r\n/g, '\n')
+			.replace(/^\/\/# sourceMappingURL=.*\r?\n?/m, '');
+		const script = bundles['assets/js/widget-bundle.js'];
+		assert.ok(script.startsWith(angular));
+		const controllers = [];
+		const cache = {};
+		const module = {
+			controller(name) { controllers.push(name); return module; },
+			run(definition) { definition[definition.length - 1]({ put: (key, value) => { cache[key] = value; } }); return module; }
+		};
+		const context = { window: {}, document: {}, angular: { module: () => module, bootstrap() {} } };
+		vm.runInNewContext(script.slice(angular.length), context);
+		assert.strictEqual(cache['../../assets/templates/chronograph-widget-design.html'], template.replace(/\r\n/g, '\n'));
+		context.onHomeyReady({});
+		assert.deepStrictEqual(controllers, ['ChronographWidgetController', 'MultipleChronographsController']);
+	});
+
+	it('loads one shared script and stylesheet in each widget', () => {
+		for (const widget of ['timer', 'stopwatch', 'transition', 'multiple_chronographs']) {
+			const html = fs.readFileSync(path.join(root, 'widgets', widget, 'public', 'index.html'), 'utf8');
+			assert.deepStrictEqual(Array.from(html.matchAll(/<script\s+src="([^"]+)"/g), match => match[1]),
+				['../../assets/js/widget-bundle.js']);
+			assert.deepStrictEqual(Array.from(html.matchAll(/<link\s+rel="stylesheet"\s+href="([^"]+)"/g), match => match[1]),
+				['../../assets/css/widget-bundle.css']);
+		}
+	});
+});
 
 describe('Widget input layout', () => {
 	it('keeps spanning column gaps without padding the right edge in widgets or previews', () => {

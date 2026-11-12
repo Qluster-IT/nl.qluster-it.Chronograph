@@ -52,6 +52,10 @@ Press Ctrl+C in the terminal to stop the server. Set
 On Windows, regenerate the widget picker previews with
 `.\tools\development\generate-widget-previews.ps1`.
 
+After changing widget scripts, styles, or the shared design template, run
+`npm run build:widget-assets` and commit the generated bundles. Tests check
+that the bundles match their sources.
+
 ## Contributing
 
 To submit a bug report or feature request, please create an [issue at GitHub](https://github.com/Qluster-IT/nl.qluster-it.Chronograph/issues/new).

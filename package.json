@@ -8,6 +8,7 @@
 		"test": "test"
 	},
 	"scripts": {
+		"build:widget-assets": "node tools/development/build-widget-assets.js",
 		"generate:icon-previews": "npm --prefix tools/icon-previews run generate",
 		"test": "npm --prefix tools/development test"
 	},

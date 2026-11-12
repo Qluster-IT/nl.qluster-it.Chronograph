@@ -175,14 +175,14 @@ describe('Widget icon autocomplete', () => {
 	});
 
 	it('loads the font styles for every widget type', () => {
-		for (const type of ['timer', 'stopwatch', 'transition']) {
+		for (const type of ['timer', 'stopwatch', 'transition', 'multiple_chronographs']) {
 			const html = fs.readFileSync(path.join(__dirname, '..', 'widgets', type, 'public', 'index.html'), 'utf8');
-			for (const style of ['solid', 'regular', 'brands']) {
-				assert.ok(html.includes('assets/css/' + style + '.min.css'), type + ':' + style);
-			}
+			assert.ok(html.includes('assets/css/widget-bundle.css'), type);
 		}
+		const bundle = fs.readFileSync(path.join(__dirname, '..', 'assets', 'css', 'widget-bundle.css'), 'utf8');
 		for (const font of ['fa-solid-900.woff2', 'fa-regular-400.woff2', 'fa-brands-400.woff2']) {
 			assert.ok(fs.existsSync(path.join(__dirname, '..', 'assets', 'webfonts', font)), font);
+			assert.ok(bundle.includes('../webfonts/' + font), font);
 		}
 	});
 });
