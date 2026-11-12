@@ -63,9 +63,11 @@
 						return;
 					}
 					var prefix = '/chronographs/';
-					var item = url.indexOf(prefix) === 0
-						? chronographs.find(function (entry) { return entry.id === decodeURIComponent(url.slice(prefix.length)); })
-						: null;
+					var parts = url.indexOf(prefix) === 0 ? url.slice(prefix.length).split('/') : [];
+					var item = parts.length === 2
+						? chronographs.find(function (entry) {
+							return entry.data.type.toLowerCase() === parts[0] && entry.name === decodeURIComponent(parts[1]);
+						}) : null;
 					if (!item || (method !== 'PUT' && method !== 'DELETE')) {
 						callback(new Error('Unsupported preview API request: ' + method + ' ' + url));
 						return;

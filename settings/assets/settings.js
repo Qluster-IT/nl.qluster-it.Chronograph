@@ -1263,7 +1263,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		$scope.toggleChronograph = function (chronograph) {
 			if (chronograph.busy) return;
 			chronograph.busy = true;
-			Homey.api('PUT', '/chronographs/' + encodeURIComponent(chronograph.id), {
+			Homey.api('PUT', '/chronographs/' + chronograph.data.type.toLowerCase() + '/' + encodeURIComponent(chronograph.name), {
 				running: !chronograph.running
 			}, function (error, updatedChronograph) {
 				$scope.$applyAsync(function () {
@@ -1281,7 +1281,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		$scope.stopChronograph = function (chronograph) {
 			if (chronograph.busy) return;
 			chronograph.busy = true;
-			Homey.api('DELETE', '/chronographs/' + encodeURIComponent(chronograph.id), null, function (error) {
+			Homey.api('DELETE', '/chronographs/' + chronograph.data.type.toLowerCase() + '/' + encodeURIComponent(chronograph.name), null, function (error) {
 				$scope.$applyAsync(function () {
 					chronograph.busy = false;
 					if (error) {
@@ -1473,8 +1473,10 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 
 				Homey.on('chronograph_event', function (event) {
 					$scope.$applyAsync(function () {
+						if (!event.data || !event.data.type) return;
 						var index = $scope.chronographs.findIndex(function (chronograph) {
-							return chronograph.id === event.id;
+							return chronograph.name === event.name && chronograph.data && event.data
+								&& chronograph.data.type === event.data.type;
 						});
 						if (event.removed) {
 							if (index !== -1) $scope.chronographs.splice(index, 1);

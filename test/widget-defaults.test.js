@@ -17,7 +17,7 @@ async function loadWidget(type, settings, defaults, widgetStyles) {
 	const module = { controller: (name, definition) => { controller = definition[definition.length - 1]; } };
 	const scope = { $on() {}, $applyAsync(callback) { callback(); } };
 	const homey = {
-		getSettings: () => Object.assign({ chronograph: { id: 'test' } }, settings),
+		getSettings: () => Object.assign({ chronograph: { id: 'test', name: 'test' } }, settings),
 		__: key => key,
 		ready() {},
 		on: (name, callback) => { listeners[name] = callback; },
@@ -47,6 +47,14 @@ async function loadWidget(type, settings, defaults, widgetStyles) {
 }
 
 describe('Widget duration defaults', () => {
+	it('requests the selected chronograph using its encoded name', async () => {
+		const widget = await loadWidget('timer', {
+			chronograph: { id: 'legacy-id', name: 'Kitchen / lamp' }
+		}, {}, { version: 2, styles: [], colorSchemes: [] });
+		assert.ok(widget.requests.some(request => request.method === 'GET'
+			&& request.url === '/timer/Kitchen%20%2F%20lamp'));
+	});
+
 	it('uses the shared spanning layout in actual and measured widget layers', async () => {
 		const runtime = require('../assets/js/chronograph-widget-style.js');
 		const design = runtime.currentDesign();

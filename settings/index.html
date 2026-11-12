@@ -46,7 +46,7 @@
 					{{ section.label }}
 				</h3>
 				<div class="chronograph-list" ng-if="getChronographs(section.key).length">
-					<article class="chronograph-row" ng-repeat="chronograph in getChronographs(section.key) track by chronograph.id">
+					<article class="chronograph-row" ng-repeat="chronograph in getChronographs(section.key) track by chronograph.name">
 						<div class="chronograph-summary">
 							<strong class="chronograph-name">{{ chronograph.name }}</strong>
 							<span class="chronograph-status">

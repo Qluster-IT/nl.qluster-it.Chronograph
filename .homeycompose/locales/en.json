@@ -7,5 +7,6 @@
 	"invalid_name": "Invalid name.",
 	"name_required": "You need to (type and) pick a name or enter a name.",
 	"existing": "Existing",
-	"new": "New"
+	"new": "New",
+	"name_based_api_notice": "Chronograph API changed: use names instead of IDs. Update your scripts and integrations; see the API wiki."
 }

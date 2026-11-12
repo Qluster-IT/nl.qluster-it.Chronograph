@@ -116,10 +116,10 @@ describe('Resume chronograph actions', () => {
 				else assert.strictEqual(chronograph.getData('steps'), 12);
 
 				const api = createWidgetApi(scenario.type);
-				const active = await api.getChronograph({ homey, params: { id } });
+				const active = await api.getChronograph({ homey, params: { name } });
 				assert.deepStrictEqual(active.defaults, Object.assign({ from: undefined, to: undefined, steps: undefined }, expected));
 				chronograph.stop();
-				const inactive = await api.getChronograph({ homey, params: { id } });
+				const inactive = await api.getChronograph({ homey, params: { name } });
 				assert.deepStrictEqual(inactive.defaults, active.defaults);
 			});
 

@@ -30,7 +30,7 @@ Par exemple, ce script arrêtera toutes les minuteries en cours :
 	const timers = await app.get({ path: '/timers/' });
 	for (const timer of timers) {
 		if (timer.running) {
-			await app.delete({ path: '/timers/' + encodeURIComponent(timer.id) });
+			await app.delete({ path: '/timers/' + encodeURIComponent(timer.name) });
 		}
 	}
 

@@ -109,15 +109,16 @@
     },
     "getTimer": {
       "method": "GET",
-      "path": "/timers/:id"
+      "path": "/timers/:name"
     },
+    "postTimer": { "method": "POST", "path": "/timers/" },
     "putTimer": {
       "method": "PUT",
-      "path": "/timers/:id"
+      "path": "/timers/:name"
     },
     "deleteTimer": {
       "method": "DELETE",
-      "path": "/timers/:id"
+      "path": "/timers/:name"
     },
     "getStopwatches": {
       "method": "GET",
@@ -125,15 +126,16 @@
     },
     "getStopwatch": {
       "method": "GET",
-      "path": "/stopwatches/:id"
+      "path": "/stopwatches/:name"
     },
+    "postStopwatch": { "method": "POST", "path": "/stopwatches/" },
     "putStopwatch": {
       "method": "PUT",
-      "path": "/stopwatches/:id"
+      "path": "/stopwatches/:name"
     },
     "deleteStopwatch": {
       "method": "DELETE",
-      "path": "/stopwatches/:id"
+      "path": "/stopwatches/:name"
     },
     "getTransitions": {
       "method": "GET",
@@ -141,15 +143,16 @@
     },
     "getTransition": {
       "method": "GET",
-      "path": "/transitions/:id"
+      "path": "/transitions/:name"
     },
+    "postTransition": { "method": "POST", "path": "/transitions/" },
     "putTransition": {
       "method": "PUT",
-      "path": "/transitions/:id"
+      "path": "/transitions/:name"
     },
     "deleteTransition": {
       "method": "DELETE",
-      "path": "/transitions/:id"
+      "path": "/transitions/:name"
     },
     "getChronographs": {
       "method": "GET",
@@ -157,15 +160,15 @@
     },
     "getChronograph": {
       "method": "GET",
-      "path": "/chronographs/:id"
+      "path": "/chronographs/:type/:name"
     },
     "putChronograph": {
       "method": "PUT",
-      "path": "/chronographs/:id"
+      "path": "/chronographs/:type/:name"
     },
     "deleteChronograph": {
       "method": "DELETE",
-      "path": "/chronographs/:id"
+      "path": "/chronographs/:type/:name"
     },
     "getAllChronographs": {
       "method": "GET",

@@ -89,9 +89,9 @@
 	],
 	"api": {
 		"getWidgetStyles": { "method": "GET", "path": "/widget-styles" },
-		"getChronograph": { "method": "GET", "path": "/timer/:id" },
-		"putChronograph": { "method": "PUT", "path": "/timers/:id" },
-		"deleteChronograph": { "method": "DELETE", "path": "/timers/:id" },
-		"startChronograph": { "method": "POST", "path": "/timer/:id/start" }
+		"getChronograph": { "method": "GET", "path": "/timer/:name" },
+		"putChronograph": { "method": "PUT", "path": "/timers/:name" },
+		"deleteChronograph": { "method": "DELETE", "path": "/timers/:name" },
+		"startChronograph": { "method": "POST", "path": "/timer/:name/start" }
 	}
 }

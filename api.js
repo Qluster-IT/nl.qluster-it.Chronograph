@@ -1,157 +1,59 @@
+'use strict';
+
 const Chronograph = require('./lib/chronograph.js');
-const { ChronographType } = require('./lib/utils.js');
+const api = require('./lib/chronograph-api.js');
 
-let getAllFn = (getter, args, callback) => {
-	let result = [];
-	getter().forEach(entity => {
-		result.push({
-			id: entity.getId(),
-			name: entity.getName(),
-			data: entity.getAllData(),
-			duration: entity.getDuration(),
-			targetDuration: entity.getTargetDuration(),
-			running: entity.isRunning()
-		});
-	});
-	//return JSON.stringify(result);
-	return result;
-	//callback(null, JSON.stringify(result));
-};
+function list(type) {
+	const chronographType = type ? api.getType(type) : null;
+	return Chronograph.all()
+		.filter(item => !chronographType || item.getData('type') === chronographType)
+		.map(api.snapshot);
+}
 
-let getOneFn = (getter, args, callback) => {
-	let entity = getter(args.params.id);
-	if (!entity) {
-		throw new Error('entity not found');
-		return;
-	}
-	return {
-		id: entity.getId(),
-		name: entity.getName(),
-		data: entity.getAllData(),
-		duration: entity.getDuration(),
-		targetDuration: entity.getTargetDuration(),
-		running: entity.isRunning()
-	};
-	// callback(null, {
-	// 	id: entity.getId(),
-	// 	name: entity.getName(),
-	// 	data: entity.getAllData(),
-	// 	duration: entity.getDuration(),
-	// 	targetDuration: entity.getTargetDuration(),
-	// 	running: entity.isRunning()
-	// });
-};
+function get(type, params) {
+	return api.snapshot(api.findActive(type, params.name));
+}
 
-let putOneFn = (getter, args, callback) => {
-	let entity = getter(args.params.id);
-	if (!entity) {
-		throw new Error('entity not found');
-	}
-	if (
-		args.body.running
-		&& !entity.isRunning()
-	) {
-		entity.resume();
-	}
-	if (
-		!args.body.running
-		&& entity.isRunning()
-	) {
-		entity.pause();
-	}
-	return {
-		id: entity.getId(),
-		name: entity.getName(),
-		data: entity.getAllData(),
-		duration: entity.getDuration(),
-		targetDuration: entity.getTargetDuration(),
-		running: entity.isRunning()
-	};
-	// callback(null, {
-	// 	id: entity.getId(),
-	// 	name: entity.getName(),
-	// 	data: entity.getAllData(),
-	// 	duration: entity.getDuration(),
-	// 	targetDuration: entity.getTargetDuration(),
-	// 	running: entity.isRunning()
-	// });
-};
+function put(type, params, body) {
+	const chronograph = api.findActive(type, params.name);
+	api.setRunning(chronograph, body);
+	return api.snapshot(chronograph);
+}
 
-let deleteOneFn = (getter, args, callback) => {
-	let entity = getter(args.params.id);
-	if (!entity) {
-		throw new Error('entity not found');
-	}
-	entity.stop();
+function stop(type, params) {
+	api.findActive(type, params.name).stop();
 	return true;
-	//callback(null, true);
-};
+}
 
 module.exports = {
-	async getTimers({homey}) {
-		let a = getAllFn.call(null, () => Chronograph.all().filter(entity => entity.getData('type') == ChronographType.TIMER));
-		return a;
-	},
-	async getTimer({homey, params}) {
-		return getOneFn.call(null, Chronograph.get, {params});
-	},
-	async putTimer({homey, params, body}) {
-		return putOneFn.call(null, Chronograph.get, {params, body});
-	},
-	async deleteTimer({homey, params, body}) {
-		return deleteOneFn.call(null, Chronograph.get, {params, body});
-	},
+	async getTimers() { return list('timer'); },
+	async getTimer({ params }) { return get('timer', params); },
+	async putTimer({ params, body }) { return put('timer', params, body); },
+	async deleteTimer({ params }) { return stop('timer', params); },
+	async postTimer({ homey, body }) { return api.start(homey, 'timer', body && body.name, body); },
 
-	async getStopwatches({homey}) {
-		let a = getAllFn.call(null, () => Chronograph.all().filter(entity => entity.getData('type') == ChronographType.STOPWATCH));
-		return a;
-	},
-	async getStopwatch({homey, params}) {
-		return getOneFn.call(null, Chronograph.get, {params});
-	},
-	async putStopwatch({homey, params, body}) {
-		return putOneFn.call(null, Chronograph.get, {params, body});
-	},
-	async deleteStopwatch({homey, params, body}) {
-		return deleteOneFn.call(null, Chronograph.get, {params, body});
-	},
+	async getStopwatches() { return list('stopwatch'); },
+	async getStopwatch({ params }) { return get('stopwatch', params); },
+	async putStopwatch({ params, body }) { return put('stopwatch', params, body); },
+	async deleteStopwatch({ params }) { return stop('stopwatch', params); },
+	async postStopwatch({ homey, body }) { return api.start(homey, 'stopwatch', body && body.name, body); },
 
-	async getTransitions({homey}) {
-		let a = getAllFn.call(null, () => Chronograph.all().filter(entity => entity.getData('type') == ChronographType.TRANSITION));
-		return a;
-	},
-	async getTransition({homey, params}) {
-		return getOneFn.call(null, Chronograph.get, {params});
-	},
-	async putTransition({homey, params, body}) {
-		return putOneFn.call(null, Chronograph.get, {params, body});
-	},
-	async deleteTransition({homey, params, body}) {
-		return deleteOneFn.call(null, Chronograph.get, {params, body});
-	},
+	async getTransitions() { return list('transition'); },
+	async getTransition({ params }) { return get('transition', params); },
+	async putTransition({ params, body }) { return put('transition', params, body); },
+	async deleteTransition({ params }) { return stop('transition', params); },
+	async postTransition({ homey, body }) { return api.start(homey, 'transition', body && body.name, body); },
 
-	async getChronographs({homey}) {
-		let a = getAllFn.call(null, Chronograph.all);
-		return a;
-	},
-	async getChronograph({homey, params}) {
-		return getOneFn.call(null, Chronograph.get, {params});
-	},
-	async putChronograph({homey, params, body}) {
-		return putOneFn.call(null, Chronograph.get, {params, body});
-	},
-	async deleteChronograph({homey, params, body}) {
-		return deleteOneFn.call(null, Chronograph.get, {params, body});
-	},
-	
-	async getAllChronographs({homey}) {
-		const chronographs = homey.app.chronographs || {};
+	async getChronographs() { return list(); },
+	async getChronograph({ params }) { return get(params.type, params); },
+	async putChronograph({ params, body }) { return put(params.type, params, body); },
+	async deleteChronograph({ params }) { return stop(params.type, params); },
+
+	async getAllChronographs({ homey }) {
 		const result = {};
-		for (const type of Object.keys(chronographs)) {
-			result[type] = (chronographs[type] || []).map(chronograph =>
-				typeof chronograph === 'string' ? chronograph : chronograph.name
-			);
+		for (const type of Object.keys(homey.app.chronographs || {})) {
+			result[type] = homey.app.chronographs[type].map(item => typeof item === 'string' ? item : item.name);
 		}
 		return result;
-	},
+	}
 };

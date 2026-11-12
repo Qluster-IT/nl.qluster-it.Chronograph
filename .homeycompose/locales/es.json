@@ -7,5 +7,6 @@
 	"invalid_name": "Nombre no válido.",
 	"name_required": "Necesitas escribir y elegir un nombre o ingresar un nombre.",
 	"existing": "Existente",
-	"new": "Nuevo"
+	"new": "Nuevo",
+	"name_based_api_notice": "La API de Chronograph ha cambiado: usa nombres en lugar de ID. Actualiza tus scripts e integraciones; consulta la wiki de la API."
 }

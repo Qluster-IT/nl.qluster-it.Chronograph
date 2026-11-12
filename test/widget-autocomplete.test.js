@@ -118,7 +118,7 @@ describe('Widget chronograph autocomplete', () => {
 			const results = await listeners[type + ':chronograph']('');
 			assert.deepStrictEqual(Array.from(results, item => item.name), ['alpha 2', 'Alpha 10', 'Beta', 'zebra']);
 			assert.deepStrictEqual(Array.from(await listeners[type + ':chronograph']('ALPHA'), item => item.name), ['alpha 2', 'Alpha 10']);
-			assert.strictEqual(results[0].id, Utils.generateId(ChronographType[type.toUpperCase()], 'alpha 2'));
+			assert.strictEqual(results[0].id, 'alpha 2');
 			assert.strictEqual(results[0].type, type);
 			assert.strictEqual(results[0].data.name, 'alpha 2');
 			assert.deepStrictEqual(chronographs[type].map(item => typeof item === 'string' ? item : item.name), ['zebra', 'Alpha 10', 'alpha 2', 'Beta']);

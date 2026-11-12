@@ -53,7 +53,7 @@ function onHomeyReady(Homey) {
 				stopwatch: 'stopwatches'
 			};
 			var selectedSetting = settings.chronograph;
-			var selectedId = selectedSetting && (selectedSetting.id || (selectedSetting.data && selectedSetting.data.id));
+			var selectedName = selectedSetting && (selectedSetting.chronographName || (selectedSetting.data && selectedSetting.data.name) || selectedSetting.name);
 			$scope.alternativeName = typeof settings.alternativeName === 'string' ? settings.alternativeName.trim() : '';
 			$scope.layout = settings.layout === 'compact' || settings.layout === 'large' ? settings.layout : 'normal';
 			var buttonColors = [
@@ -383,13 +383,13 @@ function onHomeyReady(Homey) {
 			}
 
 			function refresh() {
-				if (!selectedId) {
+				if (!selectedName) {
 					$scope.loading = false;
 					markReady();
 					return Promise.resolve();
 				}
 
-				return Homey.api('GET', '/' + widgetType + '/' + encodeURIComponent(selectedId), {})
+				return Homey.api('GET', '/' + widgetType + '/' + encodeURIComponent(selectedName), {})
 					.then(function (chronograph) {
 						if (destroyed) return;
 						$scope.$applyAsync(function () {
@@ -487,7 +487,7 @@ function onHomeyReady(Homey) {
 
 				$scope.busy = true;
 				$scope.error = null;
-				Homey.api('POST', '/' + widgetType + '/' + encodeURIComponent(selectedId) + '/start', $scope.startValues)
+				Homey.api('POST', '/' + widgetType + '/' + encodeURIComponent(selectedName) + '/start', $scope.startValues)
 					.then(function () {
 						$scope.cancelStart();
 						return refresh();
@@ -535,7 +535,7 @@ function onHomeyReady(Homey) {
 
 				$scope.busy = true;
 				$scope.error = null;
-				Homey.api('PUT', '/' + chronographCollectionPaths[widgetType] + '/' + encodeURIComponent(selectedId), {
+				Homey.api('PUT', '/' + chronographCollectionPaths[widgetType] + '/' + encodeURIComponent(selectedName), {
 					running: !$scope.selectedChronograph.running
 				}).then(function (updated) {
 					$scope.$applyAsync(function () {
@@ -556,7 +556,7 @@ function onHomeyReady(Homey) {
 
 				$scope.busy = true;
 				$scope.error = null;
-				Homey.api('DELETE', '/' + chronographCollectionPaths[widgetType] + '/' + encodeURIComponent(selectedId)).then(function () {
+				Homey.api('DELETE', '/' + chronographCollectionPaths[widgetType] + '/' + encodeURIComponent(selectedName)).then(function () {
 					$scope.$applyAsync(function () {
 						$scope.selectedChronograph.active = false;
 						$scope.selectedChronograph.running = false;
@@ -588,7 +588,7 @@ function onHomeyReady(Homey) {
 
 			Homey.on('chronograph_event_multi', refresh);
 			loadWidgetAppearance().then(refresh).then(function () {
-				if (!selectedId) return;
+				if (!selectedName) return;
 				refreshInterval = $interval(refresh, 5000);
 				durationInterval = $interval(updateDurations, 250);
 				markReady();

@@ -7,5 +7,6 @@
 	"invalid_name": "Ugyldigt navn.",
 	"name_required": "Du skal (skrive og) vælge et navn eller indtaste et navn.",
 	"existing": "Eksisterende",
-	"new": "Ny"
+	"new": "Ny",
+	"name_based_api_notice": "Chronograph-API er ?ndret: Brug navne i stedet for ID?er. Opdater dine scripts og integrationer; se API-wikien."
 }

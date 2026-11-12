@@ -82,7 +82,7 @@ describe('Chronograph widget API', () => {
 		const timer = new Chronograph(chronographId, 'Widget API timer', 30, 'seconds');
 		timer.setData('type', ChronographType.TIMER);
 
-		const result = await widgetApi.getChronograph({ homey, params: { id: chronographId } });
+		const result = await widgetApi.getChronograph({ homey, params: { name: 'Widget API timer' } });
 		assert.ok(result);
 		assert.strictEqual(result.name, 'Widget API timer');
 		assert.strictEqual(result.type, ChronographType.TIMER);
@@ -94,7 +94,7 @@ describe('Chronograph widget API', () => {
 	});
 
 	it('returns an inactive state for a configured chronograph that is not running', async () => {
-		const result = await widgetApi.getChronograph({ homey, params: { id: chronographId } });
+		const result = await widgetApi.getChronograph({ homey, params: { name: 'Widget API timer' } });
 		assert.strictEqual(result.active, false);
 		assert.strictEqual(result.name, 'Widget API timer');
 		assert.strictEqual(result.type, ChronographType.TIMER);
@@ -104,7 +104,7 @@ describe('Chronograph widget API', () => {
 	it('leaves saved Flow defaults empty when no start card values are configured', async () => {
 		savedStartArgs.timer_start_cards = [];
 
-		const result = await widgetApi.getChronograph({ homey, params: { id: chronographId } });
+		const result = await widgetApi.getChronograph({ homey, params: { name: 'Widget API timer' } });
 		assert.strictEqual(result.defaults.time, undefined);
 		assert.strictEqual(result.defaults.unit, undefined);
 		assert.strictEqual(result.defaults.from, undefined);
@@ -119,19 +119,19 @@ describe('Chronograph widget API', () => {
 
 		const paused = await widgetApi.putChronograph({
 			homey,
-			params: { id: chronographId },
+			params: { name: 'Widget API timer' },
 			body: { running: false }
 		});
 		assert.strictEqual(paused.running, false);
 
 		const resumed = await widgetApi.putChronograph({
 			homey,
-			params: { id: chronographId },
+			params: { name: 'Widget API timer' },
 			body: { running: true }
 		});
 		assert.strictEqual(resumed.running, true);
 
-		assert.strictEqual(await widgetApi.deleteChronograph({ homey, params: { id: chronographId } }), true);
+		assert.strictEqual(await widgetApi.deleteChronograph({ homey, params: { name: 'Widget API timer' } }), true);
 		assert.strictEqual(Chronograph.get(chronographId), false);
 	});
 
@@ -150,19 +150,19 @@ describe('Chronograph widget API', () => {
 
 			const paused = await api.putChronograph({
 				homey,
-				params: { id },
+				params: { name },
 				body: { running: false }
 			});
 			assert.strictEqual(paused.running, false);
 
 			const resumed = await api.putChronograph({
 				homey,
-				params: { id },
+				params: { name },
 				body: { running: true }
 			});
 			assert.strictEqual(resumed.running, true);
 
-			assert.strictEqual(await api.deleteChronograph({ homey, params: { id } }), true);
+			assert.strictEqual(await api.deleteChronograph({ homey, params: { name } }), true);
 			assert.strictEqual(Chronograph.get(id), false);
 		}
 	});
@@ -170,7 +170,7 @@ describe('Chronograph widget API', () => {
 	it('starts a timer with the duration supplied by the widget', async () => {
 		await widgetApi.startChronograph({
 			homey,
-			params: { id: chronographId },
+			params: { name: 'Widget API timer' },
 			body: { time: 2, unit: 'seconds' }
 		});
 
@@ -181,12 +181,12 @@ describe('Chronograph widget API', () => {
 		assert.strictEqual(chronographs.timer[0].flowValues, undefined);
 		assert.strictEqual(savedStartArgs.chronographs, undefined);
 
-		const result = await widgetApi.getChronograph({ homey, params: { id: chronographId } });
+		const result = await widgetApi.getChronograph({ homey, params: { name: 'Widget API timer' } });
 		assert.strictEqual(result.defaults.time, 30);
 		assert.strictEqual(result.defaults.unit, 'seconds');
 
-		await widgetApi.deleteChronograph({ homey, params: { id: chronographId } });
-		const stopped = await widgetApi.getChronograph({ homey, params: { id: chronographId } });
+		await widgetApi.deleteChronograph({ homey, params: { name: 'Widget API timer' } });
+		const stopped = await widgetApi.getChronograph({ homey, params: { name: 'Widget API timer' } });
 		assert.strictEqual(stopped.active, false);
 		assert.strictEqual(stopped.defaults.time, 30);
 		assert.strictEqual(stopped.defaults.unit, 'seconds');
@@ -211,7 +211,7 @@ describe('Chronograph widget API', () => {
 		const stopwatchId = Utils.generateId(ChronographType.STOPWATCH, 'Widget API stopwatch');
 		await stopwatchWidgetApi.startChronograph({
 			homey,
-			params: { id: stopwatchId },
+			params: { name: 'Widget API stopwatch' },
 			body: {}
 		});
 
@@ -232,7 +232,7 @@ describe('Chronograph widget API', () => {
 			for (const time of [0, 0.001, 0.999, -1, '0.5', NaN, Infinity, 'invalid']) {
 				await assert.rejects(api.startChronograph({
 					homey,
-					params: { id },
+					params: { name },
 					body: { time, unit: 'seconds', from: 0, to: 10, steps: 2 }
 				}), /invalid_duration/);
 				assert.strictEqual(Chronograph.get(id), false);
@@ -240,7 +240,7 @@ describe('Chronograph widget API', () => {
 			for (const time of [1, 1.5, '2']) {
 				await api.startChronograph({
 					homey,
-					params: { id },
+					params: { name },
 					body: { time, unit: 'seconds', from: 0, to: 10, steps: 2 }
 				});
 				assert.strictEqual(Chronograph.get(id).getTargetDuration(), Number(time) * 1000);
@@ -277,7 +277,7 @@ describe('Chronograph widget API', () => {
 
 	it('starts a transition with widget duration and configured transition values', async () => {
 		const transitionId = Utils.generateId(ChronographType.TRANSITION, 'Widget API transition');
-		const result = await transitionWidgetApi.getChronograph({ homey, params: { id: transitionId } });
+		const result = await transitionWidgetApi.getChronograph({ homey, params: { name: 'Widget API transition' } });
 		assert.strictEqual(result.defaults.from, 10);
 		assert.strictEqual(result.defaults.to, 90);
 		assert.strictEqual(result.defaults.steps, 12);
@@ -292,7 +292,7 @@ describe('Chronograph widget API', () => {
 		chronographs.transition[0].flowValues = previousTransitionFlowValues;
 		await transitionWidgetApi.startChronograph({
 			homey,
-			params: { id: transitionId },
+			params: { name: 'Widget API transition' },
 			body: { time: 2, unit: 'seconds', from: 0, to: 50, steps: 4 }
 		});
 
@@ -306,14 +306,14 @@ describe('Chronograph widget API', () => {
 		assert.strictEqual(transition.getData('flowValues'), undefined);
 		assert.deepStrictEqual(chronographs.transition[0].flowValues, previousTransitionFlowValues);
 
-		const updated = await transitionWidgetApi.getChronograph({ homey, params: { id: transitionId } });
+		const updated = await transitionWidgetApi.getChronograph({ homey, params: { name: 'Widget API transition' } });
 		assert.strictEqual(updated.defaults.time, 15);
 		assert.strictEqual(updated.defaults.unit, 'minutes');
 		assert.strictEqual(updated.defaults.from, 10);
 		assert.strictEqual(updated.defaults.to, 90);
 		assert.strictEqual(updated.defaults.steps, 12);
 		assert.strictEqual(updated.steps, 4);
-		const paused = await transitionWidgetApi.putChronograph({ homey, params: { id: transitionId }, body: { running: false } });
+		const paused = await transitionWidgetApi.putChronograph({ homey, params: { name: 'Widget API transition' }, body: { running: false } });
 		assert.strictEqual(paused.steps, 4);
 	});
 
@@ -350,7 +350,7 @@ describe('Chronograph widget API', () => {
 		assert.strictEqual(restored.getData('steps'), 4);
 		assert.deepStrictEqual(restored._splits.map(split => split.time), [8000, 4000]);
 		assert.strictEqual(snapshot.data.steps, 4);
-		const result = await transitionWidgetApi.getChronograph({ homey, params: { id } });
+		const result = await transitionWidgetApi.getChronograph({ homey, params: { name: 'Widget API transition' } });
 		assert.strictEqual(result.steps, 4);
 	});
 
@@ -360,12 +360,12 @@ describe('Chronograph widget API', () => {
 
 		await assert.rejects(widgetApi.putChronograph({
 			homey,
-			params: { id: chronographId },
+			params: { name: 'Widget API timer' },
 			body: { running: 'false' }
 		}), /running property must be a boolean/);
 		await assert.rejects(widgetApi.putChronograph({
 			homey,
-			params: { id: 'missing' },
+			params: { name: 'missing' },
 			body: { running: false }
 		}), /Chronograph not found in app configuration/);
 	});
@@ -373,11 +373,11 @@ describe('Chronograph widget API', () => {
 	it('restricts each widget API to its own chronograph type', async () => {
 		await assert.rejects(transitionWidgetApi.getChronograph({
 			homey,
-			params: { id: chronographId }
+			params: { name: 'Widget API timer' }
 		}), /Chronograph not found in app configuration/);
 		await assert.rejects(stopwatchWidgetApi.startChronograph({
 			homey,
-			params: { id: chronographId },
+			params: { name: 'Widget API timer' },
 			body: {}
 		}), /Chronograph not found in app configuration/);
 	});

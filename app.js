@@ -98,7 +98,7 @@ const TransitionPaused = require('./lib/transition/triggers/transition_paused.js
  * An item returned by the widget chronograph-name autocomplete listener.
  * @typedef {Object} ChronographWidgetAutocompleteItem
  * @property {string} name Displayed chronograph name.
- * @property {string} id Generated chronograph identifier.
+ * @property {string} id Chronograph name used as the autocomplete identifier.
  * @property {ChronographCategory} type Widget chronograph kind.
  * @property {string} chronographName Configured chronograph name.
  * @property {{type: string, name: string}} data Chronograph type and name passed to the widget.
@@ -154,6 +154,7 @@ class Application extends Homey.App {
 			this._initializeTransitionCards();
 			this._initializeGenericCards();
 			this._registerChronographWidgetAutocomplete();
+			await this._notifyNameBasedApi();
 
 
 
@@ -193,6 +194,17 @@ class Application extends Homey.App {
 		}
 	}
 
+	async _notifyNameBasedApi() {
+		const key = 'nameBasedApiNotificationSent';
+		if (this.homey.settings.get(key)) return;
+		try {
+			await this.homey.notifications.createNotification({ excerpt: this.homey.__('name_based_api_notice') });
+			this.homey.settings.set(key, true);
+		} catch (error) {
+			this.homey.error('Unable to deliver API migration notification', error);
+		}
+	}
+
 	_registerChronographWidgetAutocomplete() {
 		['timer', 'transition', 'stopwatch'].forEach(type => {
 			const widget = this.homey.dashboards.getWidget(type);
@@ -210,7 +222,7 @@ class Application extends Homey.App {
 						/** @type {ChronographWidgetAutocompleteItem} */
 						const item = {
 							name: chronograph.name,
-							id: Utils.generateId(chronographType, chronograph.name),
+							id: chronograph.name,
 							type,
 							chronographName: chronograph.name,
 							data: {
@@ -550,7 +562,11 @@ class Application extends Homey.App {
 					elapsed,
 				};
 
-				this.homey.api.realtime('chronograph_event', raw).catch(() => { }).then(() => { });
+				const eventData = { ...raw };
+				delete eventData.id;
+				this.homey.api.realtime('chronograph_event', eventData).catch(error => {
+					this.homey.error('Unable to notify settings of chronograph update', error);
+				});
 				/** @type {Object.<string, ChronographActiveSnapshot>} Active snapshots indexed by chronograph ID. */
 				let active = this.homey.settings.get('chronographs_active') || {};
 				if (event == 'removed') {
@@ -560,7 +576,7 @@ class Application extends Homey.App {
 				}
 				this.homey.settings.set('chronographs_active', active);
 				if (event === 'started' && chronograph.getData('flowValues')) {
-					this.homey.api.realtime('chronograph_event_multi', [raw]).catch(error => {
+					this.homey.api.realtime('chronograph_event_multi', [eventData]).catch(error => {
 						this.homey.error('Unable to notify widgets of updated Flow start values', error);
 					});
 				}
