@@ -46,6 +46,8 @@ survive reloads but do not modify the app defaults or Homey. Share the saved
 preview when requesting changes to the actual defaults. Chronographs are
 sample data and reset when the page reloads. The preview does not load Homey's actual stylesheet or connect to a
 Homey device, so final appearance and behavior still require a Homey check.
+The designer can also preview one tile in a one-, two-, or three-column
+multi-widget; its width depends on the available preview space.
 Press Ctrl+C in the terminal to stop the server. Set
 `CHRONOGRAPH_PREVIEW_PORT` before starting it to use another port.
 

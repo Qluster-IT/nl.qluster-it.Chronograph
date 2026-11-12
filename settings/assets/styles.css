@@ -338,12 +338,33 @@ body {
 	margin: 0;
 }
 
+.style-preview-columns {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 8px;
+	min-width: 0;
+}
+
+.style-preview-empty-column {
+	min-width: 0;
+	border: 1px dashed rgba(128, 128, 128, 0.35);
+	border-radius: 8px;
+}
+
 .style-preview {
 	--style-background: transparent;
 	padding: 8px;
 	border: 1px solid rgba(128, 128, 128, 0.35);
 	border-radius: 8px;
 	background: var(--style-background);
+}
+
+.style-preview-multiple {
+	min-width: 0;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	overflow-x: auto;
 }
 
 .style-preview-height,

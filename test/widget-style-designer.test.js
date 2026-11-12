@@ -65,6 +65,21 @@ function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns) {
 }
 
 describe('Widget style designer preview', () => {
+	it('keeps the multi-widget column preview separate from saved designs', () => {
+		const { scope, writes } = loadSettings();
+		const originalStyle = JSON.stringify(scope.getSelectedStyle());
+		assert.strictEqual(scope.editor.previewColumns, 'single');
+		for (const columns of ['1', '2', '3', 'single']) {
+			scope.editor.previewColumns = columns;
+			assert.strictEqual(scope.isDirty(), false);
+			assert.strictEqual(JSON.stringify(scope.getSelectedStyle()), originalStyle);
+		}
+		assert.strictEqual(writes.length, 0);
+		assert.match(html, /id="preview-columns"[^>]*ng-model="editor\.previewColumns"/);
+		assert.match(html, /grid-template-columns': 'repeat\(' \+ editor\.previewColumns \+ ', minmax\(0, 1fr\)\)'/);
+		assert.match(css, /\.style-preview-columns\s*\{[^}]*gap:\s*8px;/);
+	});
+
 	it('localizes chronograph operation errors in settings and preserves unknown errors', () => {
 		const { scope, homey } = loadSettings();
 		const chronograph = { name: 'Test', data: { type: 'Timer' }, running: true };

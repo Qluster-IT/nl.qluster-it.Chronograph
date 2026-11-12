@@ -52,6 +52,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			previewType: 'timer',
 			previewSize: 'normal',
 			previewState: 'running',
+			previewColumns: 'single',
 			editStatus: false,
 			selectedCell: null,
 			selectedElement: 'name',

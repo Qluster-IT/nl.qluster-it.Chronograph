@@ -199,16 +199,27 @@
 							<option value="running">{{ labels.running }}</option>
 							<option value="starting" ng-if="editor.previewType !== 'stopwatch' || editor.previewState === 'starting'">{{ t('settings.style_starting') }}</option>
 						</select>
+						<label class="hy-nostyle" for="preview-columns">{{ t('settings.style_preview_columns') }}</label>
+						<select id="preview-columns" class="form-select" ng-model="editor.previewColumns" aria-describedby="preview-columns-hint">
+							<option value="single">{{ t('settings.style_preview_single') }}</option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+						</select>
+						<p id="preview-columns-hint" class="help-text style-progress-full-row" ng-if="editor.previewColumns !== 'single'">{{ t('settings.style_preview_columns_hint') }}</p>
 					</div>
-					<div class="style-preview style-preview-height" ng-class="'style-preview-' + editor.previewSize"
-						ng-attr-data-allow-shrink="{{ allowDesignShrink() }}"
-						ng-attr-data-background="{{ previewColor('background') }}">
-						<div class="style-preview-layer" ng-include="getSelectedStyle().groups ? 'grouped-preview.html' : 'cell-preview.html'"></div>
-						<div class="style-preview-measure" ng-if="heightMode() !== 'auto'" aria-hidden="true" inert>
-							<div class="style-preview-layer" ng-repeat="previewScenario in measureHeightScenarios() track by previewScenario.id">
-								<div ng-include="getSelectedStyle().groups ? 'grouped-preview.html' : 'cell-preview.html'"></div>
+					<div class="style-preview-columns" ng-style="editor.previewColumns === 'single' ? {} : { 'grid-template-columns': 'repeat(' + editor.previewColumns + ', minmax(0, 1fr))' }">
+						<div class="style-preview style-preview-height" ng-class="['style-preview-' + editor.previewSize, { 'style-preview-multiple': editor.previewColumns !== 'single' }]"
+							ng-attr-data-allow-shrink="{{ allowDesignShrink() }}"
+							ng-attr-data-background="{{ previewColor('background') }}">
+							<div class="style-preview-layer" ng-include="getSelectedStyle().groups ? 'grouped-preview.html' : 'cell-preview.html'"></div>
+							<div class="style-preview-measure" ng-if="heightMode() !== 'auto'" aria-hidden="true" inert>
+								<div class="style-preview-layer" ng-repeat="previewScenario in measureHeightScenarios() track by previewScenario.id">
+									<div ng-include="getSelectedStyle().groups ? 'grouped-preview.html' : 'cell-preview.html'"></div>
+								</div>
 							</div>
 						</div>
+						<div class="style-preview-empty-column" ng-repeat="column in [2, 3] | limitTo: editor.previewColumns - 1" ng-show="editor.previewColumns !== 'single'" aria-hidden="true"></div>
 					</div>
 					<div ng-if="editor.mode === 'design' ? !isDesignReadOnly() : !isSchemeReadOnly()">
 					<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button"
