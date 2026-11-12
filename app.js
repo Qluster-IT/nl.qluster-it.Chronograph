@@ -200,8 +200,8 @@ class Application extends Homey.App {
 		const key = 'nameBasedApiNotificationSent';
 		if (this.homey.settings.get(key)) return;
 		try {
-			await this.homey.notifications.createNotification({ excerpt: this.homey.__('name_based_api_notice') });
 			this.homey.settings.set(key, true);
+			await this.homey.notifications.createNotification({ excerpt: this.homey.__('name_based_api_notice') });
 		} catch (error) {
 			this.homey.error('Unable to deliver API migration notification', error);
 		}
