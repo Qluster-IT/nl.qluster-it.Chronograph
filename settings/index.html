@@ -295,7 +295,7 @@
 									<legend>{{ t('settings.style_row_visibility') }} {{ editor.selectedRow }}</legend>
 									<label class="hy-nostyle" for="style-row-columns">{{ t('settings.style_row_columns') }}</label>
 									<select id="style-row-columns" class="form-select" ng-model="editor.rowColumns"
-										ng-options="value for value in layoutGroups" ng-change="updateRowColumns()" ng-disabled="editor.invalidRowRule"></select>
+										ng-options="value for value in availableRowColumns()" ng-change="updateRowColumns()" ng-disabled="editor.invalidRowRule"></select>
 									<label class="hy-nostyle" for="style-row-alignment">{{ t('settings.style_row_alignment') }}</label>
 									<select id="style-row-alignment" class="form-select" ng-model="editor.rowAlignment"
 										ng-change="updateRowAlignment()" ng-disabled="savingSettings || editor.invalidRowRule">

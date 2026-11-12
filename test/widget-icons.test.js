@@ -163,6 +163,17 @@ describe('Widget icon autocomplete', () => {
 		}
 	});
 
+	it('explains where to create designs and color schemes in every widget', () => {
+		for (const type of ['timer', 'stopwatch', 'transition']) {
+			const compose = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'widgets', type, 'widget.compose.json'), 'utf8'));
+			for (const id of ['designStyle', 'colorScheme']) {
+				const hint = compose.settings.find(setting => setting.id === id).hint;
+				assert.match(hint.en, /Create your own in Chronograph App Settings under Widgets\./);
+				assert.match(hint.nl, /Maak je eigen .+ in de Chronograph-appinstellingen onder Widgets\./);
+			}
+		}
+	});
+
 	it('loads the font styles for every widget type', () => {
 		for (const type of ['timer', 'stopwatch', 'transition']) {
 			const html = fs.readFileSync(path.join(__dirname, '..', 'widgets', type, 'public', 'index.html'), 'utf8');

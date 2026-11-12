@@ -99,6 +99,9 @@ share it rather than overlapping.
 Select a column to span additional rows for the selected size. The editor shows
 the column extending across the affected rows. Hidden rows
 collapse, and columns in the affected rows fit into the remaining width.
+The four column-span units are shared with columns spanning from earlier rows.
+Changing spans or row order automatically adjusts affected rows; if there is
+not enough room, extra columns are merged into the last remaining column.
 Spanning columns fit their content; other columns can also use fit-to-content
 width. Moving a row clips its spans to the remaining rows.
 Each row also has top padding from 0 to 100 px, configured independently for
@@ -291,8 +294,7 @@ test hook when Git hooks are available. Development dependencies stay under
 ## Support
 
 If you like this project, perhaps you can support us by making a donation?
-- Paypal: [Donate](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VQNGE3N5L6MKS)
-- Bitcoin: 3KU2PbVyB1cVh7n6uNuNYbhuZopC9GP2hp
+- Paypal: [Donate](https://www.paypal.me/qlusterit)
 
 ## Credits
 

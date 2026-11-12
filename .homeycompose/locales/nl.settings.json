@@ -110,7 +110,7 @@
 	"style_align_center": "Midden",
 	"style_align_right": "Rechts",
 	"style_align_stretch": "Uitrekken",
-	"style_column_span_hint": "Kolommen verdelen vier eenheden. Bij een grotere breedte kunnen aangrenzende kolommen verdwijnen en elementen opschuiven; overtollige elementen gaan naar de laatste kolom.",
+	"style_column_span_hint": "Kolommen verdelen vier eenheden, inclusief kolommen die vanuit eerdere rijen doorlopen. Bij ruimtegebrek worden brede kolommen eerst smaller gemaakt; overtollige kolommen kunnen worden samengevoegd met de laatste kolom.",
 	"style_row_column_error": "Deze rij heeft niet zoveel kolommen.",
 	"style_row_visibility": "Zichtbaarheid voor rij",
 	"style_simulate": "Simuleer",

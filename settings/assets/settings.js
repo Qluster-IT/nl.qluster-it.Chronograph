@@ -118,6 +118,13 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				&& value.colorSchemes.every(function (item) { return Object.prototype.hasOwnProperty.call(builtInSchemes, item.id); });
 		}
 
+		function normalizeDesignSpans(style) {
+			if (!style || !style.groups) return;
+			['compact', 'normal', 'large'].forEach(function (size) {
+				widgetStyleEditor.normalizeColumnSpans(style, size);
+			});
+		}
+
 		$scope.getSelectedStyle = function () {
 			if (Object.prototype.hasOwnProperty.call(builtInDesigns, $scope.editor.selectedStyleId)) return builtInDesigns[$scope.editor.selectedStyleId];
 			var id = $scope.editor.selectedStyleId.slice(7);
@@ -453,6 +460,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				widgetStyleEditor.configureCurrentPresentation(style);
 			}
 			if (!colorMode) style = widgetStyleEditor.designFromStyle(style);
+			if (!colorMode) normalizeDesignSpans(style);
 			style.id = id;
 			style.name = name;
 			items.push(style);
@@ -616,6 +624,10 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				return;
 			}
 			if (row > 0 && group > columns) {
+				if (group > widgetStyleEditor.rowSpanCapacity(style, $scope.editor.previewSize, row)) {
+					showError(Homey.__('settings.style_row_column_error'));
+					return;
+				}
 				widgetStyleEditor.setRowColumns(style, $scope.editor.previewSize, row, group);
 			}
 			if (group > widgetStyleEditor.rowColumns(style, $scope.editor.previewSize, row)) {
@@ -968,8 +980,15 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		$scope.availableColumnSpans = function () {
 			var selected = $scope.editor.selectedColumn;
 			var style = $scope.getSelectedStyle();
-			return selected && style && style.groups
-				? $scope.layoutGroups : [];
+			if (!selected || !style || !style.groups) return [];
+			var size = $scope.editor.previewSize;
+			var max = widgetStyleEditor.rowSpanCapacity(style, size, selected.row);
+			var height = widgetStyleEditor.columnRowSpans(style, size, selected.row)[selected.group - 1];
+			for (var row = selected.row + 1; row < selected.row + height; row++) {
+				max = Math.min(max, widgetStyleEditor.rowSpanCapacity(style, size, row)
+					+ widgetStyleEditor.columnSpans(style, size, selected.row)[selected.group - 1] - 1);
+			}
+			return $scope.layoutGroups.slice(0, max);
 		};
 
 		$scope.updateColumnSpan = function () {
@@ -983,7 +1002,19 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 
 		$scope.availableColumnRowSpans = function () {
 			var selected = $scope.editor.selectedColumn;
-			return selected ? $scope.layoutRows.slice(0, 6 - selected.row) : [];
+			var style = $scope.getSelectedStyle();
+			if (!selected || !style || !style.groups) return [];
+			var size = $scope.editor.previewSize;
+			var width = widgetStyleEditor.columnSpans(style, size, selected.row)[selected.group - 1];
+			var current = widgetStyleEditor.columnRowSpans(style, size, selected.row)[selected.group - 1];
+			return $scope.layoutRows.slice(0, 6 - selected.row).filter(function (height) {
+				for (var row = selected.row + 1; row < selected.row + height; row++) {
+					var capacity = widgetStyleEditor.rowSpanCapacity(style, size, row);
+					if (row < selected.row + current) capacity += width;
+					if (capacity < 2) return false;
+				}
+				return true;
+			});
 		};
 
 		$scope.updateColumnRowSpan = function () {
@@ -992,6 +1023,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			if (!selected || !style || !style.groups || $scope.savingSettings || $scope.isDesignReadOnly()
 				|| $scope.availableColumnRowSpans().indexOf($scope.editor.columnRowSpan) === -1) return;
 			widgetStyleEditor.setColumnRowSpan(style, $scope.editor.previewSize, selected.row, selected.group, $scope.editor.columnRowSpan);
+			refreshColumnSpan();
 		};
 
 		$scope.updateColumnAlignment = function () {
@@ -1030,9 +1062,15 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			var style = $scope.getSelectedStyle();
 			var count = $scope.editor.rowColumns;
 			if (!style || !style.groups || $scope.savingSettings || $scope.editor.invalidRowRule
-				|| $scope.layoutGroups.indexOf(count) === -1 || $scope.layoutRows.indexOf($scope.editor.selectedRow) === -1) return;
+				|| $scope.availableRowColumns().indexOf(count) === -1 || $scope.layoutRows.indexOf($scope.editor.selectedRow) === -1) return;
 			widgetStyleEditor.setRowColumns(style, $scope.editor.previewSize, $scope.editor.selectedRow, count);
 			$scope.refreshLayoutElement();
+		};
+
+		$scope.availableRowColumns = function () {
+			var style = $scope.getSelectedStyle();
+			return style && style.groups && $scope.editor.selectedRow
+				? $scope.layoutGroups.slice(0, widgetStyleEditor.rowSpanCapacity(style, $scope.editor.previewSize, $scope.editor.selectedRow)) : [];
 		};
 
 		$scope.updateRowAlignment = function () {
@@ -1515,6 +1553,8 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 						migrationPending = $scope.widgetStyles.styles.length > 0;
 					}
 					savedStyles = angular.copy($scope.widgetStyles);
+					$scope.widgetStyles.styles.forEach(normalizeDesignSpans);
+					if (!angular.equals($scope.widgetStyles, savedStyles)) migrationPending = true;
 					stylesLoaded = true;
 					$scope.stylesAvailable = !$scope.localPreview || previewBuiltInsLoaded;
 					$scope.editor.selectedStyleId = 'builtin:current';
@@ -1545,6 +1585,9 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 							$scope.builtInSchemes = $scope.builtInSchemes.map(function (item) { return builtInSchemes[item.id]; });
 						}
 						savedPreviewBuiltIns = previewBuiltIns();
+						Object.keys(builtInDesigns).forEach(function (id) {
+							normalizeDesignSpans(builtInDesigns[id]);
+						});
 						previewBuiltInsLoaded = true;
 						$scope.stylesAvailable = stylesLoaded;
 						completeInitialLoad();

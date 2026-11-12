@@ -63,6 +63,123 @@ function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns) {
 }
 
 describe('Widget style designer preview', () => {
+	it('reserves span units in covered rows and restores them when the span ends', () => {
+		const { scope, editor, writes } = loadSettings();
+		scope.createStyle(true);
+		const style = scope.getSelectedStyle();
+		scope.selectColumn(1, 1);
+		scope.editor.columnRowSpan = 4;
+		scope.updateColumnRowSpan();
+		assert.deepStrictEqual(Array.from(editor.columnSpans(style, 'normal', 1)), [3, 1]);
+		for (const row of [2, 3, 4]) {
+			assert.strictEqual(editor.rowSpanCapacity(style, 'normal', row), 1);
+			assert.deepStrictEqual(Array.from(editor.columnSpans(style, 'normal', row)), [1]);
+			scope.selectVisibilityRow(row);
+			assert.deepStrictEqual(Array.from(scope.availableRowColumns()), [1]);
+			scope.selectColumn(row, 1);
+			assert.deepStrictEqual(Array.from(scope.availableColumnSpans()), [1]);
+		}
+		scope.selectColumn(1, 1);
+		scope.editor.columnRowSpan = 1;
+		scope.updateColumnRowSpan();
+		for (const row of [2, 3, 4]) {
+			assert.strictEqual(editor.rowSpanCapacity(style, 'normal', row), 4);
+			assert.deepStrictEqual(Array.from(editor.columnSpans(style, 'normal', row)), [4]);
+		}
+		scope.saveSettings();
+		assert.strictEqual(editor.isValidCollection(writes[0].value), true);
+	});
+
+	it('reduces row capacity by the width of multiple overlapping spans', () => {
+		const { scope, editor } = loadSettings();
+		scope.createStyle(true);
+		const style = scope.getSelectedStyle();
+		editor.setRowColumns(style, 'normal', 1, 3);
+		editor.setColumnRowSpan(style, 'normal', 1, 1, 3);
+		editor.setColumnRowSpan(style, 'normal', 1, 2, 4);
+		assert.deepStrictEqual(Array.from(editor.columnSpans(style, 'normal', 1)), [2, 1, 1]);
+		assert.strictEqual(editor.rowSpanCapacity(style, 'normal', 2), 1);
+		assert.strictEqual(editor.rowSpanCapacity(style, 'normal', 4), 3);
+		assert.deepStrictEqual(Array.from(editor.columnSpans(style, 'normal', 4)), [2, 1]);
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
+	});
+
+	it('reduces existing multi-unit columns before merging covered-row columns', () => {
+		const { scope, editor, writes } = loadSettings();
+		scope.createStyle(true);
+		const style = scope.getSelectedStyle();
+		editor.setRowColumns(style, 'normal', 1, 2);
+		editor.setRowColumns(style, 'normal', 2, 3);
+		assert.deepStrictEqual(Array.from(editor.columnSpans(style, 'normal', 1)), [3, 1]);
+		assert.deepStrictEqual(Array.from(editor.columnSpans(style, 'normal', 2)), [2, 1, 1]);
+		scope.selectColumn(1, 2);
+		scope.editor.columnRowSpan = 2;
+		scope.updateColumnRowSpan();
+		assert.deepStrictEqual(Array.from(editor.columnSpans(style, 'normal', 2)), [1, 1, 1]);
+		assert.strictEqual(editor.rowColumns(style, 'normal', 2), 3);
+		scope.selectVisibilityRow(2);
+		assert.deepStrictEqual(Array.from(scope.availableRowColumns()), [1, 2, 3]);
+		scope.selectColumn(2, 1);
+		assert.deepStrictEqual(Array.from(scope.availableColumnSpans()), [1, 2, 3]);
+		scope.saveSettings();
+		const reloaded = loadSettings(writes[0].value).scope;
+		reloaded.editor.selectedStyleId = 'custom:' + writes[0].value.styles[0].id;
+		assert.deepStrictEqual(Array.from(editor.columnSpans(reloaded.getSelectedStyle(), 'normal', 2)), [1, 1, 1]);
+	});
+
+	it('updates covered row budgets when the spanning width changes', () => {
+		const { scope, editor } = loadSettings();
+		scope.createStyle(true);
+		const style = scope.getSelectedStyle();
+		editor.setRowColumns(style, 'normal', 1, 2);
+		scope.selectColumn(1, 2);
+		scope.editor.columnRowSpan = 3;
+		scope.updateColumnRowSpan();
+		scope.editor.columnSpan = 2;
+		scope.updateColumnSpan();
+		assert.deepStrictEqual(Array.from(editor.columnSpans(style, 'normal', 1)), [2, 2]);
+		assert.deepStrictEqual(Array.from(editor.columnSpans(style, 'normal', 3)), [1, 1]);
+		scope.selectVisibilityRow(3);
+		assert.deepStrictEqual(Array.from(scope.availableRowColumns()), [1, 2]);
+		scope.selectColumn(3, 1);
+		assert.deepStrictEqual(Array.from(scope.availableColumnSpans()), [1, 2]);
+		scope.selectColumn(1, 2);
+		scope.editor.columnSpan = 1;
+		scope.updateColumnSpan();
+		assert.deepStrictEqual(Array.from(editor.columnSpans(style, 'normal', 3)), [1, 2]);
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
+	});
+
+	it('does not offer a row span where all remaining units are reserved', () => {
+		const { scope, editor } = loadSettings();
+		scope.createStyle(true);
+		const style = scope.getSelectedStyle();
+		editor.setRowColumns(style, 'normal', 1, 2);
+		scope.selectColumn(1, 1);
+		scope.editor.columnRowSpan = 3;
+		scope.updateColumnRowSpan();
+		scope.selectColumn(2, 1);
+		assert.deepStrictEqual(Array.from(scope.availableColumnRowSpans()), [1]);
+	});
+
+	it('normalizes previously saved row widths without writing until settings are saved', () => {
+		const { scope, editor } = loadSettings();
+		scope.createStyle(true);
+		const oldStyle = JSON.parse(JSON.stringify(scope.widgetStyles));
+		oldStyle.styles[0].columnRowSpans = { normal: { 1: [2] } };
+		const loaded = loadSettings(oldStyle);
+		const style = loaded.scope.widgetStyles.styles[0];
+		assert.strictEqual(loaded.scope.isDirty(), true);
+		assert.strictEqual(loaded.writes.length, 0);
+		assert.strictEqual(editor.rowSpanCapacity(style, 'normal', 2), 1);
+		assert.deepStrictEqual(Array.from(editor.columnSpans(style, 'normal', 2)), [1]);
+		loaded.scope.saveSettings();
+		assert.strictEqual(loaded.writes.length, 1);
+		assert.strictEqual(editor.isValidCollection(loaded.writes[0].value), true);
+		const again = loadSettings(loaded.writes[0].value);
+		assert.strictEqual(again.scope.isDirty(), false);
+	});
+
 	it('persists column row spans independently per size and preserves them on reorder', () => {
 		const { scope, writes, editor } = loadSettings();
 		scope.createStyle(true);

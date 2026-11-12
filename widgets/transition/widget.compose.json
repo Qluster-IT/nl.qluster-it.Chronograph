@@ -22,8 +22,8 @@
 				"nl": "Ontwerpstijl"
 			},
 			"hint": {
-				"en": "Choose a saved widget design",
-				"nl": "Kies een opgeslagen widgetontwerp"
+				"en": "Choose a widget design. Create your own in Chronograph App Settings under Widgets.",
+				"nl": "Kies een widgetontwerp. Maak je eigen ontwerp in de Chronograph-appinstellingen onder Widgets."
 			}
 		},
 		{
@@ -34,8 +34,8 @@
 				"nl": "Kleurenschema"
 			},
 			"hint": {
-				"en": "Choose a saved widget color scheme",
-				"nl": "Kies een opgeslagen kleurenschema voor widgets"
+				"en": "Choose a widget color scheme. Create your own in Chronograph App Settings under Widgets.",
+				"nl": "Kies een kleurenschema voor widgets. Maak je eigen schema in de Chronograph-appinstellingen onder Widgets."
 			}
 		},
 		{
