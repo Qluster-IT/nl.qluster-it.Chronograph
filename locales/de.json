@@ -91,7 +91,7 @@
     "style_align_center": "Center",
     "style_align_right": "Right",
     "style_align_stretch": "Strecken",
-    "style_column_span_hint": "Columns share four units. Increasing the span may remove adjacent columns and shift their elements; overflow joins the last column.",
+    "style_column_span_hint": "Columns share four units, including columns spanning from earlier rows. Wider columns are reduced first when space is needed; extra columns may be merged into the last column.",
     "style_row_column_error": "This row does not have that many columns.",
     "style_row_visibility": "Visibility for row",
     "style_simulate": "Simulate",
@@ -234,5 +234,6 @@
   "invalid_name": "Ungültige Name.",
   "name_required": "Sie müssen einen Namen (eintippen und) auswählen oder einen Namen eingeben.",
   "existing": "Bestehende",
-  "new": "Neu"
+  "new": "Neu",
+  "name_based_api_notice": "Die Chronograph-API wurde ge?ndert: Namen statt IDs verwenden. Skripte und Integrationen aktualisieren; siehe API-Wiki."
 }

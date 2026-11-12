@@ -47,6 +47,19 @@ async function loadWidget(type, settings, defaults, widgetStyles) {
 }
 
 describe('Widget duration defaults', () => {
+	it('refreshes for changed Flow values of the selected chronograph only', async () => {
+		const widget = await loadWidget('timer', {}, { time: 5, unit: 'seconds' });
+		const initialRequests = widget.requests.length;
+		widget.state.defaults = { time: 20, unit: 'seconds' };
+		await widget.listeners.chronograph_flow_values_changed({ type: 'Timer', name: 'other' });
+		await widget.listeners.chronograph_flow_values_changed({ type: 'Transition', name: 'test' });
+		await widget.listeners.chronograph_flow_values_changed({ name: 'test' });
+		assert.strictEqual(widget.requests.length, initialRequests);
+		await widget.listeners.chronograph_flow_values_changed({ type: 'Timer', name: 'test' });
+		assert.strictEqual(widget.requests.length, initialRequests + 1);
+		assert.strictEqual(widget.scope.selectedChronograph.defaults.time, 20);
+	});
+
 	it('requests the selected chronograph using its encoded name', async () => {
 		const widget = await loadWidget('timer', {
 			chronograph: { id: 'legacy-id', name: 'Kitchen / lamp' }

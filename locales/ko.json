@@ -91,7 +91,7 @@
     "style_align_center": "Center",
     "style_align_right": "Right",
     "style_align_stretch": "늘이기",
-    "style_column_span_hint": "Columns share four units. Increasing the span may remove adjacent columns and shift their elements; overflow joins the last column.",
+    "style_column_span_hint": "Columns share four units, including columns spanning from earlier rows. Wider columns are reduced first when space is needed; extra columns may be merged into the last column.",
     "style_row_column_error": "This row does not have that many columns.",
     "style_row_visibility": "Visibility for row",
     "style_simulate": "Simulate",
@@ -234,5 +234,6 @@
   "invalid_name": "잘못된 이름입니다.",
   "name_required": "이름을 입력하거나 선택해야 합니다.",
   "existing": "기존의",
-  "new": "새로운"
+  "new": "새로운",
+  "name_based_api_notice": "Chronograph API? ???????. ID ?? ??? ?????. ????? ??? ?????? API ??? ?????."
 }

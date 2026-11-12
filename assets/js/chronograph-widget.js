@@ -587,6 +587,10 @@ function onHomeyReady(Homey) {
 			}
 
 			Homey.on('chronograph_event_multi', refresh);
+			Homey.on('chronograph_flow_values_changed', function (event) {
+				if (event && event.name === selectedName && typeof event.type === 'string'
+					&& event.type.toLowerCase() === widgetType) return refresh();
+			});
 			loadWidgetAppearance().then(refresh).then(function () {
 				if (!selectedName) return;
 				refreshInterval = $interval(refresh, 5000);

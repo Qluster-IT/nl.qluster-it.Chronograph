@@ -15,6 +15,10 @@
 
 - Add the `hy-nostyle` class to buttons in settings screens.
 
+## Documentation
+
+- Do not document widget-scoped APIs in docs, Wiki pages, or README files; they are only accessible from Chronograph widgets.
+
 ## Chronograph widget
 
 - Preserve published widget IDs, setting IDs, setting values, and existing dashboard configurations unless the user explicitly authorizes a breaking change.

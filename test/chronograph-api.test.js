@@ -96,6 +96,114 @@ describe('Name-based app API', () => {
 	});
 });
 
+describe('Chronograph realtime updates', () => {
+	let homey;
+	let originalHomey;
+	let originalUpdateTimeout;
+	let originalTimeout;
+	let listeners;
+	let events;
+	const name = 'Realtime test';
+	const monitoredEvents = ['created', 'started', 'resumed', 'paused', 'updated', 'removed', 'flow_values_changed'];
+
+	beforeEach(() => {
+		originalHomey = Chronograph.homey;
+		originalUpdateTimeout = Chronograph._updateTimeout;
+		originalTimeout = Chronograph._timeout;
+		listeners = Object.fromEntries(monitoredEvents.map(event => [event, Chronograph.events.listeners(event)]));
+		events = [];
+		const settings = {};
+		const app = {
+			chronographs: { timer: [{ name }], transition: [{ name }], stopwatch: [{ name }] },
+			saveChronographs() {}
+		};
+		homey = {
+			app,
+			settings: { get: key => settings[key], set: (key, value) => { settings[key] = value; } },
+			api: { realtime: (event, data) => {
+				events.push({ event, data: JSON.parse(JSON.stringify(data)) });
+				return Promise.resolve();
+			} },
+			error: (...args) => { throw new Error(args.join(' ')); },
+			setTimeout: () => 1,
+			clearTimeout() {},
+			__: key => key
+		};
+		app.homey = homey;
+		Chronograph.homey = homey;
+		Chronograph._timeout = null;
+		Chronograph._updateTimeout = null;
+		const module = { exports: {} };
+		vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8'), {
+			module,
+			require: id => {
+				if (id === 'homey') return { App: class {} };
+				if (id === './lib/chronograph.js') return Chronograph;
+				if (id === './lib/utils.js') return require('../lib/utils.js');
+				return {};
+			}
+		});
+		module.exports.prototype._installEventHandlers.call(app);
+	});
+
+	afterEach(() => {
+		for (const type of Object.values(ChronographType)) {
+			const chronograph = Chronograph.get(Utils.generateId(type, name));
+			if (chronograph) chronograph.stop(true);
+		}
+		for (const event of monitoredEvents) {
+			for (const listener of Chronograph.events.listeners(event)) {
+				if (!listeners[event].includes(listener)) Chronograph.events.removeListener(event, listener);
+			}
+		}
+		Chronograph.homey = originalHomey;
+		Chronograph._timeout = originalTimeout;
+		Chronograph._updateTimeout = originalUpdateTimeout;
+	});
+
+	it('omits Flow values from lifecycle and periodic updates without changing saved snapshots', async () => {
+		const body = { name, time: 30, unit: 'seconds', from: 0, to: 10, steps: 4 };
+		const result = await api.postTransition({ homey, body });
+		const chronograph = Chronograph.get(Utils.generateId(ChronographType.TRANSITION, name));
+		const values = { time: 30, unit: 'seconds', from: 0, to: 10, steps: 4 };
+		assert.deepStrictEqual(result.data.flowValues, values);
+		chronograph.pause();
+		chronograph.resume();
+		Chronograph._resetUpdateTimeout();
+		assert.deepStrictEqual(homey.settings.get('chronographs_active')[chronograph.getId()].data.flowValues, values);
+		chronograph.stop();
+
+		const updates = events.filter(entry => entry.event === 'chronograph_event' || entry.event === 'chronograph_event_multi');
+		assert.strictEqual(events.filter(entry => entry.event === 'chronograph_flow_values_changed').length, 1);
+		assert.ok(updates.some(entry => entry.event === 'chronograph_event_multi'));
+		for (const entry of updates) {
+			for (const snapshot of Array.isArray(entry.data) ? entry.data : [entry.data]) {
+				assert.strictEqual(Object.prototype.hasOwnProperty.call(snapshot.data, 'flowValues'), false);
+				if (snapshot.data.type === ChronographType.TRANSITION) assert.strictEqual(snapshot.data.steps, 4);
+			}
+		}
+		assert.strictEqual(chronograph.getData('flowValues').steps, 4);
+	});
+
+	it('notifies only when saved values change, including empty stopwatch defaults', async () => {
+		await api.postTimer({ homey, body: { name, time: 10, unit: 'seconds' } });
+		await api.postTimer({ homey, body: { name, time: 10, unit: 'seconds', replace: true } });
+		await api.postTimer({ homey, body: { name, time: 11, unit: 'seconds', replace: true } });
+		await api.postStopwatch({ homey, body: { name } });
+		await api.postStopwatch({ homey, body: { name, replace: true } });
+		await api.deleteTimer({ params: { name } });
+		await require('../lib/widget-api.js').createWidgetApi('timer').startChronograph({
+			homey, params: { name }, body: { time: 12, unit: 'seconds' }
+		});
+		const changes = events.filter(entry => entry.event === 'chronograph_flow_values_changed').map(entry => entry.data);
+		assert.deepStrictEqual(changes, [
+			{ type: ChronographType.TIMER, name, flowValues: { time: 10, unit: 'seconds' } },
+			{ type: ChronographType.TIMER, name, flowValues: { time: 11, unit: 'seconds' } },
+			{ type: ChronographType.STOPWATCH, name, flowValues: {} }
+		]);
+	});
+});
+
 describe('API migration notification', () => {
 	it('sends once and retries after a delivery failure', async () => {
 		const module = { exports: {} };

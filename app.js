@@ -562,7 +562,7 @@ class Application extends Homey.App {
 					elapsed,
 				};
 
-				const eventData = { ...raw };
+				const eventData = { ...raw, data: chronograph.getRealtimeData() };
 				delete eventData.id;
 				this.homey.api.realtime('chronograph_event', eventData).catch(error => {
 					this.homey.error('Unable to notify settings of chronograph update', error);
@@ -577,7 +577,7 @@ class Application extends Homey.App {
 				this.homey.settings.set('chronographs_active', active);
 				if (event === 'started' && chronograph.getData('flowValues')) {
 					this.homey.api.realtime('chronograph_event_multi', [eventData]).catch(error => {
-						this.homey.error('Unable to notify widgets of updated Flow start values', error);
+						this.homey.error('Unable to notify widgets of chronograph start', error);
 					});
 				}
 
@@ -599,6 +599,11 @@ class Application extends Homey.App {
 			} catch (error) {
 				this.homey.error('_installEventHandlers', event, 'error', error);
 			}
+		});
+		Chronograph.events.on('flow_values_changed', values => {
+			this.homey.api.realtime('chronograph_flow_values_changed', values).catch(error => {
+				this.homey.error('Unable to notify clients of updated Flow start values', error);
+			});
 		});
 	}
 
