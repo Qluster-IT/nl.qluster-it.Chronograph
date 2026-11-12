@@ -22,7 +22,7 @@ For eksempel:
 	random(10, 30)
 	abs(-10)
 
-Ud over de tilgængelige flow-kort, kan timere og stopure også kontrolleres ved brug af [HomeyScript](https://homeyscript.homey.app).
+Ud over de tilgængelige flow-kort, kan timere og stopure også kontrolleres ved brug af HomeyScript.
 
 For eksempel, dette script vil stoppe alle kørende timere:
 
@@ -35,3 +35,4 @@ For eksempel, dette script vil stoppe alle kørende timere:
 	}
 
 Se emnet på Community Forum for mere information!
+For at åbne Chronograph-wikien med brugervejledningen og API-referencen skal du vælge "Besøg hjemmeside" under "Udviklers hjemmeside" på denne apps side i Homey App Store.

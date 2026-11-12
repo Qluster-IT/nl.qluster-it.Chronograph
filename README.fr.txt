@@ -22,7 +22,7 @@ Par exemple :
 	random(10, 30)
 	abs(-10)
 
-En plus des cartes de flux disponibles, les minuteries et chronomètres peuvent également être contrôlés à l'aide de [HomeyScript](https://homeyscript.homey.app).
+En plus des cartes de flux disponibles, les minuteries et chronomètres peuvent également être contrôlés à l'aide de HomeyScript.
 
 Par exemple, ce script arrêtera toutes les minuteries en cours :
 
@@ -35,3 +35,4 @@ Par exemple, ce script arrêtera toutes les minuteries en cours :
 	}
 
 Consultez le sujet sur le forum communautaire pour plus d'informations !
+Pour accéder au wiki Chronograph, au guide d'utilisation et à la référence de l'API, sélectionnez "Visiter le site web" sous "Site web du développeur" sur la page de cette application dans le Homey App Store.

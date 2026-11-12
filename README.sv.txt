@@ -22,7 +22,7 @@ Till exempel:
 	random(10, 30)
 	abs(-10)
 
-Förutom de tillgängliga flödeskorten kan timers och stoppur också styras med [HomeyScript](https://homeyscript.homey.app).
+Förutom de tillgängliga flödeskorten kan timers och stoppur också styras med HomeyScript.
 
 Till exempel, detta skript kommer att stoppa alla pågående timers:
 
@@ -35,3 +35,4 @@ Till exempel, detta skript kommer att stoppa alla pågående timers:
 	}
 
 Se ämnet på Community Forum för mer information!
+För Chronograph-wikin med användarhandbok och API-referens, välj "Besök webbplats" under "Utvecklares webbplats" på appens sida i Homey App Store.

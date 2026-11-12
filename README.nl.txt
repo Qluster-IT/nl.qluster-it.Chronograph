@@ -22,7 +22,7 @@ Bijvoorbeeld:
 	random(10, 30)
 	abs(-10)
 
-Naast de beschikbare flowkaarten kunnen timers en stopwatches ook worden bediend met behulp van [HomeyScript](https://homeyscript.homey.app).
+Naast de beschikbare flowkaarten kunnen timers en stopwatches ook worden bediend met behulp van HomeyScript.
 
 Bijvoorbeeld, dit script stopt alle lopende timers:
 
@@ -35,3 +35,4 @@ Bijvoorbeeld, dit script stopt alle lopende timers:
 	}
 
 Bekijk het topic op het Community Forum voor meer informatie!
+Voor de Chronograph-wiki met de gebruikershandleiding en API-referentie kies je "Bezoek website" onder "Ontwikkelaarswebsite" op de Homey App Store-pagina van deze app.

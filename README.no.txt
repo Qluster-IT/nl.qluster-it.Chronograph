@@ -22,7 +22,7 @@ For eksempel:
 	random(10, 30)
 	abs(-10)
 
-I tillegg til de tilgjengelige flytkortene, kan tidtakere og stoppeklokker også kontrolleres ved bruk av [HomeyScript](https://homeyscript.homey.app).
+I tillegg til de tilgjengelige flytkortene, kan tidtakere og stoppeklokker også kontrolleres ved bruk av HomeyScript.
 
 For eksempel vil dette skriptet stoppe alle løpende tidtakere:
 
@@ -35,3 +35,4 @@ For eksempel vil dette skriptet stoppe alle løpende tidtakere:
 	}
 
 Se emnet på samfunnsforumet for mer informasjon!
+For Chronograph-wikien med brukerveiledning og API-referanse, velg "Besøk nettsted" under "Utviklerens nettsted" på denne appens side i Homey App Store.

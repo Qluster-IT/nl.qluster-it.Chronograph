@@ -22,7 +22,7 @@ Na przykład:
 	random(10, 30)
 	abs(-10)
 
-Oprócz dostępnych kart przepływów, timery i stopery mogą być również kontrolowane za pomocą [HomeyScript](https://homeyscript.homey.app).
+Oprócz dostępnych kart przepływów, timery i stopery mogą być również kontrolowane za pomocą HomeyScript.
 
 Na przykład, ten skrypt zatrzyma wszystkie działające timery:
 
@@ -35,3 +35,4 @@ Na przykład, ten skrypt zatrzyma wszystkie działające timery:
 	}
 
 Zobacz temat na Forum Społeczności, aby uzyskać więcej informacji!
+Aby otworzyć wiki Chronograph z instrukcją obsługi i dokumentacją API, wybierz „Odwiedź stronę” w sekcji „Strona www twórców aplikacji” na stronie tej aplikacji w Homey App Store.

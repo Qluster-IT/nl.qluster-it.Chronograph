@@ -22,7 +22,7 @@ Zum Beispiel:
 	random(10, 30)
 	abs(-10)
 
-Neben den verfügbaren Flow-Karten können Timer und Stoppuhren auch mit [HomeyScript](https://homeyscript.homey.app) gesteuert werden.
+Neben den verfügbaren Flow-Karten können Timer und Stoppuhren auch mit HomeyScript gesteuert werden.
 
 Zum Beispiel, dieses Skript wird alle laufenden Timer stoppen:
 
@@ -35,3 +35,4 @@ Zum Beispiel, dieses Skript wird alle laufenden Timer stoppen:
 	}
 
 Sieh dir das Thema im Community-Forum für weitere Informationen an!
+Für das Chronograph-Wiki mit Benutzerhandbuch und API-Referenz wähle auf der Homey App Store-Seite dieser App unter "Entwickler-Website" die Option "Website besuchen".

@@ -88,6 +88,7 @@ Application image by [Agê Barros](https://unsplash.com/@agebarros?utm_source=un
 * Added a multi-Chronograph widget with individually configurable tiles and up to three columns.
 * Create custom widget layouts and color schemes with the widget designer.
 * Improved translations.
+* Improved app and widget performance and reduced resource usage.
 * The Chronograph API now uses names instead of IDs. Update your scripts and integrations; see the [API wiki](https://github.com/Qluster-IT/nl.qluster-it.Chronograph/wiki).
 
 ### v2.3.1

@@ -22,7 +22,7 @@ Ad esempio:
 	random(10, 30)
 	abs(-10)
 
-Oltre alle carte di flusso disponibili, i timer e i cronometri possono anche essere controllati usando [HomeyScript](https://homeyscript.homey.app).
+Oltre alle carte di flusso disponibili, i timer e i cronometri possono anche essere controllati usando HomeyScript.
 
 Ad esempio, questo script fermerà tutti i timer in esecuzione:
 
@@ -35,3 +35,4 @@ Ad esempio, questo script fermerà tutti i timer in esecuzione:
 	}
 
 Guarda l'argomento sul Forum della Comunità per ulteriori informazioni!
+Per accedere al wiki di Chronograph, con il manuale utente e la documentazione API, seleziona "Visita il sito web" sotto "Sito web dello sviluppatore" nella pagina di questa app su Homey App Store.

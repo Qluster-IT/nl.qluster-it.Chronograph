@@ -22,7 +22,7 @@ For example:
 	random(10, 30)
 	abs(-10)
 
-In addition to the available flow cards, timers and stopwatches can also be controlled using [HomeyScript](https://homeyscript.homey.app).
+In addition to the available flow cards, timers and stopwatches can also be controlled using HomeyScript.
 
 For example, this script will stop all running timers:
 
@@ -35,3 +35,4 @@ For example, this script will stop all running timers:
 	}
 
 See the topic on the Community Forum for more information!
+For the Chronograph wiki, user manual and API reference, select "Visit website" under "Developer website" on this app's Homey App Store page.

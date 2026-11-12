@@ -22,7 +22,7 @@ Por ejemplo:
 	random(10, 30)
 	abs(-10)
 
-Además de las tarjetas de flujo disponibles, los temporizadores y cronómetros también pueden ser controlados usando [HomeyScript](https://homeyscript.homey.app).
+Además de las tarjetas de flujo disponibles, los temporizadores y cronómetros también pueden ser controlados usando HomeyScript.
 
 Por ejemplo, este script detendrá todos los temporizadores en ejecución:
 
@@ -35,3 +35,4 @@ Por ejemplo, este script detendrá todos los temporizadores en ejecución:
 	}
 
 ¡Consulta el tema en el Foro de la Comunidad para más información!
+Para acceder a la wiki de Chronograph, con el manual de usuario y la referencia de la API, selecciona "Visitar el sitio web" en "Sitio web del desarrollador" en la página de esta aplicación en la Homey App Store.
