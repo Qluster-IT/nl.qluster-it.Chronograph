@@ -184,10 +184,12 @@ body {
 
 .chronograph-design-group[data-alignment="center"] {
 	justify-content: center;
+	justify-content: safe center;
 }
 
 .chronograph-design-group[data-alignment="right"] {
 	justify-content: flex-end;
+	justify-content: safe flex-end;
 }
 
 .chronograph-design-group[data-vertical-alignment="top"] {
@@ -232,6 +234,11 @@ body {
 .chronograph-design-element {
 	min-width: 0;
 	max-width: 100%;
+}
+
+.chronograph-design-element-icon {
+	flex: 0 0 auto;
+	overflow: hidden;
 }
 
 .chronograph-design-element-fields,

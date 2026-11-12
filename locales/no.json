@@ -236,7 +236,11 @@
     "multiple_invalid_settings": "Noen widgetinnstillinger er ugyldige. Kontroller widgetinnstillingene.",
     "widget_type_timer": "Timer",
     "widget_type_stopwatch": "Stoppeklokke",
-    "widget_type_transition": "Overgang"
+    "widget_type_transition": "Overgang",
+    "multiple_row_separator": "Radskille",
+    "multiple_separator_cards": "Widgetlignende kort",
+    "multiple_separator_line": "Linje",
+    "multiple_separator_color": "Linjefarge"
   },
   "timer_not_running": "Timeren __name__ kjører ikke.",
   "stopwatch_not_running": "Stoppeklokken __name__ kjører ikke.",

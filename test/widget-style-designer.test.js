@@ -1199,7 +1199,7 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(layout.elements.cancel.group, 2);
 		assert.strictEqual(editor.rowColumns(style, 'compact', 3), 2);
 		assert.deepStrictEqual(Array.from(editor.columnSpans(style, 'compact', 3)), [3, 1]);
-		assert.deepStrictEqual(Array.from(editor.columnWidths(style, 'compact', 3)), ['span', 'span']);
+		assert.deepStrictEqual(Array.from(editor.columnWidths(style, 'compact', 3)), ['span', 'content']);
 		assert.deepStrictEqual(Array.from(editor.columnAlignments(style, 'compact', 3)), ['left', 'left']);
 		assert.deepStrictEqual(Array.from(editor.columnDirections(style, 'compact', 3)), ['horizontal', 'horizontal']);
 		assert.strictEqual(style.rowVisibility.compact[3].startForm, true);

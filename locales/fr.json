@@ -236,7 +236,11 @@
     "multiple_invalid_settings": "Certains paramètres du widget sont invalides. Vérifiez les paramètres du widget.",
     "widget_type_timer": "Minuteur",
     "widget_type_stopwatch": "Chronomètre",
-    "widget_type_transition": "Transition"
+    "widget_type_transition": "Transition",
+    "multiple_row_separator": "Séparation des lignes",
+    "multiple_separator_cards": "Cartes de type widget",
+    "multiple_separator_line": "Ligne",
+    "multiple_separator_color": "Couleur de la ligne"
   },
   "timer_not_running": "Le minuteur __name__ n’est pas en cours d’exécution.",
   "stopwatch_not_running": "Le chronomètre __name__ n’est pas en cours d’exécution.",

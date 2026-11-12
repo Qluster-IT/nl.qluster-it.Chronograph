@@ -236,7 +236,11 @@
     "multiple_invalid_settings": "일부 위젯 설정이 올바르지 않습니다. 위젯 설정을 확인하세요.",
     "widget_type_timer": "타이머",
     "widget_type_stopwatch": "스톱워치",
-    "widget_type_transition": "전환"
+    "widget_type_transition": "전환",
+    "multiple_row_separator": "행 구분",
+    "multiple_separator_cards": "위젯 스타일 카드",
+    "multiple_separator_line": "선",
+    "multiple_separator_color": "선 색상"
   },
   "timer_not_running": "타이머 __name__이(가) 실행 중이 아닙니다.",
   "stopwatch_not_running": "스톱워치 __name__이(가) 실행 중이 아닙니다.",

@@ -9880,6 +9880,374 @@
           ]
         },
         {
+          "id": "rowSeparator",
+          "type": "dropdown",
+          "title": {
+            "en": "Row separation",
+            "nl": "Rijscheiding",
+            "da": "Rækkeadskillelse",
+            "de": "Zeilentrennung",
+            "es": "Separación de filas",
+            "fr": "Séparation des lignes",
+            "it": "Separazione delle righe",
+            "no": "Radskille",
+            "sv": "Radavskiljare",
+            "pl": "Oddzielenie wierszy",
+            "ru": "Разделение строк",
+            "ko": "행 구분",
+            "ar": "فاصل الصفوف"
+          },
+          "value": "none",
+          "values": [
+            {
+              "id": "none",
+              "title": {
+                "en": "None",
+                "nl": "Geen",
+                "da": "Ingen",
+                "de": "Keine",
+                "es": "Ninguno",
+                "fr": "Aucune",
+                "it": "Nessuno",
+                "no": "Ingen",
+                "sv": "Ingen",
+                "pl": "Brak",
+                "ru": "Нет",
+                "ko": "없음",
+                "ar": "بدون"
+              }
+            },
+            {
+              "id": "cards",
+              "title": {
+                "en": "Widget-style cards",
+                "nl": "Widgetachtige kaarten",
+                "da": "Widgetlignende kort",
+                "de": "Widgetartige Karten",
+                "es": "Tarjetas como widgets",
+                "fr": "Cartes de type widget",
+                "it": "Schede tipo widget",
+                "no": "Widgetlignende kort",
+                "sv": "Widgetliknande kort",
+                "pl": "Karty jak widżety",
+                "ru": "Карточки как виджеты",
+                "ko": "위젯 스타일 카드",
+                "ar": "بطاقات بنمط الأدوات"
+              }
+            },
+            {
+              "id": "line",
+              "title": {
+                "en": "Line",
+                "nl": "Lijn",
+                "da": "Linje",
+                "de": "Linie",
+                "es": "Línea",
+                "fr": "Ligne",
+                "it": "Linea",
+                "no": "Linje",
+                "sv": "Linje",
+                "pl": "Linia",
+                "ru": "Линия",
+                "ko": "선",
+                "ar": "خط"
+              }
+            }
+          ]
+        },
+        {
+          "id": "rowSeparatorColor",
+          "type": "dropdown",
+          "title": {
+            "en": "Line color",
+            "nl": "Lijnkleur",
+            "da": "Linjefarve",
+            "de": "Linienfarbe",
+            "es": "Color de línea",
+            "fr": "Couleur de la ligne",
+            "it": "Colore della linea",
+            "no": "Linjefarge",
+            "sv": "Linjefärg",
+            "pl": "Kolor linii",
+            "ru": "Цвет линии",
+            "ko": "선 색상",
+            "ar": "لون الخط"
+          },
+          "value": "default",
+          "values": [
+            {
+              "id": "default",
+              "title": {
+                "en": "Theme color",
+                "nl": "Themakleur",
+                "da": "Temafarve",
+                "de": "Themenfarbe",
+                "es": "Color del tema",
+                "fr": "Couleur du thème",
+                "it": "Colore del tema",
+                "no": "Temafarge",
+                "sv": "Temafärg",
+                "pl": "Kolor motywu",
+                "ru": "Цвет темы",
+                "ko": "테마 색상",
+                "ar": "لون السمة"
+              }
+            },
+            {
+              "id": "blue",
+              "title": {
+                "en": "Blue",
+                "nl": "Blauw",
+                "da": "Blå",
+                "de": "Blau",
+                "es": "Azul",
+                "fr": "Bleu",
+                "it": "Blu",
+                "no": "Blå",
+                "sv": "Blå",
+                "pl": "Niebieski",
+                "ru": "Синий",
+                "ko": "파란색",
+                "ar": "أزرق"
+              }
+            },
+            {
+              "id": "red",
+              "title": {
+                "en": "Red",
+                "nl": "Rood",
+                "da": "Rød",
+                "de": "Rot",
+                "es": "Rojo",
+                "fr": "Rouge",
+                "it": "Rosso",
+                "no": "Rød",
+                "sv": "Röd",
+                "pl": "Czerwony",
+                "ru": "Красный",
+                "ko": "빨간색",
+                "ar": "أحمر"
+              }
+            },
+            {
+              "id": "orange",
+              "title": {
+                "en": "Orange",
+                "nl": "Oranje",
+                "da": "Orange",
+                "de": "Orange",
+                "es": "Naranja",
+                "fr": "Orange",
+                "it": "Arancione",
+                "no": "Oransje",
+                "sv": "Orange",
+                "pl": "Pomarańczowy",
+                "ru": "Оранжевый",
+                "ko": "주황색",
+                "ar": "برتقالي"
+              }
+            },
+            {
+              "id": "yellow",
+              "title": {
+                "en": "Yellow",
+                "nl": "Geel",
+                "da": "Gul",
+                "de": "Gelb",
+                "es": "Amarillo",
+                "fr": "Jaune",
+                "it": "Giallo",
+                "no": "Gul",
+                "sv": "Gul",
+                "pl": "Żółty",
+                "ru": "Жёлтый",
+                "ko": "노란색",
+                "ar": "أصفر"
+              }
+            },
+            {
+              "id": "green",
+              "title": {
+                "en": "Green",
+                "nl": "Groen",
+                "da": "Grøn",
+                "de": "Grün",
+                "es": "Verde",
+                "fr": "Vert",
+                "it": "Verde",
+                "no": "Grønn",
+                "sv": "Grön",
+                "pl": "Zielony",
+                "ru": "Зелёный",
+                "ko": "초록색",
+                "ar": "أخضر"
+              }
+            },
+            {
+              "id": "purple",
+              "title": {
+                "en": "Purple",
+                "nl": "Paars",
+                "da": "Lilla",
+                "de": "Violett",
+                "es": "Morado",
+                "fr": "Violet",
+                "it": "Viola",
+                "no": "Lilla",
+                "sv": "Lila",
+                "pl": "Fioletowy",
+                "ru": "Фиолетовый",
+                "ko": "보라색",
+                "ar": "بنفسجي"
+              }
+            },
+            {
+              "id": "teal",
+              "title": {
+                "en": "Teal",
+                "nl": "Blauwgroen",
+                "da": "Blågrøn",
+                "de": "Türkisgrün",
+                "es": "Verde azulado",
+                "fr": "Bleu-vert",
+                "it": "Verde acqua",
+                "no": "Blågrønn",
+                "sv": "Blågrön",
+                "pl": "Morski",
+                "ru": "Бирюзово-зелёный",
+                "ko": "청록색",
+                "ar": "أخضر مزرق"
+              }
+            },
+            {
+              "id": "cyan",
+              "title": {
+                "en": "Cyan",
+                "nl": "Cyaan",
+                "da": "Cyan",
+                "de": "Cyan",
+                "es": "Cian",
+                "fr": "Cyan",
+                "it": "Ciano",
+                "no": "Cyan",
+                "sv": "Cyan",
+                "pl": "Cyjan",
+                "ru": "Голубой",
+                "ko": "시안",
+                "ar": "سماوي"
+              }
+            },
+            {
+              "id": "indigo",
+              "title": {
+                "en": "Indigo",
+                "nl": "Indigo",
+                "da": "Indigo",
+                "de": "Indigo",
+                "es": "Índigo",
+                "fr": "Indigo",
+                "it": "Indaco",
+                "no": "Indigo",
+                "sv": "Indigo",
+                "pl": "Indygo",
+                "ru": "Индиго",
+                "ko": "남색",
+                "ar": "نيلي"
+              }
+            },
+            {
+              "id": "pink",
+              "title": {
+                "en": "Pink",
+                "nl": "Roze",
+                "da": "Lyserød",
+                "de": "Rosa",
+                "es": "Rosa",
+                "fr": "Rose",
+                "it": "Rosa",
+                "no": "Rosa",
+                "sv": "Rosa",
+                "pl": "Różowy",
+                "ru": "Розовый",
+                "ko": "분홍색",
+                "ar": "وردي"
+              }
+            },
+            {
+              "id": "brown",
+              "title": {
+                "en": "Brown",
+                "nl": "Bruin",
+                "da": "Brun",
+                "de": "Braun",
+                "es": "Marrón",
+                "fr": "Marron",
+                "it": "Marrone",
+                "no": "Brun",
+                "sv": "Brun",
+                "pl": "Brązowy",
+                "ru": "Коричневый",
+                "ko": "갈색",
+                "ar": "بني"
+              }
+            },
+            {
+              "id": "grey",
+              "title": {
+                "en": "Grey",
+                "nl": "Grijs",
+                "da": "Grå",
+                "de": "Grau",
+                "es": "Gris",
+                "fr": "Gris",
+                "it": "Grigio",
+                "no": "Grå",
+                "sv": "Grå",
+                "pl": "Szary",
+                "ru": "Серый",
+                "ko": "회색",
+                "ar": "رمادي"
+              }
+            },
+            {
+              "id": "black",
+              "title": {
+                "en": "Black",
+                "nl": "Zwart",
+                "da": "Sort",
+                "de": "Schwarz",
+                "es": "Negro",
+                "fr": "Noir",
+                "it": "Nero",
+                "no": "Svart",
+                "sv": "Svart",
+                "pl": "Czarny",
+                "ru": "Чёрный",
+                "ko": "검정",
+                "ar": "أسود"
+              }
+            },
+            {
+              "id": "white",
+              "title": {
+                "en": "White",
+                "nl": "Wit",
+                "da": "Hvid",
+                "de": "Weiß",
+                "es": "Blanco",
+                "fr": "Blanc",
+                "it": "Bianco",
+                "no": "Hvit",
+                "sv": "Vit",
+                "pl": "Biały",
+                "ru": "Белый",
+                "ko": "흰색",
+                "ar": "أبيض"
+              }
+            }
+          ]
+        },
+        {
           "id": "chronograph1",
           "type": "autocomplete",
           "title": {

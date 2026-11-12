@@ -236,7 +236,11 @@
     "multiple_invalid_settings": "Alcune impostazioni del widget non sono valide. Controlla le impostazioni del widget.",
     "widget_type_timer": "Timer",
     "widget_type_stopwatch": "Cronometro",
-    "widget_type_transition": "Transizione"
+    "widget_type_transition": "Transizione",
+    "multiple_row_separator": "Separazione delle righe",
+    "multiple_separator_cards": "Schede tipo widget",
+    "multiple_separator_line": "Linea",
+    "multiple_separator_color": "Colore della linea"
   },
   "timer_not_running": "Il timer __name__ non è in esecuzione.",
   "stopwatch_not_running": "Il cronometro __name__ non è in esecuzione.",

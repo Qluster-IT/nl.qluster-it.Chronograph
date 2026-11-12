@@ -236,7 +236,11 @@
     "multiple_invalid_settings": "Некоторые настройки виджета недействительны. Проверьте настройки виджета.",
     "widget_type_timer": "Таймер",
     "widget_type_stopwatch": "Секундомер",
-    "widget_type_transition": "Переход"
+    "widget_type_transition": "Переход",
+    "multiple_row_separator": "Разделение строк",
+    "multiple_separator_cards": "Карточки как виджеты",
+    "multiple_separator_line": "Линия",
+    "multiple_separator_color": "Цвет линии"
   },
   "timer_not_running": "Таймер __name__ не запущен.",
   "stopwatch_not_running": "Секундомер __name__ не запущен.",

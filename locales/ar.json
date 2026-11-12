@@ -236,7 +236,11 @@
     "multiple_invalid_settings": "بعض إعدادات الأداة غير صالحة. يرجى التحقق من إعدادات الأداة.",
     "widget_type_timer": "مؤقت",
     "widget_type_stopwatch": "ساعة التوقيف",
-    "widget_type_transition": "انتقال"
+    "widget_type_transition": "انتقال",
+    "multiple_row_separator": "فاصل الصفوف",
+    "multiple_separator_cards": "بطاقات بنمط الأدوات",
+    "multiple_separator_line": "خط",
+    "multiple_separator_color": "لون الخط"
   },
   "timer_not_running": "المؤقت __name__ غير قيد التشغيل.",
   "stopwatch_not_running": "ساعة الإيقاف __name__ غير قيد التشغيل.",

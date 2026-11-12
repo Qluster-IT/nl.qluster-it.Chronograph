@@ -236,7 +236,11 @@
     "multiple_invalid_settings": "Niektóre ustawienia widżetu są nieprawidłowe. Sprawdź ustawienia widżetu.",
     "widget_type_timer": "Stoper",
     "widget_type_stopwatch": "Stoper",
-    "widget_type_transition": "Przejście"
+    "widget_type_transition": "Przejście",
+    "multiple_row_separator": "Oddzielenie wierszy",
+    "multiple_separator_cards": "Karty jak widżety",
+    "multiple_separator_line": "Linia",
+    "multiple_separator_color": "Kolor linii"
   },
   "timer_not_running": "Timer __name__ nie działa.",
   "stopwatch_not_running": "Stoper __name__ nie działa.",

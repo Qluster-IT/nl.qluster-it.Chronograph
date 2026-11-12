@@ -236,7 +236,11 @@
     "multiple_invalid_settings": "Algunos ajustes del widget no son válidos. Comprueba los ajustes del widget.",
     "widget_type_timer": "Temporizador",
     "widget_type_stopwatch": "Cronómetro",
-    "widget_type_transition": "Transición"
+    "widget_type_transition": "Transición",
+    "multiple_row_separator": "Separación de filas",
+    "multiple_separator_cards": "Tarjetas como widgets",
+    "multiple_separator_line": "Línea",
+    "multiple_separator_color": "Color de línea"
   },
   "timer_not_running": "El temporizador __name__ no está en marcha.",
   "stopwatch_not_running": "El cronómetro __name__ no está en marcha.",

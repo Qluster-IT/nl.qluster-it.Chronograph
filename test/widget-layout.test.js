@@ -22,8 +22,12 @@ describe('Widget input layout', () => {
 
 	it('keeps text elements together unless the column is stretched', () => {
 		assert.match(css, /\.chronograph-design-element-name,\s*\.chronograph-design-element-status,\s*\.chronograph-design-element-duration\s*\{[^}]*flex:\s*0 1 auto/s);
+		assert.match(css, /\.chronograph-design-element-icon\s*\{[^}]*flex:\s*0 0 auto;[^}]*overflow:\s*hidden/s);
+		assert.match(previewCss, /\.style-widget-icon\s*\{[^}]*flex:\s*0 0 auto;[^}]*overflow:\s*hidden/s);
 		assert.match(css, /\.chronograph-design \.chronograph-icon\s*\{[^}]*margin-right:\s*0/s);
 		for (const sheet of [css, previewCss]) {
+			assert.match(sheet, /\[data-alignment="center"\][^{]*\{[^}]*justify-content:\s*safe center/s);
+			assert.match(sheet, /\[data-alignment="right"\][^{]*\{[^}]*justify-content:\s*safe flex-end/s);
 			assert.match(sheet, /\[data-direction="horizontal"\]\[data-alignment="stretch"\][^{]*\{[^}]*flex:\s*1 1 0/s);
 			assert.match(sheet, /\[data-direction="vertical"\]\[data-alignment="stretch"\][^{]*\{[^}]*align-items:\s*stretch/s);
 			assert.match(sheet, /\[data-alignment="stretch"\][^{]*action[^{]*\{[^}]*width:\s*100%/s);

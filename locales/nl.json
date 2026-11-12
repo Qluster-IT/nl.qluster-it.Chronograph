@@ -233,7 +233,11 @@
     "multiple_invalid_settings": "Sommige widgetinstellingen zijn ongeldig. Controleer de widgetinstellingen.",
     "widget_type_timer": "Timer",
     "widget_type_stopwatch": "Stopwatch",
-    "widget_type_transition": "Transitie"
+    "widget_type_transition": "Transitie",
+    "multiple_row_separator": "Rijscheiding",
+    "multiple_separator_cards": "Widgetachtige kaarten",
+    "multiple_separator_line": "Lijn",
+    "multiple_separator_color": "Lijnkleur"
   },
   "timer_not_running": "Timer __name__ loopt niet.",
   "stopwatch_not_running": "Stopwatch __name__ loopt niet.",

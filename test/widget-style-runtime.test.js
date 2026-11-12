@@ -4,6 +4,15 @@ const assert = require('assert');
 const widgetStyle = require('../assets/js/chronograph-widget-style.js');
 
 describe('Widget style runtime', () => {
+	it('reserves the compact default start column for both buttons', () => {
+		for (const type of ['timer', 'transition']) {
+			const rows = widgetStyle.buildRows(widgetStyle.currentDesign(), 'compact', 'starting', type, true);
+			const row = rows.find(item => item.id === 3);
+			assert.deepStrictEqual(row.groups.map(group => group.elements), [['fields'], ['start', 'cancel']]);
+			assert.strictEqual(row.tracks, 'minmax(0, 3fr) minmax(0, max-content)');
+		}
+	});
+
 	it('fills the available width beside content-sized spanning columns in the Vertical start form', () => {
 		const design = widgetStyle.builtInDesign('builtin:vertical');
 		for (const size of ['normal', 'large']) {

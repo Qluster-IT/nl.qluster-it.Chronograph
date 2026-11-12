@@ -1,8 +1,26 @@
-.multiple-chronographs-grid {
-	display: grid;
-	grid-auto-flow: row;
+.multiple-chronographs-rows {
+	display: flex;
+	flex-direction: column;
 	gap: 8px;
 	min-width: 0;
+}
+
+.multiple-chronographs-grid {
+	display: grid;
+	gap: 8px;
+	min-width: 0;
+}
+
+.multiple-chronographs-rows[data-separator="cards"] .multiple-chronographs-grid {
+	padding: 12px;
+	border: 1px solid color-mix(in srgb, var(--homey-text-color, #202127) 15%, transparent);
+	border-radius: 12px;
+	background: color-mix(in srgb, var(--homey-text-color, #202127) 5%, transparent);
+}
+
+.multiple-chronographs-rows[data-separator="line"] .multiple-chronographs-grid + .multiple-chronographs-grid {
+	border-top: 1px solid var(--multiple-separator-color);
+	padding-top: 8px;
 }
 
 .multiple-chronographs-grid .chronograph-widget {

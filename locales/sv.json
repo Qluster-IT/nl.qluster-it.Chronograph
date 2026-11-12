@@ -236,7 +236,11 @@
     "multiple_invalid_settings": "Vissa widgetinställningar är ogiltiga. Kontrollera widgetinställningarna.",
     "widget_type_timer": "Timer",
     "widget_type_stopwatch": "Stoppur",
-    "widget_type_transition": "Övergång"
+    "widget_type_transition": "Övergång",
+    "multiple_row_separator": "Radavskiljare",
+    "multiple_separator_cards": "Widgetliknande kort",
+    "multiple_separator_line": "Linje",
+    "multiple_separator_color": "Linjefärg"
   },
   "timer_not_running": "Timern __name__ körs inte.",
   "stopwatch_not_running": "Stoppuret __name__ körs inte.",

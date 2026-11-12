@@ -236,7 +236,11 @@
     "multiple_invalid_settings": "Einige Widget-Einstellungen sind ungültig. Bitte überprüfe die Widget-Einstellungen.",
     "widget_type_timer": "Timer",
     "widget_type_stopwatch": "Stoppuhr",
-    "widget_type_transition": "Übergang"
+    "widget_type_transition": "Übergang",
+    "multiple_row_separator": "Zeilentrennung",
+    "multiple_separator_cards": "Widgetartige Karten",
+    "multiple_separator_line": "Linie",
+    "multiple_separator_color": "Linienfarbe"
   },
   "timer_not_running": "Timer __name__ läuft nicht.",
   "stopwatch_not_running": "Stopuhr __name__ läuft nicht.",

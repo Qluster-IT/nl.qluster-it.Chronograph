@@ -12,6 +12,7 @@ window.registerMultipleChronographsWidget = function (Homey) {
 			var lastHeight = 0;
 			var destroyed = false;
 			$scope.entries = [];
+			$scope.rows = [];
 			$scope.error = null;
 			$scope.emptyMessage = Homey.__('settings.widget_select_chronograph');
 
@@ -21,6 +22,19 @@ window.registerMultipleChronographsWidget = function (Homey) {
 				columns = 1;
 			}
 			$scope.columns = columns;
+			var separator = settings.rowSeparator == null ? 'none' : settings.rowSeparator;
+			var separatorColor = settings.rowSeparatorColor == null ? 'default' : settings.rowSeparatorColor;
+			var colors = ['default', 'blue', 'red', 'orange', 'yellow', 'green', 'purple', 'teal',
+				'cyan', 'indigo', 'pink', 'brown', 'grey', 'black', 'white'];
+			if (['none', 'cards', 'line'].indexOf(separator) === -1 || colors.indexOf(separatorColor) === -1) {
+				console.error('Invalid multiple chronographs row separator settings', separator, separatorColor);
+				$scope.error = Homey.__('settings.multiple_invalid_settings');
+				separator = 'none';
+				separatorColor = 'default';
+			}
+			$scope.rowSeparator = separator;
+			$scope.rowSeparatorColor = separatorColor === 'default'
+				? 'currentColor' : window.ChronographWidgetStyle.valueColor(separatorColor);
 
 			for (var slot = 1; slot <= 10; slot++) {
 				var prefix = 'chronograph' + slot;
@@ -53,6 +67,17 @@ window.registerMultipleChronographsWidget = function (Homey) {
 					}
 				});
 			}
+			var row;
+			var usedColumns = 0;
+			$scope.entries.forEach(function (entry) {
+				if (!row || usedColumns + entry.span > columns) {
+					row = [];
+					$scope.rows.push(row);
+					usedColumns = 0;
+				}
+				row.push(entry);
+				usedColumns += entry.span;
+			});
 			pending = $scope.entries.length;
 
 			function resize() {

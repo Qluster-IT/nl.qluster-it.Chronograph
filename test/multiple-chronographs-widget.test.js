@@ -79,8 +79,11 @@ describe('Multiple Chronographs widget', () => {
 		const { id, ...generated } = require('../app.json').widgets.multiple_chronographs;
 		if (id !== undefined) assert.strictEqual(id, 'multiple_chronographs');
 		assert.deepStrictEqual(generated, manifest);
-		assert.strictEqual(manifest.settings.length, 81);
+		assert.strictEqual(manifest.settings.length, 83);
 		assert.deepStrictEqual(manifest.settings[0].values.map(value => value.id), ['1', '2', '3']);
+		assert.deepStrictEqual(manifest.settings.find(setting => setting.id === 'rowSeparator').values.map(value => value.id),
+			['none', 'cards', 'line']);
+		assert.strictEqual(manifest.settings.find(setting => setting.id === 'rowSeparator').value, 'none');
 		for (let slot = 1; slot <= 10; slot++) {
 			for (const suffix of ['', 'ColumnSpan', 'AlternativeName', 'DesignStyle', 'ColorScheme', 'Layout', 'Icon', 'ShowMilliseconds']) {
 				const setting = manifest.settings.find(item => item.id === 'chronograph' + slot + suffix);
@@ -99,6 +102,56 @@ describe('Multiple Chronographs widget', () => {
 			assert.strictEqual(typeof api['start' + type], 'function');
 			assert.strictEqual(typeof api['put' + type], 'function');
 			assert.strictEqual(typeof api['delete' + type], 'function');
+		}
+	});
+
+	it('wraps selected slots into rows without changing their order or spans', async () => {
+		const widget = await loadWidget({
+			columns: '3',
+			chronograph1: { type: 'timer', name: 'A' }, chronograph1ColumnSpan: '2',
+			chronograph3: { type: 'stopwatch', name: 'B' }, chronograph3ColumnSpan: '2',
+			chronograph4: { type: 'timer', name: 'C' },
+			chronograph10: { type: 'transition', name: 'D' }, chronograph10ColumnSpan: '3'
+		}, {
+			'timer:A': { name: 'A', active: false },
+			'stopwatch:B': { name: 'B', active: false },
+			'timer:C': { name: 'C', active: false },
+			'transition:D': { name: 'D', active: false }
+		});
+		assert.deepStrictEqual(Array.from(widget.parent.rows, row => Array.from(row, entry => [entry.slot, entry.span])),
+			[[[1, 2]], [[3, 2], [4, 1]], [[10, 3]]]);
+		assert.strictEqual(widget.parent.rowSeparator, 'none');
+		assert.strictEqual(widget.parent.rowSeparatorColor, 'currentColor');
+	});
+
+	it('uses the selected separator and validates its color', async () => {
+		const line = await loadWidget({ rowSeparator: 'line', rowSeparatorColor: 'red' }, {});
+		assert.strictEqual(line.parent.rowSeparator, 'line');
+		assert.strictEqual(line.parent.rowSeparatorColor, 'var(--homey-color-red, #f25f5c)');
+		for (const option of manifest.settings.find(setting => setting.id === 'rowSeparatorColor').values) {
+			const widget = await loadWidget({ rowSeparator: 'line', rowSeparatorColor: option.id }, {});
+			assert.strictEqual(widget.parent.error, null, option.id);
+			assert.notStrictEqual(widget.parent.rowSeparatorColor, 'inherit', option.id);
+		}
+		const cards = await loadWidget({ rowSeparator: 'cards' }, {});
+		assert.strictEqual(cards.parent.rowSeparator, 'cards');
+		const invalid = await loadWidget({ rowSeparator: 'line', rowSeparatorColor: 'invalid' }, {});
+		assert.strictEqual(invalid.parent.error, 'settings.multiple_invalid_settings');
+		assert.strictEqual(invalid.parent.rowSeparator, 'none');
+	});
+
+	it('uses Compose translations for the separator settings and colors', () => {
+		const separator = manifest.settings.find(setting => setting.id === 'rowSeparator');
+		const color = manifest.settings.find(setting => setting.id === 'rowSeparatorColor');
+		for (const language of Object.keys(separator.title)) {
+			const locale = require('../.homeycompose/locales/' + language + '.settings.json');
+			assert.strictEqual(separator.title[language], locale.multiple_row_separator);
+			assert.strictEqual(color.title[language], locale.multiple_separator_color);
+			assert.strictEqual(separator.values.find(item => item.id === 'cards').title[language], locale.multiple_separator_cards);
+			assert.strictEqual(separator.values.find(item => item.id === 'line').title[language], locale.multiple_separator_line);
+			for (const option of color.values) {
+				assert.strictEqual(option.title[language], locale['style_color_' + option.id]);
+			}
 		}
 	});
 

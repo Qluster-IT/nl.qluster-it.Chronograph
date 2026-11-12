@@ -14,8 +14,11 @@
 	<main class="multiple-chronographs">
 		<p class="chronograph-error" role="alert" ng-if="error">{{ error }}</p>
 		<p class="chronograph-message" ng-if="!entries.length && !error">{{ emptyMessage }}</p>
-		<div class="multiple-chronographs-grid" ng-style="{ 'grid-template-columns': 'repeat(' + columns + ', minmax(0, 1fr))' }">
-			<article ng-repeat="widgetEntry in entries track by widgetEntry.slot"
+		<div class="multiple-chronographs-rows" ng-attr-data-separator="{{ rowSeparator }}"
+			ng-attr-style="--multiple-separator-color: {{ rowSeparatorColor }}">
+			<div class="multiple-chronographs-grid" ng-repeat="row in rows track by $index"
+				ng-style="{ 'grid-template-columns': 'repeat(' + columns + ', minmax(0, 1fr))' }">
+			<article ng-repeat="widgetEntry in row track by widgetEntry.slot"
 				ng-controller="ChronographWidgetController"
 				ng-style="{ 'grid-column': 'span ' + widgetEntry.span }"
 				class="chronograph-widget homey-text-regular"
@@ -71,6 +74,7 @@
 				</section>
 				<p class="chronograph-error" role="alert" ng-if="error">{{ error }}</p>
 			</article>
+			</div>
 		</div>
 	</main>
 	<script src="../../assets/js/angular.min.js"></script>
