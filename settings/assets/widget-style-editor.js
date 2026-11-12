@@ -309,9 +309,27 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			|| !Number.isInteger(span) || span < 1 || span > 4) {
 			throw new RangeError('Invalid column span');
 		}
-		if (spans.length === 1 && span < 4) {
-			setRowColumns(style, size, row, 5 - span);
-			return 1;
+		if (span < spans[index]) {
+			var freed = spans[index] - span;
+			spans[index] = span;
+			while (freed-- > 0) {
+				spans.push(1);
+				alignments.push('left');
+				verticalAlignments.push('middle');
+				directions.push('horizontal');
+				widths.push('span');
+				rowSpans.push(1);
+			}
+			if (!style.rowColumns) style.rowColumns = {};
+			if (!style.rowColumns[size]) style.rowColumns[size] = {};
+			style.rowColumns[size][row] = spans.length;
+			storeColumnSpans(style, size, row, spans);
+			storeColumnValues(style, 'columnAlignments', size, row, alignments);
+			storeColumnValues(style, 'columnVerticalAlignments', size, row, verticalAlignments);
+			storeColumnValues(style, 'columnDirections', size, row, directions);
+			storeColumnValues(style, 'columnWidths', size, row, widths);
+			storeColumnValues(style, 'columnRowSpans', size, row, rowSpans);
+			return column;
 		}
 		var removedColumns = [];
 		var originalIndex = index;
@@ -370,8 +388,6 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 				spans[other] -= taken;
 				difference -= taken;
 			});
-		} else if (difference < 0) {
-			spans[others[0]] -= difference;
 		}
 		spans[index] = span;
 		storeColumnSpans(style, size, row, spans);

@@ -53,7 +53,7 @@ to create an editable custom design or scheme. The preview controls remain
 interactive for testing without changing the saved design. Choose a widget type, size and state
 for the design preview. Confirming deletion removes a custom item immediately
 without saving other pending edits. Built-in designs and schemes cannot be deleted. Select an item before dragging it. Drag a row label
-to reorder rows, or a column number to reorder columns within its row. Reordering applies to the selected
+to reorder rows, or the top of a column to reorder columns within its row. Reordering applies to the selected
 size, moving the associated settings and element positions in every state;
 other sizes are unchanged. Arrange elements in rows and groups by dragging
 them, including reordering within a column. A line and label mark the insertion
@@ -138,8 +138,9 @@ active transition's actual step count and show markers for counts from 2 to 100.
 The Compact status bar is thinner than Normal and Large. The bar is not shown
 for stopwatches.
 Select a column to set its span, from one to four units. Every row has four
-units in total; other columns adjust automatically, taking or giving space to
-the nearest columns on the right first, then on the left. If a larger span
+units in total. Reducing a span adds empty one-unit columns at the end of the
+row without changing existing columns. Increasing a span takes space from the
+nearest columns on the right first, then on the left. If a larger span
 cannot fit, adjacent columns are removed from right to left around the selected
 column. Elements to its right shift into the next available column, cascading
 until the last column, where overflow is combined. Elements from removed columns
@@ -148,7 +149,6 @@ The selected column remains selected even if its number changes. When columns ar
 removed their space joins the last remaining column; new columns take one unit
 from the rightmost column with space to spare. Spans are saved per size and
 shared across preview states.
-Reducing a full-width column creates empty one-unit columns to its right.
 Each column also has left, center, right or stretch alignment. Stretch fills the
 column width for vertically arranged elements, or shares the width equally
 among horizontally arranged elements. Direction and alignment

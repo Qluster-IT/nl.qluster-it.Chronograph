@@ -130,6 +130,11 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual((editorScript.match(/getAttribute\('draggable'\) !== 'true'/g) || []).length, 4);
 	});
 
+	it('makes the column drag handle span the full width of the column', () => {
+		assert.match(css, /\.style-group-number\s*\{[^}]*width:\s*100%;[^}]*min-height:\s*24px;/);
+		assert.match(html, /class="hy-nostyle style-group-number"[\s\S]*?style-reorder-drag="column"/);
+	});
+
 	it('persists independent timer and transition field rows per design size', () => {
 		const { scope, writes, editor } = loadSettings();
 		scope.createStyle(true);
@@ -1370,6 +1375,54 @@ describe('Widget style designer preview', () => {
 			scope.saveSettings();
 			const reloaded = loadSettings(writes[0].value).scope.widgetStyles.styles[0];
 			assert.deepStrictEqual(Array.from(reloaded.columnSpans.normal[1]), [span, ...Array(4 - span).fill(1)]);
+		}
+	});
+
+	it('appends empty columns when reducing a span without changing other columns or their contents', () => {
+		for (const [initial, selected, newSpan, expected] of [
+			[[3, 1], 1, 2, [2, 1, 1]],
+			[[3, 1], 1, 1, [1, 1, 1, 1]],
+			[[1, 3], 2, 2, [1, 2, 1]],
+			[[1, 3], 2, 1, [1, 1, 1, 1]],
+			[[2, 2], 1, 1, [1, 2, 1]]
+		]) {
+			const { scope, editor, writes } = loadSettings();
+			scope.createStyle(true);
+			const style = scope.getSelectedStyle();
+			editor.setRowColumns(style, 'normal', 1, 2);
+			style.columnSpans.normal[1] = initial.slice();
+			editor.setColumnAlignment(style, 'normal', 1, 1, 'right');
+			editor.setColumnAlignment(style, 'normal', 1, 2, 'center');
+			editor.setColumnDirection(style, 'normal', 1, 2, 'vertical');
+			editor.setColumnVerticalAlignment(style, 'normal', 1, 2, 'bottom');
+			editor.setColumnWidth(style, 'normal', 1, 2, 'content');
+			editor.setColumnRowSpan(style, 'normal', 1, 2, 3);
+			style.groups.normal.elements.name.group = 2;
+			style.groups.normal.overrides.paused = { icon: { row: 1, group: 2, order: 1 } };
+			const positions = JSON.stringify(style.groups.normal);
+			const otherSize = JSON.stringify(style.groups.large);
+			scope.selectColumn(1, selected);
+			scope.editor.columnSpan = newSpan;
+			scope.updateColumnSpan();
+			const added = expected.length - initial.length;
+			assert.deepStrictEqual(Array.from(style.columnSpans.normal[1]), expected);
+			assert.strictEqual(style.rowColumns.normal[1], expected.length);
+			assert.strictEqual(scope.editor.selectedColumn.group, selected);
+			assert.deepStrictEqual(Array.from(style.columnAlignments.normal[1]), ['right', 'center', ...Array(added).fill('left')]);
+			assert.deepStrictEqual(Array.from(style.columnDirections.normal[1]), ['horizontal', 'vertical', ...Array(added).fill('horizontal')]);
+			assert.deepStrictEqual(Array.from(style.columnVerticalAlignments.normal[1]), ['middle', 'bottom', ...Array(added).fill('middle')]);
+			assert.deepStrictEqual(Array.from(style.columnWidths.normal[1]), ['span', 'content', ...Array(added).fill('span')]);
+			assert.deepStrictEqual(Array.from(style.columnRowSpans.normal[1]), [1, 3, ...Array(added).fill(1)]);
+			assert.strictEqual(JSON.stringify(style.groups.normal), positions);
+			assert.strictEqual(JSON.stringify(style.groups.large), otherSize);
+			assert.ok(scope.groupedRows(false).find(row => row.id === 1).groups.slice(2)
+				.every(group => group.elements.length === 0));
+			assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
+			scope.saveSettings();
+			const reloaded = loadSettings(writes[0].value).scope.widgetStyles.styles[0];
+			assert.deepStrictEqual(Array.from(reloaded.columnSpans.normal[1]), expected);
+			assert.strictEqual(JSON.stringify(reloaded.groups.normal), positions);
+			assert.deepStrictEqual(Array.from(reloaded.columnRowSpans.normal[1]), [1, 3, ...Array(added).fill(1)]);
 		}
 	});
 
