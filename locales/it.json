@@ -243,7 +243,10 @@
     "multiple_separator_color": "Colore della linea",
     "style_design_small": "Piccolo",
     "style_design_tiny": "Molto piccolo",
-    "widget_layout_automatic": "Automatico"
+    "widget_layout_automatic": "Automatico",
+    "style_preview_columns": "Colonne del widget multiplo",
+    "style_preview_single": "Widget singolo",
+    "style_preview_columns_hint": "L'anteprima mostra un riquadro che occupa una colonna. La sua larghezza dipende dallo spazio disponibile per l'anteprima."
   },
   "timer_not_running": "Il timer __name__ non è in esecuzione.",
   "stopwatch_not_running": "Il cronometro __name__ non è in esecuzione.",

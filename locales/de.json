@@ -243,7 +243,10 @@
     "multiple_separator_color": "Linienfarbe",
     "style_design_small": "Klein",
     "style_design_tiny": "Sehr klein",
-    "widget_layout_automatic": "Automatisch"
+    "widget_layout_automatic": "Automatisch",
+    "style_preview_columns": "Spalten im Multi-Widget",
+    "style_preview_single": "Einzelnes Widget",
+    "style_preview_columns_hint": "Die Vorschau zeigt eine Kachel über eine Spalte. Ihre Breite hängt vom verfügbaren Platz für die Vorschau ab."
   },
   "timer_not_running": "Timer __name__ läuft nicht.",
   "stopwatch_not_running": "Stopuhr __name__ läuft nicht.",

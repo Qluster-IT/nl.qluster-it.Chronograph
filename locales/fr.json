@@ -243,7 +243,10 @@
     "multiple_separator_color": "Couleur de la ligne",
     "style_design_small": "Petit",
     "style_design_tiny": "Très petit",
-    "widget_layout_automatic": "Automatique"
+    "widget_layout_automatic": "Automatique",
+    "style_preview_columns": "Colonnes du widget multiple",
+    "style_preview_single": "Widget individuel",
+    "style_preview_columns_hint": "L'aperçu affiche une tuile occupant une colonne. Sa largeur dépend de l'espace disponible pour l'aperçu."
   },
   "timer_not_running": "Le minuteur __name__ n’est pas en cours d’exécution.",
   "stopwatch_not_running": "Le chronomètre __name__ n’est pas en cours d’exécution.",

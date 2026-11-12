@@ -243,7 +243,10 @@
     "multiple_separator_color": "Linjefarge",
     "style_design_small": "Liten",
     "style_design_tiny": "Svært liten",
-    "widget_layout_automatic": "Automatisk"
+    "widget_layout_automatic": "Automatisk",
+    "style_preview_columns": "Kolonner i multiwidget",
+    "style_preview_single": "Enkelt widget",
+    "style_preview_columns_hint": "Forhåndsvisningen viser én flis som fyller én kolonne. Bredden avhenger av tilgjengelig plass til forhåndsvisningen."
   },
   "timer_not_running": "Timeren __name__ kjører ikke.",
   "stopwatch_not_running": "Stoppeklokken __name__ kjører ikke.",

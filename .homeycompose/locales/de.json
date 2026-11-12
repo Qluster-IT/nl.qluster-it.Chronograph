@@ -8,5 +8,6 @@
 	"name_required": "Sie müssen einen Namen (eintippen und) auswählen oder einen Namen eingeben.",
 	"existing": "Bestehende",
 	"new": "Neu",
-	"name_based_api_notice": "Die Chronograph-API wurde geändert: Namen statt IDs verwenden. Skripte und Integrationen aktualisieren; siehe API-Wiki."
+	"name_based_api_notice": "Die Chronograph-API wurde geändert: Namen statt IDs verwenden. Skripte und Integrationen aktualisieren; siehe API-Wiki.",
+	"widget_features_notice": "Chronograph bietet jetzt Dashboard-Widgets! Öffne die App-Einstellungen, um Chronographen zu verwalten und Widget-Layouts und Farbschemata zu gestalten."
 }

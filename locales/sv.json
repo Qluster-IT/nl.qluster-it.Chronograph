@@ -243,7 +243,10 @@
     "multiple_separator_color": "Linjefärg",
     "style_design_small": "Liten",
     "style_design_tiny": "Mycket liten",
-    "widget_layout_automatic": "Automatisk"
+    "widget_layout_automatic": "Automatisk",
+    "style_preview_columns": "Kolumner i multiwidget",
+    "style_preview_single": "Enskild widget",
+    "style_preview_columns_hint": "Förhandsvisningen visar en ruta som upptar en kolumn. Bredden beror på det tillgängliga utrymmet för förhandsvisningen."
   },
   "timer_not_running": "Timern __name__ körs inte.",
   "stopwatch_not_running": "Stoppuret __name__ körs inte.",

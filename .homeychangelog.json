@@ -1168,5 +1168,20 @@
     "ru": "Добавлен предпросмотр дизайна мультивиджета с одним, двумя или тремя столбцами.",
     "ko": "1개, 2개 또는 3개 열로 구성된 다중 위젯 디자인 미리보기를 추가했습니다.",
     "ar": "أُضيفت معاينة للتصميم لتخطيطات الأداة المتعددة بعمود واحد أو عمودين أو ثلاثة أعمدة."
+  },
+  "3.0.2": {
+    "en": "Added a one-time notification introducing dashboard widgets and the app settings designer.",
+    "nl": "Een eenmalige melding toegevoegd over dashboardwidgets en de ontwerper in de appinstellingen.",
+    "da": "Tilføjet en engangsmeddelelse om dashboardwidgets og designeren i appens indstillinger.",
+    "de": "Eine einmalige Benachrichtigung über Dashboard-Widgets und den Designer in den App-Einstellungen hinzugefügt.",
+    "es": "Se añadió una notificación única sobre los widgets del panel y el diseñador en los ajustes de la aplicación.",
+    "fr": "Ajout d'une notification unique présentant les widgets de tableau de bord et le concepteur dans les paramètres de l'application.",
+    "it": "Aggiunta una notifica unica sui widget della dashboard e sul designer nelle impostazioni dell'app.",
+    "no": "Lagt til et engangsvarsel om dashboardwidgeter og designeren i appinnstillingene.",
+    "sv": "Lagt till en engångsavisering om dashboardwidgetar och designern i appinställningarna.",
+    "pl": "Dodano jednorazowe powiadomienie o widżetach pulpitu i edytorze w ustawieniach aplikacji.",
+    "ru": "Добавлено одноразовое уведомление о виджетах панели управления и редакторе в настройках приложения.",
+    "ko": "대시보드 위젯과 앱 설정의 디자이너를 소개하는 일회성 알림을 추가했습니다.",
+    "ar": "أُضيف إشعار لمرة واحدة للتعريف بأدوات لوحة التحكم والمصمم في إعدادات التطبيق."
   }
 }

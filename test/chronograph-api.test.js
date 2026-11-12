@@ -274,7 +274,7 @@ describe('Chronograph realtime updates', () => {
 	});
 });
 
-describe('API migration notification', () => {
+describe('App notifications', () => {
 	it('sends once and retries after a delivery failure', async () => {
 		const module = { exports: {} };
 		vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8'), {
@@ -298,5 +298,64 @@ describe('API migration notification', () => {
 		await notify.call(app);
 		assert.strictEqual(attempts, 2);
 		assert.strictEqual(settings.nameBasedApiNotificationSent, true);
+	});
+
+	it('attempts the widget announcement once, independently of the API notice, even after failure', async () => {
+		const module = { exports: {} };
+		vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8'), {
+			module,
+			require: id => id === 'homey' ? { App: class {} } : {}
+		});
+		const notify = module.exports.prototype._notifyWidgetFeatures;
+		const settings = { nameBasedApiNotificationSent: true };
+		const errors = [];
+		const excerpts = [];
+		const app = { homey: {
+			settings: { get: key => settings[key], set: (key, value) => { settings[key] = value; } },
+			__: key => key,
+			notifications: { async createNotification({ excerpt }) {
+				excerpts.push(excerpt);
+				if (excerpts.length === 1) throw new Error('offline');
+			} },
+			error: (...args) => errors.push(args)
+		} };
+		await notify.call(app);
+		assert.strictEqual(settings.widgetFeaturesNotificationAttempted, true);
+		assert.strictEqual(errors.length, 1);
+		await notify.call(app);
+		await notify.call(app);
+		assert.deepStrictEqual(excerpts, ['widget_features_notice']);
+	});
+
+	it('sends the widget announcement during app initialization', async () => {
+		const module = { exports: {} };
+		vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8'), {
+			module,
+			require: id => {
+				if (id === 'homey') return { App: class {} };
+				if (id === './lib/chronograph.js') return { all: () => [] };
+				if (id === './lib/flow-arguments.js') return { BL: { init: async () => {} } };
+				return {};
+			},
+			process: { env: {} }
+		});
+		const settings = { nameBasedApiNotificationSent: true };
+		const excerpts = [];
+		const app = Object.create(module.exports.prototype);
+		app.homey = {
+			settings: { get: key => settings[key], set: (key, value) => { settings[key] = value; }, on() {} },
+			__: key => key,
+			notifications: { async createNotification({ excerpt }) { excerpts.push(excerpt); } },
+			setTimeout() {},
+			error: error => { throw error; }
+		};
+		app.log = () => {};
+		for (const method of ['setRoundOfDurationsFlowcards', '_initializeTimerCards', '_initializeStopwatchCards',
+			'_initializeTransitionCards', '_initializeGenericCards', '_registerChronographWidgetAutocomplete',
+			'_installLogEventHandler', '_installEventHandlers']) app[method] = () => {};
+		await app.onInitLoader();
+		await app.onInitLoader();
+		assert.deepStrictEqual(excerpts, ['widget_features_notice']);
+		assert.strictEqual(settings.widgetFeaturesNotificationAttempted, true);
 	});
 });

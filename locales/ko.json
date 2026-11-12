@@ -243,7 +243,10 @@
     "multiple_separator_color": "선 색상",
     "style_design_small": "작게",
     "style_design_tiny": "아주 작게",
-    "widget_layout_automatic": "자동"
+    "widget_layout_automatic": "자동",
+    "style_preview_columns": "다중 위젯 열",
+    "style_preview_single": "단일 위젯",
+    "style_preview_columns_hint": "미리보기에는 한 열을 차지하는 타일 하나가 표시됩니다. 너비는 미리보기에 사용할 수 있는 공간에 따라 달라집니다."
   },
   "timer_not_running": "타이머 __name__이(가) 실행 중이 아닙니다.",
   "stopwatch_not_running": "스톱워치 __name__이(가) 실행 중이 아닙니다.",

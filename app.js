@@ -158,8 +158,7 @@ class Application extends Homey.App {
 			this._initializeGenericCards();
 			this._registerChronographWidgetAutocomplete();
 			await this._notifyNameBasedApi();
-
-
+			await this._notifyWidgetFeatures();
 
 			// Install event handlers.
 			this.log('Installing event handlers.');
@@ -205,6 +204,17 @@ class Application extends Homey.App {
 			this.homey.settings.set(key, true);
 		} catch (error) {
 			this.homey.error('Unable to deliver API migration notification', error);
+		}
+	}
+
+	async _notifyWidgetFeatures() {
+		const key = 'widgetFeaturesNotificationAttempted';
+		if (this.homey.settings.get(key)) return;
+		try {
+			this.homey.settings.set(key, true);
+			await this.homey.notifications.createNotification({ excerpt: this.homey.__('widget_features_notice') });
+		} catch (error) {
+			this.homey.error('Unable to deliver widget features notification', error);
 		}
 	}
 

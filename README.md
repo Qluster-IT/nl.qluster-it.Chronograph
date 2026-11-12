@@ -85,6 +85,10 @@ Application image by [Agê Barros](https://unsplash.com/@agebarros?utm_source=un
 
 ## Changelog
 
+### v3.0.2
+
+* Added a one-time notification introducing dashboard widgets and the app settings designer.
+
 ### v3.0.1
 
 * Added a designer preview for one-, two-, and three-column multi-widget layouts.

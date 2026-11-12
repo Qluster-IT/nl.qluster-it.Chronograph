@@ -8,5 +8,6 @@
 	"name_required": "이름을 입력하거나 선택해야 합니다.",
 	"existing": "기존의",
 	"new": "새로운",
-	"name_based_api_notice": "Chronograph API가 변경되었습니다. ID 대신 이름을 사용하세요. 스크립트와 연동을 업데이트하고 API 위키를 참조하세요."
+	"name_based_api_notice": "Chronograph API가 변경되었습니다. ID 대신 이름을 사용하세요. 스크립트와 연동을 업데이트하고 API 위키를 참조하세요.",
+	"widget_features_notice": "Chronograph에 대시보드 위젯이 추가되었습니다! 앱 설정에서 크로노그래프를 관리하고 위젯 레이아웃과 색상 구성을 디자인하세요."
 }

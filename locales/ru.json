@@ -243,7 +243,10 @@
     "multiple_separator_color": "Цвет линии",
     "style_design_small": "Маленький",
     "style_design_tiny": "Очень маленький",
-    "widget_layout_automatic": "Автоматически"
+    "widget_layout_automatic": "Автоматически",
+    "style_preview_columns": "Столбцы мультивиджета",
+    "style_preview_single": "Одиночный виджет",
+    "style_preview_columns_hint": "Предпросмотр показывает одну плитку шириной в один столбец. Её ширина зависит от доступного места для предпросмотра."
   },
   "timer_not_running": "Таймер __name__ не запущен.",
   "stopwatch_not_running": "Секундомер __name__ не запущен.",

@@ -243,7 +243,10 @@
     "multiple_separator_color": "Linjefarve",
     "style_design_small": "Lille",
     "style_design_tiny": "Meget lille",
-    "widget_layout_automatic": "Automatisk"
+    "widget_layout_automatic": "Automatisk",
+    "style_preview_columns": "Kolonner i multiwidget",
+    "style_preview_single": "Enkelt widget",
+    "style_preview_columns_hint": "Forhåndsvisningen viser én flise, der fylder én kolonne. Bredden afhænger af den tilgængelige plads til forhåndsvisningen."
   },
   "timer_not_running": "Timeren __name__ kører ikke.",
   "stopwatch_not_running": "Stopuret __name__ kører ikke.",

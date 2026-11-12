@@ -243,7 +243,10 @@
     "multiple_separator_color": "Line color",
     "style_design_small": "Small",
     "style_design_tiny": "Tiny",
-    "widget_layout_automatic": "Automatic"
+    "widget_layout_automatic": "Automatic",
+    "style_preview_columns": "Multi-widget columns",
+    "style_preview_single": "Single widget",
+    "style_preview_columns_hint": "The preview shows one tile spanning one column. Its width depends on the available preview space."
   },
   "timer_not_running": "Timer __name__ is not running.",
   "stopwatch_not_running": "Stopwatch __name__ is not running.",
