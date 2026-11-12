@@ -92,6 +92,7 @@
 	"style_column_span": "Column span",
 	"style_column_row_span": "Filas ocupadas",
 	"style_select_before_drag": "Selecciona un elemento antes de arrastrarlo.",
+	"style_preview_builtin_hint": "Solo vista local: los cambios de los ajustes integrados se guardan en este navegador, no en la aplicación.",
 	"style_row_span_fit_hint": "Al ocupar varias filas visibles, esta columna se ajusta al contenido independientemente del ancho elegido.",
 	"style_column_row_span_hint": "Incluye esta fila. Las filas ocultas se contraen y las demás columnas ocupan el espacio restante.",
 	"style_column_alignment": "Element alignment",

@@ -92,6 +92,7 @@
 	"style_column_span": "Kolombreedte",
 	"style_column_row_span": "Aantal rijen",
 	"style_select_before_drag": "Selecteer een onderdeel voordat je het versleept.",
+	"style_preview_builtin_hint": "Alleen lokaal voorbeeld: wijzigingen aan standaardinstellingen worden in deze browser opgeslagen, niet in de app.",
 	"style_row_span_fit_hint": "Bij meerdere zichtbare rijen past deze kolom zich aan de inhoud aan, ongeacht de breedte-instelling.",
 	"style_column_row_span_hint": "Inclusief deze rij. Verborgen rijen vallen weg; andere kolommen passen in de resterende ruimte.",
 	"style_column_alignment": "Uitlijning van elementen",

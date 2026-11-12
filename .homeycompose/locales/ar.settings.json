@@ -92,6 +92,7 @@
 	"style_column_span": "Column span",
 	"style_column_row_span": "عدد الصفوف الممتدة",
 	"style_select_before_drag": "حدد العنصر قبل سحبه.",
+	"style_preview_builtin_hint": "للمعاينة المحلية فقط: تُحفظ تعديلات الإعدادات المضمنة في هذا المتصفح، وليس في التطبيق.",
 	"style_row_span_fit_hint": "عند الامتداد عبر صفوف ظاهرة، يتناسب عرض العمود مع المحتوى بغض النظر عن إعداد العرض.",
 	"style_column_row_span_hint": "يشمل هذا الصف. تُطوى الصفوف المخفية وتستخدم الأعمدة الأخرى المساحة المتبقية.",
 	"style_column_alignment": "Element alignment",

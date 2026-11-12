@@ -92,6 +92,7 @@
 	"style_column_span": "Column span",
 	"style_column_row_span": "Zeilen übergreifen",
 	"style_select_before_drag": "Wähle ein Element aus, bevor du es ziehst.",
+	"style_preview_builtin_hint": "Nur lokale Vorschau: Änderungen an Vorlagen werden in diesem Browser gespeichert, nicht in der App.",
 	"style_row_span_fit_hint": "Über mehrere sichtbare Zeilen passt sich diese Spalte unabhängig von der Breiteneinstellung an den Inhalt an.",
 	"style_column_row_span_hint": "Einschließlich dieser Zeile. Ausgeblendete Zeilen entfallen; andere Spalten nutzen den verbleibenden Platz.",
 	"style_column_alignment": "Element alignment",

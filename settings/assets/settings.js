@@ -113,7 +113,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		}
 
 		function validPreviewBuiltIns(value) {
-			if (!widgetStyleEditor.isValidCollection(value)) return false;
+			if (!value || value.version !== 2 || !widgetStyleEditor.isValidCollection(value)) return false;
 			return value.styles.every(function (item) { return Object.prototype.hasOwnProperty.call(builtInDesigns, item.id); })
 				&& value.colorSchemes.every(function (item) { return Object.prototype.hasOwnProperty.call(builtInSchemes, item.id); });
 		}
@@ -145,6 +145,8 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		$scope.isSchemeReadOnly = function () {
 			return $scope.isBuiltInScheme() && !previewBuiltInsLoaded;
 		};
+		$scope.defaultDesignName = function () { return builtInDesigns['builtin:current'] && builtInDesigns['builtin:current'].name; };
+		$scope.defaultSchemeName = function () { return builtInSchemes['builtin:current'] && builtInSchemes['builtin:current'].name; };
 
 		$scope.getSelectedScheme = function () {
 			if (Object.prototype.hasOwnProperty.call(builtInSchemes, $scope.editor.selectedSchemeId)) return builtInSchemes[$scope.editor.selectedSchemeId];
@@ -1514,11 +1516,13 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 								return;
 							}
 							value.styles.forEach(function (item) {
-								angular.extend(builtInDesigns[item.id], angular.copy(item));
+								builtInDesigns[item.id] = angular.copy(item);
 							});
 							value.colorSchemes.forEach(function (item) {
-								angular.extend(builtInSchemes[item.id], angular.copy(item));
+								builtInSchemes[item.id] = angular.copy(item);
 							});
+							$scope.builtInDesigns = $scope.builtInDesigns.map(function (item) { return builtInDesigns[item.id]; });
+							$scope.builtInSchemes = $scope.builtInSchemes.map(function (item) { return builtInSchemes[item.id]; });
 						}
 						savedPreviewBuiltIns = previewBuiltIns();
 						previewBuiltInsLoaded = true;

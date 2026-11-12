@@ -92,6 +92,7 @@
 	"style_column_span": "Column span",
 	"style_column_row_span": "Antal rader",
 	"style_select_before_drag": "Välj ett objekt innan du drar det.",
+	"style_preview_builtin_hint": "Endast lokal förhandsvisning: ändringar av standarder sparas i webbläsaren, inte i appen.",
 	"style_row_span_fit_hint": "När kolumnen spänner över synliga rader anpassas den till innehållet oavsett breddinställning.",
 	"style_column_row_span_hint": "Inkluderar den här raden. Dolda rader faller bort och andra kolumner använder det återstående utrymmet.",
 	"style_column_alignment": "Element alignment",

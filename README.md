@@ -48,7 +48,7 @@ Large sizes, Focus emphasizes the duration, and Vertical stacks content.
 The light and dark widget picker previews are abstract, text-free illustrations
 of the Default design. On Windows, regenerate them with
 `.\tools\development\generate-widget-previews.ps1`.
-Built-in designs and color schemes are read-only, including Default. Copy one
+On Homey, built-in designs and color schemes are read-only, including Default. Copy one
 to create an editable custom design or scheme. The preview controls remain
 interactive for testing without changing the saved design. Choose a widget type, size and state
 for the design preview. Confirming deletion removes a custom item immediately
@@ -209,9 +209,12 @@ The preview opens the Widgets tab by default; Homey settings keep their usual
 default tab. The preview loads translations for the browser language; add `?lang=nl` or
 `?lang=en` to choose a language. It reads translations directly from the Homey
 Compose locale sources, without requiring generated locale files. Settings saved in this preview are stored
-in the browser's local storage, not on Homey. Chronographs are sample data and
-reset when the page reloads. The temporary Default style edits are also reset
-on reload. The preview does not load Homey's actual stylesheet or connect to a
+in the browser's local storage, not on Homey. In this local preview, all built-in
+designs and color schemes are editable; Save stores a separate browser-only
+snapshot under `chronograph-settings-preview:previewBuiltIns`. These changes
+survive reloads but do not modify the app defaults or Homey. Share the saved
+preview when requesting changes to the actual defaults. Chronographs are
+sample data and reset when the page reloads. The preview does not load Homey's actual stylesheet or connect to a
 Homey device, so final appearance and behavior still require a Homey check.
 Press Ctrl+C in the terminal to stop the server. Set
 `CHRONOGRAPH_PREVIEW_PORT` before starting it to use another port.

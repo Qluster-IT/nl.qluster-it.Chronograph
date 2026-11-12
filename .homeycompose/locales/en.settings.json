@@ -92,6 +92,7 @@
 	"style_column_span": "Column span",
 	"style_column_row_span": "Rows spanned",
 	"style_select_before_drag": "Select an item before dragging it.",
+	"style_preview_builtin_hint": "Local preview only: built-in edits are saved in this browser, not in the app.",
 	"style_row_span_fit_hint": "When spanning visible rows, this column fits its content regardless of the width setting.",
 	"style_column_row_span_hint": "Includes this row. Hidden rows collapse; other columns fit in the remaining space.",
 	"style_column_alignment": "Element alignment",

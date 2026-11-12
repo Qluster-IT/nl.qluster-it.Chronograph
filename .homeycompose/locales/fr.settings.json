@@ -92,6 +92,7 @@
 	"style_column_span": "Column span",
 	"style_column_row_span": "Lignes couvertes",
 	"style_select_before_drag": "Sélectionnez un élément avant de le faire glisser.",
+	"style_preview_builtin_hint": "Aperçu local uniquement : les modifications des modèles sont enregistrées dans ce navigateur, pas dans l’application.",
 	"style_row_span_fit_hint": "Sur plusieurs lignes visibles, cette colonne s’adapte à son contenu quel que soit le réglage de largeur.",
 	"style_column_row_span_hint": "Inclut cette ligne. Les lignes masquées disparaissent ; les autres colonnes occupent l’espace restant.",
 	"style_column_alignment": "Element alignment",

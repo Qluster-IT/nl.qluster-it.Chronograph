@@ -92,6 +92,7 @@
 	"style_column_span": "Column span",
 	"style_column_row_span": "Righe occupate",
 	"style_select_before_drag": "Seleziona un elemento prima di trascinarlo.",
+	"style_preview_builtin_hint": "Solo anteprima locale: le modifiche ai modelli sono salvate in questo browser, non nell’app.",
 	"style_row_span_fit_hint": "Su più righe visibili, questa colonna si adatta al contenuto indipendentemente dalla larghezza impostata.",
 	"style_column_row_span_hint": "Include questa riga. Le righe nascoste si riducono e le altre colonne usano lo spazio rimanente.",
 	"style_column_alignment": "Element alignment",

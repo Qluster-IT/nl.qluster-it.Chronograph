@@ -12,7 +12,7 @@ const settingsScript = fs.readFileSync(path.join(root, 'settings', 'assets', 'se
 const html = fs.readFileSync(path.join(root, 'settings', 'index.html'), 'utf8');
 const css = fs.readFileSync(path.join(root, 'settings', 'assets', 'styles.css'), 'utf8');
 
-function loadSettings(widgetStyles, confirm, set, preview) {
+function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns) {
 	let editor;
 	let controller;
 	const module = {
@@ -40,7 +40,8 @@ function loadSettings(widgetStyles, confirm, set, preview) {
 	const homey = {
 		__: key => key,
 		get(key, callback) {
-			callback(null, key === 'roundOfDurationsFlowcards' ? 2 : key === 'widgetStyles' ? widgetStyles : null);
+			callback(null, key === 'roundOfDurationsFlowcards' ? 2 : key === 'widgetStyles' ? widgetStyles
+				: key === 'previewBuiltIns' ? previewBuiltIns : null);
 		},
 		set: set || ((key, value, callback) => { writes.push({ key, value }); callback(null); }),
 		api(method, url, data, callback) { callback(null, []); },
@@ -490,9 +491,9 @@ describe('Widget style designer preview', () => {
 			assert.strictEqual(scope.getSelectedScheme().colors.play, 'red');
 			assert.strictEqual(scope.progressForeground(), 'red');
 		}
-		assert.ok(html.includes('ng-disabled="editor.mode === \'color\' ? isBuiltInScheme() : isPresetDesign()"'));
-		assert.ok(html.includes('class="hy-nostyle style-colors" ng-disabled="isBuiltInScheme()"'));
-		assert.ok(html.includes('class="hy-nostyle style-progress-controls" ng-disabled="isBuiltInScheme()"'));
+		assert.ok(html.includes('ng-disabled="editor.mode === \'color\' ? isSchemeReadOnly() : isDesignReadOnly()"'));
+		assert.ok(html.includes('class="hy-nostyle style-colors" ng-disabled="isSchemeReadOnly()"'));
+		assert.ok(html.includes('class="hy-nostyle style-progress-controls" ng-disabled="isSchemeReadOnly()"'));
 	});
 
 	it('keeps every built-in design unchanged while preview actions remain interactive', () => {
@@ -524,9 +525,81 @@ describe('Widget style designer preview', () => {
 			scope.progressDirection('top-bottom');
 			assert.strictEqual(JSON.stringify(scope.getSelectedStyle()), before, id);
 		}
-		assert.ok(html.includes('ng-if="editor.mode !== \'design\' || !isPresetDesign()"'));
+		assert.ok(html.includes('ng-if="editor.mode !== \'design\' || !isDesignReadOnly()"'));
 		assert.ok(html.includes("'settings.style_design_builtin_hint'"));
 		assert.ok(!html.includes("'settings.style_builtin_hint'"));
+	});
+
+	it('edits and saves built-in designs and schemes only in the local preview', () => {
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		const { scope, writes } = loadSettings(null, null, null, true);
+		for (const id of ['builtin:current', ...runtime.builtInDesignDefinitions.map(item => item.id)]) {
+			scope.selectEditorMode('design');
+			scope.editor.selectedStyleId = id;
+			assert.strictEqual(scope.isBuiltInStyle(), true);
+			assert.strictEqual(scope.isDesignReadOnly(), false);
+			scope.heightMode('auto');
+			if (id === 'builtin:current') {
+				scope.getSelectedStyle().name = 'Preview default design';
+				assert.strictEqual(scope.defaultDesignName(), 'Preview default design');
+			}
+			scope.selectColumn(1, 1);
+			scope.editor.columnRowSpan = 2;
+			scope.updateColumnRowSpan();
+			assert.strictEqual(scope.getSelectedStyle().columnRowSpans.normal[1][0], 2);
+			scope.deleteStyle();
+			assert.strictEqual(scope.editor.selectedStyleId, id);
+		}
+		for (const id of ['builtin:current', ...runtime.builtInSchemeDefinitions.map(item => item.id)]) {
+			scope.selectEditorMode('color');
+			scope.editor.selectedSchemeId = id;
+			assert.strictEqual(scope.isSchemeReadOnly(), false);
+			scope.editor.previewState = 'inactive';
+			scope.editor.colorValues.icon = 'red';
+			scope.updateColorOverride('icon');
+			if (id === 'builtin:current') {
+				scope.getSelectedScheme().name = 'Preview default scheme';
+				assert.strictEqual(scope.defaultSchemeName(), 'Preview default scheme');
+			}
+			assert.strictEqual(scope.getSelectedScheme().colors.icon, 'red');
+			scope.deleteStyle();
+			assert.strictEqual(scope.editor.selectedSchemeId, id);
+		}
+		assert.strictEqual(scope.isDirty(), true);
+		scope.saveSettings();
+		assert.strictEqual(writes.length, 1);
+		assert.strictEqual(writes[0].key, 'previewBuiltIns');
+		assert.strictEqual(scope.isDirty(), false);
+		const reloaded = loadSettings(null, null, null, true, writes[0].value).scope;
+		assert.strictEqual(reloaded.defaultDesignName(), 'Preview default design');
+		assert.strictEqual(reloaded.defaultSchemeName(), 'Preview default scheme');
+		for (const design of writes[0].value.styles) {
+			reloaded.editor.selectedStyleId = design.id;
+			assert.strictEqual(reloaded.heightMode(), 'auto');
+			assert.strictEqual(reloaded.getSelectedStyle().columnRowSpans.normal[1][0], 2);
+		}
+		for (const scheme of writes[0].value.colorSchemes) {
+			reloaded.editor.selectedSchemeId = scheme.id;
+			assert.strictEqual(reloaded.getSelectedScheme().colors.icon, 'red');
+		}
+		assert.strictEqual(reloaded.isDirty(), false);
+		const homey = loadSettings(null, null, null, false, writes[0].value).scope;
+		assert.strictEqual(homey.isDesignReadOnly(), true);
+		assert.strictEqual(homey.heightMode(), 'minimum');
+		assert.strictEqual(homey.isSchemeReadOnly(), true);
+	});
+
+	it('keeps preview edits dirty when saving fails and rejects invalid stored snapshots', () => {
+		const failure = loadSettings(null, null, (key, value, callback) => callback(new Error('preview save failed')), true);
+		let message;
+		failure.homey.alert = value => { message = value; };
+		failure.scope.heightMode('auto');
+		failure.scope.saveSettings();
+		assert.strictEqual(failure.scope.isDirty(), true);
+		assert.match(message, /preview save failed/);
+		const invalid = loadSettings(null, null, null, true, { version: 1, styles: [] });
+		assert.strictEqual(invalid.scope.stylesAvailable, false);
+		assert.strictEqual(invalid.scope.isDesignReadOnly(), true);
 	});
 
 	it('defaults to the timer preview', () => {

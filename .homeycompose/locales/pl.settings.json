@@ -92,6 +92,7 @@
 	"style_column_span": "Column span",
 	"style_column_row_span": "Liczba wierszy",
 	"style_select_before_drag": "Wybierz element przed przeciągnięciem.",
+	"style_preview_builtin_hint": "Tylko podgląd lokalny: zmiany ustawień wbudowanych są zapisywane w tej przeglądarce, nie w aplikacji.",
 	"style_row_span_fit_hint": "Gdy kolumna obejmuje widoczne wiersze, dopasowuje się do zawartości niezależnie od ustawienia szerokości.",
 	"style_column_row_span_hint": "Obejmuje ten wiersz. Ukryte wiersze znikają, a pozostałe kolumny zajmują dostępną przestrzeń.",
 	"style_column_alignment": "Element alignment",

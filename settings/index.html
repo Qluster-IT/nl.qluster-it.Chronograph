@@ -102,7 +102,7 @@
 						ng-change="editor.selectedCell = null; refreshLayoutElement()">
 						<option value="">{{ t('settings.style_select_placeholder') }}</option>
 						<optgroup label="{{ t('settings.style_built_in') }}">
-							<option value="builtin:current">{{ t('settings.style_current') }}</option>
+							<option value="builtin:current">{{ defaultDesignName() }}</option>
 							<option ng-repeat="style in sortedStyleOptions(builtInDesigns) track by style.id" value="{{ style.id }}">{{ style.name }}</option>
 						</optgroup>
 						<optgroup label="{{ t('settings.style_custom') }}">
@@ -111,7 +111,7 @@
 					</select>
 					<select ng-if="editor.mode === 'color'" id="widget-style" class="form-select" ng-model="editor.selectedSchemeId">
 						<optgroup label="{{ t('settings.style_builtin_label') }}">
-							<option value="builtin:current">{{ t('settings.style_current') }}</option>
+							<option value="builtin:current">{{ defaultSchemeName() }}</option>
 							<option ng-repeat="scheme in sortedStyleOptions(builtInSchemes) track by scheme.id" value="{{ scheme.id }}">{{ scheme.name }}</option>
 						</optgroup>
 						<optgroup label="{{ t('settings.style_custom_label') }}">
@@ -136,16 +136,16 @@
 				<div ng-if="getSelectedStyle() && getEditingItem()" class="style-design">
 					<label class="hy-nostyle" for="widget-style-name">{{ t('settings.style_name') }}</label>
 					<input class="hy-nostyle form-control" id="widget-style-name" type="text"
-						ng-model="getEditingItem().name" ng-disabled="editor.mode === 'color' ? isBuiltInScheme() : isPresetDesign()" maxlength="80" required>
-					<p class="help-text" ng-if="isBuiltInStyle()">{{ t(editor.mode === 'color' ? 'settings.style_scheme_builtin_hint' : 'settings.style_design_builtin_hint') }}</p>
+						ng-model="getEditingItem().name" ng-disabled="editor.mode === 'color' ? isSchemeReadOnly() : isDesignReadOnly()" maxlength="80" required>
+					<p class="help-text" ng-if="isBuiltInStyle()">{{ t(localPreview ? 'settings.style_preview_builtin_hint' : (editor.mode === 'color' ? 'settings.style_scheme_builtin_hint' : 'settings.style_design_builtin_hint')) }}</p>
 
 					<div class="style-design-selectors">
 						<h3 ng-if="editor.mode === 'design'">{{ t('settings.style_design') }}</h3>
 						<label ng-if="editor.mode === 'design'" class="hy-nostyle style-progress-full-row"><input class="hy-nostyle" type="checkbox"
-							ng-model="allowDesignShrink" ng-model-options="{ getterSetter: true }" ng-disabled="savingSettings || isPresetDesign()"> {{ t('settings.style_allow_shrink') }}</label>
+							ng-model="allowDesignShrink" ng-model-options="{ getterSetter: true }" ng-disabled="savingSettings || isDesignReadOnly()"> {{ t('settings.style_allow_shrink') }}</label>
 						<label ng-if="editor.mode === 'design'" class="hy-nostyle" for="style-height">{{ t('settings.style_height') }} ({{ t('settings.style_' + editor.previewSize) }})</label>
 						<select ng-if="editor.mode === 'design'" id="style-height" class="form-select" ng-model="heightMode"
-							ng-model-options="{ getterSetter: true }" ng-disabled="savingSettings || isPresetDesign()" aria-describedby="style-height-hint">
+							ng-model-options="{ getterSetter: true }" ng-disabled="savingSettings || isDesignReadOnly()" aria-describedby="style-height-hint">
 							<option value="auto">{{ t('settings.style_height_auto') }}</option>
 							<option value="minimum-without-inputs">{{ t('settings.style_height_minimum_without_inputs') }}</option>
 							<option value="minimum">{{ t('settings.style_height_minimum_with_inputs') }}</option>
@@ -153,14 +153,14 @@
 						<p ng-if="editor.mode === 'design'" id="style-height-hint" class="help-text style-progress-full-row">{{ t('settings.style_height_size_hint') }}</p>
 						<label ng-if="editor.mode === 'design'" class="hy-nostyle" for="style-layout-mode">{{ t('settings.style_layout_mode') }}</label>
 						<select ng-if="editor.mode === 'design'" id="style-layout-mode" class="form-select" ng-model="editor.editStatus"
-							ng-options="option.value as option.label for option in layoutModes" ng-disabled="isPresetDesign()" ng-change="editor.selectedCell = null; refreshLayoutElement()"></select>
+							ng-options="option.value as option.label for option in layoutModes" ng-disabled="isDesignReadOnly()" ng-change="editor.selectedCell = null; refreshLayoutElement()"></select>
 						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button"
-							ng-if="editor.mode === 'design' && editor.editStatus && !isPresetDesign()" ng-click="clearStatusLayout()">{{ t('settings.style_reset_override') }}</button>
+							ng-if="editor.mode === 'design' && editor.editStatus && !isDesignReadOnly()" ng-click="clearStatusLayout()">{{ t('settings.style_reset_override') }}</button>
 						<h3>{{ t('settings.style_preview') }}</h3>
 						<label ng-if="editor.mode === 'design'" class="hy-nostyle" for="preview-scheme">{{ t('settings.style_color_schemes') }}</label>
 						<select ng-if="editor.mode === 'design'" id="preview-scheme" class="form-select" ng-model="editor.selectedSchemeId">
 							<optgroup label="{{ t('settings.style_builtin_label') }}">
-								<option value="builtin:current">{{ t('settings.style_current') }}</option>
+								<option value="builtin:current">{{ defaultSchemeName() }}</option>
 								<option ng-repeat="scheme in sortedStyleOptions(builtInSchemes) track by scheme.id" value="{{ scheme.id }}">{{ scheme.name }}</option>
 							</optgroup>
 							<optgroup label="{{ t('settings.style_custom_label') }}">
@@ -170,7 +170,7 @@
 						<label ng-if="editor.mode === 'color'" class="hy-nostyle" for="preview-design">{{ t('settings.style_design_styles') }}</label>
 						<select ng-if="editor.mode === 'color'" id="preview-design" class="form-select" ng-model="editor.selectedStyleId" ng-change="refreshLayoutElement()">
 							<optgroup label="{{ t('settings.style_builtin_label') }}">
-								<option value="builtin:current">{{ t('settings.style_current') }}</option>
+								<option value="builtin:current">{{ defaultDesignName() }}</option>
 								<option ng-repeat="style in sortedStyleOptions(builtInDesigns) track by style.id" value="{{ style.id }}">{{ style.name }}</option>
 							</optgroup>
 							<optgroup label="{{ t('settings.style_custom_label') }}">
@@ -210,7 +210,7 @@
 							</div>
 						</div>
 					</div>
-					<div ng-if="editor.mode !== 'design' || !isPresetDesign()">
+					<div ng-if="editor.mode !== 'design' || !isDesignReadOnly()">
 					<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button"
 						ng-if="editor.mode === 'design' && !getSelectedStyle().groups" ng-click="upgradeLayout()">{{ t('settings.style_upgrade') }}</button>
 					<div ng-if="editor.mode === 'design' && getSelectedStyle().groups">
@@ -407,7 +407,7 @@
 							ng-click="selectLayoutElement(element)" ng-class="{ 'style-cell-selected': !editor.selectedBackground && editor.selectedElement === element }"
 							ng-attr-aria-pressed="{{ !editor.selectedBackground && editor.selectedElement === element }}">{{ styleLabels[element] }}</button>
 					</div>
-					<fieldset ng-if="editor.mode === 'color' && editor.selectedElement === 'progress'" class="hy-nostyle style-progress-controls" ng-disabled="isBuiltInScheme()">
+					<fieldset ng-if="editor.mode === 'color' && editor.selectedElement === 'progress'" class="hy-nostyle style-progress-controls" ng-disabled="isSchemeReadOnly()">
 						<legend>{{ t('settings.style_progress') }}</legend>
 						<div class="style-position-controls">
 						<label class="hy-nostyle" for="progress-background">{{ t('settings.style_background') }}</label>
@@ -420,7 +420,7 @@
 					<div ng-repeat="key in [selectedColorKey()] track by key">
 						<h3>{{ t('settings.style_colors') }}</h3>
 						<p class="help-text">{{ t('settings.style_color_status_hint') }}</p>
-						<fieldset class="hy-nostyle style-colors" ng-disabled="isBuiltInScheme()">
+						<fieldset class="hy-nostyle style-colors" ng-disabled="isSchemeReadOnly()">
 						<div class="style-color-row" ng-if="isButtonElement(key)">
 							<label class="hy-nostyle" ng-attr-for="style-color-{{ key }}">{{ t('settings.style_background') }}</label>
 							<select ng-if="editor.previewState === 'inactive'" class="form-select" ng-attr-id="style-color-{{ key }}"
