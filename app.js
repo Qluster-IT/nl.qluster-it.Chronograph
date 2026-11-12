@@ -4,6 +4,7 @@ const Homey = require('homey');
 const Chronograph = require('./lib/chronograph.js');
 const { Utils, ChronographType, LogLevel } = require('./lib/utils.js');
 const { searchIcons } = require('./lib/widget-icons.js');
+const { BL, resolveSplitNames } = require('./lib/flow-arguments.js');
 const widgetStyleRuntime = require('./assets/js/chronograph-widget-style.js');
 
 // Actions.
@@ -147,6 +148,7 @@ class Application extends Homey.App {
 
 			Chronograph.homey = this.homey;
 			this.setRoundOfDurationsFlowcards();
+			await BL.init({ homey: this.homey });
 
 			this.log('Initializing cards.');
 			this._initializeTimerCards();
@@ -175,7 +177,7 @@ class Application extends Homey.App {
 				}
 
 				this.log('Restoring chronographs.');
-				this._restoreChronographs();
+				await this._restoreChronographs();
 
 			}, 1000);
 
@@ -374,7 +376,7 @@ class Application extends Homey.App {
 	async setArgumentNamesCard(card, type) {
 		let args = await card.getArgumentValues();
 		let names = [];
-		let nameArgs = args.filter(x => x.name);
+		let nameArgs = args.filter(x => x.name && !x.namedd && !x.name.includes('{['));
 		if (nameArgs.length) names = names.concat(nameArgs.map(x => x.name));
 
 		let nameDdArgs = args.filter(x => x.namedd);
@@ -406,7 +408,8 @@ class Application extends Homey.App {
 				if (!this.chronographs[type]) this.chronographs[type] = [];
 			} else {
 				this.oldChronographs = Object.assign({}, this.chronographs);
-				this.chronographs[type] = [];
+				this.chronographs[type] = (this.oldChronographs[type] || [])
+					.filter(chronograph => chronograph && chronograph.flowValues);
 			}
 
 			let changed = false;
@@ -599,9 +602,11 @@ class Application extends Homey.App {
 						type = chronograph.getId().split('_');
 						type = type[1];
 					}
-					let chrono = Chronograph.homey.app.chronographs[type].find(x => x.name == raw.name);
-					chrono.action = raw.now;
-					Chronograph.homey.app.saveChronographs();
+					let chrono = (Chronograph.homey.app.chronographs[type] || []).find(x => x.name == raw.name);
+					if (chrono) {
+						chrono.action = raw.now;
+						Chronograph.homey.app.saveChronographs();
+					}
 				} catch (error) {
 
 					this.homey.error('_installEventHandlers gettype', event, 'error', error);
@@ -618,15 +623,26 @@ class Application extends Homey.App {
 		});
 	}
 
-	_restoreChronographs() {
+	async _restoreChronographs() {
 		try {
 			/** @type {Object.<string, ChronographActiveSnapshot>} Active snapshots to restore after startup. */
 			let active = this.homey.settings.get('chronographs_active') || {};
 			this.homey.settings.set('chronographs_active', {});
-			Object.values(active).forEach(raw => {
+			for (const [snapshotId, raw] of Object.entries(active)) {
 				// Create the correct type of chronograph.
 				if (!raw.data || !raw.data.type || !raw.name) {
-					return;
+					continue;
+				}
+				let splits;
+				try {
+					if (raw.data.type == ChronographType.TIMER) splits = await Chronograph.resolveTimerSplits(this.homey);
+					if (raw.data.type == ChronographType.STOPWATCH) splits = await resolveSplitNames(this.homey, 'stopwatch_splits');
+				} catch (error) {
+					const pending = this.homey.settings.get('chronographs_active') || {};
+					pending[snapshotId] = raw;
+					this.homey.settings.set('chronographs_active', pending);
+					this.homey.error('_restoreChronographs split decoding', raw.name, error);
+					continue;
 				}
 				let id = Utils.generateId(raw.data.type, raw.name);
 				let chronograph;
@@ -639,14 +655,11 @@ class Application extends Homey.App {
 
 				// Add the splits.
 				if (raw.data.type == ChronographType.TIMER) {
-					Chronograph.addTimerSplits(chronograph, this.homey);
+					Chronograph.addTimerSplits(chronograph, this.homey, splits);
 				}
 
 				if (raw.data.type == ChronographType.STOPWATCH) {
-					let splits = this.homey.settings.get('stopwatch_splits') || [];
-					splits
-						.filter(split => split.name == chronograph.getName())
-						.forEach(split => chronograph.addSplit(split.time, split.unit, split));
+					Chronograph.addStopwatchSplits(chronograph, splits);
 				}
 
 				if (raw.data.type == ChronographType.TRANSITION) {
@@ -669,7 +682,7 @@ class Application extends Homey.App {
 				if (raw.running) {
 					chronograph.start();
 				}
-			});
+			}
 
 
 			this.homey.setTimeout(() => {

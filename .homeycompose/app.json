@@ -69,7 +69,7 @@
 	},
 	"homeyCommunityTopicId": 18214,
 	"homepage": "https://github.com/Qluster-IT/nl.qluster-it.Chronograph/wiki",
-	"permissions": [],
+	"permissions": ["homey:app:net.i-dev.betterlogic"],
 	"images": {
 		"large": "/assets/images/large.png",
 		"small": "/assets/images/small.png"
