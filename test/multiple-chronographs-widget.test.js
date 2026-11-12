@@ -24,8 +24,8 @@ async function loadWidget(settings, states) {
 		const scope = Object.create(parent || null);
 		const events = {};
 		scope.$on = (name, fn) => { events[name] = fn; };
-		scope.$broadcast = (name, value) => scopes.forEach(child => {
-			if (child.events[name]) child.events[name]({}, value);
+		scope.$broadcast = (name, ...values) => scopes.forEach(child => {
+			if (child.events[name]) child.events[name]({}, ...values);
 		});
 		scope.$applyAsync = fn => fn();
 		scope.$evalAsync = fn => fn();
@@ -71,7 +71,7 @@ async function loadWidget(settings, states) {
 		return scope;
 	});
 	await new Promise(resolve => setImmediate(resolve));
-	return { parent, children, listeners, requests, intervals, get ready() { return ready; }, failRoute: route => { failedRoute = route; } };
+	return { parent, children, listeners, requests, intervals, homey, get ready() { return ready; }, failRoute: route => { failedRoute = route; } };
 }
 
 describe('Multiple Chronographs widget', () => {
@@ -290,11 +290,13 @@ describe('Multiple Chronographs widget', () => {
 		assert.strictEqual(widget.children[0].widgetInputPrefix, 'chronograph-1-');
 		assert.strictEqual(widget.children[1].widgetInputPrefix, 'chronograph-2-');
 		assert.deepStrictEqual(JSON.parse(JSON.stringify(widget.children[1].startValues)), { time: 8, unit: 'minutes', from: 0, to: 10, steps: 3 });
+		const beforeStart = widget.requests.length;
 		widget.children[1].start();
 		await new Promise(resolve => setImmediate(resolve));
 		assert.deepStrictEqual(widget.requests.find(request => request.method === 'POST'), {
 			method: 'POST', url: '/transition/Same/start', body: { time: 8, unit: 'minutes', from: 0, to: 10, steps: 3 }
 		});
+		assert.deepStrictEqual(widget.requests.slice(beforeStart).map(request => request.method), ['POST']);
 		assert.strictEqual(widget.children[0].selectedChronograph.active, false);
 		assert.strictEqual(widget.children[1].selectedChronograph.active, true);
 		widget.children[2].toggle();
@@ -303,6 +305,110 @@ describe('Multiple Chronographs widget', () => {
 		widget.children[2].stop();
 		await new Promise(resolve => setImmediate(resolve));
 		assert.ok(widget.requests.some(request => request.method === 'DELETE' && request.url === '/stopwatches/Last'));
+	});
+
+	it('refreshes only tiles matching realtime chronograph name and type', async () => {
+		const states = {
+			'timer:Same': { name: 'Same', type: 'Timer', active: true, running: true },
+			'transition:Same': { name: 'Same', type: 'Transition', active: true, running: true },
+			'timer:Other': { name: 'Other', type: 'Timer', active: true, running: true }
+		};
+		const widget = await loadWidget({
+			chronograph1: { name: 'Same', type: 'timer' },
+			chronograph2: { name: 'Same', type: 'transition' },
+			chronograph3: { name: 'Other', type: 'timer' }
+		}, states);
+		let before = widget.requests.length;
+		widget.listeners.chronograph_event_multi([
+			{ name: 'Same', data: { type: 'Transition' } },
+			{ name: 'Unrelated', data: { type: 'Timer' } }
+		]);
+		await new Promise(resolve => setImmediate(resolve));
+		assert.deepStrictEqual(widget.requests.slice(before).map(request => request.url), ['/transition/Same']);
+
+		before = widget.requests.length;
+		widget.listeners.chronograph_event({ name: 'Other', data: { type: 'Timer' }, removed: true });
+		await new Promise(resolve => setImmediate(resolve));
+		assert.deepStrictEqual(widget.requests.slice(before).map(request => request.url), ['/timer/Other']);
+
+		before = widget.requests.length;
+		widget.listeners.chronograph_event_multi([{ name: 'Same', data: { type: 'Stopwatch' } }]);
+		await new Promise(resolve => setImmediate(resolve));
+		assert.strictEqual(widget.requests.length, before);
+	});
+
+	it('avoids polling a running tile for unchanged periodic snapshots', async () => {
+		const widget = await loadWidget({ chronograph1: { name: 'A', type: 'timer' } }, {
+			'timer:A': { name: 'A', type: 'Timer', active: true, running: true, duration: 1000, targetDuration: 10000 }
+		});
+		const before = widget.requests.length;
+		widget.listeners.chronograph_event_multi([
+			{ name: 'A', data: { type: 'Timer' }, running: true, removed: false, duration: 1000, targetDuration: 10000 }
+		]);
+		await new Promise(resolve => setImmediate(resolve));
+		assert.strictEqual(widget.requests.length, before);
+		widget.listeners.chronograph_event_multi([
+			{ name: 'A', data: { type: 'Timer' }, running: true, removed: false, duration: 1000, targetDuration: 20000 }
+		]);
+		await new Promise(resolve => setImmediate(resolve));
+		assert.strictEqual(widget.requests.length, before + 1);
+	});
+
+	it('avoids realtime GET requests for ten unchanged running entries', async () => {
+		const settings = {}, states = {}, events = [];
+		for (let slot = 1; slot <= 10; slot++) {
+			const name = 'Timer ' + slot;
+			settings['chronograph' + slot] = { name, type: 'timer' };
+			states['timer:' + name] = { name, type: 'Timer', active: true, running: true, duration: 1000, targetDuration: 10000 };
+			events.push({ name, data: { type: 'Timer' }, running: true, removed: false, duration: 1000, targetDuration: 10000 });
+		}
+		const widget = await loadWidget(settings, states);
+		const before = widget.requests.length;
+		widget.listeners.chronograph_event_multi(events);
+		await new Promise(resolve => setImmediate(resolve));
+		assert.strictEqual(widget.requests.length, before);
+		events[4].targetDuration = 20000;
+		widget.listeners.chronograph_event_multi(events);
+		await new Promise(resolve => setImmediate(resolve));
+		assert.deepStrictEqual(widget.requests.slice(before).map(request => request.url), ['/timer/Timer%205']);
+	});
+
+	it('does not let an older refresh overwrite a successful start', async () => {
+		const widget = await loadWidget({ chronograph1: { name: 'A', type: 'timer' } }, {
+			'timer:A': { name: 'A', type: 'Timer', active: false, defaults: { time: 5, unit: 'seconds' } }
+		});
+		let resolveOld;
+		widget.homey.api = (method) => method === 'GET'
+			? new Promise(resolve => { resolveOld = resolve; })
+			: Promise.resolve({ name: 'A', type: 'Timer', active: true, running: true, duration: 0, targetDuration: 5000 });
+		widget.listeners.chronograph_event({ name: 'A', data: { type: 'Timer' } });
+		widget.children[0].start();
+		await new Promise(resolve => setImmediate(resolve));
+		assert.strictEqual(widget.children[0].selectedChronograph.active, true);
+		resolveOld({ name: 'A', type: 'Timer', active: false, running: false });
+		await new Promise(resolve => setImmediate(resolve));
+		assert.strictEqual(widget.children[0].selectedChronograph.active, true);
+	});
+
+	it('reconciles conflicting realtime changes that arrive during a start', async () => {
+		const widget = await loadWidget({ chronograph1: { name: 'A', type: 'timer' } }, {
+			'timer:A': { name: 'A', type: 'Timer', active: false, defaults: { time: 5, unit: 'seconds' } }
+		});
+		let resolveStart;
+		let gets = 0;
+		widget.homey.api = method => {
+			if (method === 'POST') return new Promise(resolve => { resolveStart = resolve; });
+			gets++;
+			return Promise.resolve({ name: 'A', type: 'Timer', active: false, running: false });
+		};
+		widget.children[0].start();
+		widget.listeners.chronograph_event({ name: 'A', data: { type: 'Timer' }, removed: false, running: true });
+		assert.strictEqual(gets, 0);
+		widget.listeners.chronograph_event({ name: 'A', data: { type: 'Timer' }, removed: true, running: false });
+		resolveStart({ name: 'A', type: 'Timer', active: true, running: true, duration: 0, targetDuration: 5000 });
+		await new Promise(resolve => setImmediate(resolve));
+		assert.strictEqual(gets, 1);
+		assert.strictEqual(widget.children[0].selectedChronograph.active, false);
 	});
 
 	it('refreshes the matching tile for saved values and isolates errors', async () => {

@@ -205,7 +205,7 @@ describe('Chronograph widget API', () => {
 	});
 
 	it('starts a timer with the duration supplied by the widget', async () => {
-		await widgetApi.startChronograph({
+		const started = await widgetApi.startChronograph({
 			homey,
 			params: { name: 'Widget API timer' },
 			body: { time: 2, unit: 'seconds' }
@@ -215,6 +215,12 @@ describe('Chronograph widget API', () => {
 		assert.ok(timer);
 		assert.strictEqual(timer.isRunning(), true);
 		assert.strictEqual(timer.getTargetDuration(), 2000);
+		assert.strictEqual(started.name, 'Widget API timer');
+		assert.strictEqual(started.type, ChronographType.TIMER);
+		assert.strictEqual(started.active, true);
+		assert.strictEqual(started.running, true);
+		assert.strictEqual(started.targetDuration, 2000);
+		assert.strictEqual(started.defaults.time, 30);
 		assert.strictEqual(chronographs.timer[0].flowValues, undefined);
 		assert.strictEqual(savedStartArgs.chronographs, undefined);
 
@@ -332,7 +338,7 @@ describe('Chronograph widget API', () => {
 			steps: 12
 		};
 		chronographs.transition[0].flowValues = previousTransitionFlowValues;
-		await transitionWidgetApi.startChronograph({
+		const started = await transitionWidgetApi.startChronograph({
 			homey,
 			params: { name: 'Widget API transition' },
 			body: { time: 2, unit: 'seconds', from: 0, to: 50, steps: 4 }
@@ -347,6 +353,8 @@ describe('Chronograph widget API', () => {
 		assert.strictEqual(transition.getData('steps'), 4);
 		assert.strictEqual(transition.getData('flowValues'), undefined);
 		assert.deepStrictEqual(chronographs.transition[0].flowValues, previousTransitionFlowValues);
+		assert.strictEqual(started.steps, 4);
+		assert.deepStrictEqual(started.defaults, previousTransitionFlowValues);
 
 		const updated = await transitionWidgetApi.getChronograph({ homey, params: { name: 'Widget API transition' } });
 		assert.strictEqual(updated.defaults.time, 15);

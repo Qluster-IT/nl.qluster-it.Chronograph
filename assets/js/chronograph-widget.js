@@ -14,6 +14,9 @@ function onHomeyReady(Homey) {
 			var destroyed = false;
 			var widgetReady = false;
 			var lastHeight = 0;
+			var refreshVersion = 0;
+			var expectedRealtime = null;
+			var deferredRealtime = false;
 			var multipleEntry = $scope.widgetEntry;
 			var settings = multipleEntry ? multipleEntry.settings : Homey.getSettings() || {};
 		var widgetStyleRuntime = window.ChronographWidgetStyle;
@@ -389,6 +392,22 @@ function onHomeyReady(Homey) {
 				});
 			}
 
+			function applyState(chronograph) {
+				var wasActive = $scope.selectedChronograph && $scope.selectedChronograph.active;
+				$scope.selectedChronograph = applyChronographUpdate(chronograph);
+				if (chronograph.active) $scope.cancelStart();
+				if (chronograph.defaults) {
+					var savedValuesKey = JSON.stringify(chronograph.defaults);
+					if (savedValuesKey !== lastSavedValues || (wasActive && !chronograph.active)) {
+						lastSavedValues = savedValuesKey;
+						applySavedDefaults(chronograph.defaults);
+					}
+				}
+				updateDesignRows();
+				$scope.loading = false;
+				$scope.error = styleError;
+			}
+
 			function refresh() {
 				if (!selectedName) {
 					$scope.loading = false;
@@ -396,28 +415,18 @@ function onHomeyReady(Homey) {
 					return Promise.resolve();
 				}
 
+				var version = ++refreshVersion;
 				return Homey.api('GET', '/' + widgetType + '/' + encodeURIComponent(selectedName), {})
 					.then(function (chronograph) {
-						if (destroyed) return;
+						if (destroyed || version !== refreshVersion) return;
 						$scope.$applyAsync(function () {
-							var wasActive = $scope.selectedChronograph && $scope.selectedChronograph.active;
-							$scope.selectedChronograph = applyChronographUpdate(chronograph);
-							if (chronograph.active) $scope.cancelStart();
-							if (chronograph.defaults) {
-								var savedValuesKey = JSON.stringify(chronograph.defaults);
-								if (savedValuesKey !== lastSavedValues || (wasActive && !chronograph.active)) {
-									lastSavedValues = savedValuesKey;
-									applySavedDefaults(chronograph.defaults);
-								}
-							}
-							updateDesignRows();
-							$scope.loading = false;
-							$scope.error = styleError;
+							if (!destroyed && version === refreshVersion) applyState(chronograph);
 						});
 					})
 					.catch(function (error) {
-						if (destroyed) return;
+						if (destroyed || version !== refreshVersion) return;
 						$scope.$applyAsync(function () {
+							if (destroyed || version !== refreshVersion) return;
 							$scope.loading = false;
 							$scope.error = window.chronographErrorMessage(Homey, error);
 						});
@@ -495,20 +504,31 @@ function onHomeyReady(Homey) {
 
 				$scope.busy = true;
 				$scope.error = null;
+				expectedRealtime = { active: true, running: true };
+				deferredRealtime = false;
+				++refreshVersion;
 				Homey.api('POST', '/' + widgetType + '/' + encodeURIComponent(selectedName) + '/start', $scope.startValues)
-					.then(function () {
+					.then(function (started) {
 						$scope.cancelStart();
+						if (started && started.active === true && started.name === selectedName
+							&& typeof started.type === 'string' && started.type.toLowerCase() === widgetType) {
+							var version = ++refreshVersion;
+							$scope.$applyAsync(function () {
+								if (!destroyed && version === refreshVersion) applyState(started);
+							});
+							return;
+						}
 						return refresh();
 					})
 					.then(function () {
 						$scope.$applyAsync(function () {
-							$scope.busy = false;
+							finishOperation(true);
 						});
 					})
 					.catch(function (error) {
 						$scope.$applyAsync(function () {
-							$scope.busy = false;
 							$scope.error = window.chronographErrorMessage(Homey, error);
+							finishOperation(false);
 						});
 					});
 			};
@@ -543,18 +563,22 @@ function onHomeyReady(Homey) {
 
 				$scope.busy = true;
 				$scope.error = null;
+				expectedRealtime = { active: true, running: !$scope.selectedChronograph.running };
+				deferredRealtime = false;
+				++refreshVersion;
 				Homey.api('PUT', '/' + chronographCollectionPaths[widgetType] + '/' + encodeURIComponent(selectedName), {
 					running: !$scope.selectedChronograph.running
 				}).then(function (updated) {
 					$scope.$applyAsync(function () {
+						++refreshVersion;
 						$scope.selectedChronograph = applyChronographUpdate(Object.assign({ active: true }, updated));
 						updateDesignRows();
-						$scope.busy = false;
+						finishOperation(true);
 					});
 				}).catch(function (error) {
 					$scope.$applyAsync(function () {
-						$scope.busy = false;
 						$scope.error = window.chronographErrorMessage(Homey, error);
+						finishOperation(false);
 					});
 				});
 			};
@@ -564,19 +588,23 @@ function onHomeyReady(Homey) {
 
 				$scope.busy = true;
 				$scope.error = null;
+				expectedRealtime = { active: false, running: false };
+				deferredRealtime = false;
+				++refreshVersion;
 				Homey.api('DELETE', '/' + chronographCollectionPaths[widgetType] + '/' + encodeURIComponent(selectedName)).then(function () {
 					$scope.$applyAsync(function () {
+						++refreshVersion;
 						$scope.selectedChronograph.active = false;
 						$scope.selectedChronograph.running = false;
 						applySavedDefaults($scope.selectedChronograph.defaults);
 						$scope.showStartForm = false;
 						updateDesignRows();
-						$scope.busy = false;
+						finishOperation(true);
 					});
 				}).catch(function (error) {
 					$scope.$applyAsync(function () {
-						$scope.busy = false;
 						$scope.error = window.chronographErrorMessage(Homey, error);
+						finishOperation(false);
 					});
 				});
 			};
@@ -598,12 +626,42 @@ function onHomeyReady(Homey) {
 				if (event && event.name === selectedName && typeof event.type === 'string'
 					&& event.type.toLowerCase() === widgetType) return refresh();
 			}
+			function finishOperation(succeeded) {
+				$scope.busy = false;
+				expectedRealtime = null;
+				var shouldRefresh = deferredRealtime && succeeded;
+				deferredRealtime = false;
+				if (shouldRefresh) refresh();
+			}
+			function refreshRealtime(events, periodic) {
+				if (!Array.isArray(events)) return refresh();
+				if (events.some(function (event) {
+					if (!event || event.name !== selectedName || !event.data
+						|| typeof event.data.type !== 'string' || event.data.type.toLowerCase() !== widgetType) return false;
+					if ($scope.busy) {
+						if (!expectedRealtime || typeof event.removed !== 'boolean'
+							|| event.removed === expectedRealtime.active
+							|| (!event.removed && event.running !== expectedRealtime.running)) deferredRealtime = true;
+						return false;
+					}
+					var current = $scope.selectedChronograph;
+					// The local clock already advances running durations; allow for event delivery delay.
+					if (periodic && current && current.active && current.running
+						&& event.running === true && event.removed === false && Number.isFinite(event.duration)
+						&& (isStopwatch || event.targetDuration === current.targetDuration)
+						&& (!isTransition || event.data.steps === current.steps)
+						&& Math.abs(event.duration - (current.duration + Date.now() - current.updatedAt)) < 2000) return false;
+					return true;
+				})) return refresh();
+			}
 			if (multipleEntry) {
 				$scope.$on('multipleChronographsRefresh', refresh);
+				$scope.$on('multipleChronographsRealtime', function (event, values, periodic) { refreshRealtime(values, periodic); });
 				$scope.$on('multipleChronographsFlowValues', function (event, values) { refreshSavedValues(values); });
 				$scope.$on('multipleChronographsClock', updateDurations);
 			} else {
-				Homey.on('chronograph_event_multi', refresh);
+				Homey.on('chronograph_event_multi', function (events) { return refreshRealtime(events, true); });
+				Homey.on('chronograph_event', function (event) { refreshRealtime([event]); });
 				Homey.on('chronograph_flow_values_changed', refreshSavedValues);
 			}
 			loadWidgetAppearance().then(refresh).then(function () {

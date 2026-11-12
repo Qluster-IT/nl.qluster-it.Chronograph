@@ -124,7 +124,8 @@ window.registerMultipleChronographsWidget = function (Homey) {
 				observer = new window.ResizeObserver(resize);
 				observer.observe(document.querySelector('main'));
 			}
-			Homey.on('chronograph_event_multi', function () { $scope.$broadcast('multipleChronographsRefresh'); });
+			Homey.on('chronograph_event_multi', function (events) { $scope.$broadcast('multipleChronographsRealtime', events, true); });
+			Homey.on('chronograph_event', function (event) { $scope.$broadcast('multipleChronographsRealtime', [event]); });
 			Homey.on('chronograph_flow_values_changed', function (event) { $scope.$broadcast('multipleChronographsFlowValues', event); });
 			var refreshInterval = $interval(function () { $scope.$broadcast('multipleChronographsRefresh'); }, 5000);
 			var clockInterval = $interval(function () { $scope.$broadcast('multipleChronographsClock'); }, 250);

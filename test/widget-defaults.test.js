@@ -80,6 +80,18 @@ describe('Widget duration defaults', () => {
 		assert.strictEqual(widget.scope.selectedChronograph.defaults.time, 20);
 	});
 
+	it('ignores realtime updates for other chronographs and types', async () => {
+		const widget = await loadWidget('timer', {}, { time: 5, unit: 'seconds' });
+		const before = widget.requests.length;
+		await widget.listeners.chronograph_event_multi([
+			{ name: 'other', data: { type: 'Timer' } },
+			{ name: 'test', data: { type: 'Transition' } }
+		]);
+		assert.strictEqual(widget.requests.length, before);
+		await widget.listeners.chronograph_event_multi([{ name: 'test', data: { type: 'Timer' } }]);
+		assert.strictEqual(widget.requests.length, before + 1);
+	});
+
 	it('requests the selected chronograph using its encoded name', async () => {
 		const widget = await loadWidget('timer', {
 			chronograph: { id: 'legacy-id', name: 'Kitchen / lamp' }
