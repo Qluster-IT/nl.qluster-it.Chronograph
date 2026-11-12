@@ -316,6 +316,27 @@ describe('Widget duration defaults', () => {
 		}
 	});
 
+	it('includes start fields in the normal and large minimum heights of Small and Tiny', async () => {
+		for (const id of ['builtin:small', 'builtin:tiny']) {
+			for (const type of ['timer', 'transition']) {
+				for (const layout of ['compact', 'normal', 'large']) {
+					const { scope, state, listeners } = await loadWidget(type, { layout, designStyle: { id } }, {});
+					for (const active of [false, true]) {
+						if (active) {
+							state.active = true;
+							state.running = true;
+							await listeners.chronograph_event_multi();
+						}
+						const layers = scope.designLayers.filter(layer => layer.measure);
+						const hasFields = layers.some(layer => layer.rows.some(row =>
+							row.groups.some(group => group.elements.includes('fields'))));
+						assert.strictEqual(hasFields, layout !== 'compact', `${id} ${type} ${layout} active=${active}`);
+					}
+				}
+			}
+		}
+	});
+
 	it('reports invalid start fields without sending a start request', async () => {
 		const widget = await loadWidget('timer', {}, {});
 		let reported = false;

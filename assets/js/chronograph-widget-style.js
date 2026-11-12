@@ -314,7 +314,6 @@
 				5: { states: ['running', 'paused'], actions: {}, startForm: false }
 			};
 			design.inputFieldRows[size] = { timer: 2, transition: 5 };
-			design.heightModes[size] = 'minimum-without-inputs';
 			design.elementSizes.overrides[size] = {
 				icon: 16, name: size === 'large' ? 16 : 14, status: 12,
 				duration: size === 'large' ? 18 : size === 'normal' ? 16 : 14,
