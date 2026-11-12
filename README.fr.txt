@@ -12,7 +12,7 @@ CARACTÉRISTIQUES
 * Ciblez plusieurs minuteries, chronomètres et transitions à la fois en utilisant des jokers dans les cartes prises en charge.
 * Le widget Chronograph du tableau de bord permet de choisir dans ses paramètres un minuteur, un chronomètre ou une transition, puis de le mettre en pause, de le reprendre ou de l'arrêter.
 * Utilisez des expressions mathématiques à l'intérieur des cartes de flux.
-* Utilisez HomeyScript pour déclencher ou régler des minuteries, chronomètres et transitions.
+* Utilisez HomeyScript pour surveiller, mettre en pause, reprendre ou arrêter les minuteries, chronomètres et transitions actifs.
 
 Les cartes d'action start, resume et adjust ont un support intégré pour les simples expressions mathématiques. Cela permet des durées de minuterie et de chronomètre aléatoires ou calculées, y compris des calculs basés sur les valeurs des jetons.
 Par exemple :
@@ -26,12 +26,12 @@ En plus des cartes de flux disponibles, les minuteries et chronomètres peuvent 
 
 Par exemple, ce script arrêtera toutes les minuteries en cours :
 
-	let app = await Homey.apps.getApp({id:'nl.fellownet.chronograph'});
-	app.apiGet('/timers').then(result => {
-		let timers = JSON.parse(result);
-		timers.forEach(timer => {
-			app.apiDelete('/timers/' + timer.id);
-		});
-	});
+	const app = await Homey.apps.getApp({ id: 'nl.fellownet.chronograph' });
+	const timers = await app.get({ path: '/timers/' });
+	for (const timer of timers) {
+		if (timer.running) {
+			await app.delete({ path: '/timers/' + encodeURIComponent(timer.id) });
+		}
+	}
 
 Consultez le sujet sur le forum communautaire pour plus d'informations !

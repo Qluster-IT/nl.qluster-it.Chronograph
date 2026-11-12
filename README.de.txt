@@ -12,7 +12,7 @@ FEATURES
 * Richte mehrere Timer, Stoppuhren und Übergänge gleichzeitig mit Platzhaltern in unterstützten Karten aus.
 * Mit dem Chronograph-Dashboard-Widget kannst du in den Widget-Einstellungen einen Timer, eine Stoppuhr oder einen Übergang auswählen, pausieren, fortsetzen oder stoppen.
 * Verwende Mathematik-Ausdrücke innerhalb von Flow-Karten.
-* Nutze HomeyScript, um Timer, Stoppuhren und Übergänge auszulösen oder einzustellen.
+* Nutze HomeyScript, um aktive Timer, Stoppuhren und Übergänge zu überwachen, zu pausieren, fortzusetzen oder zu stoppen.
 
 Die Start-, Fortsetzungs- und Anpassungsaktionskarten unterstützen eingebaute einfache mathematische Ausdrücke. Dies ermöglicht zufällige oder berechnete Timer- und Stoppuhren-Dauern, einschließlich Berechnungen basierend auf Token-Werten.
 Zum Beispiel:
@@ -26,12 +26,12 @@ Neben den verfügbaren Flow-Karten können Timer und Stoppuhren auch mit [HomeyS
 
 Zum Beispiel, dieses Skript wird alle laufenden Timer stoppen:
 
-	let app = await Homey.apps.getApp({id:'nl.fellownet.chronograph'});
-	app.apiGet('/timers').then(result => {
-		let timers = JSON.parse(result);
-		timers.forEach(timer => {
-			app.apiDelete('/timers/' + timer.id);
-		});
-	});
+	const app = await Homey.apps.getApp({ id: 'nl.fellownet.chronograph' });
+	const timers = await app.get({ path: '/timers/' });
+	for (const timer of timers) {
+		if (timer.running) {
+			await app.delete({ path: '/timers/' + encodeURIComponent(timer.id) });
+		}
+	}
 
 Sieh dir das Thema im Community-Forum für weitere Informationen an!

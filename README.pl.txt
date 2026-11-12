@@ -12,7 +12,7 @@ FUNKCJE
 * Kieruj wiele timerów, stoperów i przejść naraz używając symboli wieloznacznych w obsługiwanych kartach.
 * Widżet Chronograph na pulpicie pozwala wybrać w ustawieniach timer, stoper albo przejście, a następnie je wstrzymać, wznowić lub zatrzymać.
 * Używaj wyrażeń matematycznych w kartach przepływów.
-* Używaj HomeyScript do wyzwalania lub ustawiania timerów, stoperów i przejść.
+* Używaj HomeyScript do monitorowania, wstrzymywania, wznawiania lub zatrzymywania aktywnych timerów, stoperów i przejść.
 
 Karty akcji start, resume i adjust mają wbudowaną obsługę prostych wyrażeń matematycznych. Pozwala to na losowe lub obliczane czasy trwania timerów i stoperów, w tym obliczenia oparte na wartościach tokenów.
 Na przykład:
@@ -26,12 +26,12 @@ Oprócz dostępnych kart przepływów, timery i stopery mogą być również kon
 
 Na przykład, ten skrypt zatrzyma wszystkie działające timery:
 
-	let app = await Homey.apps.getApp({id:'nl.fellownet.chronograph'});
-	app.apiGet('/timers').then(result => {
-		let timers = JSON.parse(result);
-		timers.forEach(timer => {
-			app.apiDelete('/timers/' + timer.id);
-		});
-	});
+	const app = await Homey.apps.getApp({ id: 'nl.fellownet.chronograph' });
+	const timers = await app.get({ path: '/timers/' });
+	for (const timer of timers) {
+		if (timer.running) {
+			await app.delete({ path: '/timers/' + encodeURIComponent(timer.id) });
+		}
+	}
 
 Zobacz temat na Forum Społeczności, aby uzyskać więcej informacji!

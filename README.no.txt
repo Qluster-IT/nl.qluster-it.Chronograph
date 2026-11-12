@@ -12,7 +12,7 @@ FUNKSJONER
 * Rett flere tidtakere, stoppeklokker og overganger samtidig ved å bruke jokertegn i støttede kort.
 * Med Chronograph-dashbordwidgeten kan du velge en tidtaker, stoppeklokke eller overgang i widgetinnstillingene og pause, gjenoppta eller stoppe den.
 * Bruk matematiske uttrykk inne i flytkort.
-* Bruk HomeyScript for å utløse eller sette tidtakere, stoppeklokker og overganger.
+* Bruk HomeyScript til å overvåke, pause, fortsette eller stoppe aktive tidtakere, stoppeklokker og overganger.
 
 Start-, fortsett-, og justeringshandlingskort har innebygd støtte for enkle matematiske uttrykk. Dette tillater tilfeldige eller beregnede tidtaker- og stoppeklokkevarigheter, inkludert beregninger basert på tokenverdier.
 For eksempel:
@@ -26,12 +26,12 @@ I tillegg til de tilgjengelige flytkortene, kan tidtakere og stoppeklokker også
 
 For eksempel vil dette skriptet stoppe alle løpende tidtakere:
 
-	let app = await Homey.apps.getApp({id:'nl.fellownet.chronograph'});
-	app.apiGet('/timers').then(result => {
-		let timers = JSON.parse(result);
-		timers.forEach(timer => {
-			app.apiDelete('/timers/' + timer.id);
-		});
-	});
+	const app = await Homey.apps.getApp({ id: 'nl.fellownet.chronograph' });
+	const timers = await app.get({ path: '/timers/' });
+	for (const timer of timers) {
+		if (timer.running) {
+			await app.delete({ path: '/timers/' + encodeURIComponent(timer.id) });
+		}
+	}
 
 Se emnet på samfunnsforumet for mer informasjon!

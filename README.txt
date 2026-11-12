@@ -12,7 +12,7 @@ FEATURES
 * Target multiple timers, stopwatches and transitions at once using wildcards in supported cards.
 * Use the Chronograph dashboard widget to choose a timer, stopwatch or transition in its settings and pause, resume or stop it.
 * Use Math Expressions inside flowcards.
-* Use HomeyScript to trigger or set timers, stopwatches and transitions.
+* Use HomeyScript to monitor, pause, resume or stop active timers, stopwatches and transitions.
 
 The start, resume and adjust action cards have built-in support for simple math expressions. This allows for random or computed timer and stopwatch durations, including calculations based on token values.
 For example:
@@ -26,12 +26,12 @@ In addition to the available flow cards, timers and stopwatches can also be cont
 
 For example, this script will stop all running timers:
 
-	let app = await Homey.apps.getApp({id:'nl.fellownet.chronograph'});
-	app.apiGet('/timers').then(result => {
-		let timers = JSON.parse(result);
-		timers.forEach(timer => {
-			app.apiDelete('/timers/' + timer.id);
-		});
-	});
+	const app = await Homey.apps.getApp({ id: 'nl.fellownet.chronograph' });
+	const timers = await app.get({ path: '/timers/' });
+	for (const timer of timers) {
+		if (timer.running) {
+			await app.delete({ path: '/timers/' + encodeURIComponent(timer.id) });
+		}
+	}
 
 See the topic on the Community Forum for more information!

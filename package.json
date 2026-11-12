@@ -13,7 +13,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/fellownet/chronograph.git"
+		"url": "git+https://github.com/Qluster-IT/nl.qluster-it.Chronograph.git"
 	},
 	"keywords": [
 		"timer",
@@ -25,7 +25,7 @@
 	"author": "Fellownet <bob@fellownet.nl>",
 	"license": "GPL-3.0",
 	"bugs": {
-		"url": "https://github.com/fellownet/chronograph/issues"
+		"url": "https://github.com/Qluster-IT/nl.qluster-it.Chronograph/issues"
 	},
-	"homepage": "https://github.com/fellownet/chronograph#readme"
+	"homepage": "https://github.com/Qluster-IT/nl.qluster-it.Chronograph#readme"
 }

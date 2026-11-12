@@ -12,7 +12,7 @@ CARATTERISTICHE
 * Target multipli per timer, cronometri e transizioni contemporaneamente usando wildcard nelle carte supportate.
 * Il widget Chronograph per la dashboard consente di scegliere nelle impostazioni un timer, cronometro o transizione e di metterlo in pausa, riprenderlo o interromperlo.
 * Usa Espressioni Matematiche all'interno delle carte di flusso.
-* Usa HomeyScript per attivare o impostare timer, cronometri e transizioni.
+* Usa HomeyScript per monitorare, mettere in pausa, riprendere o fermare timer, cronometri e transizioni attivi.
 
 Le carte d'azione per avviare, riprendere e regolare hanno il supporto integrato per semplici espressioni matematiche. Questo consente durate di timer e cronometri casuali o calcolate, inclusi calcoli basati su valori di token.
 Ad esempio:
@@ -26,12 +26,12 @@ Oltre alle carte di flusso disponibili, i timer e i cronometri possono anche ess
 
 Ad esempio, questo script fermerà tutti i timer in esecuzione:
 
-	let app = await Homey.apps.getApp({id:'nl.fellownet.chronograph'});
-	app.apiGet('/timers').then(result => {
-		let timers = JSON.parse(result);
-		timers.forEach(timer => {
-			app.apiDelete('/timers/' + timer.id);
-		});
-	});
+	const app = await Homey.apps.getApp({ id: 'nl.fellownet.chronograph' });
+	const timers = await app.get({ path: '/timers/' });
+	for (const timer of timers) {
+		if (timer.running) {
+			await app.delete({ path: '/timers/' + encodeURIComponent(timer.id) });
+		}
+	}
 
 Guarda l'argomento sul Forum della Comunità per ulteriori informazioni!

@@ -12,7 +12,7 @@ FUNKTIONER
 * Ret flere timere, stopure og overgange på én gang ved at bruge wildcards i understøttede kort.
 * Med Chronograph-dashboardwidgetten kan du vælge en timer, et stopur eller en overgang i widgetindstillingerne og sætte den på pause, genoptage eller stoppe den.
 * Brug matematiske udtryk inde i flowcards.
-* Brug HomeyScript til at udløse eller sætte timere, stopure og overgange.
+* Brug HomeyScript til at overvåge, sætte på pause, genoptage eller stoppe aktive timere, stopure og overgange.
 
 Start-, genoptag- og justerings handlingskort har indbygget understøttelse for simple matematiske udtryk. Dette muliggør tilfældige eller beregnede timer- og stopur-varigheder, inklusiv beregninger baseret på tokenværdier.
 For eksempel:
@@ -26,12 +26,12 @@ Ud over de tilgængelige flow-kort, kan timere og stopure også kontrolleres ved
 
 For eksempel, dette script vil stoppe alle kørende timere:
 
-	lad app = await Homey.apps.getApp({id:'nl.fellownet.chronograph'});
-	app.apiGet('/timers').then(resultat => {
-		lad timere = JSON.parse(resultat);
-		timere.forEach(timer => {
-			app.apiDelete('/timers/' + timer.id);
-		});
-	});
+	const app = await Homey.apps.getApp({ id: 'nl.fellownet.chronograph' });
+	const timers = await app.get({ path: '/timers/' });
+	for (const timer of timers) {
+		if (timer.running) {
+			await app.delete({ path: '/timers/' + encodeURIComponent(timer.id) });
+		}
+	}
 
 Se emnet på Community Forum for mere information!

@@ -12,7 +12,7 @@ FUNCIONALIDADES
 * Dirige múltiples temporizadores, cronómetros y transiciones a la vez usando comodines en tarjetas compatibles.
 * El widget de Chronograph para el panel permite elegir en sus ajustes un temporizador, cronómetro o transición y pausarlo, reanudarlo o detenerlo.
 * Usa Expresiones Matemáticas dentro de las tarjetas de flujo.
-* Usa HomeyScript para activar o establecer temporizadores, cronómetros y transiciones.
+* Usa HomeyScript para supervisar, pausar, reanudar o detener temporizadores, cronómetros y transiciones activos.
 
 Las tarjetas de acción de inicio, reanudación y ajuste tienen soporte integrado para expresiones matemáticas simples. Esto permite duraciones de temporizador y cronómetro aleatorias o calculadas, incluidas cálculos basados en valores de token.
 Por ejemplo:
@@ -26,12 +26,12 @@ Además de las tarjetas de flujo disponibles, los temporizadores y cronómetros 
 
 Por ejemplo, este script detendrá todos los temporizadores en ejecución:
 
-	let app = await Homey.apps.getApp({id:'nl.fellownet.chronograph'});
-	app.apiGet('/timers').then(result => {
-		let timers = JSON.parse(result);
-		timers.forEach(timer => {
-			app.apiDelete('/timers/' + timer.id);
-		});
-	});
+	const app = await Homey.apps.getApp({ id: 'nl.fellownet.chronograph' });
+	const timers = await app.get({ path: '/timers/' });
+	for (const timer of timers) {
+		if (timer.running) {
+			await app.delete({ path: '/timers/' + encodeURIComponent(timer.id) });
+		}
+	}
 
 ¡Consulta el tema en el Foro de la Comunidad para más información!

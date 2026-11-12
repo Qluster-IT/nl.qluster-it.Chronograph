@@ -12,7 +12,7 @@
 * استهداف مؤقتات وساعات توقيت وانتقالات متعددة في نفس الوقت باستخدام wildcards في البطاقات المدعومة.
 * تتيح أداة Chronograph في لوحة التحكم اختيار مؤقت أو ساعة توقيت أو انتقال من إعداداتها وإيقافه مؤقتًا أو استئنافه أو إيقافه.
 * استخدام التعبيرات الرياضية داخل بطاقات التدفق.
-* استخدام HomeyScript لتشغيل أو ضبط مؤقتات وساعات توقيت وانتقالات.
+* استخدام HomeyScript لمراقبة المؤقتات وساعات التوقيت والانتقالات النشطة أو إيقافها مؤقتًا أو استئنافها أو إيقافها.
 
 تحتوي بطاقات بدء واستئناف وتعديل العمل على دعم مدمج لتعبيرات رياضية بسيطة. وهذا يتيح وجود أوقات مؤقتات وساعات توقيت عشوائية أو محوسبة، بما في ذلك الحسابات المبنية على قيم الرموز.
 على سبيل المثال:
@@ -26,12 +26,12 @@
 
 على سبيل المثال، هذا السكريبت سيوقف جميع المؤقتات الجارية:
 
-	let app = await Homey.apps.getApp({id:'nl.fellownet.chronograph'});
-	app.apiGet('/timers').then(result => {
-		let timers = JSON.parse(result);
-		timers.forEach(timer => {
-			app.apiDelete('/timers/' + timer.id);
-		});
-	});
+	const app = await Homey.apps.getApp({ id: 'nl.fellownet.chronograph' });
+	const timers = await app.get({ path: '/timers/' });
+	for (const timer of timers) {
+		if (timer.running) {
+			await app.delete({ path: '/timers/' + encodeURIComponent(timer.id) });
+		}
+	}
 
 انظر الموضوع في المنتدى المجتمعي لمزيد من المعلومات!

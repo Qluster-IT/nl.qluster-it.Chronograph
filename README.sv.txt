@@ -12,7 +12,7 @@ FUNKTIONER
 * Rikta flera timers, stoppur och övergångar samtidigt med hjälp av jokertecken i stödda kort.
 * Med Chronographs instrumentpanelswidget kan du välja en timer, ett stoppur eller en övergång i widgetinställningarna och pausa, återuppta eller stoppa den.
 * Använd matematiska uttryck inom flödeskort.
-* Använd HomeyScript för att trigga eller ställa in timers, stoppur och övergångar.
+* Använd HomeyScript för att övervaka, pausa, återuppta eller stoppa aktiva timers, stoppur och övergångar.
 
 Start-, återuppta- och justera-åtgärdskort har inbyggt stöd för enkla matematiska uttryck. Detta tillåter slumpmässiga eller beräknade timer- och stoppurvaraktigheter, inklusive beräkningar baserade på token-värden.
 Till exempel:
@@ -26,12 +26,12 @@ Förutom de tillgängliga flödeskorten kan timers och stoppur också styras med
 
 Till exempel, detta skript kommer att stoppa alla pågående timers:
 
-	let app = await Homey.apps.getApp({id:'nl.fellownet.chronograph'});
-	app.apiGet('/timers').then(result => {
-		let timers = JSON.parse(result);
-		timers.forEach(timer => {
-			app.apiDelete('/timers/' + timer.id);
-		});
-	});
+	const app = await Homey.apps.getApp({ id: 'nl.fellownet.chronograph' });
+	const timers = await app.get({ path: '/timers/' });
+	for (const timer of timers) {
+		if (timer.running) {
+			await app.delete({ path: '/timers/' + encodeURIComponent(timer.id) });
+		}
+	}
 
 Se ämnet på Community Forum för mer information!

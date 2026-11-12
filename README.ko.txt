@@ -12,7 +12,7 @@
 * 지원되는 카드에서 와일드카드를 사용하여 여러 타이머, 스톱워치 및 전환 대상 지정.
 * Chronograph 대시보드 위젯 설정에서 타이머, 스톱워치 또는 전환을 선택하고 일시 중지, 재개 또는 중지할 수 있습니다.
 * Flow 카드 내에서 수학 표현식 사용.
-* HomeyScript를 사용하여 타이머, 스톱워치 및 전환 트리거 또는 설정.
+* HomeyScript를 사용하여 활성 타이머, 스톱워치 및 전환을 모니터링, 일시 중지, 재개 또는 정지합니다.
 
 시작, 재개 및 조정 액션 카드는 간단한 수학 표현식을 위한 내장 지원을 제공합니다. 이로 인해 토큰 값을 기반으로 계산된 타이머 및 스톱워치 지속 시간을 무작위로 또는 계산할 수 있습니다.
 예:
@@ -26,12 +26,12 @@
 
 예를 들어, 이 스크립트는 실행 중인 모든 타이머를 중지합니다:
 
-	let app = await Homey.apps.getApp({id:'nl.fellownet.chronograph'});
-	app.apiGet('/timers').then(result => {
-		let timers = JSON.parse(result);
-		timers.forEach(timer => {
-			app.apiDelete('/timers/' + timer.id);
-		});
-	});
+	const app = await Homey.apps.getApp({ id: 'nl.fellownet.chronograph' });
+	const timers = await app.get({ path: '/timers/' });
+	for (const timer of timers) {
+		if (timer.running) {
+			await app.delete({ path: '/timers/' + encodeURIComponent(timer.id) });
+		}
+	}
 
 더 많은 정보는 커뮤니티 포럼의 주제를 참조하세요!
