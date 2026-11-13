@@ -99,6 +99,7 @@ Application image by [Agê Barros](https://unsplash.com/@agebarros?utm_source=un
 ### v3.0.4
 
 * Added per-design and per-scheme undo/redo and unsaved-change protection.
+* Export and import individual widget designs and color schemes as JSON files.
 * Added layout copying between design sizes and a three-tile multi-widget preview.
 * Added a link to the widget designer guide.
 * Customize widget button text separately for each design size.

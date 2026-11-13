@@ -81,6 +81,16 @@ function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns, extr
 }
 
 describe('Widget style designer preview', () => {
+	it('places the sticky size selector after the other preview options', () => {
+		const options = html.indexOf('id="preview-columns"');
+		const tiles = html.indexOf('class="style-preview-tile-controls');
+		const size = html.indexOf('class="style-size-sticky"');
+		const preview = html.indexOf('class="style-preview-columns"');
+		assert.ok(options !== -1 && options < tiles && tiles < size && size < preview);
+		assert.match(html.slice(size, preview), /id="preview-size"[^>]*ng-model="editor\.previewSize"/);
+		assert.match(css, /\.style-size-sticky\s*\{[^}]*position:\s*sticky;[^}]*top:\s*0;/);
+	});
+
 	it('exports and imports individual designs and schemes as new, unsaved copies', () => {
 		const downloads = [];
 		const alerts = [];
@@ -106,7 +116,7 @@ describe('Widget style designer preview', () => {
 		};
 		window.setTimeout = callback => callback();
 		scope.exportStyle();
-		assert.strictEqual(downloads[0], 'chronograph-design.json');
+		assert.strictEqual(downloads[0], 'chronograph-design-settings.style_current.json');
 		assert.strictEqual(exported.type, 'design');
 		assert.strictEqual(exported.item.colors, undefined);
 		const first = JSON.stringify(exported.item);
@@ -114,19 +124,24 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(scope.widgetStyles.styles.length, 1);
 		assert.notStrictEqual(scope.getSelectedStyle().id, exported.item.id);
 		assert.notStrictEqual(scope.getSelectedStyle().name, exported.item.name);
+		assert.strictEqual(JSON.stringify(scope.getSelectedStyle().groups), JSON.stringify(exported.item.groups));
 		assert.strictEqual(scope.isDirty(), true);
 		assert.strictEqual(JSON.stringify(exported.item), first);
+		scope.getSelectedStyle().name = 'Morning / evening';
+		scope.exportStyle();
+		assert.strictEqual(downloads[1], 'chronograph-design-Morning - evening.json');
 		scope.saveSettings();
 		assert.strictEqual(writes.length, 1);
 		scope.selectEditorMode('color');
 		scope.exportStyle();
-		assert.strictEqual(downloads[1], 'chronograph-color.json');
+		assert.strictEqual(downloads[2], 'chronograph-color-settings.style_current.json');
 		assert.strictEqual(exported.type, 'color');
 		scope.selectEditorMode('design');
 		scope.importStyleFile({ text: JSON.stringify(exported) });
 		assert.strictEqual(scope.editor.mode, 'color');
 		assert.strictEqual(scope.widgetStyles.colorSchemes.length, 1);
 		assert.notStrictEqual(scope.getSelectedScheme().id, exported.item.id);
+		assert.strictEqual(JSON.stringify(scope.getSelectedScheme().colors), JSON.stringify(exported.item.colors));
 		assert.strictEqual(scope.isDirty(), true);
 		assert.deepStrictEqual(alerts, ['settings.saved']);
 		assert.strictEqual(readers.length, 2);
@@ -162,6 +177,23 @@ describe('Widget style designer preview', () => {
 		reader.onerror();
 		assert.strictEqual(messages[3], 'settings.style_import_read_error');
 		assert.strictEqual(scope.importingStyle, false);
+	});
+
+	it('rejects imports when the selection changes while reading', () => {
+		let reader;
+		class Reader {
+			constructor() { reader = this; }
+			readAsText(file) { this.result = file.text; }
+		}
+		const { scope, homey, editor } = loadSettings(null, undefined, undefined, false, undefined, { FileReader: Reader });
+		const messages = [];
+		homey.alert = message => messages.push(message);
+		const item = editor.designFromStyle(scope.getSelectedStyle());
+		scope.importStyleFile({ text: JSON.stringify({ format: 'chronograph-widget-style', version: 1, type: 'design', item }) });
+		scope.selectEditingStyle('builtin:vertical');
+		reader.onload();
+		assert.deepStrictEqual(messages, ['settings.style_import_changed']);
+		assert.strictEqual(scope.widgetStyles.styles.length, 0);
 	});
 
 	it('copies only layout settings between sizes after confirmation', () => {

@@ -361,6 +361,28 @@ body {
 	margin: 0;
 }
 
+.style-size-sticky {
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	align-items: center;
+	gap: 12px;
+	padding: 8px 0;
+	background: var(--homey-background-color, var(--homey-color-background, #fff));
+}
+
+.style-size-sticky label {
+	margin: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+	.style-size-sticky {
+		background: var(--homey-background-color, var(--homey-color-background, #1c1c1e));
+	}
+}
+
 .style-preview-columns {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr);

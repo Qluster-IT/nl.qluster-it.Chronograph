@@ -202,14 +202,6 @@
 							<option value="timer">{{ t('settings.timers') }}</option>
 							<option value="transition">{{ t('settings.transitions') }}</option>
 						</select>
-						<label class="hy-nostyle" for="preview-size">{{ t('settings.style_size') }}</label>
-						<select id="preview-size" class="form-select" ng-model="editor.previewSize"
-							ng-disabled="editor.rowPaddingForm.$invalid || editor.elementSizeForm.$invalid"
-							ng-change="editor.selectedCell = null; editor.previewState = editor.previewState === 'starting' ? 'inactive' : editor.previewState; refreshLayoutElement()">
-							<option value="compact">{{ t('settings.style_compact') }}</option>
-							<option value="normal">{{ t('settings.style_normal') }}</option>
-							<option value="large">{{ t('settings.style_large') }}</option>
-						</select>
 						<label class="hy-nostyle" for="preview-state">{{ t('settings.style_state') }}</label>
 						<select id="preview-state" class="form-select" ng-model="editor.previewState" ng-change="resetRowPreview(); editor.selectedCell = null; refreshLayoutElement()">
 							<option value="inactive">{{ t('settings.widget_not_running') }}</option>
@@ -235,6 +227,16 @@
 								</select>
 							</label>
 						</div>
+					</div>
+					<div class="style-size-sticky">
+						<label class="hy-nostyle" for="preview-size">{{ t('settings.style_size') }}</label>
+						<select id="preview-size" class="form-select" ng-model="editor.previewSize"
+							ng-disabled="editor.rowPaddingForm.$invalid || editor.elementSizeForm.$invalid"
+							ng-change="editor.selectedCell = null; editor.previewState = editor.previewState === 'starting' ? 'inactive' : editor.previewState; refreshLayoutElement()">
+							<option value="compact">{{ t('settings.style_compact') }}</option>
+							<option value="normal">{{ t('settings.style_normal') }}</option>
+							<option value="large">{{ t('settings.style_large') }}</option>
+						</select>
 					</div>
 					<div class="style-preview-columns" ng-style="editor.previewColumns === 'single' ? {} : { 'grid-template-columns': 'repeat(' + editor.previewColumns + ', minmax(0, 1fr))' }">
 						<div class="style-preview style-preview-height" ng-repeat="previewTile in visiblePreviewTiles() track by $index"
