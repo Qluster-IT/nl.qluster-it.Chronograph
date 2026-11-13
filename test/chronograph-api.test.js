@@ -275,15 +275,15 @@ describe('Chronograph realtime updates', () => {
 });
 
 describe('App notifications', () => {
-	it('attempts the API migration notification once whether delivery succeeds or fails', async () => {
+	it('attempts one combined release notification whether delivery succeeds or fails', async () => {
 		const module = { exports: {} };
 		vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8'), {
 			module,
 			require: id => id === 'homey' ? { App: class {} } : {}
 		});
-		const notify = module.exports.prototype._notifyNameBasedApi;
-		for (const fail of [false, true]) {
-			const settings = {};
+		const notify = module.exports.prototype._notifyReleaseFeatures;
+		for (const [fail, previousApiNotice] of [[false, false], [true, false], [false, true], [true, true]]) {
+			const settings = { nameBasedApiNotificationSent: previousApiNotice };
 			const errors = [];
 			const excerpts = [];
 			const app = { homey: {
@@ -297,20 +297,20 @@ describe('App notifications', () => {
 			} };
 			await notify.call(app);
 			await notify.call(app);
-			assert.deepStrictEqual(excerpts, ['name_based_api_notice']);
-			assert.strictEqual(settings.nameBasedApiNotificationSent, true);
+			assert.deepStrictEqual(excerpts, ['widget_features_notice\n\nname_based_api_notice']);
+			assert.strictEqual(settings.widgetFeaturesNotificationAttempted, true);
 			assert.strictEqual(errors.length, fail ? 1 : 0);
 		}
 	});
 
-	it('attempts the widget announcement once, independently of the API notice, even after failure', async () => {
+	it('does not repeat an already attempted release notification', async () => {
 		const module = { exports: {} };
 		vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8'), {
 			module,
 			require: id => id === 'homey' ? { App: class {} } : {}
 		});
-		const notify = module.exports.prototype._notifyWidgetFeatures;
-		const settings = { nameBasedApiNotificationSent: true };
+		const notify = module.exports.prototype._notifyReleaseFeatures;
+		const settings = { widgetFeaturesNotificationAttempted: true };
 		const errors = [];
 		const excerpts = [];
 		const app = { homey: {
@@ -318,19 +318,15 @@ describe('App notifications', () => {
 			__: key => key,
 			notifications: { async createNotification({ excerpt }) {
 				excerpts.push(excerpt);
-				if (excerpts.length === 1) throw new Error('offline');
 			} },
 			error: (...args) => errors.push(args)
 		} };
 		await notify.call(app);
-		assert.strictEqual(settings.widgetFeaturesNotificationAttempted, true);
-		assert.strictEqual(errors.length, 1);
-		await notify.call(app);
-		await notify.call(app);
-		assert.deepStrictEqual(excerpts, ['widget_features_notice']);
+		assert.deepStrictEqual(excerpts, []);
+		assert.deepStrictEqual(errors, []);
 	});
 
-	it('sends the widget announcement during app initialization', async () => {
+	it('sends the combined announcement during app initialization', async () => {
 		const module = { exports: {} };
 		vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8'), {
 			module,
@@ -358,7 +354,7 @@ describe('App notifications', () => {
 			'_installLogEventHandler', '_installEventHandlers']) app[method] = () => {};
 		await app.onInitLoader();
 		await app.onInitLoader();
-		assert.deepStrictEqual(excerpts, ['widget_features_notice']);
+		assert.deepStrictEqual(excerpts, ['widget_features_notice\n\nname_based_api_notice']);
 		assert.strictEqual(settings.widgetFeaturesNotificationAttempted, true);
 	});
 });

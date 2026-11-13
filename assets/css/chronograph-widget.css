@@ -248,6 +248,22 @@ body {
 	max-width: 100%;
 }
 
+.chronograph-design-placeholder {
+	visibility: hidden;
+	pointer-events: none;
+}
+
+.chronograph-design-element-duration.chronograph-design-placeholder {
+	width: 0;
+	max-width: 0;
+	overflow: hidden;
+}
+
+.chronograph-design-group[data-direction="horizontal"] > .chronograph-design-element-duration.chronograph-design-placeholder {
+	flex: 0 0 0;
+	margin-inline-end: -8px;
+}
+
 .chronograph-design-element-icon {
 	flex: 0 0 auto;
 	overflow: hidden;

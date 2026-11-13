@@ -228,6 +228,7 @@
 	"style_size_override": "تجاوز لهذا الحجم",
 	"style_size_current": "الحجم المخصص (بكسل)",
 	"style_size_hint": "يحدد الحجم حجم خط النص والأيقونات وارتفاع الأزرار والحقول وسُمك شريط الحالة. أدخل قيمة من 4 إلى 100 بكسل.",
+	"style_reserve_hidden_space": "حجز المساحة عند الإخفاء",
 	"style_size_invalid": "أدخل عدداً صحيحاً من 4 إلى 100.",
 	"settings_navigation": "إعدادات Chronograph",
 	"widget_design_unavailable": "تصميم الأداة المحدد لم يعد متاحًا.",

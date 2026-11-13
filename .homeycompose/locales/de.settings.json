@@ -228,6 +228,7 @@
 	"style_size_override": "Für diese Größe überschreiben",
 	"style_size_current": "Abweichende Größe (px)",
 	"style_size_hint": "Für Text und Symbole gilt die Schriftgröße, für Schaltflächen und Felder die Höhe und für die Statusleiste die Dicke. Wert von 4 bis 100 px eingeben.",
+	"style_reserve_hidden_space": "Platz beibehalten, wenn ausgeblendet",
 	"style_size_invalid": "Geben Sie eine ganze Zahl von 4 bis 100 ein.",
 	"settings_navigation": "Chronograph-Einstellungen",
 	"widget_design_unavailable": "Das ausgewählte Widget-Design ist nicht mehr verfügbar.",

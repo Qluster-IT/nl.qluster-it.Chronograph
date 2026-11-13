@@ -228,6 +228,7 @@
 	"style_size_override": "Tilsidesæt for denne størrelse",
 	"style_size_current": "Tilpasset størrelse (px)",
 	"style_size_hint": "Størrelsen angiver skriftstørrelse for tekst og ikoner, højde for knapper og felter og tykkelse for statuslinjen. Angiv en værdi fra 4 til 100 px.",
+	"style_reserve_hidden_space": "Bevar plads, når elementet er skjult",
 	"style_size_invalid": "Angiv et heltal fra 4 til 100.",
 	"settings_navigation": "Chronograph-indstillinger",
 	"widget_design_unavailable": "Det valgte widgetdesign er ikke længere tilgængeligt.",

@@ -228,6 +228,7 @@
 	"style_size_override": "Åsidosätt för denna storlek",
 	"style_size_current": "Anpassad storlek (px)",
 	"style_size_hint": "Storleken anger teckenstorlek för text och ikoner, höjd för knappar och fält och tjocklek för statusfältet. Ange ett värde från 4 till 100 px.",
+	"style_reserve_hidden_space": "Behåll utrymme när elementet är dolt",
 	"style_size_invalid": "Ange ett heltal mellan 4 och 100.",
 	"settings_navigation": "Chronograph-inställningar",
 	"widget_design_unavailable": "Den valda widgetdesignen är inte längre tillgänglig.",

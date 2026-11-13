@@ -249,7 +249,8 @@
     "style_preview_columns_hint": "Forhåndsvisningen viser én flis som fyller én kolonne. Bredden avhenger av tilgjengelig plass til forhåndsvisningen.",
     "style_button_text": "Knappetekst",
     "style_button_text_default": "Bruk standardtekst",
-    "style_button_text_hint": "Standardteksten oversettes. Egendefinert tekst er lik på alle språk; la den være tom for å bare vise ikonet."
+    "style_button_text_hint": "Standardteksten oversettes. Egendefinert tekst er lik på alle språk; la den være tom for å bare vise ikonet.",
+    "style_reserve_hidden_space": "Behold plass når elementet er skjult"
   },
   "timer_not_running": "Timeren __name__ kjører ikke.",
   "stopwatch_not_running": "Stoppeklokken __name__ kjører ikke.",

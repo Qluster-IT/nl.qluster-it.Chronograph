@@ -79,6 +79,8 @@ describe('Widget style runtime', () => {
 			assert.deepStrictEqual(design.columnSpans[size], { 1: [1, 3], 2: [3], 3: [2, 1], 4: [2, 1], 5: [3] });
 			assert.deepStrictEqual(design.columnWidths[size][1], [size === 'compact' ? 'span' : 'content', 'span']);
 			assert.deepStrictEqual(design.columnRowSpans[size][1], [5, 1]);
+			assert.deepStrictEqual(design.columnVerticalAlignments[size][3], ['middle', size === 'compact' ? 'top' : 'bottom']);
+			assert.deepStrictEqual(design.columnVerticalAlignments[size][4], ['middle', size === 'compact' ? 'top' : 'bottom']);
 			assert.deepStrictEqual(design.rowVisibility[size][5].states, []);
 			for (const type of ['timer', 'transition']) {
 				for (const state of ['running', 'paused']) {
@@ -91,9 +93,75 @@ describe('Widget style runtime', () => {
 					assert.strictEqual(progress.rowSpan, 5);
 					assert.strictEqual(progress.fitContent, true);
 					assert.ok(layout.rows[0].groups[1].elements.includes('name'));
+					assert.strictEqual(layout.rows.find(row => row.id === 3).groups[1].verticalAlignment,
+						size === 'compact' ? 'top' : 'bottom');
 				}
 			}
 		}
+	});
+
+	it('collapses the hidden Vertical progress column for stopwatches', () => {
+		const design = widgetStyle.builtInDesign('builtin:vertical');
+		design.reservedElements = {};
+		for (const size of ['compact', 'normal', 'large']) {
+			for (const state of ['inactive', 'running', 'paused']) {
+				const rows = widgetStyle.buildRows(design, size, state, 'stopwatch', false);
+				const layout = widgetStyle.layoutSpanningRows(rows);
+				const header = layout.rows.find(row => row.id === 1);
+				assert.strictEqual(layout.spanning, false);
+				assert.deepStrictEqual(header.groups.map(group => group.id), [2]);
+				assert.strictEqual(header.tracks, 'minmax(0, 3fr)');
+				assert.deepStrictEqual(header.groups[0].elements, ['icon', 'name']);
+				assert.strictEqual(rows[0].groups.length, 2);
+			}
+		}
+	});
+
+	it('reserves the Vertical progress column for stopwatches at every size', () => {
+		const design = widgetStyle.builtInDesign('builtin:vertical');
+		for (const size of ['compact', 'normal', 'large']) {
+			for (const state of ['inactive', 'running', 'paused']) {
+				const rows = widgetStyle.buildRows(design, size, state, 'stopwatch', false);
+				const layout = widgetStyle.layoutSpanningRows(rows);
+				const progress = layout.rows[0].groups[0];
+				assert.deepStrictEqual(progress.elements, []);
+				assert.deepStrictEqual(progress.placeholders, ['progress']);
+				assert.deepStrictEqual(progress.renderElements, ['progress']);
+				assert.strictEqual(layout.spanning, true);
+				assert.strictEqual(layout.rows[0].groups[1].gridStart, layout.rows[1].groups[0].gridStart);
+			}
+		}
+	});
+
+	it('reserves the hidden duration without exposing it in Small and Tiny', () => {
+		for (const preset of ['builtin:small', 'builtin:tiny']) {
+			const design = widgetStyle.builtInDesign(preset);
+			for (const size of ['compact', 'normal', 'large']) {
+				for (const type of ['timer', 'transition', 'stopwatch']) {
+					const rows = widgetStyle.buildRows(design, size, 'inactive', type, false);
+					const row = rows.find(item => item.id === (preset === 'builtin:tiny' ? 3 : 2));
+					const group = row.groups[0];
+					assert.ok(group.placeholders.includes('duration'));
+					assert.ok(!group.elements.includes('duration'));
+					assert.ok(group.renderElements.includes('duration'));
+				}
+			}
+		}
+	});
+
+	it('collapses an empty spanning column even when another column spans rows', () => {
+		const rows = [
+			{ id: 1, groups: [
+				{ id: 1, span: 1, rowSpan: 2, elements: [] },
+				{ id: 2, span: 1, rowSpan: 2, elements: ['name'] },
+				{ id: 3, span: 1, rowSpan: 1, elements: [] }
+			] },
+			{ id: 2, groups: [{ id: 1, span: 1, rowSpan: 1, elements: ['duration'] }] }
+		];
+		const layout = widgetStyle.layoutSpanningRows(rows);
+		assert.strictEqual(layout.spanning, true);
+		assert.deepStrictEqual(layout.rows[0].groups.map(group => group.id), [2, 3]);
+		assert.strictEqual(rows[0].groups.length, 3);
 	});
 
 	it('uses the designed centered layout in normal and large sizes', () => {
@@ -118,6 +186,30 @@ describe('Widget style runtime', () => {
 				const row = widgetStyle.buildRows(design, size, state, type, type !== 'stopwatch').find(item => item.id === 4);
 				assert.deepStrictEqual(row.groups[0].elements, type === 'stopwatch' ? ['start'] : ['fields', 'start']);
 				assert.strictEqual(row.groups[0].alignment, 'center');
+			}
+		}
+	});
+
+	it('bottom-aligns the Dashboard start row and button in normal and large sizes', () => {
+		const design = widgetStyle.builtInDesign('builtin:dashboard');
+		for (const size of ['normal', 'large']) {
+			for (const type of ['timer', 'transition', 'stopwatch']) {
+				const state = type === 'stopwatch' ? 'inactive' : 'starting';
+				const row = widgetStyle.buildRows(design, size, state, type, type !== 'stopwatch').find(item => item.id === 4);
+				assert.strictEqual(row.alignment, 'bottom');
+				assert.deepStrictEqual(row.groups[1].elements, ['start']);
+				assert.strictEqual(row.groups[1].verticalAlignment, 'bottom');
+			}
+		}
+	});
+
+	it('centers the Focus start row vertically in normal and large sizes', () => {
+		const design = widgetStyle.builtInDesign('builtin:focus');
+		for (const size of ['normal', 'large']) {
+			for (const type of ['timer', 'transition', 'stopwatch']) {
+				const state = type === 'stopwatch' ? 'inactive' : 'starting';
+				const row = widgetStyle.buildRows(design, size, state, type, type !== 'stopwatch').find(item => item.id === 4);
+				assert.strictEqual(row.alignment, 'middle');
 			}
 		}
 	});

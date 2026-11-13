@@ -228,6 +228,7 @@
 	"style_size_override": "Remplacer pour cette taille",
 	"style_size_current": "Taille personnalisée (px)",
 	"style_size_hint": "La taille concerne la police du texte et des icônes, la hauteur des boutons et des champs et l’épaisseur de la barre d’état. Saisissez une valeur de 4 à 100 px.",
+	"style_reserve_hidden_space": "Conserver l’espace lorsque l’élément est masqué",
 	"style_size_invalid": "Saisissez un entier de 4 à 100.",
 	"settings_navigation": "Paramètres Chronograph",
 	"widget_design_unavailable": "Le design de widget sélectionné n’est plus disponible.",

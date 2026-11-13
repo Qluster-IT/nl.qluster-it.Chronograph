@@ -479,6 +479,22 @@ body {
 	color: var(--foreground-color, var(--style-color));
 }
 
+.style-widget-placeholder {
+	visibility: hidden;
+	pointer-events: none;
+}
+
+.style-widget-duration.style-widget-placeholder {
+	width: 0;
+	max-width: 0;
+	overflow: hidden;
+}
+
+.style-preview-group[data-direction="horizontal"] > .style-widget-duration.style-widget-placeholder {
+	flex: 0 0 0;
+	margin-inline-end: -8px;
+}
+
 .style-widget-icon { flex: 0 0 auto; overflow: hidden; }
 .style-widget-progress { flex: 1 1 0; width: 100%; }
 .style-progress {

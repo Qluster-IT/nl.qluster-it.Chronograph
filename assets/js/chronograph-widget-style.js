@@ -39,6 +39,11 @@
 		return typeof value === 'string' ? value : element === 'start' ? defaultStartText : '';
 	}
 
+	function reserveElement(style, size, element) {
+		return !!(style && style.reservedElements && style.reservedElements[size]
+			&& style.reservedElements[size][element] === true);
+	}
+
 	function inputFieldRows(style, size, type) {
 		var fallback = type === 'transition' ? 2 : 1;
 		var max = type === 'transition' ? 5 : 2;
@@ -295,6 +300,7 @@
 	function narrowDesign(design, tiny) {
 		design.wrapNarrowElements = true;
 		design.inputFieldRows = {};
+		design.reservedElements = {};
 		['compact', 'normal', 'large'].forEach(function (size) {
 			function position(row, group, order) { return { row: row, group: group, order: order }; }
 			design.groups[size] = { elements: {
@@ -321,6 +327,7 @@
 				5: { states: ['running', 'paused'], actions: {}, startForm: false }
 			};
 			design.inputFieldRows[size] = { timer: 2, transition: 5 };
+			design.reservedElements[size] = { duration: true };
 			design.elementSizes.overrides[size] = {
 				icon: 16, name: size === 'large' ? 16 : 14, status: 12,
 				duration: size === 'large' ? 18 : size === 'normal' ? 16 : 14,
@@ -369,6 +376,8 @@
 				positions.status = { row: 1, group: 1, order: 3 };
 				positions.duration = { row: 2, group: 1, order: 1 };
 				design.rowVisibility[size][2] = { states: ['paused', 'running'], actions: {}, startForm: false };
+				design.rowAlignments[size][4] = 'bottom';
+				design.columnVerticalAlignments[size][4][1] = 'bottom';
 			});
 		} else if (id === 'builtin:focus') {
 			design.elementSizes.overrides.compact.duration = 20;
@@ -376,6 +385,7 @@
 			design.elementSizes.overrides.large.duration = 44;
 			['normal', 'large'].forEach(function (size) {
 				design.columnAlignments[size][3] = ['center', 'right'];
+				design.rowAlignments[size][4] = 'middle';
 			});
 		} else if (id === 'builtin:vertical') {
 			design.groups.compact = currentLayout('normal');
@@ -388,6 +398,7 @@
 			design.rowVisibility.compact[4].hideAfterSeconds = 10;
 			design.groups.compact.elements.cancel = { row: 4, group: 2, order: 2 };
 			design.columnRowSpans = {};
+			design.reservedElements = {};
 			['compact', 'normal', 'large'].forEach(function (size) {
 				design.groups[size].elements.icon.group = 2;
 				design.groups[size].elements.name.group = 2;
@@ -399,7 +410,10 @@
 				design.columnAlignments[size][1] = ['left', 'left'];
 				design.columnDirections[size][1] = ['horizontal', 'horizontal'];
 				design.columnVerticalAlignments[size][1] = ['middle', 'middle'];
+				design.columnVerticalAlignments[size][3] = ['middle', size === 'compact' ? 'top' : 'bottom'];
+				design.columnVerticalAlignments[size][4] = ['middle', size === 'compact' ? 'top' : 'bottom'];
 				design.columnRowSpans[size] = { 1: [5, 1] };
+				design.reservedElements[size] = { progress: true };
 				design.progressSettings[size].direction = 'bottom-top';
 			});
 		}
@@ -407,17 +421,38 @@
 	}
 
 	var rowSpanCache = new WeakMap();
+	function hasGroupContent(group) {
+		return (group.renderElements || group.elements).length > 0;
+	}
+
 	function layoutSpanningRows(rows) {
 		var cached = rowSpanCache.get(rows);
 		if (cached) return cached;
+		var sourceRows = rows;
+		rows = rows.map(function (row) {
+			var groups = row.groups.filter(function (group) {
+				return !(group.rowSpan > 1) || hasGroupContent(group);
+			});
+			if (groups.length === row.groups.length) return row;
+			return Object.assign({}, row, {
+				groups: groups,
+				tracks: groups.map(function (group) {
+					return group.width === 'content' ? 'minmax(0, max-content)' : 'minmax(0, ' + group.span + 'fr)';
+				}).join(' ')
+			});
+		});
 		var spanning = rows.some(function (row) {
 			return row.groups.some(function (group) {
-				return group.rowSpan > 1 && group.elements.length && rows.some(function (other) {
+				return group.rowSpan > 1 && hasGroupContent(group) && rows.some(function (other) {
 					return other.id > row.id && other.id < row.id + group.rowSpan;
 				});
 			});
 		});
-		if (!spanning) return { rows: rows, spanning: false };
+		if (!spanning) {
+			var ordinary = { rows: rows.every(function (row, index) { return row === sourceRows[index]; }) ? sourceRows : rows, spanning: false };
+			rowSpanCache.set(sourceRows, ordinary);
+			return ordinary;
+		}
 		var rowTracks = [];
 		var rowLines = rows.map(function (row) {
 			if (row.alignment === 'middle' || row.alignment === 'bottom') rowTracks.push('minmax(0, 1fr)');
@@ -454,7 +489,7 @@
 				remainingWidth -= width;
 				var weight = selection.reduce(function (sum, group) { return sum + group.span; }, 0);
 				var allSpanning = selection.every(function (group) {
-					return group.rowSpan > 1 && group.elements.length
+					return group.rowSpan > 1 && hasGroupContent(group)
 						&& rows.some(function (other) { return other.id > row.id && other.id < row.id + group.rowSpan; });
 				});
 				var scale = allSpanning ? 0.75 : 1;
@@ -466,7 +501,7 @@
 					var endRow = row.id + (group.rowSpan || 1) - 1;
 					var last = rowIndex;
 					while (last + 1 < rows.length && rows[last + 1].id <= endRow) last++;
-					if (last > rowIndex && group.elements.length) {
+					if (last > rowIndex && hasGroupContent(group)) {
 						reservations.push({ start: start, endColumn: end, end: endRow });
 					}
 					placed.push(Object.assign({}, group, {
@@ -496,7 +531,7 @@
 			var start = boundaries[index];
 			var content = result.some(function (row) {
 				return row.groups.some(function (group) {
-					return group.fitContent && group.elements.length && group.gridStart <= start && group.gridEnd >= end;
+					return group.fitContent && hasGroupContent(group) && group.gridStart <= start && group.gridEnd >= end;
 				});
 			});
 			return { content: content, weight: end - start };
@@ -510,7 +545,7 @@
 			return 'minmax(0, ' + (track.weight / flexibleWeight) + 'fr)';
 		}).join(' ');
 		var layout = { rows: result, spanning: true, tracks: tracks, rowTracks: rowTracks.join(' ') };
-		rowSpanCache.set(rows, layout);
+		rowSpanCache.set(sourceRows, layout);
 		return layout;
 	}
 
@@ -562,7 +597,7 @@
 		return [1, 2, 3, 4, 5].map(function (rowId) {
 			var rule = rowVisibility[rowId];
 			var visibleStates = rule && Array.isArray(rule.states) ? rule.states : [];
-			if (rule && visibleStates.indexOf(state) === -1 && !(state === 'starting' && rule.startForm)) return null;
+			var visible = !rule || visibleStates.indexOf(state) !== -1 || (state === 'starting' && rule.startForm);
 			var count = Number.isInteger(columns[rowId]) && columns[rowId] >= 1 && columns[rowId] <= 4 ? columns[rowId] : 4;
 			var rowSpans = spans[rowId] && spans[rowId].length === count
 				? spans[rowId] : Array.from({ length: count }, function () { return 1; });
@@ -574,10 +609,18 @@
 				var groupId = groupIndex + 1;
 				var elements = elementIds.filter(function (id) {
 					var position = positions[id];
-					return !(excludeFields && id === 'fields')
+					return visible && !(excludeFields && id === 'fields')
 						&& position && position.row === rowId && position.group === groupId
 						&& isElementVisible(id, state, type, showForm, style, size);
 				}).sort(function (left, right) {
+					return positions[left].order - positions[right].order || elementIds.indexOf(left) - elementIds.indexOf(right);
+				});
+				var placeholders = ['duration', 'progress'].filter(function (id) {
+					var position = positions[id];
+					return reserveElement(style, size, id) && position && position.row === rowId && position.group === groupId
+						&& elements.indexOf(id) === -1;
+				});
+				var renderElements = elements.concat(placeholders).sort(function (left, right) {
 					return positions[left].order - positions[right].order || elementIds.indexOf(left) - elementIds.indexOf(right);
 				});
 				return {
@@ -592,11 +635,12 @@
 					direction: rowDirections[groupIndex] || 'horizontal',
 					width: rowWidths[groupIndex] || 'span',
 					rowSpan: rowSpansByColumn[rowId] && rowSpansByColumn[rowId][groupIndex] || 1,
-					elements: elements
+					elements: elements,
+					placeholders: placeholders,
+					renderElements: renderElements
 				};
 			});
-			var visible = !rule || visibleStates.indexOf(state) !== -1 || (state === 'starting' && rule.startForm);
-			return visible && groups.some(function (group) { return group.elements.length; })
+			return groups.some(hasGroupContent)
 				? {
 					id: rowId,
 					alignment: style.rowAlignments && style.rowAlignments[size]
@@ -681,6 +725,7 @@
 		migrateElementSizes: migrateElementSizes,
 		elementSize: elementSize,
 		buttonText: buttonText,
+		reserveElement: reserveElement,
 		inputFieldRows: inputFieldRows,
 		inputFieldLayout: inputFieldLayout,
 		buildRows: buildRows,

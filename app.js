@@ -157,8 +157,7 @@ class Application extends Homey.App {
 			this._initializeTransitionCards();
 			this._initializeGenericCards();
 			this._registerChronographWidgetAutocomplete();
-			await this._notifyNameBasedApi();
-			await this._notifyWidgetFeatures();
+			await this._notifyReleaseFeatures();
 
 			// Install event handlers.
 			this.log('Installing event handlers.');
@@ -196,25 +195,15 @@ class Application extends Homey.App {
 		}
 	}
 
-	async _notifyNameBasedApi() {
-		const key = 'nameBasedApiNotificationSent';
-		if (this.homey.settings.get(key)) return;
-		try {
-			this.homey.settings.set(key, true);
-			await this.homey.notifications.createNotification({ excerpt: this.homey.__('name_based_api_notice') });
-		} catch (error) {
-			this.homey.error('Unable to deliver API migration notification', error);
-		}
-	}
-
-	async _notifyWidgetFeatures() {
+	async _notifyReleaseFeatures() {
 		const key = 'widgetFeaturesNotificationAttempted';
 		if (this.homey.settings.get(key)) return;
 		try {
 			this.homey.settings.set(key, true);
-			await this.homey.notifications.createNotification({ excerpt: this.homey.__('widget_features_notice') });
+			const excerpt = `${this.homey.__('widget_features_notice')}\n\n${this.homey.__('name_based_api_notice')}`;
+			await this.homey.notifications.createNotification({ excerpt });
 		} catch (error) {
-			this.homey.error('Unable to deliver widget features notification', error);
+			this.homey.error('Unable to deliver release notification', error);
 		}
 	}
 

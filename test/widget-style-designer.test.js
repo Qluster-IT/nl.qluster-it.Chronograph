@@ -510,6 +510,49 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(reloaded.useDefaultButtonText(), true);
 	});
 
+	it('saves hidden-element space reservations independently per size', () => {
+		const { scope, writes, editor } = loadSettings();
+		scope.createStyle(false);
+		const style = scope.getSelectedStyle();
+		scope.selectLayoutElement('duration');
+		assert.strictEqual(scope.reserveElementSpace(), false);
+		scope.reserveElementSpace(true);
+		scope.editor.previewSize = 'compact';
+		assert.strictEqual(scope.reserveElementSpace(), false);
+		scope.selectLayoutElement('progress');
+		scope.reserveElementSpace(true);
+		scope.saveSettings();
+		assert.strictEqual(editor.isValidCollection(writes[0].value), true);
+		const reloaded = loadSettings(writes[0].value).scope;
+		reloaded.editor.selectedStyleId = 'custom:' + style.id;
+		reloaded.selectLayoutElement('duration');
+		assert.strictEqual(reloaded.reserveElementSpace(), true);
+		reloaded.editor.previewSize = 'compact';
+		assert.strictEqual(reloaded.reserveElementSpace(), false);
+		reloaded.selectLayoutElement('progress');
+		assert.strictEqual(reloaded.reserveElementSpace(), true);
+		reloaded.getSelectedStyle().reservedElements.compact.progress = 'yes';
+		assert.strictEqual(editor.isValidCollection(reloaded.widgetStyles), false);
+	});
+
+	it('adds reservation defaults to older built-in preview snapshots without replacing edits', () => {
+		const { scope, writes } = loadSettings(null, null, null, true);
+		scope.editor.selectedStyleId = 'builtin:vertical';
+		scope.getSelectedStyle().name = 'Edited Vertical';
+		scope.saveSettings();
+		const saved = writes[0].value;
+		const vertical = saved.styles.find(style => style.id === 'builtin:vertical');
+		delete vertical.reservedElements;
+		const tiny = saved.styles.find(style => style.id === 'builtin:tiny');
+		tiny.reservedElements = { normal: { duration: false } };
+		const reloaded = loadSettings(null, null, null, true, saved).scope;
+		reloaded.editor.selectedStyleId = 'builtin:vertical';
+		assert.strictEqual(reloaded.getSelectedStyle().name, 'Edited Vertical');
+		assert.strictEqual(reloaded.getSelectedStyle().reservedElements.normal.progress, true);
+		reloaded.editor.selectedStyleId = 'builtin:tiny';
+		assert.strictEqual(reloaded.getSelectedStyle().reservedElements.normal.duration, false);
+	});
+
 	it('rejects invalid button text settings', () => {
 		const { scope, editor } = loadSettings();
 		scope.createStyle(false);

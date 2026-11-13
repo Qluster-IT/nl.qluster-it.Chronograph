@@ -14,8 +14,9 @@
 			ng-attr-data-alignment="{{ group.alignment }}"
 			ng-attr-data-vertical-alignment="{{ group.verticalAlignment }}"
 			ng-attr-data-direction="{{ group.direction }}">
-			<div class="chronograph-design-element" ng-repeat="element in group.elements track by element"
-				ng-class="'chronograph-design-element-' + element" ng-switch="element"
+			<div class="chronograph-design-element" ng-repeat="element in group.renderElements track by element"
+				ng-class="['chronograph-design-element-' + element, { 'chronograph-design-placeholder': group.placeholders.indexOf(element) !== -1 }]" ng-switch="element"
+				ng-attr-aria-hidden="{{ group.placeholders.indexOf(element) !== -1 ? 'true' : undefined }}"
 				ng-attr-style="--element-size: {{ designElementSize(element) }}px; color: {{ designElementStyle(element).color || 'inherit' }}">
 				<h2 ng-switch-when="name" class="chronograph-name">{{ getDisplayName(selectedChronograph) }}</h2>
 				<i ng-switch-when="icon" class="chronograph-icon" ng-if="iconClass" ng-class="iconClass" aria-hidden="true"></i>
@@ -25,8 +26,8 @@
 				<p ng-switch-when="status" class="chronograph-status">
 					{{ designLayer.state === 'running' ? labels.running : (designLayer.state === 'paused' ? labels.paused : labels.notRunning) }}
 				</p>
-				<p ng-switch-when="duration" class="chronograph-duration" aria-live="polite" ng-if="designLayer.state === 'running' || designLayer.state === 'paused'">
-					{{ formatDuration(selectedChronograph) }}
+				<p ng-switch-when="duration" class="chronograph-duration" aria-live="polite">
+					{{ group.placeholders.indexOf(element) !== -1 ? '00:00' : formatDuration(selectedChronograph) }}
 				</p>
 				<div ng-switch-when="fields" class="chronograph-fields chronograph-design-fields"
 					ng-style="{ 'grid-template-columns': 'repeat(' + designFieldLayout().columns + ', minmax(0, 1fr))' }">

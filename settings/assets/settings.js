@@ -261,6 +261,18 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		$scope.defaultElementSize = function () {
 			return sizeRuntime.defaultElementSize($scope.editor.previewSize, $scope.editor.selectedElement);
 		};
+		$scope.reserveElementSpace = function (value) {
+			var style = $scope.getSelectedStyle();
+			var size = $scope.editor.previewSize;
+			var element = $scope.editor.selectedElement;
+			if (!style || ['duration', 'progress'].indexOf(element) === -1) return false;
+			if (arguments.length && typeof value === 'boolean' && !$scope.savingSettings && !$scope.isDesignReadOnly()) {
+				if (!style.reservedElements) style.reservedElements = {};
+				if (!style.reservedElements[size]) style.reservedElements[size] = {};
+				style.reservedElements[size][element] = value;
+			}
+			return sizeRuntime.reserveElement(style, size, element);
+		};
 		$scope.overrideElementSize = function (value) {
 			var style = $scope.getSelectedStyle();
 			var element = $scope.editor.selectedElement;
@@ -749,7 +761,8 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				return Object.assign({}, row, {
 					alignment: 'top',
 					groups: row.groups.map(function (group) {
-						return Object.assign({}, group, { elements: group.elements.length ? group.elements : [''] });
+						var elements = group.elements.length ? group.elements : [''];
+						return Object.assign({}, group, { elements: elements, renderElements: elements });
 					})
 				});
 			});
@@ -792,7 +805,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			var fingerprint = angular.toJson([
 				style.id, style.groups[$scope.editor.previewSize], $scope.editor.previewSize,
 				state, $scope.editor.previewType, $scope.editor.editStatus,
-				style.rowVisibility, style.rowColumns, style.rowAlignments, style.rowTopPadding, style.columnSpans, style.columnRowSpans, style.columnAlignments, style.columnVerticalAlignments, style.columnDirections, style.columnWidths,
+				style.rowVisibility, style.rowColumns, style.rowAlignments, style.rowTopPadding, style.columnSpans, style.columnRowSpans, style.columnAlignments, style.columnVerticalAlignments, style.columnDirections, style.columnWidths, style.reservedElements,
 				$scope.getStartFieldsVisibility()
 			]);
 			if (groupedRowsCache[cacheKey] && groupedRowsCache[cacheKey].fingerprint === fingerprint) {
@@ -802,6 +815,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				? widgetStyleEditor.resolvedGroups(style, $scope.editor.previewSize, state)
 				: style.groups[$scope.editor.previewSize].elements;
 			var rows = $scope.layoutRows.map(function (row) {
+				var visible = !preview || $scope.isRowVisible(row, scenario);
 				var spans = widgetStyleEditor.columnSpans(style, $scope.editor.previewSize, row);
 				var alignments = widgetStyleEditor.columnAlignments(style, $scope.editor.previewSize, row);
 				var verticalAlignments = widgetStyleEditor.columnVerticalAlignments(style, $scope.editor.previewSize, row);
@@ -817,14 +831,21 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 					}).join(' '),
 					groups: $scope.layoutGroups.slice(0, widgetStyleEditor.rowColumns(style, $scope.editor.previewSize, row)).map(function (group) {
 						var elements = $scope.styleElements.filter(function (id) {
-							return layout[id].row === row && layout[id].group === group
+							return visible && layout[id].row === row && layout[id].group === group
 								&& (!preview || (!(scenario && scenario.excludeFields && id === 'fields') && $scope.previewVisible(id, state)));
 						}).sort(function (a, b) { return layout[a].order - layout[b].order || $scope.styleElements.indexOf(a) - $scope.styleElements.indexOf(b); });
-						return { id: group, span: spans[group - 1], rowSpan: rowSpans[group - 1], alignment: alignments[group - 1], verticalAlignment: verticalAlignments[group - 1], direction: directions[group - 1], width: widths[group - 1], elements: elements };
+						var placeholders = preview ? ['duration', 'progress'].filter(function (id) {
+							return layout[id].row === row && layout[id].group === group && elements.indexOf(id) === -1
+								&& sizeRuntime.reserveElement(style, $scope.editor.previewSize, id);
+						}) : [];
+						var renderElements = elements.concat(placeholders).sort(function (a, b) {
+							return layout[a].order - layout[b].order || $scope.styleElements.indexOf(a) - $scope.styleElements.indexOf(b);
+						});
+						return { id: group, span: spans[group - 1], rowSpan: rowSpans[group - 1], alignment: alignments[group - 1], verticalAlignment: verticalAlignments[group - 1], direction: directions[group - 1], width: widths[group - 1], elements: elements, placeholders: placeholders, renderElements: renderElements };
 					})
 				};
 			}).filter(function (row) {
-				return !preview || ($scope.isRowVisible(row.id, scenario) && row.groups.some(function (group) { return group.elements.length; }));
+				return !preview || row.groups.some(function (group) { return group.renderElements.length; });
 			});
 			rows.forEach(function (row) {
 				row.hasFields = row.groups.some(function (group) { return group.elements.indexOf('fields') !== -1; });
@@ -1606,7 +1627,11 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 								return;
 							}
 							value.styles.forEach(function (item) {
-								builtInDesigns[item.id] = angular.copy(item);
+								var design = angular.copy(item);
+								if (design.reservedElements === undefined && builtInDesigns[item.id].reservedElements) {
+									design.reservedElements = angular.copy(builtInDesigns[item.id].reservedElements);
+								}
+								builtInDesigns[item.id] = design;
 							});
 							value.colorSchemes.forEach(function (item) {
 								builtInSchemes[item.id] = angular.copy(item);

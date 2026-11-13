@@ -228,6 +228,7 @@
 	"style_size_override": "Nadpisz dla tego rozmiaru",
 	"style_size_current": "Rozmiar niestandardowy (px)",
 	"style_size_hint": "Rozmiar oznacza wielkość tekstu i ikon, wysokość przycisków i pól oraz grubość paska stanu. Wpisz wartość od 4 do 100 px.",
+	"style_reserve_hidden_space": "Zachowaj miejsce po ukryciu",
 	"style_size_invalid": "Wpisz liczbę całkowitą od 4 do 100.",
 	"settings_navigation": "Ustawienia Chronograph",
 	"widget_design_unavailable": "Wybrany projekt widżetu nie jest już dostępny.",

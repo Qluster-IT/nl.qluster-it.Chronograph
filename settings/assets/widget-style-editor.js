@@ -784,6 +784,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			|| !validInputFieldRows(style.inputFieldRows)
 			|| !validElementSizes(style.elementSizes)
 			|| !validButtonTexts(style.buttonTexts)
+			|| !validReservedElements(style.reservedElements)
 			|| (style.allowShrink !== undefined && typeof style.allowShrink !== 'boolean')
 			|| (style.wrapNarrowElements !== undefined && typeof style.wrapNarrowElements !== 'boolean')
 			|| !validProgressSettings(style)
@@ -875,6 +876,17 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 					&& Object.keys(texts).every(function (button) {
 						return buttonIds.indexOf(button) !== -1
 							&& (texts[button] === null || (typeof texts[button] === 'string' && texts[button].length <= 80));
+					});
+			}));
+	}
+
+	function validReservedElements(value) {
+		return value === undefined || (value && typeof value === 'object' && !Array.isArray(value)
+			&& Object.keys(value).every(function (size) {
+				var elements = value[size];
+				return sizes.indexOf(size) !== -1 && elements && typeof elements === 'object' && !Array.isArray(elements)
+					&& Object.keys(elements).every(function (element) {
+						return ['duration', 'progress'].indexOf(element) !== -1 && typeof elements[element] === 'boolean';
 					});
 			}));
 	}

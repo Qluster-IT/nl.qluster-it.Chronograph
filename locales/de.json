@@ -249,7 +249,8 @@
     "style_preview_columns_hint": "Die Vorschau zeigt eine Kachel über eine Spalte. Ihre Breite hängt vom verfügbaren Platz für die Vorschau ab.",
     "style_button_text": "Schaltflächentext",
     "style_button_text_default": "Standardtext verwenden",
-    "style_button_text_hint": "Der Standardtext wird übersetzt. Eigener Text ist in allen Sprachen gleich; leer lassen, um nur das Symbol anzuzeigen."
+    "style_button_text_hint": "Der Standardtext wird übersetzt. Eigener Text ist in allen Sprachen gleich; leer lassen, um nur das Symbol anzuzeigen.",
+    "style_reserve_hidden_space": "Platz beibehalten, wenn ausgeblendet"
   },
   "timer_not_running": "Timer __name__ läuft nicht.",
   "stopwatch_not_running": "Stopuhr __name__ läuft nicht.",

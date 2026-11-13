@@ -364,6 +364,10 @@
 								ng-model="overrideElementSize" ng-model-options="{ getterSetter: true, allowInvalid: true }" ng-disabled="savingSettings">
 							<p class="help-text style-progress-full-row">{{ t('settings.style_size_default').replace('__size__', defaultElementSize()) }}</p>
 							<p class="help-text style-progress-full-row">{{ t('settings.style_size_hint') }}</p>
+							<label class="hy-nostyle style-progress-full-row" ng-if="editor.selectedElement === 'duration' || editor.selectedElement === 'progress'">
+								<input class="hy-nostyle" type="checkbox" ng-model="reserveElementSpace" ng-model-options="{ getterSetter: true }"
+									ng-disabled="savingSettings || isDesignReadOnly()"> {{ t('settings.style_reserve_hidden_space') }}
+							</label>
 							<p class="help-text style-progress-full-row" role="alert" ng-if="editor.elementSizeForm.$invalid">{{ t('settings.style_size_invalid') }}</p>
 						</div>
 					</fieldset>
@@ -508,8 +512,9 @@
 					ng-attr-data-vertical-alignment="{{ group.verticalAlignment }}"
 					ng-attr-data-direction="{{ group.direction }}"
 					ng-attr-data-preview-group="{{ row.id }}:{{ group.id }}">
-					<span ng-repeat="element in group.elements track by element" class="style-widget-element"
-						ng-class="'style-widget-' + element"
+					<span ng-repeat="element in group.renderElements track by element" class="style-widget-element"
+						ng-class="['style-widget-' + element, { 'style-widget-placeholder': group.placeholders.indexOf(element) !== -1 }]"
+						ng-attr-aria-hidden="{{ group.placeholders.indexOf(element) !== -1 ? 'true' : undefined }}"
 						ng-attr-style="--element-size: {{ elementSize(element) }}px"
 						ng-attr-data-palette="{{ isButtonElement(element) ? previewColor(element) : 'default' }}"
 						ng-attr-data-foreground="{{ previewForeground(element) }}">

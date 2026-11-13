@@ -228,6 +228,7 @@
 	"style_size_override": "이 크기에 대해 재정의",
 	"style_size_current": "재정의 크기 (px)",
 	"style_size_hint": "텍스트와 아이콘은 글꼴 크기, 버튼과 필드는 높이, 상태 표시줄은 두께를 설정합니다. 4~100px 값을 입력하세요.",
+	"style_reserve_hidden_space": "숨겨져 있을 때 공간 유지",
 	"style_size_invalid": "4부터 100까지의 정수를 입력하세요.",
 	"settings_navigation": "Chronograph 설정",
 	"widget_design_unavailable": "선택한 위젯 디자인을 더 이상 사용할 수 없습니다.",

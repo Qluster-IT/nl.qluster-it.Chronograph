@@ -249,7 +249,8 @@
     "style_preview_columns_hint": "Forhåndsvisningen viser én flise, der fylder én kolonne. Bredden afhænger af den tilgængelige plads til forhåndsvisningen.",
     "style_button_text": "Knaptekst",
     "style_button_text_default": "Brug standardtekst",
-    "style_button_text_hint": "Standardteksten oversættes. Brugerdefineret tekst er ens på alle sprog; lad den være tom for kun at vise ikonet."
+    "style_button_text_hint": "Standardteksten oversættes. Brugerdefineret tekst er ens på alle sprog; lad den være tom for kun at vise ikonet.",
+    "style_reserve_hidden_space": "Bevar plads, når elementet er skjult"
   },
   "timer_not_running": "Timeren __name__ kører ikke.",
   "stopwatch_not_running": "Stopuret __name__ kører ikke.",

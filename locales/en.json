@@ -249,7 +249,8 @@
     "style_preview_columns_hint": "The preview shows one tile spanning one column. Its width depends on the available preview space.",
     "style_button_text": "Button text",
     "style_button_text_default": "Use default text",
-    "style_button_text_hint": "The default text is translated. Custom text is the same in every language; leave it empty to show only the icon."
+    "style_button_text_hint": "The default text is translated. Custom text is the same in every language; leave it empty to show only the icon.",
+    "style_reserve_hidden_space": "Reserve space when hidden"
   },
   "timer_not_running": "Timer __name__ is not running.",
   "stopwatch_not_running": "Stopwatch __name__ is not running.",

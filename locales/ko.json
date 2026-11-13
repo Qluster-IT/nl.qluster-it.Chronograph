@@ -249,7 +249,8 @@
     "style_preview_columns_hint": "미리보기에는 한 열을 차지하는 타일 하나가 표시됩니다. 너비는 미리보기에 사용할 수 있는 공간에 따라 달라집니다.",
     "style_button_text": "버튼 텍스트",
     "style_button_text_default": "기본 텍스트 사용",
-    "style_button_text_hint": "기본 텍스트는 번역됩니다. 사용자 지정 텍스트는 모든 언어에서 동일하며, 비워 두면 아이콘만 표시됩니다."
+    "style_button_text_hint": "기본 텍스트는 번역됩니다. 사용자 지정 텍스트는 모든 언어에서 동일하며, 비워 두면 아이콘만 표시됩니다.",
+    "style_reserve_hidden_space": "숨겨져 있을 때 공간 유지"
   },
   "timer_not_running": "타이머 __name__이(가) 실행 중이 아닙니다.",
   "stopwatch_not_running": "스톱워치 __name__이(가) 실행 중이 아닙니다.",

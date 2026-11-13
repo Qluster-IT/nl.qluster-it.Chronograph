@@ -228,6 +228,7 @@
 	"style_size_override": "Afwijkende waarde voor deze grootte",
 	"style_size_current": "Afwijkende grootte (px)",
 	"style_size_hint": "Tekst en pictogrammen gebruiken de lettergrootte; knoppen en velden de hoogte; de statusbalk de dikte. Voer een waarde van 4 tot 100 px in.",
+	"style_reserve_hidden_space": "Ruimte behouden wanneer verborgen",
 	"style_size_invalid": "Voer een geheel getal van 4 tot 100 in.",
 	"settings_navigation": "Chronograph-instellingen",
 	"widget_design_unavailable": "Het geselecteerde widgetontwerp is niet meer beschikbaar.",

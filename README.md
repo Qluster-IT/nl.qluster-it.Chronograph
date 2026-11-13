@@ -50,6 +50,8 @@ The designer can also preview one tile in a one-, two-, or three-column
 multi-widget; its width depends on the available preview space.
 Button text can be customized per design size. Default text is translated;
 custom text is shared across languages, and empty custom text shows only the icon.
+Duration and status bar elements can reserve space when hidden, separately for
+each design size.
 Press Ctrl+C in the terminal to stop the server. Set
 `CHRONOGRAPH_PREVIEW_PORT` before starting it to use another port.
 

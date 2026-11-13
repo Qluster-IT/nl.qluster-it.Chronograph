@@ -392,6 +392,11 @@ c){var e=a|0,f=c;void 0===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0=
 		return typeof value === 'string' ? value : element === 'start' ? defaultStartText : '';
 	}
 
+	function reserveElement(style, size, element) {
+		return !!(style && style.reservedElements && style.reservedElements[size]
+			&& style.reservedElements[size][element] === true);
+	}
+
 	function inputFieldRows(style, size, type) {
 		var fallback = type === 'transition' ? 2 : 1;
 		var max = type === 'transition' ? 5 : 2;
@@ -648,6 +653,7 @@ c){var e=a|0,f=c;void 0===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0=
 	function narrowDesign(design, tiny) {
 		design.wrapNarrowElements = true;
 		design.inputFieldRows = {};
+		design.reservedElements = {};
 		['compact', 'normal', 'large'].forEach(function (size) {
 			function position(row, group, order) { return { row: row, group: group, order: order }; }
 			design.groups[size] = { elements: {
@@ -674,6 +680,7 @@ c){var e=a|0,f=c;void 0===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0=
 				5: { states: ['running', 'paused'], actions: {}, startForm: false }
 			};
 			design.inputFieldRows[size] = { timer: 2, transition: 5 };
+			design.reservedElements[size] = { duration: true };
 			design.elementSizes.overrides[size] = {
 				icon: 16, name: size === 'large' ? 16 : 14, status: 12,
 				duration: size === 'large' ? 18 : size === 'normal' ? 16 : 14,
@@ -722,6 +729,8 @@ c){var e=a|0,f=c;void 0===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0=
 				positions.status = { row: 1, group: 1, order: 3 };
 				positions.duration = { row: 2, group: 1, order: 1 };
 				design.rowVisibility[size][2] = { states: ['paused', 'running'], actions: {}, startForm: false };
+				design.rowAlignments[size][4] = 'bottom';
+				design.columnVerticalAlignments[size][4][1] = 'bottom';
 			});
 		} else if (id === 'builtin:focus') {
 			design.elementSizes.overrides.compact.duration = 20;
@@ -729,6 +738,7 @@ c){var e=a|0,f=c;void 0===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0=
 			design.elementSizes.overrides.large.duration = 44;
 			['normal', 'large'].forEach(function (size) {
 				design.columnAlignments[size][3] = ['center', 'right'];
+				design.rowAlignments[size][4] = 'middle';
 			});
 		} else if (id === 'builtin:vertical') {
 			design.groups.compact = currentLayout('normal');
@@ -741,6 +751,7 @@ c){var e=a|0,f=c;void 0===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0=
 			design.rowVisibility.compact[4].hideAfterSeconds = 10;
 			design.groups.compact.elements.cancel = { row: 4, group: 2, order: 2 };
 			design.columnRowSpans = {};
+			design.reservedElements = {};
 			['compact', 'normal', 'large'].forEach(function (size) {
 				design.groups[size].elements.icon.group = 2;
 				design.groups[size].elements.name.group = 2;
@@ -752,7 +763,10 @@ c){var e=a|0,f=c;void 0===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0=
 				design.columnAlignments[size][1] = ['left', 'left'];
 				design.columnDirections[size][1] = ['horizontal', 'horizontal'];
 				design.columnVerticalAlignments[size][1] = ['middle', 'middle'];
+				design.columnVerticalAlignments[size][3] = ['middle', size === 'compact' ? 'top' : 'bottom'];
+				design.columnVerticalAlignments[size][4] = ['middle', size === 'compact' ? 'top' : 'bottom'];
 				design.columnRowSpans[size] = { 1: [5, 1] };
+				design.reservedElements[size] = { progress: true };
 				design.progressSettings[size].direction = 'bottom-top';
 			});
 		}
@@ -760,17 +774,38 @@ c){var e=a|0,f=c;void 0===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0=
 	}
 
 	var rowSpanCache = new WeakMap();
+	function hasGroupContent(group) {
+		return (group.renderElements || group.elements).length > 0;
+	}
+
 	function layoutSpanningRows(rows) {
 		var cached = rowSpanCache.get(rows);
 		if (cached) return cached;
+		var sourceRows = rows;
+		rows = rows.map(function (row) {
+			var groups = row.groups.filter(function (group) {
+				return !(group.rowSpan > 1) || hasGroupContent(group);
+			});
+			if (groups.length === row.groups.length) return row;
+			return Object.assign({}, row, {
+				groups: groups,
+				tracks: groups.map(function (group) {
+					return group.width === 'content' ? 'minmax(0, max-content)' : 'minmax(0, ' + group.span + 'fr)';
+				}).join(' ')
+			});
+		});
 		var spanning = rows.some(function (row) {
 			return row.groups.some(function (group) {
-				return group.rowSpan > 1 && group.elements.length && rows.some(function (other) {
+				return group.rowSpan > 1 && hasGroupContent(group) && rows.some(function (other) {
 					return other.id > row.id && other.id < row.id + group.rowSpan;
 				});
 			});
 		});
-		if (!spanning) return { rows: rows, spanning: false };
+		if (!spanning) {
+			var ordinary = { rows: rows.every(function (row, index) { return row === sourceRows[index]; }) ? sourceRows : rows, spanning: false };
+			rowSpanCache.set(sourceRows, ordinary);
+			return ordinary;
+		}
 		var rowTracks = [];
 		var rowLines = rows.map(function (row) {
 			if (row.alignment === 'middle' || row.alignment === 'bottom') rowTracks.push('minmax(0, 1fr)');
@@ -807,7 +842,7 @@ c){var e=a|0,f=c;void 0===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0=
 				remainingWidth -= width;
 				var weight = selection.reduce(function (sum, group) { return sum + group.span; }, 0);
 				var allSpanning = selection.every(function (group) {
-					return group.rowSpan > 1 && group.elements.length
+					return group.rowSpan > 1 && hasGroupContent(group)
 						&& rows.some(function (other) { return other.id > row.id && other.id < row.id + group.rowSpan; });
 				});
 				var scale = allSpanning ? 0.75 : 1;
@@ -819,7 +854,7 @@ c){var e=a|0,f=c;void 0===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0=
 					var endRow = row.id + (group.rowSpan || 1) - 1;
 					var last = rowIndex;
 					while (last + 1 < rows.length && rows[last + 1].id <= endRow) last++;
-					if (last > rowIndex && group.elements.length) {
+					if (last > rowIndex && hasGroupContent(group)) {
 						reservations.push({ start: start, endColumn: end, end: endRow });
 					}
 					placed.push(Object.assign({}, group, {
@@ -849,7 +884,7 @@ c){var e=a|0,f=c;void 0===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0=
 			var start = boundaries[index];
 			var content = result.some(function (row) {
 				return row.groups.some(function (group) {
-					return group.fitContent && group.elements.length && group.gridStart <= start && group.gridEnd >= end;
+					return group.fitContent && hasGroupContent(group) && group.gridStart <= start && group.gridEnd >= end;
 				});
 			});
 			return { content: content, weight: end - start };
@@ -863,7 +898,7 @@ c){var e=a|0,f=c;void 0===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0=
 			return 'minmax(0, ' + (track.weight / flexibleWeight) + 'fr)';
 		}).join(' ');
 		var layout = { rows: result, spanning: true, tracks: tracks, rowTracks: rowTracks.join(' ') };
-		rowSpanCache.set(rows, layout);
+		rowSpanCache.set(sourceRows, layout);
 		return layout;
 	}
 
@@ -915,7 +950,7 @@ c){var e=a|0,f=c;void 0===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0=
 		return [1, 2, 3, 4, 5].map(function (rowId) {
 			var rule = rowVisibility[rowId];
 			var visibleStates = rule && Array.isArray(rule.states) ? rule.states : [];
-			if (rule && visibleStates.indexOf(state) === -1 && !(state === 'starting' && rule.startForm)) return null;
+			var visible = !rule || visibleStates.indexOf(state) !== -1 || (state === 'starting' && rule.startForm);
 			var count = Number.isInteger(columns[rowId]) && columns[rowId] >= 1 && columns[rowId] <= 4 ? columns[rowId] : 4;
 			var rowSpans = spans[rowId] && spans[rowId].length === count
 				? spans[rowId] : Array.from({ length: count }, function () { return 1; });
@@ -927,10 +962,18 @@ c){var e=a|0,f=c;void 0===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0=
 				var groupId = groupIndex + 1;
 				var elements = elementIds.filter(function (id) {
 					var position = positions[id];
-					return !(excludeFields && id === 'fields')
+					return visible && !(excludeFields && id === 'fields')
 						&& position && position.row === rowId && position.group === groupId
 						&& isElementVisible(id, state, type, showForm, style, size);
 				}).sort(function (left, right) {
+					return positions[left].order - positions[right].order || elementIds.indexOf(left) - elementIds.indexOf(right);
+				});
+				var placeholders = ['duration', 'progress'].filter(function (id) {
+					var position = positions[id];
+					return reserveElement(style, size, id) && position && position.row === rowId && position.group === groupId
+						&& elements.indexOf(id) === -1;
+				});
+				var renderElements = elements.concat(placeholders).sort(function (left, right) {
 					return positions[left].order - positions[right].order || elementIds.indexOf(left) - elementIds.indexOf(right);
 				});
 				return {
@@ -945,11 +988,12 @@ c){var e=a|0,f=c;void 0===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0=
 					direction: rowDirections[groupIndex] || 'horizontal',
 					width: rowWidths[groupIndex] || 'span',
 					rowSpan: rowSpansByColumn[rowId] && rowSpansByColumn[rowId][groupIndex] || 1,
-					elements: elements
+					elements: elements,
+					placeholders: placeholders,
+					renderElements: renderElements
 				};
 			});
-			var visible = !rule || visibleStates.indexOf(state) !== -1 || (state === 'starting' && rule.startForm);
-			return visible && groups.some(function (group) { return group.elements.length; })
+			return groups.some(hasGroupContent)
 				? {
 					id: rowId,
 					alignment: style.rowAlignments && style.rowAlignments[size]
@@ -1034,6 +1078,7 @@ c){var e=a|0,f=c;void 0===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0=
 		migrateElementSizes: migrateElementSizes,
 		elementSize: elementSize,
 		buttonText: buttonText,
+		reserveElement: reserveElement,
 		inputFieldRows: inputFieldRows,
 		inputFieldLayout: inputFieldLayout,
 		buildRows: buildRows,
@@ -1964,5 +2009,5 @@ window.registerMultipleChronographsWidget = function (Homey) {
 
 ;
 angular.module('chronographWidget').run(['$templateCache', function ($templateCache) {
-	$templateCache.put('../../assets/templates/chronograph-widget-design.html', "<section class=\"chronograph-design\" ng-style=\"designBackgroundStyle()\" ng-attr-data-allow-shrink=\"{{ designAllowShrink() }}\">\n\t<div class=\"chronograph-design-layer\" ng-repeat=\"designLayer in designLayers track by designLayer.id\"\n\t\tng-class=\"designLayer.measure ? 'chronograph-design-layer-measure' : 'chronograph-design-layer-current'\"\n\t\tng-attr-data-row-spanning=\"{{ designLayer.spanning }}\"\n\t\tng-style=\"designLayer.spanning ? { 'grid-template-columns': designLayer.tracks, 'grid-template-rows': designLayer.rowTracks } : {}\"\n\t\tng-attr-aria-hidden=\"{{ designLayer.measure ? 'true' : undefined }}\" ng-attr-inert=\"{{ designLayer.measure ? '' : undefined }}\">\n\t<div class=\"chronograph-design-row\" ng-repeat=\"row in designLayer.rows track by row.id\"\n\t\tng-attr-data-row-alignment=\"{{ row.alignment }}\" ng-style=\"{ 'grid-template-columns': row.tracks, 'padding-top': row.topPadding + 'px' }\">\n\t\t<div class=\"chronograph-design-group\" ng-repeat=\"group in row.groups track by group.id\"\n\t\t\tng-class=\"{ 'chronograph-design-group-wrap': group.wrap, 'chronograph-design-group-narrow-start': group.narrowStart }\"\n\t\t\tng-style=\"designLayer.spanning ? { 'grid-column': group.gridColumn, 'grid-row': group.gridRow, 'padding-top': group.rowTopPadding + 'px' } : {}\"\n\t\t\tng-attr-data-row-span=\"{{ group.rowSpan }}\"\n\t\t\tng-attr-data-grid-last=\"{{ group.gridEnd >= 0.999999999 ? 'true' : undefined }}\"\n\t\t\tng-attr-data-alignment=\"{{ group.alignment }}\"\n\t\t\tng-attr-data-vertical-alignment=\"{{ group.verticalAlignment }}\"\n\t\t\tng-attr-data-direction=\"{{ group.direction }}\">\n\t\t\t<div class=\"chronograph-design-element\" ng-repeat=\"element in group.elements track by element\"\n\t\t\t\tng-class=\"'chronograph-design-element-' + element\" ng-switch=\"element\"\n\t\t\t\tng-attr-style=\"--element-size: {{ designElementSize(element) }}px; color: {{ designElementStyle(element).color || 'inherit' }}\">\n\t\t\t\t<h2 ng-switch-when=\"name\" class=\"chronograph-name\">{{ getDisplayName(selectedChronograph) }}</h2>\n\t\t\t\t<i ng-switch-when=\"icon\" class=\"chronograph-icon\" ng-if=\"iconClass\" ng-class=\"iconClass\" aria-hidden=\"true\"></i>\n\t\t\t\t<img ng-switch-when=\"icon\" class=\"chronograph-icon\" ng-if=\"iconImage && !iconMask\" ng-src=\"{{ iconImage }}\" alt=\"\" aria-hidden=\"true\">\n\t\t\t\t<span ng-switch-when=\"icon\" class=\"chronograph-icon chronograph-icon-mask\" ng-if=\"iconMask\"\n\t\t\t\t\tng-style=\"{ '-webkit-mask-image': iconMask, 'mask-image': iconMask }\" aria-hidden=\"true\"></span>\n\t\t\t\t<p ng-switch-when=\"status\" class=\"chronograph-status\">\n\t\t\t\t\t{{ designLayer.state === 'running' ? labels.running : (designLayer.state === 'paused' ? labels.paused : labels.notRunning) }}\n\t\t\t\t</p>\n\t\t\t\t<p ng-switch-when=\"duration\" class=\"chronograph-duration\" aria-live=\"polite\" ng-if=\"designLayer.state === 'running' || designLayer.state === 'paused'\">\n\t\t\t\t\t{{ formatDuration(selectedChronograph) }}\n\t\t\t\t</p>\n\t\t\t\t<div ng-switch-when=\"fields\" class=\"chronograph-fields chronograph-design-fields\"\n\t\t\t\t\tng-style=\"{ 'grid-template-columns': 'repeat(' + designFieldLayout().columns + ', minmax(0, 1fr))' }\">\n\t\t\t\t\t<div class=\"chronograph-duration-fields\" ng-if=\"!isStopwatch\">\n\t\t\t\t\t\t<div ng-style=\"designFieldLayout().positions[0]\">\n\t\t\t\t\t\t<label class=\"visually-hidden\" ng-attr-for=\"{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-duration' }}\">{{ labels.duration }}</label>\n\t\t\t\t\t\t<input class=\"form-control\" ng-attr-id=\"{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-duration' }}\" type=\"number\" min=\"1\" step=\"any\"\n\t\t\t\t\t\t\tng-model=\"startValues.time\" required>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div ng-style=\"designFieldLayout().positions[1]\">\n\t\t\t\t\t\t<label class=\"visually-hidden\" ng-attr-for=\"{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-duration-unit' }}\">{{ labels.unit }}</label>\n\t\t\t\t\t\t<select class=\"form-select\" ng-attr-id=\"{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-duration-unit' }}\" ng-model=\"startValues.unit\"\n\t\t\t\t\t\t\tng-options=\"unit.id as unit.label for unit in units\"></select>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"chronograph-transition-fields\" ng-if=\"isTransition\">\n\t\t\t\t\t\t<div ng-style=\"designFieldLayout().positions[2]\">\n\t\t\t\t\t\t\t<label class=\"visually-hidden\" ng-attr-for=\"{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-transition-from' }}\">{{ labels.from }}</label>\n\t\t\t\t\t\t\t<input class=\"form-control\" ng-attr-id=\"{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-transition-from' }}\" type=\"number\" step=\"any\"\n\t\t\t\t\t\t\t\tplaceholder=\"{{ labels.from }}\" ng-model=\"startValues.from\" required>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div ng-style=\"designFieldLayout().positions[3]\">\n\t\t\t\t\t\t\t<label class=\"visually-hidden\" ng-attr-for=\"{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-transition-to' }}\">{{ labels.to }}</label>\n\t\t\t\t\t\t\t<input class=\"form-control\" ng-attr-id=\"{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-transition-to' }}\" type=\"number\" step=\"any\"\n\t\t\t\t\t\t\t\tplaceholder=\"{{ labels.to }}\" ng-model=\"startValues.to\" required>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div ng-style=\"designFieldLayout().positions[4]\">\n\t\t\t\t\t\t\t<label class=\"visually-hidden\" ng-attr-for=\"{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-transition-steps' }}\">{{ labels.steps }}</label>\n\t\t\t\t\t\t\t<input class=\"form-control\" ng-attr-id=\"{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-transition-steps' }}\" type=\"number\" min=\"2\" step=\"1\"\n\t\t\t\t\t\t\t\tplaceholder=\"{{ labels.steps }}\" ng-model=\"startValues.steps\" required>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<div ng-switch-when=\"progress\" class=\"chronograph-design-progress\" role=\"progressbar\"\n\t\t\t\t\tng-attr-data-direction=\"{{ designProgressDirection() }}\"\n\t\t\t\t\tng-attr-aria-label=\"{{ labels.duration }}\" aria-valuemin=\"0\" aria-valuemax=\"100\"\n\t\t\t\t\tng-attr-aria-valuenow=\"{{ designProgressPercent() }}\"\n\t\t\t\t\tng-style=\"{ backgroundColor: designProgressBackground() }\">\n\t\t\t\t\t<span class=\"chronograph-design-progress-fill\" ng-style=\"designProgressFillStyle()\"></span>\n\t\t\t\t\t<span class=\"chronograph-design-progress-marker\" ng-repeat=\"marker in designProgressMarkers() track by $index\"\n\t\t\t\t\t\tng-style=\"designProgressMarkerStyle(marker)\"></span>\n\t\t\t\t</div>\n\t\t\t\t<button ng-switch-when=\"start\" class=\"chronograph-start-button\" type=\"button\" ng-click=\"start()\"\n\t\t\t\t\tng-disabled=\"busy\" ng-attr-data-button-color=\"{{ designButtonColor('start') }}\"\n\t\t\t\t\tng-class=\"{ 'chronograph-button-icon-only': !designButtonText('start') }\"\n\t\t\t\t\tng-attr-aria-label=\"{{ labels.start }}\" ng-style=\"designButtonStyle('start')\">\n\t\t\t\t\t<i class=\"fa-solid fa-play\" aria-hidden=\"true\"></i><span ng-if=\"designButtonText('start')\">{{ designButtonText('start') }}</span>\n\t\t\t\t</button>\n\t\t\t\t<button ng-switch-when=\"play\" class=\"chronograph-action\" type=\"button\"\n\t\t\t\t\tng-click=\"selectedChronograph.active ? toggle() : beginStart()\" ng-disabled=\"busy\"\n\t\t\t\t\tng-attr-data-button-color=\"{{ designButtonColor('play') }}\"\n\t\t\t\t\tng-class=\"{ 'chronograph-button-with-text': designButtonText('play') }\"\n\t\t\t\t\tng-attr-aria-label=\"{{ selectedChronograph.active ? labels.resume : labels.start }}\"\n\t\t\t\t\tng-style=\"designButtonStyle('play')\">\n\t\t\t\t\t<i class=\"fa-solid fa-play\" aria-hidden=\"true\"></i><span ng-if=\"designButtonText('play')\">{{ designButtonText('play') }}</span>\n\t\t\t\t</button>\n\t\t\t\t<button ng-switch-when=\"pause\" class=\"chronograph-action\" type=\"button\" ng-click=\"toggle()\"\n\t\t\t\t\tng-disabled=\"busy\" ng-attr-data-button-color=\"{{ designButtonColor('pause') }}\"\n\t\t\t\t\tng-class=\"{ 'chronograph-button-with-text': designButtonText('pause') }\"\n\t\t\t\t\tng-attr-aria-label=\"{{ labels.pause }}\" ng-style=\"designButtonStyle('pause')\">\n\t\t\t\t\t<i class=\"fa-solid fa-pause\" aria-hidden=\"true\"></i><span ng-if=\"designButtonText('pause')\">{{ designButtonText('pause') }}</span>\n\t\t\t\t</button>\n\t\t\t\t<button ng-switch-when=\"stop\" class=\"chronograph-action\" type=\"button\" ng-click=\"stop()\"\n\t\t\t\t\tng-disabled=\"busy\" ng-attr-data-button-color=\"{{ designButtonColor('stop') }}\"\n\t\t\t\t\tng-class=\"{ 'chronograph-button-with-text': designButtonText('stop') }\"\n\t\t\t\t\tng-attr-aria-label=\"{{ labels.stop }}\" ng-style=\"designButtonStyle('stop')\">\n\t\t\t\t\t<i class=\"fa-solid fa-stop\" aria-hidden=\"true\"></i><span ng-if=\"designButtonText('stop')\">{{ designButtonText('stop') }}</span>\n\t\t\t\t</button>\n\t\t\t\t<button ng-switch-when=\"cancel\" class=\"chronograph-cancel-button\" type=\"button\" ng-click=\"cancelStart()\"\n\t\t\t\t\tng-disabled=\"busy\" ng-attr-data-button-color=\"{{ designButtonColor('cancel') }}\"\n\t\t\t\t\tng-class=\"{ 'chronograph-button-with-text': designButtonText('cancel') }\"\n\t\t\t\t\tng-attr-aria-label=\"{{ labels.cancel }}\" ng-style=\"designButtonStyle('cancel')\">\n\t\t\t\t\t<i class=\"fa-solid fa-xmark\" aria-hidden=\"true\"></i><span ng-if=\"designButtonText('cancel')\">{{ designButtonText('cancel') }}</span>\n\t\t\t\t</button>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\t</div>\n</section>\n");
+	$templateCache.put('../../assets/templates/chronograph-widget-design.html', "<section class=\"chronograph-design\" ng-style=\"designBackgroundStyle()\" ng-attr-data-allow-shrink=\"{{ designAllowShrink() }}\">\n\t<div class=\"chronograph-design-layer\" ng-repeat=\"designLayer in designLayers track by designLayer.id\"\n\t\tng-class=\"designLayer.measure ? 'chronograph-design-layer-measure' : 'chronograph-design-layer-current'\"\n\t\tng-attr-data-row-spanning=\"{{ designLayer.spanning }}\"\n\t\tng-style=\"designLayer.spanning ? { 'grid-template-columns': designLayer.tracks, 'grid-template-rows': designLayer.rowTracks } : {}\"\n\t\tng-attr-aria-hidden=\"{{ designLayer.measure ? 'true' : undefined }}\" ng-attr-inert=\"{{ designLayer.measure ? '' : undefined }}\">\n\t<div class=\"chronograph-design-row\" ng-repeat=\"row in designLayer.rows track by row.id\"\n\t\tng-attr-data-row-alignment=\"{{ row.alignment }}\" ng-style=\"{ 'grid-template-columns': row.tracks, 'padding-top': row.topPadding + 'px' }\">\n\t\t<div class=\"chronograph-design-group\" ng-repeat=\"group in row.groups track by group.id\"\n\t\t\tng-class=\"{ 'chronograph-design-group-wrap': group.wrap, 'chronograph-design-group-narrow-start': group.narrowStart }\"\n\t\t\tng-style=\"designLayer.spanning ? { 'grid-column': group.gridColumn, 'grid-row': group.gridRow, 'padding-top': group.rowTopPadding + 'px' } : {}\"\n\t\t\tng-attr-data-row-span=\"{{ group.rowSpan }}\"\n\t\t\tng-attr-data-grid-last=\"{{ group.gridEnd >= 0.999999999 ? 'true' : undefined }}\"\n\t\t\tng-attr-data-alignment=\"{{ group.alignment }}\"\n\t\t\tng-attr-data-vertical-alignment=\"{{ group.verticalAlignment }}\"\n\t\t\tng-attr-data-direction=\"{{ group.direction }}\">\n\t\t\t<div class=\"chronograph-design-element\" ng-repeat=\"element in group.renderElements track by element\"\n\t\t\t\tng-class=\"['chronograph-design-element-' + element, { 'chronograph-design-placeholder': group.placeholders.indexOf(element) !== -1 }]\" ng-switch=\"element\"\n\t\t\t\tng-attr-aria-hidden=\"{{ group.placeholders.indexOf(element) !== -1 ? 'true' : undefined }}\"\n\t\t\t\tng-attr-style=\"--element-size: {{ designElementSize(element) }}px; color: {{ designElementStyle(element).color || 'inherit' }}\">\n\t\t\t\t<h2 ng-switch-when=\"name\" class=\"chronograph-name\">{{ getDisplayName(selectedChronograph) }}</h2>\n\t\t\t\t<i ng-switch-when=\"icon\" class=\"chronograph-icon\" ng-if=\"iconClass\" ng-class=\"iconClass\" aria-hidden=\"true\"></i>\n\t\t\t\t<img ng-switch-when=\"icon\" class=\"chronograph-icon\" ng-if=\"iconImage && !iconMask\" ng-src=\"{{ iconImage }}\" alt=\"\" aria-hidden=\"true\">\n\t\t\t\t<span ng-switch-when=\"icon\" class=\"chronograph-icon chronograph-icon-mask\" ng-if=\"iconMask\"\n\t\t\t\t\tng-style=\"{ '-webkit-mask-image': iconMask, 'mask-image': iconMask }\" aria-hidden=\"true\"></span>\n\t\t\t\t<p ng-switch-when=\"status\" class=\"chronograph-status\">\n\t\t\t\t\t{{ designLayer.state === 'running' ? labels.running : (designLayer.state === 'paused' ? labels.paused : labels.notRunning) }}\n\t\t\t\t</p>\n\t\t\t\t<p ng-switch-when=\"duration\" class=\"chronograph-duration\" aria-live=\"polite\">\n\t\t\t\t\t{{ group.placeholders.indexOf(element) !== -1 ? '00:00' : formatDuration(selectedChronograph) }}\n\t\t\t\t</p>\n\t\t\t\t<div ng-switch-when=\"fields\" class=\"chronograph-fields chronograph-design-fields\"\n\t\t\t\t\tng-style=\"{ 'grid-template-columns': 'repeat(' + designFieldLayout().columns + ', minmax(0, 1fr))' }\">\n\t\t\t\t\t<div class=\"chronograph-duration-fields\" ng-if=\"!isStopwatch\">\n\t\t\t\t\t\t<div ng-style=\"designFieldLayout().positions[0]\">\n\t\t\t\t\t\t<label class=\"visually-hidden\" ng-attr-for=\"{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-duration' }}\">{{ labels.duration }}</label>\n\t\t\t\t\t\t<input class=\"form-control\" ng-attr-id=\"{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-duration' }}\" type=\"number\" min=\"1\" step=\"any\"\n\t\t\t\t\t\t\tng-model=\"startValues.time\" required>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div ng-style=\"designFieldLayout().positions[1]\">\n\t\t\t\t\t\t<label class=\"visually-hidden\" ng-attr-for=\"{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-duration-unit' }}\">{{ labels.unit }}</label>\n\t\t\t\t\t\t<select class=\"form-select\" ng-attr-id=\"{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-duration-unit' }}\" ng-model=\"startValues.unit\"\n\t\t\t\t\t\t\tng-options=\"unit.id as unit.label for unit in units\"></select>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"chronograph-transition-fields\" ng-if=\"isTransition\">\n\t\t\t\t\t\t<div ng-style=\"designFieldLayout().positions[2]\">\n\t\t\t\t\t\t\t<label class=\"visually-hidden\" ng-attr-for=\"{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-transition-from' }}\">{{ labels.from }}</label>\n\t\t\t\t\t\t\t<input class=\"form-control\" ng-attr-id=\"{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-transition-from' }}\" type=\"number\" step=\"any\"\n\t\t\t\t\t\t\t\tplaceholder=\"{{ labels.from }}\" ng-model=\"startValues.from\" required>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div ng-style=\"designFieldLayout().positions[3]\">\n\t\t\t\t\t\t\t<label class=\"visually-hidden\" ng-attr-for=\"{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-transition-to' }}\">{{ labels.to }}</label>\n\t\t\t\t\t\t\t<input class=\"form-control\" ng-attr-id=\"{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-transition-to' }}\" type=\"number\" step=\"any\"\n\t\t\t\t\t\t\t\tplaceholder=\"{{ labels.to }}\" ng-model=\"startValues.to\" required>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div ng-style=\"designFieldLayout().positions[4]\">\n\t\t\t\t\t\t\t<label class=\"visually-hidden\" ng-attr-for=\"{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-transition-steps' }}\">{{ labels.steps }}</label>\n\t\t\t\t\t\t\t<input class=\"form-control\" ng-attr-id=\"{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-transition-steps' }}\" type=\"number\" min=\"2\" step=\"1\"\n\t\t\t\t\t\t\t\tplaceholder=\"{{ labels.steps }}\" ng-model=\"startValues.steps\" required>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<div ng-switch-when=\"progress\" class=\"chronograph-design-progress\" role=\"progressbar\"\n\t\t\t\t\tng-attr-data-direction=\"{{ designProgressDirection() }}\"\n\t\t\t\t\tng-attr-aria-label=\"{{ labels.duration }}\" aria-valuemin=\"0\" aria-valuemax=\"100\"\n\t\t\t\t\tng-attr-aria-valuenow=\"{{ designProgressPercent() }}\"\n\t\t\t\t\tng-style=\"{ backgroundColor: designProgressBackground() }\">\n\t\t\t\t\t<span class=\"chronograph-design-progress-fill\" ng-style=\"designProgressFillStyle()\"></span>\n\t\t\t\t\t<span class=\"chronograph-design-progress-marker\" ng-repeat=\"marker in designProgressMarkers() track by $index\"\n\t\t\t\t\t\tng-style=\"designProgressMarkerStyle(marker)\"></span>\n\t\t\t\t</div>\n\t\t\t\t<button ng-switch-when=\"start\" class=\"chronograph-start-button\" type=\"button\" ng-click=\"start()\"\n\t\t\t\t\tng-disabled=\"busy\" ng-attr-data-button-color=\"{{ designButtonColor('start') }}\"\n\t\t\t\t\tng-class=\"{ 'chronograph-button-icon-only': !designButtonText('start') }\"\n\t\t\t\t\tng-attr-aria-label=\"{{ labels.start }}\" ng-style=\"designButtonStyle('start')\">\n\t\t\t\t\t<i class=\"fa-solid fa-play\" aria-hidden=\"true\"></i><span ng-if=\"designButtonText('start')\">{{ designButtonText('start') }}</span>\n\t\t\t\t</button>\n\t\t\t\t<button ng-switch-when=\"play\" class=\"chronograph-action\" type=\"button\"\n\t\t\t\t\tng-click=\"selectedChronograph.active ? toggle() : beginStart()\" ng-disabled=\"busy\"\n\t\t\t\t\tng-attr-data-button-color=\"{{ designButtonColor('play') }}\"\n\t\t\t\t\tng-class=\"{ 'chronograph-button-with-text': designButtonText('play') }\"\n\t\t\t\t\tng-attr-aria-label=\"{{ selectedChronograph.active ? labels.resume : labels.start }}\"\n\t\t\t\t\tng-style=\"designButtonStyle('play')\">\n\t\t\t\t\t<i class=\"fa-solid fa-play\" aria-hidden=\"true\"></i><span ng-if=\"designButtonText('play')\">{{ designButtonText('play') }}</span>\n\t\t\t\t</button>\n\t\t\t\t<button ng-switch-when=\"pause\" class=\"chronograph-action\" type=\"button\" ng-click=\"toggle()\"\n\t\t\t\t\tng-disabled=\"busy\" ng-attr-data-button-color=\"{{ designButtonColor('pause') }}\"\n\t\t\t\t\tng-class=\"{ 'chronograph-button-with-text': designButtonText('pause') }\"\n\t\t\t\t\tng-attr-aria-label=\"{{ labels.pause }}\" ng-style=\"designButtonStyle('pause')\">\n\t\t\t\t\t<i class=\"fa-solid fa-pause\" aria-hidden=\"true\"></i><span ng-if=\"designButtonText('pause')\">{{ designButtonText('pause') }}</span>\n\t\t\t\t</button>\n\t\t\t\t<button ng-switch-when=\"stop\" class=\"chronograph-action\" type=\"button\" ng-click=\"stop()\"\n\t\t\t\t\tng-disabled=\"busy\" ng-attr-data-button-color=\"{{ designButtonColor('stop') }}\"\n\t\t\t\t\tng-class=\"{ 'chronograph-button-with-text': designButtonText('stop') }\"\n\t\t\t\t\tng-attr-aria-label=\"{{ labels.stop }}\" ng-style=\"designButtonStyle('stop')\">\n\t\t\t\t\t<i class=\"fa-solid fa-stop\" aria-hidden=\"true\"></i><span ng-if=\"designButtonText('stop')\">{{ designButtonText('stop') }}</span>\n\t\t\t\t</button>\n\t\t\t\t<button ng-switch-when=\"cancel\" class=\"chronograph-cancel-button\" type=\"button\" ng-click=\"cancelStart()\"\n\t\t\t\t\tng-disabled=\"busy\" ng-attr-data-button-color=\"{{ designButtonColor('cancel') }}\"\n\t\t\t\t\tng-class=\"{ 'chronograph-button-with-text': designButtonText('cancel') }\"\n\t\t\t\t\tng-attr-aria-label=\"{{ labels.cancel }}\" ng-style=\"designButtonStyle('cancel')\">\n\t\t\t\t\t<i class=\"fa-solid fa-xmark\" aria-hidden=\"true\"></i><span ng-if=\"designButtonText('cancel')\">{{ designButtonText('cancel') }}</span>\n\t\t\t\t</button>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\t</div>\n</section>\n");
 }]);

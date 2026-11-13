@@ -228,6 +228,7 @@
 	"style_size_override": "Override for this size",
 	"style_size_current": "Size override (px)",
 	"style_size_hint": "Text and icon sizes use font size; buttons and fields use height; the status bar uses thickness. Enter a value from 4 to 100 px.",
+	"style_reserve_hidden_space": "Reserve space when hidden",
 	"style_size_invalid": "Enter a whole number from 4 to 100.",
 	"settings_navigation": "Chronograph settings",
 	"widget_design_unavailable": "The selected widget design is no longer available.",
