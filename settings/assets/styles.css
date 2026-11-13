@@ -211,9 +211,30 @@ body {
 
 .settings-savebar {
 	flex: 0 0 auto;
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
 	padding: 0;
 	margin: 0;
 	background: transparent;
+}
+
+.settings-history-button.btn {
+	min-width: 0;
+	border: 0;
+	border-radius: 0;
+	color: var(--chronograph-primary);
+	background: rgba(128, 128, 128, 0.12);
+	overflow-wrap: anywhere;
+}
+
+.settings-history-button:disabled {
+	color: var(--homey-text-color-light, #8b8d95);
+	opacity: 1;
+}
+
+.settings-history-button:focus-visible {
+	outline: 2px solid var(--chronograph-primary);
+	outline-offset: -2px;
 }
 
 .settings-save-button.btn {
@@ -223,6 +244,7 @@ body {
 	--bs-btn-active-border-color: transparent;
 	display: block;
 	width: 100%;
+	min-width: 0;
 	margin: 0;
 	border-radius: 0;
 	border: 0 !important;
@@ -232,6 +254,7 @@ body {
 	opacity: 1;
 	box-shadow: none;
 	transition: none;
+	overflow-wrap: anywhere;
 }
 
 .settings-save-button.is-dirty,
@@ -345,10 +368,14 @@ body {
 	min-width: 0;
 }
 
-.style-preview-empty-column {
-	min-width: 0;
-	border: 1px dashed rgba(128, 128, 128, 0.35);
-	border-radius: 8px;
+.style-preview-tile-controls {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.style-preview-tile-controls label {
+	flex: 1 1 8rem;
 }
 
 .style-preview {

@@ -31,6 +31,9 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		var designerRowLayouts = new WeakMap();
 		var colorOptionsCache = {};
 		var startFormTimer;
+		var editHistory;
+		var editHistories = {};
+		var confirmingSwitch = false;
 		var Homey;
 		chronographSettingsScope = $scope;
 
@@ -53,6 +56,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			previewSize: 'normal',
 			previewState: 'running',
 			previewColumns: 'single',
+			copyLayoutFrom: 'compact',
 			editStatus: false,
 			selectedCell: null,
 			selectedElement: 'name',
@@ -66,6 +70,10 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			previewValues: { time: 1, unit: 'seconds', from: null, to: null, steps: null }
 		};
 		$scope.layoutRows = [1, 2, 3, 4, 5];
+		$scope.previewTiles = [{ type: 'timer' }, { type: 'stopwatch' }, { type: 'transition' }];
+		$scope.visiblePreviewTiles = function () {
+			return $scope.editor.previewColumns === 'single' ? [null] : $scope.previewTiles;
+		};
 		$scope.positionRows = [0, 1, 2, 3, 4, 5];
 		$scope.layoutGroups = [1, 2, 3, 4];
 		$scope.layoutOrders = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
@@ -104,6 +112,13 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				|| (stylesLoaded && (migrationPending || !angular.equals($scope.widgetStyles, savedStyles)))
 				|| (previewBuiltInsLoaded && !angular.equals(previewBuiltIns(), savedPreviewBuiltIns));
 		};
+		function warnBeforeLeaving(event) {
+			if (!$scope.isDirty()) return;
+			event.preventDefault();
+			event.returnValue = '';
+			return '';
+		}
+		if (window.addEventListener) window.addEventListener('beforeunload', warnBeforeLeaving);
 
 		function previewBuiltIns() {
 			return {
@@ -165,20 +180,129 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		$scope.getEditingItem = function () {
 			return $scope.editor.mode === 'color' ? $scope.getSelectedScheme() : $scope.getSelectedStyle();
 		};
+		function editingKey() {
+			return $scope.editor.mode + ':' + ($scope.editor.mode === 'color'
+				? $scope.editor.selectedSchemeId : $scope.editor.selectedStyleId);
+		}
+		function captureEditHistory() {
+			var item = $scope.getEditingItem();
+			if (!item) { editHistory = null; return; }
+			var key = editingKey();
+			if (!editHistory || editHistory.key !== key) {
+				editHistory = editHistories[key];
+				if (!editHistory) editHistory = editHistories[key] = { key: key, entries: [angular.copy(item)], index: 0 };
+			}
+			if (!angular.equals(item, editHistory.entries[editHistory.index])) {
+				editHistory.entries.splice(editHistory.index + 1);
+				editHistory.entries.push(angular.copy(item));
+				editHistory.index++;
+			}
+		}
+		$scope.$watch(function () { return [editingKey(), $scope.getEditingItem()]; }, captureEditHistory, true);
+		$scope.canUndoEdit = function () {
+			return !!editHistory && editHistory.key === editingKey() && editHistory.index > 0;
+		};
+		$scope.canRedoEdit = function () {
+			return !!editHistory && editHistory.key === editingKey() && editHistory.index < editHistory.entries.length - 1;
+		};
+		function replaceItem(item, value) {
+			Object.keys(item).forEach(function (key) { delete item[key]; });
+			Object.assign(item, angular.copy(value));
+		}
+		function refreshEditedItem() {
+			$scope.editor.selectedRow = null;
+			$scope.editor.selectedColumn = null;
+			$scope.editor.rowRule = null;
+			$scope.editor.selectedCell = null;
+			$scope.editor.invalidRowRule = false;
+			sizeDraft = undefined;
+			$scope.refreshLayoutElement();
+			refreshColorControls();
+			$scope.resetRowPreview();
+		}
+		$scope.undoEdit = function () {
+			if ($scope.savingSettings || !$scope.canUndoEdit() || !canChangeSelection()) return;
+			replaceItem($scope.getEditingItem(), editHistory.entries[--editHistory.index]);
+			refreshEditedItem();
+		};
+		$scope.redoEdit = function () {
+			if ($scope.savingSettings || !$scope.canRedoEdit() || !canChangeSelection()) return;
+			replaceItem($scope.getEditingItem(), editHistory.entries[++editHistory.index]);
+			refreshEditedItem();
+		};
+		function savedEditingItem(item, colorMode) {
+			var collection = colorMode ? 'colorSchemes' : 'styles';
+			if ($scope.isBuiltInStyle()) {
+				return savedPreviewBuiltIns && savedPreviewBuiltIns[collection].find(function (saved) { return saved.id === item.id; });
+			}
+			return savedStyles[collection].find(function (saved) { return saved.id === item.id; });
+		}
+		function leaveEditingItem(next) {
+			if (confirmingSwitch || $scope.savingSettings || !canChangeSelection()) return;
+			var item = $scope.getEditingItem();
+			var colorMode = $scope.editor.mode === 'color';
+			var currentKey = editingKey();
+			var saved = item && savedEditingItem(item, colorMode);
+			var current = item && (!colorMode && $scope.isBuiltInStyle() ? widgetStyleEditor.designFromStyle(item) : item);
+			if (!item || saved && angular.equals(current, saved) || $scope.isBuiltInStyle() && !previewBuiltInsLoaded) {
+				editHistory = null;
+				next();
+				return;
+			}
+			confirmingSwitch = true;
+			Homey.confirm(Homey.__('settings.style_discard_switch_confirm').replace('__name__', item.name), 'warning', function (error, confirmed) {
+				$scope.$applyAsync(function () {
+					confirmingSwitch = false;
+					if (error) { showError(error); return; }
+					if (!confirmed || $scope.savingSettings || $scope.getEditingItem() !== item) return;
+					if (saved) replaceItem(item, saved);
+					else {
+						var items = colorMode ? $scope.widgetStyles.colorSchemes : $scope.widgetStyles.styles;
+						var index = items.indexOf(item);
+						if (index !== -1) items.splice(index, 1);
+						if (colorMode) $scope.editor.selectedSchemeId = 'builtin:current';
+						else $scope.editor.selectedStyleId = 'builtin:current';
+					}
+					delete editHistories[currentKey];
+					editHistory = null;
+					next();
+					refreshEditedItem();
+				});
+			});
+		}
+		$scope.selectEditingStyle = function (id) {
+			if (!arguments.length) return $scope.editor.selectedStyleId;
+			if (id === $scope.editor.selectedStyleId) return id;
+			leaveEditingItem(function () {
+				$scope.editor.selectedStyleId = id;
+				$scope.editor.selectedCell = null;
+				$scope.refreshLayoutElement();
+			});
+			return $scope.editor.selectedStyleId;
+		};
+		$scope.selectEditingScheme = function (id) {
+			if (!arguments.length) return $scope.editor.selectedSchemeId;
+			if (id === $scope.editor.selectedSchemeId) return id;
+			leaveEditingItem(function () { $scope.editor.selectedSchemeId = id; });
+			return $scope.editor.selectedSchemeId;
+		};
 		$scope.selectEditorMode = function (mode) {
 			if (mode !== 'design' && mode !== 'color') return;
+			if (mode === $scope.editor.mode) return;
 			if ($scope.editor.rowPaddingForm && $scope.editor.rowPaddingForm.$invalid) { Homey.alert(Homey.__('settings.style_row_padding_invalid')); return; }
 			if ($scope.editor.elementSizeForm && $scope.editor.elementSizeForm.$invalid) { Homey.alert(Homey.__('settings.style_size_invalid')); return; }
 			if ($scope.editor.invalidRowRule) { Homey.alert(Homey.__('settings.style_row_invalid')); return; }
-			if (!$scope.getSelectedStyle()) $scope.editor.selectedStyleId = 'builtin:current';
-			$scope.editor.mode = mode;
-			$scope.editor.selectedRow = null;
-			$scope.editor.selectedColumn = null;
-			$scope.editor.selectedCell = null;
-			$scope.editor.rowRule = null;
-			if (mode === 'color' && !$scope.editor.selectedBackground && !$scope.editor.selectedElement) {
-				$scope.editor.selectedElement = 'name';
-			}
+			leaveEditingItem(function () {
+				if (!$scope.getSelectedStyle()) $scope.editor.selectedStyleId = 'builtin:current';
+				$scope.editor.mode = mode;
+				$scope.editor.selectedRow = null;
+				$scope.editor.selectedColumn = null;
+				$scope.editor.selectedCell = null;
+				$scope.editor.rowRule = null;
+				if (mode === 'color' && !$scope.editor.selectedBackground && !$scope.editor.selectedElement) {
+					$scope.editor.selectedElement = 'name';
+				}
+			});
 		};
 
 		$scope.heightMode = function (mode) {
@@ -214,13 +338,49 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		$scope.transitionInputFieldRows = function (value) {
 			return arguments.length ? $scope.inputFieldRows('transition', value) : $scope.inputFieldRows('transition');
 		};
-		$scope.previewFieldLayout = function () {
-			return sizeRuntime.inputFieldLayout($scope.getSelectedStyle(), $scope.editor.previewSize, $scope.editor.previewType);
+		$scope.previewFieldLayout = function (type) {
+			return sizeRuntime.inputFieldLayout($scope.getSelectedStyle(), $scope.editor.previewSize, type || $scope.editor.previewType);
 		};
 		$scope.allowDesignShrink = function (value) {
 			var style = $scope.getSelectedStyle();
 			if (arguments.length && style && !$scope.savingSettings && !$scope.isDesignReadOnly()) style.allowShrink = value;
 			return !style || style.allowShrink !== false;
+		};
+		$scope.copySizeLayout = function () {
+			var style = $scope.getSelectedStyle();
+			var source = $scope.editor.copyLayoutFrom;
+			var destination = $scope.editor.previewSize;
+			if (!style || $scope.isDesignReadOnly() || $scope.savingSettings
+				|| ['compact', 'normal', 'large'].indexOf(source) === -1 || source === destination) return;
+			Homey.confirm(Homey.__('settings.style_copy_size_confirm')
+				.replace('__source__', Homey.__('settings.style_' + source))
+				.replace('__destination__', Homey.__('settings.style_' + destination)), 'warning', function (error, confirmed) {
+				$scope.$applyAsync(function () {
+					if (error) { showError(error); return; }
+					if (!confirmed || $scope.savingSettings || $scope.editor.mode !== 'design' || $scope.getSelectedStyle() !== style
+						|| $scope.editor.previewSize !== destination) return;
+					var startVisibility = widgetStyleEditor.startFieldsVisibility(style, source);
+					['layouts', 'overrides', 'groups', 'rowVisibility', 'rowColumns', 'rowAlignments', 'rowTopPadding',
+						'columnSpans', 'columnRowSpans', 'columnWidths', 'columnAlignments',
+						'columnVerticalAlignments', 'columnDirections'].forEach(function (key) {
+						if (style[key] && style[key][source] !== undefined) {
+							style[key][destination] = angular.copy(style[key][source]);
+						} else if (style[key]) {
+							delete style[key][destination];
+						}
+					});
+					if (!style.startFieldsVisibility) {
+						style.startFieldsVisibility = { compact: 'play', normal: 'inactive', large: 'inactive' };
+					}
+					style.startFieldsVisibility[destination] = startVisibility;
+					$scope.editor.selectedRow = null;
+					$scope.editor.selectedColumn = null;
+					$scope.editor.rowRule = null;
+					$scope.editor.selectedCell = null;
+					$scope.refreshLayoutElement();
+					$scope.resetRowPreview();
+				});
+			});
 		};
 		$scope.buttonText = function (element) {
 			return sizeRuntime.buttonText($scope.getSelectedStyle(), $scope.editor.previewSize, element, Homey.__('settings.widget_start'));
@@ -317,9 +477,9 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				return arguments.length ? $scope.progressSetting(key, value) : $scope.progressSetting(key);
 			};
 		});
-		$scope.progressPercent = function (state) {
+		$scope.progressPercent = function (state, type) {
 			var elapsed = state === 'running' || state === 'paused' ? 25 : 0;
-			return $scope.editor.previewType === 'timer' && $scope.progressSetting('timerMode') === 'remaining' ? 100 - elapsed : elapsed;
+			return (type || $scope.editor.previewType) === 'timer' && $scope.progressSetting('timerMode') === 'remaining' ? 100 - elapsed : elapsed;
 		};
 		$scope.progressMarkers = function () {
 			var steps = $scope.editor.previewValues.steps;
@@ -360,7 +520,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			$scope.resetRowPreview();
 		});
 
-		$scope.$watchGroup(['editor.selectedSchemeId', 'editor.previewState'], function () {
+		function refreshColorControls() {
 			var style = $scope.getSelectedScheme();
 			if (style && $scope.editor.previewState === 'inactive') {
 				$scope.editor.colorValues = {};
@@ -380,11 +540,12 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 					? widgetStyleEditor.resolveForeground(style, 'inactive', key)
 					: style ? widgetStyleEditor.foregroundOverride(style, $scope.editor.previewState, key) : 'inherit';
 			});
-		});
+		}
+		$scope.$watchGroup(['editor.selectedSchemeId', 'editor.previewState'], refreshColorControls);
 
-		$scope.previewColor = function (key, inheritedOnly) {
+		$scope.previewColor = function (key, inheritedOnly, state) {
 			var style = $scope.getSelectedScheme();
-			return style ? widgetStyleEditor.resolveColor(style, $scope.editor.previewState, key, inheritedOnly) : undefined;
+			return style ? widgetStyleEditor.resolveColor(style, state || $scope.editor.previewState, key, inheritedOnly) : undefined;
 		};
 
 		$scope.updateColorOverride = function (key) {
@@ -420,9 +581,9 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			return values;
 		};
 
-		$scope.previewForeground = function (key, inheritedOnly) {
+		$scope.previewForeground = function (key, inheritedOnly, state) {
 			var style = $scope.getSelectedScheme();
-			return style ? widgetStyleEditor.resolveForeground(style, $scope.editor.previewState, key, inheritedOnly) : 'default';
+			return style ? widgetStyleEditor.resolveForeground(style, state || $scope.editor.previewState, key, inheritedOnly) : 'default';
 		};
 
 		$scope.updateForeground = function (key) {
@@ -482,32 +643,151 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			var items = colorMode ? $scope.widgetStyles.colorSchemes : $scope.widgetStyles.styles;
 			var source = $scope.getEditingItem();
 			if (copy && !source) return;
-			var prefix = copy ? source.name + ' - ' + $scope.labels.copy
-				: colorMode ? Homey.__('settings.style_new_scheme') : $scope.labels.newStyle;
-			var name = prefix;
-			var number = 2;
-			while (items.some(function (style) { return style.name === name; })) {
-				name = prefix + ' ' + number++;
+			var sourceCopy = copy ? angular.copy(source) : null;
+			leaveEditingItem(function () {
+				var prefix = copy ? sourceCopy.name + ' - ' + $scope.labels.copy
+					: colorMode ? Homey.__('settings.style_new_scheme') : $scope.labels.newStyle;
+				var name = prefix;
+				var number = 2;
+				while (items.some(function (style) { return style.name === name; })) {
+					name = prefix + ' ' + number++;
+				}
+				var id = widgetStyleEditor.newId(items);
+				var style = copy ? sourceCopy : colorMode
+					? widgetStyleEditor.colorSchemeFromStyle(widgetStyleEditor.create(id, name))
+					: widgetStyleEditor.create(id, name);
+				if (!copy && !colorMode) {
+					style.groups = widgetStyleEditor.currentGroups();
+					style.rowVisibility = widgetStyleEditor.currentRowVisibility();
+					widgetStyleEditor.configureCurrentColumns(style);
+					widgetStyleEditor.configureCurrentPresentation(style);
+				}
+				if (!colorMode) style = widgetStyleEditor.designFromStyle(style);
+				if (!colorMode) normalizeDesignSpans(style);
+				style.id = id;
+				style.name = name;
+				items.push(style);
+				if (colorMode) $scope.editor.selectedSchemeId = 'custom:' + id;
+				else $scope.editor.selectedStyleId = 'custom:' + id;
+				$scope.editor.selectedCell = null;
+				$scope.refreshLayoutElement();
+			});
+		};
+
+		function validStyleTransfer(value) {
+			if (!value || value.format !== 'chronograph-widget-style' || value.version !== 1
+				|| (value.type !== 'design' && value.type !== 'color')) return false;
+			var collection = { version: 2, styles: [], colorSchemes: [] };
+			collection[value.type === 'color' ? 'colorSchemes' : 'styles'].push(value.item);
+			try {
+				return widgetStyleEditor.isValidCollection(collection);
+			} catch (error) {
+				return false;
 			}
-			var id = widgetStyleEditor.newId(items);
-			var style = copy ? angular.copy(source) : colorMode
-				? widgetStyleEditor.colorSchemeFromStyle(widgetStyleEditor.create(id, name))
-				: widgetStyleEditor.create(id, name);
-			if (!copy && !colorMode) {
-				style.groups = widgetStyleEditor.currentGroups();
-				style.rowVisibility = widgetStyleEditor.currentRowVisibility();
-				widgetStyleEditor.configureCurrentColumns(style);
-				widgetStyleEditor.configureCurrentPresentation(style);
+		}
+
+		$scope.exportStyle = function () {
+			var item = $scope.getEditingItem();
+			if (!item || $scope.savingSettings || !canChangeSelection()) return;
+			var type = $scope.editor.mode;
+			var value = {
+				format: 'chronograph-widget-style',
+				version: 1,
+				type: type,
+				item: type === 'design' ? widgetStyleEditor.designFromStyle(item) : angular.copy(item)
+			};
+			if (!validStyleTransfer(value)) {
+				showError(Homey.__('settings.style_transfer_invalid'));
+				return;
 			}
-			if (!colorMode) style = widgetStyleEditor.designFromStyle(style);
-			if (!colorMode) normalizeDesignSpans(style);
-			style.id = id;
-			style.name = name;
-			items.push(style);
-			if (colorMode) $scope.editor.selectedSchemeId = 'custom:' + id;
-			else $scope.editor.selectedStyleId = 'custom:' + id;
-			$scope.editor.selectedCell = null;
-			$scope.refreshLayoutElement();
+			var url;
+			try {
+				url = window.URL.createObjectURL(new Blob([JSON.stringify(value, null, 2)], { type: 'application/json' }));
+				var link = document.createElement('a');
+				link.href = url;
+				link.download = 'chronograph-' + type + '.json';
+				link.click();
+			} catch (error) {
+				showError(error);
+			} finally {
+				if (url) window.setTimeout(function () { window.URL.revokeObjectURL(url); }, 1000);
+			}
+		};
+
+		$scope.chooseStyleImport = function () {
+			if (!$scope.stylesAvailable || $scope.savingSettings || $scope.importingStyle || !canChangeSelection()) return;
+			document.getElementById('style-import-file').click();
+		};
+
+		$scope.importStyleFile = function (file) {
+			if (!file || !$scope.stylesAvailable || $scope.savingSettings || $scope.importingStyle) return;
+			var key = editingKey();
+			var selected = $scope.getEditingItem();
+			$scope.importingStyle = true;
+			var reader;
+			try {
+				reader = new FileReader();
+			} catch (error) {
+				$scope.importingStyle = false;
+				showError(error);
+				return;
+			}
+			reader.onerror = function () {
+				$scope.$applyAsync(function () {
+					$scope.importingStyle = false;
+					showError(Homey.__('settings.style_import_read_error'));
+				});
+			};
+			reader.onload = function () {
+				$scope.$applyAsync(function () {
+					$scope.importingStyle = false;
+					if (key !== editingKey() || selected !== $scope.getEditingItem() || $scope.savingSettings) {
+						showError(Homey.__('settings.style_import_changed'));
+						return;
+					}
+					var value;
+					try {
+						value = JSON.parse(reader.result);
+					} catch (error) {
+						showError(Homey.__('settings.style_transfer_invalid'));
+						return;
+					}
+					if (!validStyleTransfer(value)) {
+						showError(Homey.__('settings.style_transfer_invalid'));
+						return;
+					}
+					leaveEditingItem(function () {
+						var colorMode = value.type === 'color';
+						var items = colorMode ? $scope.widgetStyles.colorSchemes : $scope.widgetStyles.styles;
+						var builtIns = colorMode ? builtInSchemes : builtInDesigns;
+						var imported = angular.copy(value.item);
+						var name = imported.name.trim().slice(0, 80);
+						var candidate = name;
+						var number = 2;
+						var names = items.concat(Object.keys(builtIns).map(function (id) { return builtIns[id]; }))
+							.map(function (item) { return item.name.toLocaleLowerCase(); });
+						while (names.indexOf(candidate.toLocaleLowerCase()) !== -1) {
+							var suffix = ' (' + number++ + ')';
+							candidate = name.slice(0, 80 - suffix.length) + suffix;
+						}
+						imported.id = widgetStyleEditor.newId(items);
+						imported.name = candidate;
+						if (!colorMode) normalizeDesignSpans(imported);
+						items.push(imported);
+						$scope.editor.mode = value.type;
+						if (colorMode && !$scope.getSelectedStyle()) $scope.editor.selectedStyleId = 'builtin:current';
+						if (colorMode) $scope.editor.selectedSchemeId = 'custom:' + imported.id;
+						else $scope.editor.selectedStyleId = 'custom:' + imported.id;
+						refreshEditedItem();
+					});
+				});
+			};
+			try {
+				reader.readAsText(file);
+			} catch (error) {
+				$scope.importingStyle = false;
+				showError(error);
+			}
 		};
 
 		$scope.deleteStyle = function () {
@@ -530,6 +810,8 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 						var currentIndex = $scope.widgetStyles[collectionKey].indexOf(style);
 						if (currentIndex !== -1) $scope.widgetStyles[collectionKey].splice(currentIndex, 1);
 						if ($scope.editor[selectionKey] === 'custom:' + style.id) {
+							delete editHistories[editingKey()];
+							editHistory = null;
 							$scope.editor[selectionKey] = 'builtin:current';
 							$scope.editor.selectedCell = null;
 							$scope.editor.invalidRowRule = false;
@@ -750,7 +1032,8 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 
 		$scope.unusedElements = function () {
 			$scope.groupedRows(false);
-			return groupedRowsCache.editor ? groupedRowsCache.editor.unused : [];
+			var cached = groupedRowsCache['editor:' + $scope.editor.previewType];
+			return cached ? cached.unused : [];
 		};
 
 		$scope.designerRowLayout = function () {
@@ -793,18 +1076,23 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			return layout;
 		};
 
-		$scope.previewRowLayout = function (scenario) {
-			return sizeRuntime.layoutSpanningRows($scope.groupedRows(true, scenario));
+		$scope.previewRowLayout = function (scenario, type) {
+			return sizeRuntime.layoutSpanningRows($scope.groupedRows(true, scenario, type));
+		};
+		$scope.previewTileState = function (scenario, type) {
+			var state = scenario ? scenario.state : $scope.editor.previewState;
+			return (type || $scope.editor.previewType) === 'stopwatch' && state === 'starting' ? 'inactive' : state;
 		};
 
-		$scope.groupedRows = function (preview, scenario) {
+		$scope.groupedRows = function (preview, scenario, type) {
 			var style = $scope.getSelectedStyle();
 			if (!style || !style.groups) return [];
-			var state = scenario ? scenario.state : $scope.editor.previewState;
-			var cacheKey = scenario ? 'measure:' + scenario.id : preview ? 'preview' : 'editor';
+			type = type || $scope.editor.previewType;
+			var state = preview ? $scope.previewTileState(scenario, type) : $scope.editor.previewState;
+			var cacheKey = (scenario ? 'measure:' + scenario.id : preview ? 'preview' : 'editor') + ':' + type;
 			var fingerprint = angular.toJson([
 				style.id, style.groups[$scope.editor.previewSize], $scope.editor.previewSize,
-				state, $scope.editor.previewType, $scope.editor.editStatus,
+				state, type, $scope.editor.editStatus,
 				style.rowVisibility, style.rowColumns, style.rowAlignments, style.rowTopPadding, style.columnSpans, style.columnRowSpans, style.columnAlignments, style.columnVerticalAlignments, style.columnDirections, style.columnWidths, style.reservedElements,
 				$scope.getStartFieldsVisibility()
 			]);
@@ -815,7 +1103,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				? widgetStyleEditor.resolvedGroups(style, $scope.editor.previewSize, state)
 				: style.groups[$scope.editor.previewSize].elements;
 			var rows = $scope.layoutRows.map(function (row) {
-				var visible = !preview || $scope.isRowVisible(row, scenario);
+				var visible = !preview || $scope.isRowVisible(row, { state: state });
 				var spans = widgetStyleEditor.columnSpans(style, $scope.editor.previewSize, row);
 				var alignments = widgetStyleEditor.columnAlignments(style, $scope.editor.previewSize, row);
 				var verticalAlignments = widgetStyleEditor.columnVerticalAlignments(style, $scope.editor.previewSize, row);
@@ -832,7 +1120,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 					groups: $scope.layoutGroups.slice(0, widgetStyleEditor.rowColumns(style, $scope.editor.previewSize, row)).map(function (group) {
 						var elements = $scope.styleElements.filter(function (id) {
 							return visible && layout[id].row === row && layout[id].group === group
-								&& (!preview || (!(scenario && scenario.excludeFields && id === 'fields') && $scope.previewVisible(id, state)));
+								&& (!preview || (!(scenario && scenario.excludeFields && id === 'fields') && $scope.previewVisible(id, state, type)));
 						}).sort(function (a, b) { return layout[a].order - layout[b].order || $scope.styleElements.indexOf(a) - $scope.styleElements.indexOf(b); });
 						var placeholders = preview ? ['duration', 'progress'].filter(function (id) {
 							return layout[id].row === row && layout[id].group === group && elements.indexOf(id) === -1
@@ -887,10 +1175,10 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				: style.layouts[$scope.editor.previewSize];
 		};
 
-		$scope.getPreviewCells = function (scenario) {
+		$scope.getPreviewCells = function (scenario, type) {
 			var style = $scope.getSelectedStyle();
-			if (scenario && style && $scope.editor.editStatus) {
-				return widgetStyleEditor.resolveLayout(style, $scope.editor.previewSize, scenario.state);
+			if (style && $scope.editor.editStatus) {
+				return widgetStyleEditor.resolveLayout(style, $scope.editor.previewSize, $scope.previewTileState(scenario, type));
 			}
 			return $scope.getStyleCells();
 		};
@@ -925,18 +1213,19 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			}
 		};
 
-		$scope.previewVisible = function (element, previewState) {
-			var state = previewState || $scope.editor.previewState;
-			if (element === 'progress') return $scope.editor.previewType !== 'stopwatch';
+		$scope.previewVisible = function (element, previewState, previewType) {
+			var type = previewType || $scope.editor.previewType;
+			var state = $scope.previewTileState(previewState ? { state: previewState } : null, type);
+			if (element === 'progress') return type !== 'stopwatch';
 			if (element === 'cancel') return state === 'starting';
 			if (element === 'fields') return (state === 'starting'
 				|| (state === 'inactive' && ($scope.hasFieldsRowRule(state) || $scope.showStartFieldsWhenInactive())))
-				&& $scope.editor.previewType !== 'stopwatch';
+				&& type !== 'stopwatch';
 			if (element === 'start' || element === 'play') {
 				var style = $scope.getSelectedStyle();
 				if (element === 'play' && (!style || !style.groups)) return state !== 'running';
 				var startButton = state === 'starting'
-					|| (state === 'inactive' && ($scope.editor.previewType === 'stopwatch'
+					|| (state === 'inactive' && (type === 'stopwatch'
 						? $scope.editor.previewSize !== 'compact' : $scope.showStartFieldsWhenInactive()));
 				return element === 'start' ? startButton : state !== 'running' && !startButton;
 			}
@@ -964,8 +1253,9 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		$scope.resetRowPreview = function () {
 			if (startFormTimer) $timeout.cancel(startFormTimer);
 			startFormTimer = null;
-			if ($scope.editor.previewState !== 'starting' || $scope.editor.previewType === 'stopwatch') return;
-			var durations = $scope.groupedRows(true).map(function (row) {
+			if ($scope.editor.previewState !== 'starting'
+				|| $scope.editor.previewColumns === 'single' && $scope.editor.previewType === 'stopwatch') return;
+			var durations = $scope.groupedRows(true, null, $scope.editor.previewColumns === 'single' ? null : 'timer').map(function (row) {
 				var rule = getRowRule(row.id);
 				return rule && rule.startForm && rule.hideAfterSeconds;
 			}).filter(function (seconds) { return typeof seconds === 'number' && seconds > 0; });
@@ -1195,8 +1485,8 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			return !!getRowRule(layout.fields.row);
 		};
 
-		$scope.previewAction = function (action) {
-			var state = $scope.editor.previewState;
+		$scope.previewAction = function (action, previewType) {
+			var state = $scope.previewTileState(null, previewType);
 			if (action === 'start') {
 				state = 'running';
 			} else if (action === 'play') {
@@ -1204,7 +1494,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 					&& !$scope.isRowVisible(($scope.editor.editStatus
 						? widgetStyleEditor.resolvedGroups($scope.getSelectedStyle(), $scope.editor.previewSize, state)
 						: $scope.getSelectedStyle().groups[$scope.editor.previewSize].elements).fields.row)))
-					&& $scope.editor.previewType !== 'stopwatch') {
+					&& (previewType || $scope.editor.previewType) !== 'stopwatch') {
 					state = 'starting';
 				} else {
 					state = 'running';
@@ -1232,8 +1522,8 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			return Homey.__('settings.widget_cancel');
 		};
 
-		$scope.previewIcon = function () {
-			return { stopwatch: 'fa-stopwatch', timer: 'fa-clock', transition: 'fa-shuffle' }[$scope.editor.previewType];
+		$scope.previewIcon = function (type) {
+			return { stopwatch: 'fa-stopwatch', timer: 'fa-clock', transition: 'fa-shuffle' }[type || $scope.editor.previewType];
 		};
 
 		$scope.getChronographs = function (type) {
@@ -1411,6 +1701,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			if (refreshInterval) $interval.cancel(refreshInterval);
 			if (durationInterval) $interval.cancel(durationInterval);
 			if (startFormTimer) $timeout.cancel(startFormTimer);
+			if (window.removeEventListener) window.removeEventListener('beforeunload', warnBeforeLeaving);
 		});
 
 		$scope.initialize = function (homey) {
@@ -1655,4 +1946,17 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 
 		if (pendingHomey) $scope.initialize(pendingHomey);
 	}
-]);
+]).directive('styleImportFile', function () {
+	return {
+		restrict: 'A',
+		link: function (scope, element) {
+			function changed() {
+				var file = element[0].files[0];
+				element[0].value = '';
+				if (file) scope.$applyAsync(function () { scope.importStyleFile(file); });
+			}
+			element.on('change', changed);
+			scope.$on('$destroy', function () { element.off('change', changed); });
+		}
+	};
+});

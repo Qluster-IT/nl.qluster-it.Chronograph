@@ -46,13 +46,19 @@ survive reloads but do not modify the app defaults or Homey. Share the saved
 preview when requesting changes to the actual defaults. Chronographs are
 sample data and reset when the page reloads. The preview does not load Homey's actual stylesheet or connect to a
 Homey device, so final appearance and behavior still require a Homey check.
-The designer can also preview one tile in a one-, two-, or three-column
-multi-widget; its width depends on the available preview space.
+The designer can also preview three independently selectable chronograph types
+in a one-, two-, or three-column multi-widget; tile width depends on the
+available preview space. All tiles share the selected design, size, state and
+color scheme.
 Button text can be customized per design size. Default text is translated;
 the default appears as a placeholder in the designer. Custom text is shared
 across languages, and empty custom text shows only the icon.
 Duration and status bar elements can reserve space when hidden, separately for
 each design size.
+Layouts can be copied between sizes without replacing other size-specific
+settings. Undo and redo apply to the currently selected design or scheme.
+Switching away from an unsaved design or scheme prompts to discard its changes;
+the browser may also warn before leaving with unsaved settings.
 Press Ctrl+C in the terminal to stop the server. Set
 `CHRONOGRAPH_PREVIEW_PORT` before starting it to use another port.
 
@@ -92,6 +98,9 @@ Application image by [Agê Barros](https://unsplash.com/@agebarros?utm_source=un
 
 ### v3.0.4
 
+* Added per-design and per-scheme undo/redo and unsaved-change protection.
+* Added layout copying between design sizes and a three-tile multi-widget preview.
+* Added a link to the widget designer guide.
 * Customize widget button text separately for each design size.
 * Reserve space for hidden duration and status bar elements to keep widget layouts aligned.
 * Refined the built-in widget designs.
