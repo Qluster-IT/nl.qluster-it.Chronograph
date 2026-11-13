@@ -479,6 +479,50 @@ describe('Widget style designer preview', () => {
 		assert.match(html, /ng-attr-placeholder="{{ defaultElementSize\(\) }}"/);
 	});
 
+	it('edits button text per size, preserves icon-only labels, and restores translated defaults', () => {
+		const { scope, writes, editor } = loadSettings();
+		scope.createStyle(false);
+		const style = scope.getSelectedStyle();
+		scope.selectLayoutElement('start');
+		assert.strictEqual(scope.useDefaultButtonText(), true);
+		assert.strictEqual(scope.editButtonText(), 'settings.widget_start');
+		scope.useDefaultButtonText(false);
+		scope.editButtonText('Begin');
+		scope.editor.previewSize = 'compact';
+		assert.strictEqual(scope.useDefaultButtonText(), true);
+		scope.useDefaultButtonText(false);
+		scope.editButtonText(null);
+		assert.strictEqual(scope.buttonText('start'), '');
+		scope.selectLayoutElement('pause');
+		scope.useDefaultButtonText(false);
+		scope.editButtonText('Wait');
+		scope.saveSettings();
+		assert.strictEqual(editor.isValidCollection(writes[0].value), true);
+		const reloaded = loadSettings(writes[0].value).scope;
+		reloaded.editor.selectedStyleId = 'custom:' + style.id;
+		reloaded.selectLayoutElement('start');
+		assert.strictEqual(reloaded.buttonText('start'), 'Begin');
+		reloaded.editor.previewSize = 'compact';
+		assert.strictEqual(reloaded.buttonText('start'), '');
+		assert.strictEqual(reloaded.buttonText('pause'), 'Wait');
+		reloaded.useDefaultButtonText(true);
+		assert.strictEqual(reloaded.editButtonText(), 'settings.widget_start');
+		assert.strictEqual(reloaded.useDefaultButtonText(), true);
+	});
+
+	it('rejects invalid button text settings', () => {
+		const { scope, editor } = loadSettings();
+		scope.createStyle(false);
+		const style = scope.getSelectedStyle();
+		for (const value of [
+			{ normal: { start: 5 } }, { normal: { start: 'x'.repeat(81) } },
+			{ normal: { name: 'text' } }, { unknown: { start: 'text' } }
+		]) {
+			style.buttonTexts = value;
+			assert.strictEqual(editor.isValidCollection(scope.widgetStyles), false);
+		}
+	});
+
 	it('preserves legacy base sizes on migration and resets each size to its app default', () => {
 		const { scope, editor, writes } = loadSettings();
 		scope.createStyle(false);

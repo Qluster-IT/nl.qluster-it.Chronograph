@@ -249,6 +249,9 @@ function onHomeyReady(Homey) {
 			$scope.designElementSize = function (element) {
 				return widgetStyleRuntime.elementSize(activeDesign, $scope.layout, element);
 			};
+			$scope.designButtonText = function (element) {
+				return widgetStyleRuntime.buttonText(activeDesign, $scope.layout, element, $scope.labels.start);
+			};
 			$scope.designFieldLayout = function () {
 				return widgetStyleRuntime.inputFieldLayout(activeDesign, $scope.layout, widgetType);
 			};

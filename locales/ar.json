@@ -246,7 +246,10 @@
     "widget_layout_automatic": "تلقائي",
     "style_preview_columns": "أعمدة الأداة المتعددة",
     "style_preview_single": "أداة مفردة",
-    "style_preview_columns_hint": "تعرض المعاينة مربعًا واحدًا يشغل عمودًا واحدًا. يعتمد عرضه على المساحة المتاحة للمعاينة."
+    "style_preview_columns_hint": "تعرض المعاينة مربعًا واحدًا يشغل عمودًا واحدًا. يعتمد عرضه على المساحة المتاحة للمعاينة.",
+    "style_button_text": "نص الزر",
+    "style_button_text_default": "استخدام النص الافتراضي",
+    "style_button_text_hint": "يُترجم النص الافتراضي. يبقى النص المخصص كما هو في جميع اللغات؛ اتركه فارغًا لإظهار الأيقونة فقط."
   },
   "timer_not_running": "المؤقت __name__ غير قيد التشغيل.",
   "stopwatch_not_running": "ساعة الإيقاف __name__ غير قيد التشغيل.",

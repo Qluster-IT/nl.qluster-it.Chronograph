@@ -243,7 +243,10 @@
     "widget_layout_automatic": "Automatisch",
     "style_preview_columns": "Kolommen in multiwidget",
     "style_preview_single": "Enkele widget",
-    "style_preview_columns_hint": "Het voorbeeld toont één tegel die één kolom beslaat. De breedte hangt af van de beschikbare ruimte voor het voorbeeld."
+    "style_preview_columns_hint": "Het voorbeeld toont één tegel die één kolom beslaat. De breedte hangt af van de beschikbare ruimte voor het voorbeeld.",
+    "style_button_text": "Knoptekst",
+    "style_button_text_default": "Standaardtekst gebruiken",
+    "style_button_text_hint": "De standaardtekst wordt vertaald. Eigen tekst is in elke taal hetzelfde; laat deze leeg om alleen het pictogram te tonen."
   },
   "timer_not_running": "Timer __name__ loopt niet.",
   "stopwatch_not_running": "Stopwatch __name__ loopt niet.",

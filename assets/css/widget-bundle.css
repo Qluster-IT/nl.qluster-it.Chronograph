@@ -347,6 +347,24 @@ body {
 	height: var(--element-size);
 }
 
+.chronograph-design .chronograph-design-element .chronograph-button-with-text {
+	display: inline-flex;
+	flex-basis: auto;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	width: auto;
+	padding: 0 10px;
+	border-radius: 20px;
+	white-space: nowrap;
+}
+
+.chronograph-design .chronograph-design-element .chronograph-start-button.chronograph-button-icon-only {
+	width: var(--element-size);
+	padding: 0;
+	border-radius: 50%;
+}
+
 .chronograph-design .chronograph-design-element-fields .form-control,
 .chronograph-design .chronograph-design-element-fields .form-select {
 	min-height: var(--element-size);
@@ -918,7 +936,7 @@ img.chronograph-icon {
 		line-height: max(1.25em, var(--homey-line-height-large, 28px));
 	}
 
-	.chronograph-layout-large .chronograph-design[data-allow-shrink="true"] .chronograph-design-element .chronograph-action {
+	.chronograph-layout-large .chronograph-design[data-allow-shrink="true"] .chronograph-design-element .chronograph-action:not(.chronograph-button-with-text) {
 		flex-basis: min(var(--element-size), 32px);
 		width: min(var(--element-size), 32px);
 		height: min(var(--element-size), 32px);

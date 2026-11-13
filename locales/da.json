@@ -246,7 +246,10 @@
     "widget_layout_automatic": "Automatisk",
     "style_preview_columns": "Kolonner i multiwidget",
     "style_preview_single": "Enkelt widget",
-    "style_preview_columns_hint": "Forhåndsvisningen viser én flise, der fylder én kolonne. Bredden afhænger af den tilgængelige plads til forhåndsvisningen."
+    "style_preview_columns_hint": "Forhåndsvisningen viser én flise, der fylder én kolonne. Bredden afhænger af den tilgængelige plads til forhåndsvisningen.",
+    "style_button_text": "Knaptekst",
+    "style_button_text_default": "Brug standardtekst",
+    "style_button_text_hint": "Standardteksten oversættes. Brugerdefineret tekst er ens på alle sprog; lad den være tom for kun at vise ikonet."
   },
   "timer_not_running": "Timeren __name__ kører ikke.",
   "stopwatch_not_running": "Stopuret __name__ kører ikke.",

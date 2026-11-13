@@ -246,7 +246,10 @@
     "widget_layout_automatic": "Automatico",
     "style_preview_columns": "Colonne del widget multiplo",
     "style_preview_single": "Widget singolo",
-    "style_preview_columns_hint": "L'anteprima mostra un riquadro che occupa una colonna. La sua larghezza dipende dallo spazio disponibile per l'anteprima."
+    "style_preview_columns_hint": "L'anteprima mostra un riquadro che occupa una colonna. La sua larghezza dipende dallo spazio disponibile per l'anteprima.",
+    "style_button_text": "Testo del pulsante",
+    "style_button_text_default": "Usa il testo predefinito",
+    "style_button_text_hint": "Il testo predefinito viene tradotto. Il testo personalizzato è uguale in tutte le lingue; lascialo vuoto per mostrare solo l'icona."
   },
   "timer_not_running": "Il timer __name__ non è in esecuzione.",
   "stopwatch_not_running": "Il cronometro __name__ non è in esecuzione.",

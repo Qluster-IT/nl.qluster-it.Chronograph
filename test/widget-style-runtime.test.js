@@ -113,6 +113,12 @@ describe('Widget style runtime', () => {
 				assert.deepStrictEqual(row.groups.map(group => group.elements),
 					state === 'running' ? [['pause'], ['duration'], ['stop']] : [[], ['duration'], ['play', 'stop']]);
 			}
+			for (const type of ['timer', 'transition', 'stopwatch']) {
+				const state = type === 'stopwatch' ? 'inactive' : 'starting';
+				const row = widgetStyle.buildRows(design, size, state, type, type !== 'stopwatch').find(item => item.id === 4);
+				assert.deepStrictEqual(row.groups[0].elements, type === 'stopwatch' ? ['start'] : ['fields', 'start']);
+				assert.strictEqual(row.groups[0].alignment, 'center');
+			}
 		}
 	});
 

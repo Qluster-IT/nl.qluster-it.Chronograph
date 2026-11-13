@@ -783,6 +783,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			|| !validHeightModes(style.heightModes)
 			|| !validInputFieldRows(style.inputFieldRows)
 			|| !validElementSizes(style.elementSizes)
+			|| !validButtonTexts(style.buttonTexts)
 			|| (style.allowShrink !== undefined && typeof style.allowShrink !== 'boolean')
 			|| (style.wrapNarrowElements !== undefined && typeof style.wrapNarrowElements !== 'boolean')
 			|| !validProgressSettings(style)
@@ -862,6 +863,18 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 					&& Object.keys(rows).every(function (type) {
 						return (type === 'timer' || type === 'transition') && Number.isInteger(rows[type])
 							&& rows[type] >= 1 && rows[type] <= (type === 'timer' ? 2 : 5);
+					});
+			}));
+	}
+
+	function validButtonTexts(value) {
+		return value === undefined || (value && typeof value === 'object' && !Array.isArray(value)
+			&& Object.keys(value).every(function (size) {
+				var texts = value[size];
+				return sizes.indexOf(size) !== -1 && texts && typeof texts === 'object' && !Array.isArray(texts)
+					&& Object.keys(texts).every(function (button) {
+						return buttonIds.indexOf(button) !== -1
+							&& (texts[button] === null || (typeof texts[button] === 'string' && texts[button].length <= 80));
 					});
 			}));
 	}

@@ -246,7 +246,10 @@
     "widget_layout_automatic": "Automático",
     "style_preview_columns": "Columnas del widget múltiple",
     "style_preview_single": "Widget individual",
-    "style_preview_columns_hint": "La vista previa muestra una tarjeta que ocupa una columna. Su ancho depende del espacio disponible para la vista previa."
+    "style_preview_columns_hint": "La vista previa muestra una tarjeta que ocupa una columna. Su ancho depende del espacio disponible para la vista previa.",
+    "style_button_text": "Texto del botón",
+    "style_button_text_default": "Usar texto predeterminado",
+    "style_button_text_hint": "El texto predeterminado se traduce. El texto personalizado es igual en todos los idiomas; déjalo vacío para mostrar solo el icono."
   },
   "timer_not_running": "El temporizador __name__ no está en marcha.",
   "stopwatch_not_running": "El cronómetro __name__ no está en marcha.",

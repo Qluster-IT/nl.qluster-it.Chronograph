@@ -71,30 +71,35 @@
 				</div>
 				<button ng-switch-when="start" class="chronograph-start-button" type="button" ng-click="start()"
 					ng-disabled="busy" ng-attr-data-button-color="{{ designButtonColor('start') }}"
+					ng-class="{ 'chronograph-button-icon-only': !designButtonText('start') }"
 					ng-attr-aria-label="{{ labels.start }}" ng-style="designButtonStyle('start')">
-					<i class="fa-solid fa-play" aria-hidden="true"></i>{{ labels.start }}
+					<i class="fa-solid fa-play" aria-hidden="true"></i><span ng-if="designButtonText('start')">{{ designButtonText('start') }}</span>
 				</button>
 				<button ng-switch-when="play" class="chronograph-action" type="button"
 					ng-click="selectedChronograph.active ? toggle() : beginStart()" ng-disabled="busy"
 					ng-attr-data-button-color="{{ designButtonColor('play') }}"
+					ng-class="{ 'chronograph-button-with-text': designButtonText('play') }"
 					ng-attr-aria-label="{{ selectedChronograph.active ? labels.resume : labels.start }}"
 					ng-style="designButtonStyle('play')">
-					<i class="fa-solid fa-play" aria-hidden="true"></i>
+					<i class="fa-solid fa-play" aria-hidden="true"></i><span ng-if="designButtonText('play')">{{ designButtonText('play') }}</span>
 				</button>
 				<button ng-switch-when="pause" class="chronograph-action" type="button" ng-click="toggle()"
 					ng-disabled="busy" ng-attr-data-button-color="{{ designButtonColor('pause') }}"
+					ng-class="{ 'chronograph-button-with-text': designButtonText('pause') }"
 					ng-attr-aria-label="{{ labels.pause }}" ng-style="designButtonStyle('pause')">
-					<i class="fa-solid fa-pause" aria-hidden="true"></i>
+					<i class="fa-solid fa-pause" aria-hidden="true"></i><span ng-if="designButtonText('pause')">{{ designButtonText('pause') }}</span>
 				</button>
 				<button ng-switch-when="stop" class="chronograph-action" type="button" ng-click="stop()"
 					ng-disabled="busy" ng-attr-data-button-color="{{ designButtonColor('stop') }}"
+					ng-class="{ 'chronograph-button-with-text': designButtonText('stop') }"
 					ng-attr-aria-label="{{ labels.stop }}" ng-style="designButtonStyle('stop')">
-					<i class="fa-solid fa-stop" aria-hidden="true"></i>
+					<i class="fa-solid fa-stop" aria-hidden="true"></i><span ng-if="designButtonText('stop')">{{ designButtonText('stop') }}</span>
 				</button>
 				<button ng-switch-when="cancel" class="chronograph-cancel-button" type="button" ng-click="cancelStart()"
 					ng-disabled="busy" ng-attr-data-button-color="{{ designButtonColor('cancel') }}"
+					ng-class="{ 'chronograph-button-with-text': designButtonText('cancel') }"
 					ng-attr-aria-label="{{ labels.cancel }}" ng-style="designButtonStyle('cancel')">
-					<i class="fa-solid fa-xmark" aria-hidden="true"></i>
+					<i class="fa-solid fa-xmark" aria-hidden="true"></i><span ng-if="designButtonText('cancel')">{{ designButtonText('cancel') }}</span>
 				</button>
 			</div>
 		</div>

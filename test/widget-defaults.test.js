@@ -162,6 +162,30 @@ describe('Widget duration defaults', () => {
 		}
 	});
 
+	it('uses custom and default button texts independently for every size', async () => {
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		const design = runtime.currentDesign();
+		design.id = 'button-text';
+		design.buttonTexts = { compact: { start: '', pause: 'Hold' }, normal: { start: 'Begin' }, large: { start: null } };
+		for (const [layout, start, pause] of [
+			['compact', '', 'Hold'], ['normal', 'Begin', ''], ['large', 'settings.widget_start', '']
+		]) {
+			const widget = await loadWidget('timer', { layout, designStyle: { id: design.id } }, {}, {
+				version: 2, styles: [design], colorSchemes: []
+			});
+			assert.strictEqual(widget.scope.designButtonText('start'), start);
+			assert.strictEqual(widget.scope.designButtonText('pause'), pause);
+		}
+		for (const preset of ['builtin:current', ...runtime.builtInDesignDefinitions.map(item => item.id)]) {
+			for (const size of ['compact', 'normal', 'large']) {
+				const builtIn = runtime.builtInDesign(preset);
+				assert.strictEqual(runtime.buttonText(builtIn, size, 'start', 'Localized start'), 'Localized start');
+				for (const action of ['play', 'pause', 'stop', 'cancel']) assert.strictEqual(runtime.buttonText(builtIn, size, action, 'Localized start'), '');
+			}
+		}
+		assert.strictEqual(runtime.buttonText({}, 'normal', 'start', 'Localized start'), 'Localized start');
+	});
+
 	it('resolves design sizes independently and preserves legacy defaults', async () => {
 		const runtime = require('../assets/js/chronograph-widget-style.js');
 		assert.strictEqual(runtime.defaultElementSize('compact', 'duration'), 14);

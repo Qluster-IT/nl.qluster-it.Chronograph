@@ -246,7 +246,10 @@
     "widget_layout_automatic": "Automatisk",
     "style_preview_columns": "Kolumner i multiwidget",
     "style_preview_single": "Enskild widget",
-    "style_preview_columns_hint": "Förhandsvisningen visar en ruta som upptar en kolumn. Bredden beror på det tillgängliga utrymmet för förhandsvisningen."
+    "style_preview_columns_hint": "Förhandsvisningen visar en ruta som upptar en kolumn. Bredden beror på det tillgängliga utrymmet för förhandsvisningen.",
+    "style_button_text": "Knapptext",
+    "style_button_text_default": "Använd standardtext",
+    "style_button_text_hint": "Standardtexten översätts. Egen text är densamma på alla språk; lämna den tom för att bara visa ikonen."
   },
   "timer_not_running": "Timern __name__ körs inte.",
   "stopwatch_not_running": "Stoppuret __name__ körs inte.",

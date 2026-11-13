@@ -246,7 +246,10 @@
     "widget_layout_automatic": "Automatycznie",
     "style_preview_columns": "Kolumny w widżecie wielokrotnym",
     "style_preview_single": "Pojedynczy widżet",
-    "style_preview_columns_hint": "Podgląd pokazuje jeden kafelek zajmujący jedną kolumnę. Jego szerokość zależy od miejsca dostępnego w podglądzie."
+    "style_preview_columns_hint": "Podgląd pokazuje jeden kafelek zajmujący jedną kolumnę. Jego szerokość zależy od miejsca dostępnego w podglądzie.",
+    "style_button_text": "Tekst przycisku",
+    "style_button_text_default": "Użyj tekstu domyślnego",
+    "style_button_text_hint": "Tekst domyślny jest tłumaczony. Własny tekst jest taki sam we wszystkich językach; pozostaw go pustym, aby pokazać tylko ikonę."
   },
   "timer_not_running": "Timer __name__ nie działa.",
   "stopwatch_not_running": "Stoper __name__ nie działa.",

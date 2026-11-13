@@ -222,6 +222,33 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			if (arguments.length && style && !$scope.savingSettings && !$scope.isDesignReadOnly()) style.allowShrink = value;
 			return !style || style.allowShrink !== false;
 		};
+		$scope.buttonText = function (element) {
+			return sizeRuntime.buttonText($scope.getSelectedStyle(), $scope.editor.previewSize, element, Homey.__('settings.widget_start'));
+		};
+		$scope.useDefaultButtonText = function (value) {
+			var style = $scope.getSelectedStyle();
+			var size = $scope.editor.previewSize;
+			var element = $scope.editor.selectedElement;
+			if (!style || !$scope.isButtonElement(element)) return true;
+			if (arguments.length && !$scope.savingSettings && !$scope.isDesignReadOnly()) {
+				if (!style.buttonTexts) style.buttonTexts = {};
+				if (!style.buttonTexts[size]) style.buttonTexts[size] = {};
+				style.buttonTexts[size][element] = value ? null : $scope.buttonText(element);
+			}
+			var texts = style.buttonTexts && style.buttonTexts[size];
+			return !texts || texts[element] === undefined || texts[element] === null;
+		};
+		$scope.editButtonText = function (value) {
+			var style = $scope.getSelectedStyle();
+			var size = $scope.editor.previewSize;
+			var element = $scope.editor.selectedElement;
+			if (!style || !$scope.isButtonElement(element)) return '';
+			if (arguments.length && !$scope.savingSettings && !$scope.isDesignReadOnly()
+				&& !$scope.useDefaultButtonText() && (value === null || typeof value === 'string' && value.length <= 80)) {
+				style.buttonTexts[size][element] = value === null ? '' : value;
+			}
+			return $scope.buttonText(element);
+		};
 		$scope.elementSize = function (element) {
 			return sizeRuntime.elementSize($scope.getSelectedStyle(), $scope.editor.previewSize, element);
 		};

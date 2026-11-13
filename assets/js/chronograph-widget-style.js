@@ -33,6 +33,12 @@
 		return defaultElementSize(size, element);
 	}
 
+	function buttonText(style, size, element, defaultStartText) {
+		var values = style && style.buttonTexts && style.buttonTexts[size];
+		var value = values && values[element];
+		return typeof value === 'string' ? value : element === 'start' ? defaultStartText : '';
+	}
+
 	function inputFieldRows(style, size, type) {
 		var fallback = type === 'transition' ? 2 : 1;
 		var max = type === 'transition' ? 5 : 2;
@@ -236,6 +242,7 @@
 		style.rowAlignments = { compact: { 1: 'top' }, normal: { 3: 'bottom' }, large: { 3: 'bottom' } };
 		style.progressSettings = { normal: { timerMode: 'elapsed', showSteps: true }, compact: { showSteps: true }, large: { showSteps: true } };
 		style.elementSizes = elementSizesDefaults();
+		style.buttonTexts = { compact: { start: null }, normal: { start: null }, large: { start: null } };
 	}
 
 	function currentRowVisibility() {
@@ -340,14 +347,22 @@
 				positions.play.group = 3;
 				positions.pause.group = 1;
 				positions.stop.group = 3;
+				positions.start = { row: 4, group: 1, order: 2 };
+				design.groups[size].overrides.inactive.start = { row: 4, group: 1, order: 2 };
 				design.rowColumns[size][3] = 3;
 				design.columnSpans[size][3] = [1, 2, 1];
 				design.columnWidths[size][3] = ['content', 'span', 'content'];
 				design.columnAlignments[size][3] = ['left', 'center', 'center'];
 				design.columnDirections[size][3] = ['horizontal', 'horizontal', 'horizontal'];
 				design.columnVerticalAlignments[size][3] = ['middle', 'middle', 'middle'];
+				design.rowColumns[size][4] = 1;
+				design.columnSpans[size][4] = [4];
+				design.columnWidths[size][4] = ['span'];
+				design.columnAlignments[size][4] = ['center'];
+				design.columnDirections[size][4] = ['horizontal'];
+				design.columnVerticalAlignments[size][4] = ['middle'];
 			});
-			design.columnRowSpans = { normal: { 3: [1, 1, 1] }, large: { 3: [1, 1, 1] } };
+			design.columnRowSpans = { normal: { 3: [1, 1, 1], 4: [1] }, large: { 3: [1, 1, 1], 4: [1] } };
 		} else if (id === 'builtin:dashboard') {
 			['normal', 'large'].forEach(function (size) {
 				var positions = design.groups[size].elements;
@@ -665,6 +680,7 @@
 		defaultElementSize: defaultElementSize,
 		migrateElementSizes: migrateElementSizes,
 		elementSize: elementSize,
+		buttonText: buttonText,
 		inputFieldRows: inputFieldRows,
 		inputFieldLayout: inputFieldLayout,
 		buildRows: buildRows,

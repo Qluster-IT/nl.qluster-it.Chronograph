@@ -48,6 +48,8 @@ sample data and reset when the page reloads. The preview does not load Homey's a
 Homey device, so final appearance and behavior still require a Homey check.
 The designer can also preview one tile in a one-, two-, or three-column
 multi-widget; its width depends on the available preview space.
+Button text can be customized per design size. Default text is translated;
+custom text is shared across languages, and empty custom text shows only the icon.
 Press Ctrl+C in the terminal to stop the server. Set
 `CHRONOGRAPH_PREVIEW_PORT` before starting it to use another port.
 

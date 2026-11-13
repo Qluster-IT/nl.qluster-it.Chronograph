@@ -246,7 +246,10 @@
     "widget_layout_automatic": "Automatique",
     "style_preview_columns": "Colonnes du widget multiple",
     "style_preview_single": "Widget individuel",
-    "style_preview_columns_hint": "L'aperçu affiche une tuile occupant une colonne. Sa largeur dépend de l'espace disponible pour l'aperçu."
+    "style_preview_columns_hint": "L'aperçu affiche une tuile occupant une colonne. Sa largeur dépend de l'espace disponible pour l'aperçu.",
+    "style_button_text": "Texte du bouton",
+    "style_button_text_default": "Utiliser le texte par défaut",
+    "style_button_text_hint": "Le texte par défaut est traduit. Le texte personnalisé est identique dans toutes les langues ; laissez-le vide pour afficher uniquement l'icône."
   },
   "timer_not_running": "Le minuteur __name__ n’est pas en cours d’exécution.",
   "stopwatch_not_running": "Le chronomètre __name__ n’est pas en cours d’exécution.",
