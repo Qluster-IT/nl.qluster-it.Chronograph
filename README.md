@@ -61,6 +61,7 @@ settings. Undo and redo apply to the currently selected design or scheme.
 Switching away from an unsaved design or scheme prompts to discard its changes;
 the browser may also warn before leaving with unsaved settings.
 The preview highlights the selected widget, row, column or visible element.
+Nothing is selected initially; tap or click the selected item again to deselect it.
 Press Ctrl+C in the terminal to stop the server. Set
 `CHRONOGRAPH_PREVIEW_PORT` before starting it to use another port.
 
@@ -98,10 +99,15 @@ Application image by [Agê Barros](https://unsplash.com/@agebarros?utm_source=un
 
 ## Changelog
 
+### v3.0.5
+
+* Start with no designer selection and tap or click the selected item again to deselect it.
+* Export custom designs and color schemes; built-in items can be copied first.
+
 ### v3.0.4
 
 * Added per-design and per-scheme undo/redo and unsaved-change protection.
-* Export and import individual widget designs and color schemes as JSON files.
+* Export and import custom widget designs and color schemes as JSON files.
 * Added layout copying between design sizes and a three-tile multi-widget preview.
 * Added a link to the widget designer guide.
 * Configure the number of rows per design size, and customize button shapes and borders.

@@ -62,7 +62,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			copyLayoutFrom: 'compact',
 			editStatus: false,
 			selectedCell: null,
-			selectedElement: 'name',
+			selectedElement: null,
 			selectedBackground: false,
 			position: {},
 			selectedRow: null,
@@ -346,9 +346,6 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				$scope.editor.selectedColumn = null;
 				$scope.editor.selectedCell = null;
 				$scope.editor.rowRule = null;
-				if (mode === 'color' && !$scope.editor.selectedBackground && !$scope.editor.selectedElement) {
-					$scope.editor.selectedElement = 'name';
-				}
 			});
 		};
 
@@ -831,7 +828,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 
 		$scope.exportStyle = function () {
 			var item = $scope.getEditingItem();
-			if (!item || $scope.savingSettings || !canChangeSelection()) return;
+			if (!item || $scope.isBuiltInStyle() || $scope.savingSettings || !canChangeSelection()) return;
 			var type = $scope.editor.mode;
 			var value = {
 				format: 'chronograph-widget-style',
@@ -1015,6 +1012,36 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			Homey.alert(Homey.__('settings.style_row_invalid'));
 			return false;
 		}
+
+		function clearDesignerSelection() {
+			if (!canChangeSelection()) return;
+			$scope.editor.selectedElement = null;
+			$scope.editor.selectedRow = null;
+			$scope.editor.selectedColumn = null;
+			$scope.editor.selectedCell = null;
+			$scope.editor.selectedBackground = false;
+			$scope.editor.rowRule = null;
+			$scope.editor.position = {};
+			sizeDraft = undefined;
+		}
+
+		$scope.toggleLayoutElement = function (element) {
+			if ($scope.editor.selectedElement === element) clearDesignerSelection();
+			else $scope.selectLayoutElement(element);
+		};
+		$scope.toggleWidgetBackground = function () {
+			if ($scope.editor.selectedBackground) clearDesignerSelection();
+			else $scope.selectWidgetBackground();
+		};
+		$scope.toggleVisibilityRow = function (row) {
+			if ($scope.editor.selectedRow === row) clearDesignerSelection();
+			else $scope.selectVisibilityRow(row);
+		};
+		$scope.toggleColumn = function (row, group) {
+			var selected = $scope.editor.selectedColumn;
+			if (selected && selected.row === row && selected.group === group) clearDesignerSelection();
+			else $scope.selectColumn(row, group);
+		};
 
 		$scope.selectLayoutElement = function (element) {
 			if ($scope.styleElements.indexOf(element) === -1 || !canChangeSelection()) return;
@@ -1348,14 +1375,15 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 
 		$scope.selectStyleCell = function (index) {
 			if ($scope.savingSettings || !canChangeSelection()) return;
+			if ($scope.getStyleCells()[index] && $scope.editor.selectedElement === $scope.getStyleCells()[index]) {
+				clearDesignerSelection();
+				return;
+			}
 			if ($scope.editor.selectedCell === null) {
 				if ($scope.getStyleCells()[index]) {
 					$scope.selectLayoutElement($scope.getStyleCells()[index]);
 					if ($scope.editor.selectedElement === $scope.getStyleCells()[index]) $scope.editor.selectedCell = index;
 				}
-			} else if ($scope.editor.selectedCell === index) {
-				$scope.editor.selectedCell = null;
-				$scope.editor.selectedElement = null;
 			} else {
 				$scope.moveStyleElement($scope.editor.selectedCell, index);
 			}

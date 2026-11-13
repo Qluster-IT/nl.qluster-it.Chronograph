@@ -127,7 +127,7 @@
 							ng-click="createStyle(true)" ng-disabled="!getEditingItem() || editor.rowPaddingForm.$invalid || editor.elementSizeForm.$invalid">
 							<i class="fa-solid fa-copy" aria-hidden="true"></i> {{ labels.copy }}
 						</button>
-						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button"
+						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-if="!isBuiltInStyle()"
 							ng-click="exportStyle()" ng-disabled="!getEditingItem() || editor.rowPaddingForm.$invalid || editor.elementSizeForm.$invalid">
 							<i class="fa-solid fa-download" aria-hidden="true"></i> {{ t('settings.style_export') }}
 						</button>
@@ -273,23 +273,23 @@
 						<p class="help-text style-grid-hint">{{ t('settings.style_group_hint') }} {{ t('settings.style_select_before_drag') }}</p>
 						<div class="style-group-editor">
 							<button class="hy-nostyle style-row-select style-widget-select" type="button"
-								ng-click="selectWidgetBackground()" ng-class="{ 'style-row-selected': editor.selectedBackground }"
+								ng-click="toggleWidgetBackground()" ng-class="{ 'style-row-selected': editor.selectedBackground }"
 								ng-attr-aria-pressed="{{ editor.selectedBackground }}">{{ t('settings.style_widget') }}</button>
 							<div class="style-group-editor-grid" ng-class="{ 'style-editor-spanning': designerRowLayout().spanning }"
 								ng-style="designerRowLayout().spanning ? { 'grid-template-columns': 'auto ' + designerRowLayout().tracks, 'grid-template-rows': designerRowLayout().rowTracks } : {}">
-							<div class="style-group-editor-row" ng-repeat="row in designerRowLayout().rows track by row.id" ng-click="selectVisibilityRow(row.id)"
+							<div class="style-group-editor-row" ng-repeat="row in designerRowLayout().rows track by row.id" ng-click="toggleVisibilityRow(row.id)"
 								style-reorder-drop="row" style-reorder-target="{{ row.id }}" ng-attr-data-style-reorder-row="{{ row.id }}">
-								<button type="button" class="hy-nostyle style-row-select" ng-style="designerRowLayout().spanning ? { 'grid-column': '1', 'grid-row': row.id } : {}" ng-click="$event.stopPropagation(); selectVisibilityRow(row.id)"
+								<button type="button" class="hy-nostyle style-row-select" ng-style="designerRowLayout().spanning ? { 'grid-column': '1', 'grid-row': row.id } : {}" ng-click="$event.stopPropagation(); toggleVisibilityRow(row.id)"
 									ng-attr-draggable="{{ editor.selectedRow === row.id ? 'true' : 'false' }}" style-reorder-drag="row" style-reorder-source="{{ row.id }}" ng-attr-title="{{ t('settings.style_row_drag') }}"
 									ng-class="{ 'style-row-selected': editor.selectedRow === row.id }"
 									ng-attr-aria-pressed="{{ editor.selectedRow === row.id }}">{{ t('settings.style_row') }} {{ row.id }}</button>
 								<div class="style-group-slot" ng-repeat="group in row.groups track by group.id"
 									ng-style="designerRowLayout().spanning ? { 'grid-column': group.editorGridColumn, 'grid-row': group.gridRow } : { 'grid-column': 'span ' + group.span }"
-									ng-click="$event.stopPropagation(); selectColumn(row.id, group.id)"
+									ng-click="$event.stopPropagation(); toggleColumn(row.id, group.id)"
 									ng-class="{ 'style-column-selected': editor.selectedColumn.row === row.id && editor.selectedColumn.group === group.id }"
 									style-group-drop="{{ row.id }}:{{ group.id }}" ng-attr-data-style-group="{{ row.id }}:{{ group.id }}"
 									style-reorder-drop="column" style-reorder-target="{{ row.id }}:{{ group.id }}" ng-attr-data-style-reorder-column="{{ row.id }}:{{ group.id }}">
-									<button type="button" class="hy-nostyle style-group-number" ng-click="$event.stopPropagation(); selectColumn(row.id, group.id)"
+									<button type="button" class="hy-nostyle style-group-number" ng-click="$event.stopPropagation(); toggleColumn(row.id, group.id)"
 										ng-attr-draggable="{{ editor.selectedColumn.row === row.id && editor.selectedColumn.group === group.id ? 'true' : 'false' }}" style-reorder-drag="column" style-reorder-source="{{ row.id }}:{{ group.id }}" ng-attr-title="{{ t('settings.style_column_drag') }}"
 										ng-attr-aria-label="{{ t('settings.style_column') }} {{ row.id }}.{{ group.id }}"
 										ng-attr-aria-pressed="{{ editor.selectedColumn.row === row.id && editor.selectedColumn.group === group.id }}">{{ row.id }}.{{ group.id }}</button>
@@ -297,7 +297,7 @@
 										ng-repeat="element in group.elements track by element" style-group-element="{{ element }}" ng-attr-data-style-element="{{ element }}"
 										ng-attr-draggable="{{ editor.selectedElement === element ? 'true' : 'false' }}"
 										ng-class="{ 'style-cell-selected': editor.selectedElement === element }"
-										ng-click="$event.stopPropagation(); selectLayoutElement(element)">{{ styleLabels[element] }}</button>
+										ng-click="$event.stopPropagation(); toggleLayoutElement(element)">{{ styleLabels[element] }}</button>
 								</div>
 							</div>
 							</div>
@@ -307,7 +307,7 @@
 									<button class="hy-nostyle style-group-element" type="button"
 										ng-repeat="element in unusedElements() track by element" style-group-element="{{ element }}" ng-attr-data-style-element="{{ element }}"
 										ng-attr-draggable="{{ editor.selectedElement === element ? 'true' : 'false' }}" ng-class="{ 'style-cell-selected': editor.selectedElement === element }"
-										ng-click="selectLayoutElement(element)">{{ styleLabels[element] }}</button>
+										ng-click="toggleLayoutElement(element)">{{ styleLabels[element] }}</button>
 								</div>
 							</div>
 						</div>
@@ -461,7 +461,7 @@
 					</fieldset>
 					<p class="help-text style-grid-hint" ng-if="editor.mode === 'design' && !getSelectedStyle().groups">{{ t('settings.style_drag_hint') }} {{ t('settings.style_select_before_drag') }}</p>
 					<button ng-if="editor.mode === 'design' && !getSelectedStyle().groups" class="hy-nostyle style-row-select style-widget-select" type="button"
-						ng-click="selectWidgetBackground()" ng-class="{ 'style-row-selected': editor.selectedBackground }"
+						ng-click="toggleWidgetBackground()" ng-class="{ 'style-row-selected': editor.selectedBackground }"
 						ng-attr-aria-pressed="{{ editor.selectedBackground }}">{{ t('settings.style_widget') }}</button>
 					<div class="style-preview style-layout-editor" ng-if="editor.mode === 'design' && !getSelectedStyle().groups" ng-class="'style-preview-' + editor.previewSize">
 						<div class="style-grid">
@@ -490,9 +490,9 @@
 					</div>
 
 					<div ng-if="editor.mode === 'color'" class="style-color-elements">
-						<button class="hy-nostyle style-group-element" type="button" ng-click="selectWidgetBackground()" ng-class="{ 'style-cell-selected': editor.selectedBackground }" ng-attr-aria-pressed="{{ editor.selectedBackground }}">{{ t('settings.style_widget') }}</button>
+						<button class="hy-nostyle style-group-element" type="button" ng-click="toggleWidgetBackground()" ng-class="{ 'style-cell-selected': editor.selectedBackground }" ng-attr-aria-pressed="{{ editor.selectedBackground }}">{{ t('settings.style_widget') }}</button>
 						<button class="hy-nostyle style-group-element" type="button" ng-repeat="element in styleElements track by element"
-							ng-click="selectLayoutElement(element)" ng-class="{ 'style-cell-selected': !editor.selectedBackground && editor.selectedElement === element }"
+							ng-click="toggleLayoutElement(element)" ng-class="{ 'style-cell-selected': !editor.selectedBackground && editor.selectedElement === element }"
 							ng-attr-aria-pressed="{{ !editor.selectedBackground && editor.selectedElement === element }}">{{ styleLabels[element] }}</button>
 					</div>
 					<fieldset ng-if="editor.mode === 'color' && editor.selectedElement === 'progress'" class="hy-nostyle style-progress-controls" ng-disabled="isSchemeReadOnly()">

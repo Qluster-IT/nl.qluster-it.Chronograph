@@ -13,7 +13,7 @@ const settingsScript = fs.readFileSync(path.join(root, 'settings', 'assets', 'se
 const html = fs.readFileSync(path.join(root, 'settings', 'index.html'), 'utf8');
 const css = fs.readFileSync(path.join(root, 'settings', 'assets', 'styles.css'), 'utf8');
 
-function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns, extras) {
+function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns, extras, noSelection) {
 	let editor;
 	let controller;
 	const module = {
@@ -76,11 +76,98 @@ function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns, extr
 	timeout.cancel = timer => { timer.cancelled = true; };
 	controller(scope, () => {}, timeout, editor);
 	scope.initialize(homey);
-	scope.selectVisibilityRow(1);
+	if (!noSelection) scope.selectVisibilityRow(1);
 	return { scope, writes, timers, editor, homey, listeners, window: context.window };
 }
 
 describe('Widget style designer preview', () => {
+	it('starts without an element selected and does not select one when changing modes', () => {
+		for (const preview of [false, true]) {
+			const { scope } = loadSettings(null, null, null, preview, null, null, true);
+			assert.strictEqual(scope.editor.selectedElement, null);
+			assert.strictEqual(scope.editor.selectedBackground, false);
+			assert.strictEqual(scope.editor.selectedRow, null);
+			assert.strictEqual(scope.editor.selectedColumn, null);
+			assert.strictEqual(scope.selectedColorKey(), null);
+			scope.selectEditorMode('color');
+			assert.strictEqual(scope.editor.selectedElement, null);
+			scope.selectLayoutElement('duration');
+			scope.selectEditorMode('design');
+			assert.strictEqual(scope.editor.selectedElement, 'duration');
+		}
+	});
+
+	it('toggles designer selections without changing the design or bypassing validation', () => {
+		const { scope, homey, writes } = loadSettings(null, null, null, true, null, null, true);
+		const original = JSON.stringify(scope.getSelectedStyle());
+		const cases = [
+			{ toggle: () => scope.toggleWidgetBackground(), selected: () => scope.editor.selectedBackground },
+			{ toggle: () => scope.toggleVisibilityRow(1), selected: () => scope.editor.selectedRow === 1 },
+			{ toggle: () => scope.toggleColumn(1, 1), selected: () => !!scope.editor.selectedColumn },
+			{ toggle: () => scope.toggleLayoutElement('name'), selected: () => scope.editor.selectedElement === 'name' }
+		];
+		for (const item of cases) {
+			item.toggle();
+			assert.strictEqual(item.selected(), true);
+			item.toggle();
+			assert.strictEqual(item.selected(), false);
+			assert.strictEqual(scope.editor.selectedElement, null);
+			assert.strictEqual(scope.editor.selectedRow, null);
+			assert.strictEqual(scope.editor.selectedColumn, null);
+			assert.strictEqual(scope.editor.selectedBackground, false);
+			assert.strictEqual(scope.editor.rowRule, null);
+		}
+		scope.selectEditorMode('color');
+		scope.toggleLayoutElement('duration');
+		scope.toggleLayoutElement('duration');
+		assert.strictEqual(scope.selectedColorKey(), null);
+		scope.selectEditorMode('design');
+		scope.toggleLayoutElement('name');
+		const alerts = [];
+		homey.alert = message => alerts.push(message);
+		scope.editor.elementSizeForm = { $invalid: true };
+		scope.toggleLayoutElement('name');
+		assert.strictEqual(scope.editor.selectedElement, 'name');
+		assert.deepStrictEqual(alerts, ['settings.style_size_invalid']);
+		assert.strictEqual(JSON.stringify(scope.getSelectedStyle()), original);
+		assert.strictEqual(scope.isDirty(), false);
+		assert.strictEqual(writes.length, 0);
+	});
+
+	it('keeps moved elements and reordered rows and columns selected', () => {
+		const { scope } = loadSettings(null, null, null, true, null, null, true);
+		scope.toggleLayoutElement('name');
+		scope.moveGroupedElement('name', 2, 1, 0);
+		assert.strictEqual(scope.getSelectedStyle().groups.normal.elements.name.row, 2);
+		assert.strictEqual(scope.editor.selectedElement, 'name');
+		scope.toggleVisibilityRow(1);
+		scope.moveDesignerRow(1, 2);
+		assert.strictEqual(scope.editor.selectedRow, 2);
+		scope.toggleColumn(3, 1);
+		scope.moveDesignerColumn(3, 1, 2);
+		assert.strictEqual(scope.editor.selectedColumn.row, 3);
+		assert.strictEqual(scope.editor.selectedColumn.group, 2);
+	});
+
+	it('deselects a legacy cell without interfering with moving it', () => {
+		const { scope } = loadSettings(null, null, null, true, null, null, true);
+		const cells = scope.getStyleCells();
+		const source = cells.findIndex(Boolean);
+		const target = cells.findIndex((value, index) => index !== source);
+		const element = cells[source];
+		scope.selectStyleCell(source);
+		scope.selectStyleCell(source);
+		assert.strictEqual(scope.editor.selectedElement, null);
+		assert.strictEqual(scope.editor.selectedCell, null);
+		scope.selectStyleCell(source);
+		scope.selectStyleCell(target);
+		assert.strictEqual(scope.getStyleCells()[target], element);
+		assert.strictEqual(scope.editor.selectedElement, element);
+		assert.strictEqual(scope.editor.selectedCell, null);
+		scope.selectStyleCell(target);
+		assert.strictEqual(scope.editor.selectedElement, null);
+	});
+
 	it('switches saved designs without confirmation after changing only preview options', () => {
 		const prompts = [];
 		const { scope } = loadSettings(null, (message, type, callback) => {
@@ -310,14 +397,17 @@ describe('Widget style designer preview', () => {
 		};
 		window.setTimeout = callback => callback();
 		scope.exportStyle();
-		assert.strictEqual(downloads[0], 'chronograph-design-settings.style_current.json');
+		assert.strictEqual(downloads.length, 0);
+		scope.createStyle(true);
+		scope.exportStyle();
+		assert.strictEqual(downloads[0], 'chronograph-design-settings.style_current - settings.style_copy.json');
 		assert.strictEqual(exported.type, 'design');
 		assert.strictEqual(exported.item.colors, undefined);
 		const first = JSON.stringify(exported.item);
 		scope.importStyleFile({ text: JSON.stringify(exported) });
 		assert.strictEqual(scope.widgetStyles.styles.length, 1);
 		assert.notStrictEqual(scope.getSelectedStyle().id, exported.item.id);
-		assert.notStrictEqual(scope.getSelectedStyle().name, exported.item.name);
+		assert.strictEqual(scope.getSelectedStyle().name, exported.item.name);
 		assert.strictEqual(JSON.stringify(scope.getSelectedStyle().groups), JSON.stringify(exported.item.groups));
 		assert.strictEqual(scope.isDirty(), true);
 		assert.strictEqual(JSON.stringify(exported.item), first);
@@ -329,9 +419,12 @@ describe('Widget style designer preview', () => {
 		scope.saveSettings();
 		assert.strictEqual(writes.length, 1);
 		scope.selectEditorMode('color');
+		scope.exportStyle();
+		assert.strictEqual(downloads.length, 2);
+		scope.createStyle(true);
 		scope.getSelectedScheme().borderColors = { play: 'grey' };
 		scope.exportStyle();
-		assert.strictEqual(downloads[2], 'chronograph-color-settings.style_current.json');
+		assert.strictEqual(downloads[2], 'chronograph-color-settings.style_current - settings.style_copy.json');
 		assert.strictEqual(exported.type, 'color');
 		scope.selectEditorMode('design');
 		scope.importStyleFile({ text: JSON.stringify(exported) });
@@ -343,6 +436,16 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(scope.isDirty(), true);
 		assert.deepStrictEqual(alerts, ['settings.saved']);
 		assert.strictEqual(readers.length, 2);
+	});
+
+	it('hides export for built-in designs and color schemes, including local previews', () => {
+		assert.match(html, /<button[^>]*ng-if="!isBuiltInStyle\(\)"[^>]*\s+ng-click="exportStyle\(\)"/);
+		for (const preview of [false, true]) {
+			const { scope } = loadSettings(null, null, null, preview);
+			assert.strictEqual(scope.isBuiltInStyle(), true);
+			scope.selectEditorMode('color');
+			assert.strictEqual(scope.isBuiltInStyle(), true);
+		}
 	});
 
 	it('rejects invalid files and preserves the current item when import is cancelled', () => {
