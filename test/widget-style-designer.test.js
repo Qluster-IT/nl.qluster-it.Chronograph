@@ -81,6 +81,83 @@ function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns, extr
 }
 
 describe('Widget style designer preview', () => {
+	it('adds up to ten rows per size and saves, reloads, reorders and copies their layouts', () => {
+		const { scope, writes, editor } = loadSettings();
+		scope.createStyle(true);
+		const style = scope.getSelectedStyle();
+		scope.selectWidgetBackground();
+		scope.$digest();
+		scope.designRowCount(10);
+		scope.$digest();
+		assert.strictEqual(scope.groupedRows(false).length, 10);
+		scope.moveGroupedElement('name', 10, 1);
+		scope.reorderDesigner('row', '10', '9');
+		assert.strictEqual(style.groups.normal.elements.name.row, 9);
+		scope.selectColumn(1, 1);
+		assert.ok(scope.availableColumnRowSpans().includes(10));
+		scope.editor.columnRowSpan = 10;
+		scope.updateColumnRowSpan();
+		assert.strictEqual(style.columnRowSpans.normal[1][0], 10);
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
+		scope.editor.copyLayoutFrom = 'normal';
+		scope.editor.previewSize = 'large';
+		scope.copySizeLayout();
+		assert.strictEqual(scope.designRowCount(), 10);
+		assert.strictEqual(style.groups.large.elements.name.row, 9);
+		assert.strictEqual(style.rowCounts.compact, 3);
+		scope.saveSettings();
+		const reloaded = loadSettings(writes[0].value).scope;
+		reloaded.editor.selectedStyleId = 'custom:' + style.id;
+		assert.strictEqual(reloaded.designRowCount(), 10);
+		assert.strictEqual(reloaded.groupedRows(false).length, 10);
+	});
+
+	it('confirms reductions, moves affected base and state elements to Unused, and shortens spans', () => {
+		let confirmed = false;
+		const { scope, editor } = loadSettings(null, (message, type, callback) => callback(null, confirmed));
+		scope.createStyle(true);
+		scope.saveSettings();
+		scope.selectWidgetBackground();
+		scope.$digest();
+		const style = scope.getSelectedStyle();
+		scope.designRowCount(10);
+		scope.moveGroupedElement('name', 10, 1);
+		style.groups.normal.overrides.paused = { duration: { row: 9, group: 1, order: 1 } };
+		editor.setColumnRowSpan(style, 'normal', 1, 1, 10);
+		editor.setRowTopPadding(style, 'normal', 10, 20);
+		scope.$digest();
+		const before = JSON.stringify(style);
+		scope.designRowCount(4);
+		assert.strictEqual(JSON.stringify(style), before);
+		confirmed = true;
+		scope.designRowCount(4);
+		scope.$digest();
+		assert.strictEqual(scope.designRowCount(), 4);
+		assert.deepStrictEqual(JSON.parse(JSON.stringify(style.groups.normal.elements.name)), { row: 0, group: 1, order: 1 });
+		assert.deepStrictEqual(JSON.parse(JSON.stringify(style.groups.normal.overrides.paused.duration)), { row: 0, group: 1, order: 1 });
+		assert.strictEqual(style.columnRowSpans.normal[1][0], 4);
+		assert.strictEqual(style.rowTopPadding.normal[10], undefined);
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
+		scope.undoEdit();
+		scope.$digest();
+		assert.strictEqual(scope.designRowCount(), 10);
+		assert.strictEqual(style.groups.normal.elements.name.row, 10);
+	});
+
+	it('retains five rows for older designs and rejects positions beyond the configured count', () => {
+		const { scope, editor } = loadSettings();
+		scope.createStyle(true);
+		const style = scope.getSelectedStyle();
+		delete style.rowCounts;
+		assert.strictEqual(scope.designRowCount(), 5);
+		style.groups.normal.elements.name.row = 6;
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), false);
+		style.rowCounts = { normal: 6 };
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
+		style.rowCounts.normal = 11;
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), false);
+	});
+
 	it('places the sticky size selector after the other preview options', () => {
 		const options = html.indexOf('id="preview-columns"');
 		const tiles = html.indexOf('class="style-preview-tile-controls');
@@ -88,7 +165,7 @@ describe('Widget style designer preview', () => {
 		const preview = html.indexOf('class="style-preview-columns"');
 		assert.ok(options !== -1 && options < tiles && tiles < size && size < preview);
 		assert.match(html.slice(size, preview), /id="preview-size"[^>]*ng-model="editor\.previewSize"/);
-		assert.match(css, /\.style-size-sticky\s*\{[^}]*position:\s*sticky;[^}]*top:\s*0;/);
+		assert.match(css, /\.style-size-sticky\s*\{[^}]*position:\s*sticky;[^}]*top:\s*-18px;/);
 	});
 
 	it('exports and imports individual designs and schemes as new, unsaved copies', () => {
@@ -486,6 +563,7 @@ describe('Widget style designer preview', () => {
 		scope.updateColumnRowSpan();
 		assert.strictEqual(scope.groupedRows(false)[0].groups[0].rowSpan, 4);
 		scope.editor.previewSize = 'compact';
+		scope.designRowCount(5);
 		scope.selectColumn(2, 1);
 		scope.editor.columnRowSpan = 3;
 		scope.updateColumnRowSpan();

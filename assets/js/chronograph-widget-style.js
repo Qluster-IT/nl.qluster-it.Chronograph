@@ -6,6 +6,12 @@
 	var elementIds = ['icon', 'name', 'status', 'duration', 'play', 'pause', 'stop', 'fields', 'cancel', 'start', 'progress'];
 	var buttonIds = ['play', 'pause', 'stop', 'cancel', 'start'];
 	var states = ['inactive', 'running', 'paused', 'starting'];
+	var maxRows = 10;
+
+	function rowCount(style, size) {
+		var count = style && style.rowCounts && style.rowCounts[size];
+		return Number.isInteger(count) && count >= 1 && count <= maxRows ? count : 5;
+	}
 	var defaultElementSizes = {
 		base: { icon: 16, name: 14, status: 12, duration: 14, play: 28, pause: 28, stop: 28, fields: 32, cancel: 28, start: 32, progress: 6 },
 		overrides: {
@@ -243,6 +249,7 @@
 	}
 
 	function configureCurrentPresentation(style) {
+		style.rowCounts = { compact: 3, normal: 5, large: 5 };
 		style.heightModes = { compact: 'minimum-without-inputs', normal: 'minimum', large: 'minimum' };
 		style.rowAlignments = { compact: { 1: 'top' }, normal: { 3: 'bottom' }, large: { 3: 'bottom' } };
 		style.progressSettings = { normal: { timerMode: 'elapsed', showSteps: true }, compact: { showSteps: true }, large: { showSteps: true } };
@@ -298,6 +305,7 @@
 	];
 
 	function narrowDesign(design, tiny) {
+		design.rowCounts = { compact: 5, normal: 5, large: 5 };
 		design.wrapNarrowElements = true;
 		design.inputFieldRows = {};
 		design.reservedElements = {};
@@ -388,6 +396,7 @@
 				design.rowAlignments[size][4] = 'middle';
 			});
 		} else if (id === 'builtin:vertical') {
+			design.rowCounts = { compact: 4, normal: 4, large: 4 };
 			design.groups.compact = currentLayout('normal');
 			['rowColumns', 'columnSpans', 'columnWidths', 'columnAlignments', 'columnDirections', 'columnVerticalAlignments'].forEach(function (key) {
 				design[key].compact = JSON.parse(JSON.stringify(design[key].normal));
@@ -412,7 +421,7 @@
 				design.columnVerticalAlignments[size][1] = ['middle', 'middle'];
 				design.columnVerticalAlignments[size][3] = ['middle', size === 'compact' ? 'top' : 'bottom'];
 				design.columnVerticalAlignments[size][4] = ['middle', size === 'compact' ? 'top' : 'bottom'];
-				design.columnRowSpans[size] = { 1: [5, 1] };
+				design.columnRowSpans[size] = { 1: [4, 1] };
 				design.reservedElements[size] = { progress: true };
 				design.progressSettings[size].direction = 'bottom-top';
 			});
@@ -594,7 +603,8 @@
 		var directions = style.columnDirections && style.columnDirections[size] || {};
 		var widths = style.columnWidths && style.columnWidths[size] || {};
 		var rowSpansByColumn = style.columnRowSpans && style.columnRowSpans[size] || {};
-		return [1, 2, 3, 4, 5].map(function (rowId) {
+		return Array.from({ length: rowCount(style, size) }, function (unused, index) {
+			var rowId = index + 1;
 			var rule = rowVisibility[rowId];
 			var visibleStates = rule && Array.isArray(rule.states) ? rule.states : [];
 			var visible = !rule || visibleStates.indexOf(state) !== -1 || (state === 'starting' && rule.startForm);
@@ -716,6 +726,8 @@
 		builtInScheme: builtInScheme,
 		builtInSchemeDefinitions: builtInSchemeDefinitions,
 		currentDesign: currentDesign,
+		maxRows: maxRows,
+		rowCount: rowCount,
 		currentGroups: currentGroups,
 		currentRowVisibility: currentRowVisibility,
 		configureCurrentColumns: configureCurrentColumns,

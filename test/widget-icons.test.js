@@ -121,7 +121,7 @@ describe('Widget icon autocomplete', () => {
 		const script = fs.readFileSync(path.join(__dirname, '..', 'assets', 'js', 'chronograph-widget.js'), 'utf8');
 		function render(icon, type = 'timer', iconColor) {
 			let controller;
-			const module = { controller: (name, definition) => { controller = definition[definition.length - 1]; } };
+			const module = { controller: (name, definition) => { controller = definition[definition.length - 1]; }, directive() {} };
 			const scope = { $on() {}, $applyAsync(callback) { callback(); } };
 			const homey = { getSettings: () => ({ icon, iconColor }), __: key => key, ready() {}, on() {} };
 			const context = {

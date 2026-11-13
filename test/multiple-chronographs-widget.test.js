@@ -32,7 +32,7 @@ async function loadWidget(settings, states) {
 		scopes.push({ scope, events });
 		return scope;
 	};
-	const module = { controller: (name, definition) => { controllers[name] = definition[definition.length - 1]; } };
+	const module = { controller: (name, definition) => { controllers[name] = definition[definition.length - 1]; }, directive() {} };
 	const context = {
 		angular: { module: () => module, bootstrap() {} }, window: {}, Promise, Date, console,
 		document: { body: { getAttribute: () => null }, querySelector: () => null }

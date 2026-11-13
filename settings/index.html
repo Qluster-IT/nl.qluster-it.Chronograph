@@ -296,6 +296,16 @@
 								</div>
 							</div>
 						</div>
+						<fieldset class="hy-nostyle style-progress-controls" ng-if="editor.selectedBackground">
+							<legend>{{ t('settings.style_widget') }} ({{ t('settings.style_' + editor.previewSize) }})</legend>
+							<div class="style-position-controls">
+								<label class="hy-nostyle" for="style-row-count">{{ t('settings.style_row_count') }}</label>
+								<select id="style-row-count" class="form-select" ng-model="designRowCount"
+									ng-model-options="{ getterSetter: true }" ng-options="value for value in rowCountOptions"
+									ng-disabled="savingSettings || isDesignReadOnly()"></select>
+								<p class="help-text style-progress-full-row">{{ t('settings.style_row_count_hint') }}</p>
+							</div>
+						</fieldset>
 						<fieldset class="hy-nostyle style-column-controls" ng-if="editor.selectedColumn">
 							<legend>{{ t('settings.style_column') }} {{ editor.selectedColumn.row }}.{{ editor.selectedColumn.group }}</legend>
 							<label class="hy-nostyle" for="style-column-span">{{ t('settings.style_column_span') }}</label>

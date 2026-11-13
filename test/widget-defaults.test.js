@@ -16,7 +16,7 @@ async function loadWidget(type, settings, defaults, widgetStyles) {
 	const intervals = [];
 	let invalidInput = null;
 	const state = { active: false, running: false, defaults };
-	const module = { controller: (name, definition) => { controller = definition[definition.length - 1]; } };
+	const module = { controller: (name, definition) => { controller = definition[definition.length - 1]; }, directive() {} };
 	const scope = { $on() {}, $applyAsync(callback) { callback(); } };
 	const homey = {
 		getSettings: () => Object.assign({ chronograph: { id: 'test', name: 'test' } }, settings),

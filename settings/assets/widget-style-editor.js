@@ -13,7 +13,10 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 	var backgroundKeys = ['inactive', 'running', 'paused'];
 	var states = ['running', 'paused', 'inactive'];
 	var layoutStates = states.concat(['starting']);
-	var rowKeys = ['1', '2', '3', '4', '5'];
+	var rowKeys = Array.from({ length: window.ChronographWidgetStyle.maxRows }, function (unused, index) { return String(index + 1); });
+	var rowCount = window.ChronographWidgetStyle.rowCount;
+	var rowProperties = ['rowVisibility', 'rowColumns', 'columnSpans', 'columnAlignments', 'columnVerticalAlignments',
+		'columnDirections', 'columnWidths', 'columnRowSpans', 'rowAlignments', 'rowTopPadding'];
 
 	function position(row, group, order) {
 		return { row: row, group: group, order: order };
@@ -78,6 +81,48 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 		return result;
 	}
 
+	function validRowCounts(style) {
+		var counts = style.rowCounts;
+		return counts === undefined || (!!style.groups && counts && typeof counts === 'object' && !Array.isArray(counts)
+			&& Object.keys(counts).every(function (size) {
+				return sizes.indexOf(size) !== -1 && Number.isInteger(counts[size])
+					&& counts[size] >= 1 && counts[size] <= window.ChronographWidgetStyle.maxRows;
+			}));
+	}
+
+	function setRowCount(style, size, count) {
+		if (!style.groups || sizes.indexOf(size) === -1 || !Number.isInteger(count)
+			|| count < 1 || count > window.ChronographWidgetStyle.maxRows) throw new RangeError('Invalid row count');
+		var previous = rowCount(style, size);
+		if (count === previous) return;
+		var layout = style.groups[size];
+		if (count < previous) {
+			[layout.elements].concat(Object.keys(layout.overrides).map(function (state) { return layout.overrides[state]; }))
+				.forEach(function (positions) {
+					Object.keys(positions).forEach(function (id) {
+						if (positions[id].row > count) positions[id] = position(0, 1, 1);
+					});
+				});
+			Object.keys(style.columnRowSpans && style.columnRowSpans[size] || {}).forEach(function (row) {
+				if (Number(row) <= count) {
+					style.columnRowSpans[size][row] = style.columnRowSpans[size][row].map(function (span) {
+						return Math.min(span, count + 1 - Number(row));
+					});
+				}
+			});
+		}
+		rowProperties.forEach(function (key) {
+			var rows = style[key] && style[key][size];
+			if (!rows) return;
+			Object.keys(rows).forEach(function (row) {
+				if (Number(row) > Math.min(previous, count)) delete rows[row];
+			});
+		});
+		if (!style.rowCounts) style.rowCounts = {};
+		style.rowCounts[size] = count;
+		normalizeColumnSpans(style, size);
+	}
+
 	function rowColumns(style, size, row) {
 		var columns = style.rowColumns && style.rowColumns[size];
 		return columns && columns[row] !== undefined ? columns[row] : 4;
@@ -116,7 +161,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 
 	function moveRow(style, size, source, target) {
 		if (!style.groups || sizes.indexOf(size) === -1
-			|| rowKeys.indexOf(String(source)) === -1 || rowKeys.indexOf(String(target)) === -1
+			|| source < 1 || target < 1 || source > rowCount(style, size) || target > rowCount(style, size)
 			|| !Number.isInteger(source) || !Number.isInteger(target)) throw new RangeError('Invalid row');
 		if (source === target) return;
 		function destination(row) {
@@ -133,8 +178,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 				if (positions[id].row !== 0) positions[id].row = destination(positions[id].row);
 			});
 		});
-		['rowVisibility', 'rowColumns', 'columnSpans', 'columnAlignments', 'columnVerticalAlignments',
-			'columnDirections', 'columnWidths', 'columnRowSpans', 'rowAlignments', 'rowTopPadding'].forEach(function (key) {
+		rowProperties.forEach(function (key) {
 			var rows = style[key] && style[key][size];
 			if (!rows) return;
 			var moved = {};
@@ -142,8 +186,9 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			style[key][size] = moved;
 		});
 		Object.keys(style.columnRowSpans && style.columnRowSpans[size] || {}).forEach(function (row) {
+			if (Number(row) > rowCount(style, size)) return;
 			style.columnRowSpans[size][row] = style.columnRowSpans[size][row].map(function (span) {
-				return Math.min(span, 6 - Number(row));
+				return Math.min(span, rowCount(style, size) + 1 - Number(row));
 			});
 		});
 	}
@@ -222,7 +267,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 		var values = columnRowSpans(style, size, row);
 		if (!style.groups || sizes.indexOf(size) === -1 || rowKeys.indexOf(String(row)) === -1
 			|| !Number.isInteger(column) || column < 1 || column > values.length
-			|| !Number.isInteger(span) || span < 1 || span > 6 - row) throw new RangeError('Invalid column row span');
+			|| !Number.isInteger(span) || span < 1 || span > rowCount(style, size) + 1 - row) throw new RangeError('Invalid column row span');
 		values[column - 1] = span;
 		storeColumnValues(style, 'columnRowSpans', size, row, values);
 		normalizeColumnSpans(style, size);
@@ -240,7 +285,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 	}
 
 	function normalizeColumnSpans(style, size) {
-		for (var row = 1; row <= 5; row++) {
+		for (var row = 1; row <= rowCount(style, size); row++) {
 			var capacity = rowSpanCapacity(style, size, row);
 			var spans = columnSpans(style, size, row);
 			if (spans.length > capacity) {
@@ -564,11 +609,11 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 		});
 	}
 
-	function validGroups(groups) {
+	function validGroups(groups, style) {
 		if (groups === undefined) return true;
 		if (!groups || typeof groups !== 'object' || Array.isArray(groups)) return false;
 		function validPosition(value) {
-			return value && Number.isInteger(value.row) && value.row >= 0 && value.row <= 5
+			return value && Number.isInteger(value.row) && value.row >= 0 && value.row <= window.ChronographWidgetStyle.maxRows
 				&& Number.isInteger(value.group) && value.group >= 1 && value.group <= 4
 				&& Number.isInteger(value.order) && value.order >= 1 && value.order <= groupedElementIds.length
 				&& (value.row !== 0 || (value.group === 1 && value.order === 1));
@@ -584,7 +629,10 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 				&& typeof layout.overrides === 'object' && !Array.isArray(layout.overrides)
 				&& Object.keys(layout.overrides).every(function (state) {
 					return layoutStates.indexOf(state) !== -1 && validElements(layout.overrides[state], false);
-				});
+				}) && [layout.elements].concat(Object.keys(layout.overrides).map(function (state) { return layout.overrides[state]; }))
+					.every(function (positions) { return Object.keys(positions).every(function (id) {
+						return positions[id].row <= rowCount(style, size);
+					}); });
 		}) && Object.keys(groups).every(function (size) { return sizes.indexOf(size) !== -1; });
 	}
 
@@ -794,7 +842,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			|| !validColumnValues(style, 'columnDirections', ['horizontal', 'vertical'])
 			|| !validColumnValues(style, 'columnWidths', ['span', 'content'])
 			|| !validColumnRowSpans(style)) return false;
-		return validOverrides(style.overrides) && validGroups(style.groups) && validColorOverrides(style.colorOverrides)
+		return validOverrides(style.overrides) && validRowCounts(style) && validGroups(style.groups, style) && validColorOverrides(style.colorOverrides)
 			&& validColumnCapacities(style) && sizes.every(function (size) {
 			var cells = style.layouts[size];
 			return Array.isArray(cells) && cells.length === 12
@@ -810,7 +858,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 	function validColumnCapacities(style) {
 		if (!style.groups) return true;
 		return sizes.every(function (size) {
-			return rowKeys.every(function (row) {
+			return rowKeys.slice(0, rowCount(style, size)).every(function (row) {
 				var spans = columnSpans(style, size, row);
 				var total = spans.reduce(function (sum, span) { return sum + span; }, 0);
 				return total === 4 || total === rowSpanCapacity(style, size, Number(row));
@@ -828,7 +876,10 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 					&& Object.keys(rows).every(function (row) {
 						return rowKeys.indexOf(row) !== -1 && Array.isArray(rows[row])
 							&& rows[row].length === rowColumns(style, size, row)
-							&& rows[row].every(function (span) { return Number.isInteger(span) && span >= 1 && span <= 6 - Number(row); });
+							&& rows[row].every(function (span) {
+								var max = Number(row) <= rowCount(style, size) ? rowCount(style, size) : window.ChronographWidgetStyle.maxRows;
+								return Number.isInteger(span) && span >= 1 && span <= max + 1 - Number(row);
+							});
 					});
 			});
 	}
@@ -1060,6 +1111,8 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 		configureCurrentPresentation: configureCurrentPresentation,
 		currentRowVisibility: currentRowVisibility,
 		fromCells: fromCells,
+		rowCount: rowCount,
+		setRowCount: setRowCount,
 		resolvedGroups: resolvedGroups,
 		rowColumns: rowColumns,
 		rowAlignment: rowAlignment,

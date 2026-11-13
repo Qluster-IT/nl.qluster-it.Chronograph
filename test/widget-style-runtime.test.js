@@ -4,6 +4,26 @@ const assert = require('assert');
 const widgetStyle = require('../assets/js/chronograph-widget-style.js');
 
 describe('Widget style runtime', () => {
+	it('renders configured rows beyond five and preserves legacy layouts', () => {
+		const design = widgetStyle.currentDesign();
+		design.rowCounts.normal = 10;
+		design.groups.normal.elements.name.row = 10;
+		const rows = widgetStyle.buildRows(design, 'normal', 'running', 'timer', false);
+		assert.ok(rows.find(row => row.id === 10).groups[0].elements.includes('name'));
+		delete design.rowCounts;
+		assert.strictEqual(widgetStyle.rowCount(design, 'normal'), 5);
+		assert.ok(!widgetStyle.buildRows(design, 'normal', 'running', 'timer', false).some(row => row.id === 10));
+	});
+
+	it('uses the occupied row counts for built-in presets', () => {
+		for (const id of ['builtin:current', ...widgetStyle.builtInDesignDefinitions.map(item => item.id)]) {
+			const design = widgetStyle.builtInDesign(id);
+			const expected = id === 'builtin:vertical' ? [4, 4, 4]
+				: id === 'builtin:small' || id === 'builtin:tiny' ? [5, 5, 5] : [3, 5, 5];
+			assert.deepStrictEqual(['compact', 'normal', 'large'].map(size => widgetStyle.rowCount(design, size)), expected);
+		}
+	});
+
 	it('shows only one start control for inactive stopwatches in every built-in layout', () => {
 		for (const preset of ['builtin:current', ...widgetStyle.builtInDesignDefinitions.map(item => item.id)]) {
 			for (const size of ['compact', 'normal', 'large']) {
@@ -78,7 +98,7 @@ describe('Widget style runtime', () => {
 			assert.strictEqual(design.rowColumns[size][1], 2);
 			assert.deepStrictEqual(design.columnSpans[size], { 1: [1, 3], 2: [3], 3: [2, 1], 4: [2, 1], 5: [3] });
 			assert.deepStrictEqual(design.columnWidths[size][1], [size === 'compact' ? 'span' : 'content', 'span']);
-			assert.deepStrictEqual(design.columnRowSpans[size][1], [5, 1]);
+			assert.deepStrictEqual(design.columnRowSpans[size][1], [4, 1]);
 			assert.deepStrictEqual(design.columnVerticalAlignments[size][3], ['middle', size === 'compact' ? 'top' : 'bottom']);
 			assert.deepStrictEqual(design.columnVerticalAlignments[size][4], ['middle', size === 'compact' ? 'top' : 'bottom']);
 			assert.deepStrictEqual(design.rowVisibility[size][5].states, []);
@@ -90,7 +110,7 @@ describe('Widget style runtime', () => {
 					assert.ok(!rows.some(row => row.id === 5));
 					const progress = layout.rows[0].groups[0];
 					assert.deepStrictEqual(progress.elements, ['progress']);
-					assert.strictEqual(progress.rowSpan, 5);
+					assert.strictEqual(progress.rowSpan, 4);
 					assert.strictEqual(progress.fitContent, true);
 					assert.ok(layout.rows[0].groups[1].elements.includes('name'));
 					assert.strictEqual(layout.rows.find(row => row.id === 3).groups[1].verticalAlignment,

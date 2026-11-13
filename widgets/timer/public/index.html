@@ -35,10 +35,14 @@
 			<form class="chronograph-start-form" ng-if="!selectedChronograph.active && (layout !== 'compact' || showStartForm)" ng-submit="start()">
 				<div class="chronograph-fields">
 					<div class="chronograph-duration-fields">
-						<label class="visually-hidden" for="duration">{{ labels.duration }}</label>
-						<input class="form-control" id="duration" type="number" min="1" step="any" ng-model="startValues.time" required>
-						<label class="visually-hidden" for="duration-unit">{{ labels.unit }}</label>
-						<select class="form-select" id="duration-unit" ng-model="startValues.unit" ng-options="unit.id as unit.label for unit in units"></select>
+						<div chronograph-field-tooltip>
+							<label class="visually-hidden" for="duration">{{ labels.duration }}</label>
+							<input class="form-control" id="duration" type="number" min="1" step="any" ng-model="startValues.time" required>
+						</div>
+						<div chronograph-field-tooltip>
+							<label class="visually-hidden" for="duration-unit">{{ labels.unit }}</label>
+							<select class="form-select" id="duration-unit" ng-model="startValues.unit" ng-options="unit.id as unit.label for unit in units"></select>
+						</div>
 					</div>
 				</div>
 				<button class="chronograph-start-button" type="submit" ng-disabled="busy" ng-attr-data-button-color="{{ playColor }}" ng-style="schemeElementStyle('start')">

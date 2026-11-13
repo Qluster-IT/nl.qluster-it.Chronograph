@@ -345,10 +345,10 @@ body {
 
 .style-design-selectors {
 	display: grid;
-	grid-template-columns: auto minmax(0, 1fr);
+	grid-template-columns: minmax(0, 40%) minmax(0, 1fr);
 	align-items: center;
 	gap: 8px 12px;
-	margin-bottom: 12px;
+	margin-bottom: 8px;
 }
 
 .style-design-selectors h3 {
@@ -363,24 +363,18 @@ body {
 
 .style-size-sticky {
 	position: sticky;
-	top: 0;
+	top: -18px;
 	z-index: 10;
 	display: grid;
-	grid-template-columns: auto minmax(0, 1fr);
+	grid-template-columns: minmax(0, 40%) minmax(0, 1fr);
 	align-items: center;
 	gap: 12px;
-	padding: 8px 0;
-	background: var(--homey-background-color, var(--homey-color-background, #fff));
+	margin-bottom: 12px;
+	background: var(--homey-background-color, var(--homey-color-background, Canvas));
 }
 
 .style-size-sticky label {
 	margin: 0;
-}
-
-@media (prefers-color-scheme: dark) {
-	.style-size-sticky {
-		background: var(--homey-background-color, var(--homey-color-background, #1c1c1e));
-	}
 }
 
 .style-preview-columns {

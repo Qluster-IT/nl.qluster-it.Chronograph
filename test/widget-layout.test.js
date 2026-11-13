@@ -27,6 +27,7 @@ describe('Widget asset bundles', () => {
 		const cache = {};
 		const module = {
 			controller(name) { controllers.push(name); return module; },
+			directive() { return module; },
 			run(definition) { definition[definition.length - 1]({ put: (key, value) => { cache[key] = value; } }); return module; }
 		};
 		const context = { window: {}, document: {}, angular: { module: () => module, bootstrap() {} } };
@@ -48,6 +49,65 @@ describe('Widget asset bundles', () => {
 });
 
 describe('Widget input layout', () => {
+	it('shows a localized focus tooltip above the field and keeps it within the widget', () => {
+		const script = fs.readFileSync(path.join(root, 'assets', 'js', 'chronograph-widget.js'), 'utf8');
+		let directive;
+		let destroy;
+		let tooltip;
+		const listeners = {};
+		const windowListeners = {};
+		let rect = { left: 80, top: 60, bottom: 92, width: 40 };
+		const field = {
+			getBoundingClientRect: () => rect,
+			addEventListener: (event, fn) => { listeners[event] = fn; },
+			removeEventListener: event => { delete listeners[event]; }
+		};
+		const label = { textContent: 'From' };
+		const module = {
+			controller() {},
+			directive(name, factory) { if (name === 'chronographFieldTooltip') directive = factory(); }
+		};
+		const window = {
+			innerWidth: 120, innerHeight: 100,
+			addEventListener: (event, fn) => { windowListeners[event] = fn; },
+			removeEventListener: event => { delete windowListeners[event]; }
+		};
+		const document = {
+			body: { appendChild(node) { tooltip = node; } },
+			createElement: () => ({
+				style: {},
+				setAttribute(name, value) { this[name] = value; },
+				getBoundingClientRect: () => ({ width: 50, height: 20 }),
+				remove() { this.removed = true; }
+			})
+		};
+		const context = { angular: { module: () => module, bootstrap() {} }, window, document };
+		vm.runInNewContext(script, context);
+		context.onHomeyReady({});
+		directive.link({ $on(name, callback) { if (name === '$destroy') destroy = callback; } }, [{
+			querySelector: selector => selector === 'label' ? label : field
+		}]);
+		listeners.focus();
+		assert.strictEqual(tooltip.textContent, 'From');
+		assert.strictEqual(tooltip['aria-hidden'], 'true');
+		assert.strictEqual(tooltip.style.left, '66px');
+		assert.strictEqual(tooltip.style.top, '36px');
+		rect = { left: 0, top: 2, bottom: 34, width: 40 };
+		windowListeners.resize();
+		assert.strictEqual(tooltip.style.left, '4px');
+		assert.strictEqual(tooltip.style.top, '38px');
+		listeners.blur();
+		assert.strictEqual(tooltip.removed, true);
+		destroy();
+		assert.deepStrictEqual(listeners, {});
+		assert.deepStrictEqual(windowListeners, {});
+		assert.strictEqual((template.match(/chronograph-field-tooltip ng-style/g) || []).length, 5);
+		for (const [widget, count] of [['timer', 2], ['transition', 5], ['multiple_chronographs', 5]]) {
+			const html = fs.readFileSync(path.join(root, 'widgets', widget, 'public', 'index.html'), 'utf8');
+			assert.strictEqual((html.match(/chronograph-field-tooltip/g) || []).length, count, widget);
+		}
+	});
+
 	it('keeps spanning column gaps without padding the right edge in widgets or previews', () => {
 		for (const markup of [template, preview]) {
 			assert.ok(markup.includes('ng-attr-data-grid-last="{{ group.gridEnd >= 0.999999999'));

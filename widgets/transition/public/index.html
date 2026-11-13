@@ -35,21 +35,25 @@
 			<form class="chronograph-start-form chronograph-transition-start-form" ng-if="!selectedChronograph.active && (layout !== 'compact' || showStartForm)" ng-submit="start()">
 				<div class="chronograph-fields">
 					<div class="chronograph-duration-fields">
-						<label class="visually-hidden" for="duration">{{ labels.duration }}</label>
-						<input class="form-control" id="duration" type="number" min="1" step="any" ng-model="startValues.time" required>
-						<label class="visually-hidden" for="duration-unit">{{ labels.unit }}</label>
-						<select class="form-select" id="duration-unit" ng-model="startValues.unit" ng-options="unit.id as unit.label for unit in units"></select>
+						<div chronograph-field-tooltip>
+							<label class="visually-hidden" for="duration">{{ labels.duration }}</label>
+							<input class="form-control" id="duration" type="number" min="1" step="any" ng-model="startValues.time" required>
+						</div>
+						<div chronograph-field-tooltip>
+							<label class="visually-hidden" for="duration-unit">{{ labels.unit }}</label>
+							<select class="form-select" id="duration-unit" ng-model="startValues.unit" ng-options="unit.id as unit.label for unit in units"></select>
+						</div>
 					</div>
 					<div class="chronograph-transition-fields">
-						<div>
+						<div chronograph-field-tooltip>
 							<label class="visually-hidden" for="transition-from">{{ labels.from }}</label>
 							<input class="form-control" id="transition-from" type="number" step="any" placeholder="{{ labels.from }}" ng-model="startValues.from" required>
 						</div>
-						<div>
+						<div chronograph-field-tooltip>
 							<label class="visually-hidden" for="transition-to">{{ labels.to }}</label>
 							<input class="form-control" id="transition-to" type="number" step="any" placeholder="{{ labels.to }}" ng-model="startValues.to" required>
 						</div>
-						<div>
+						<div chronograph-field-tooltip>
 							<label class="visually-hidden" for="transition-steps">{{ labels.steps }}</label>
 							<input class="form-control" id="transition-steps" type="number" min="2" step="1" placeholder="{{ labels.steps }}" ng-model="startValues.steps" required>
 						</div>

@@ -701,6 +701,52 @@ function onHomeyReady(Homey) {
 		}
 	]);
 
+	angular.module('chronographWidget').directive('chronographFieldTooltip', function () {
+		return {
+			restrict: 'A',
+			link: function (scope, element) {
+				var field = element[0].querySelector('input, select');
+				var label = element[0].querySelector('label');
+				var tooltip;
+				function position() {
+					if (!tooltip) return;
+					var input = field.getBoundingClientRect();
+					var box = tooltip.getBoundingClientRect();
+					var left = Math.max(4, Math.min(input.left + (input.width - box.width) / 2, window.innerWidth - box.width - 4));
+					var top = input.top - box.height - 4;
+					if (top < 0) top = Math.min(input.bottom + 4, Math.max(0, window.innerHeight - box.height));
+					tooltip.style.left = left + 'px';
+					tooltip.style.top = top + 'px';
+					tooltip.style.visibility = 'visible';
+				}
+				function show() {
+					if (tooltip) return;
+					tooltip = document.createElement('span');
+					tooltip.className = 'chronograph-field-tooltip';
+					tooltip.setAttribute('aria-hidden', 'true');
+					tooltip.textContent = label.textContent;
+					tooltip.style.visibility = 'hidden';
+					document.body.appendChild(tooltip);
+					position();
+				}
+				function hide() {
+					if (!tooltip) return;
+					tooltip.remove();
+					tooltip = null;
+				}
+				field.addEventListener('focus', show);
+				field.addEventListener('blur', hide);
+				window.addEventListener('resize', position);
+				scope.$on('$destroy', function () {
+					hide();
+					field.removeEventListener('focus', show);
+					field.removeEventListener('blur', hide);
+					window.removeEventListener('resize', position);
+				});
+			}
+		};
+	});
+
 	if (window.registerMultipleChronographsWidget) window.registerMultipleChronographsWidget(Homey);
 	angular.bootstrap(document, ['chronographWidget']);
 }
