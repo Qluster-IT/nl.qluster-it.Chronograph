@@ -233,7 +233,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			if (arguments.length && !$scope.savingSettings && !$scope.isDesignReadOnly()) {
 				if (!style.buttonTexts) style.buttonTexts = {};
 				if (!style.buttonTexts[size]) style.buttonTexts[size] = {};
-				style.buttonTexts[size][element] = value ? null : $scope.buttonText(element);
+				style.buttonTexts[size][element] = value ? null : '';
 			}
 			var texts = style.buttonTexts && style.buttonTexts[size];
 			return !texts || texts[element] === undefined || texts[element] === null;
@@ -247,7 +247,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				&& !$scope.useDefaultButtonText() && (value === null || typeof value === 'string' && value.length <= 80)) {
 				style.buttonTexts[size][element] = value === null ? '' : value;
 			}
-			return $scope.buttonText(element);
+			return $scope.useDefaultButtonText() ? '' : $scope.buttonText(element);
 		};
 		$scope.elementSize = function (element) {
 			return sizeRuntime.elementSize($scope.getSelectedStyle(), $scope.editor.previewSize, element);

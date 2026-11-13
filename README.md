@@ -49,7 +49,8 @@ Homey device, so final appearance and behavior still require a Homey check.
 The designer can also preview one tile in a one-, two-, or three-column
 multi-widget; its width depends on the available preview space.
 Button text can be customized per design size. Default text is translated;
-custom text is shared across languages, and empty custom text shows only the icon.
+the default appears as a placeholder in the designer. Custom text is shared
+across languages, and empty custom text shows only the icon.
 Duration and status bar elements can reserve space when hidden, separately for
 each design size.
 Press Ctrl+C in the terminal to stop the server. Set
@@ -88,6 +89,13 @@ To regenerate the widget icon previews after updating the icon catalog, run `npm
 Application image by [Agê Barros](https://unsplash.com/@agebarros?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/search/photos/time?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText).
 
 ## Changelog
+
+### v3.0.4
+
+* Customize widget button text separately for each design size.
+* Reserve space for hidden duration and status bar elements to keep widget layouts aligned.
+* Refined the built-in widget designs.
+* Combined the widget and API migration announcements into one notification.
 
 ### v3.0.3
 

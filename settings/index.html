@@ -379,6 +379,7 @@
 							<label class="hy-nostyle" for="style-button-text">{{ t('settings.style_button_text') }}</label>
 							<input id="style-button-text" class="hy-nostyle form-control" type="text" maxlength="80"
 								ng-model="editButtonText" ng-model-options="{ getterSetter: true }"
+								ng-attr-placeholder="{{ useDefaultButtonText() ? buttonText(editor.selectedElement) : '' }}"
 								ng-disabled="savingSettings || useDefaultButtonText()">
 							<p class="help-text style-progress-full-row">{{ t('settings.style_button_text_hint') }}</p>
 						</div>

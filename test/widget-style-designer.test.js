@@ -485,8 +485,11 @@ describe('Widget style designer preview', () => {
 		const style = scope.getSelectedStyle();
 		scope.selectLayoutElement('start');
 		assert.strictEqual(scope.useDefaultButtonText(), true);
-		assert.strictEqual(scope.editButtonText(), 'settings.widget_start');
+		assert.strictEqual(scope.editButtonText(), '');
+		assert.strictEqual(scope.buttonText('start'), 'settings.widget_start');
 		scope.useDefaultButtonText(false);
+		assert.strictEqual(scope.editButtonText(), '');
+		assert.strictEqual(scope.buttonText('start'), '');
 		scope.editButtonText('Begin');
 		scope.editor.previewSize = 'compact';
 		assert.strictEqual(scope.useDefaultButtonText(), true);
@@ -506,8 +509,12 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(reloaded.buttonText('start'), '');
 		assert.strictEqual(reloaded.buttonText('pause'), 'Wait');
 		reloaded.useDefaultButtonText(true);
-		assert.strictEqual(reloaded.editButtonText(), 'settings.widget_start');
+		assert.strictEqual(reloaded.editButtonText(), '');
+		assert.strictEqual(reloaded.buttonText('start'), 'settings.widget_start');
 		assert.strictEqual(reloaded.useDefaultButtonText(), true);
+		reloaded.useDefaultButtonText(false);
+		assert.strictEqual(reloaded.editButtonText(), '');
+		assert.match(html, /ng-attr-placeholder="{{ useDefaultButtonText\(\) \? buttonText\(editor\.selectedElement\) : '' }}"/);
 	});
 
 	it('saves hidden-element space reservations independently per size', () => {
