@@ -264,7 +264,14 @@
     "style_preview_tile": "Tegel __number__",
     "style_row_count": "Aantal rijen",
     "style_row_count_hint": "Rijen worden per formaat afzonderlijk ingesteld.",
-    "style_row_count_confirm": "Verminderen naar __count__ rijen? Verwijderde rijen verliezen hun instellingen, hun elementen gaan naar Ongebruikt en kolommen die meerdere rijen beslaan worden ingekort."
+    "style_row_count_confirm": "Verminderen naar __count__ rijen? Verwijderde rijen verliezen hun instellingen, hun elementen gaan naar Ongebruikt en kolommen die meerdere rijen beslaan worden ingekort.",
+    "style_preset_settings": "Instellingen",
+    "style_button_shape": "Knopvorm",
+    "style_button_round": "Rond",
+    "style_button_square": "Vierkant",
+    "style_shape_override": "Afwijken voor deze grootte",
+    "style_shape_hint": "De vorm geldt standaard voor alle groottes. Schakel de afwijking in om alleen deze grootte te wijzigen.",
+    "style_button_border": "Randkleur"
   },
   "timer_not_running": "Timer __name__ loopt niet.",
   "stopwatch_not_running": "Stopwatch __name__ loopt niet.",

@@ -267,7 +267,14 @@
     "style_preview_tile": "Tarjeta __number__",
     "style_row_count": "Número de filas",
     "style_row_count_hint": "Las filas se configuran por separado para cada tamaño.",
-    "style_row_count_confirm": "¿Reducir a __count__ filas? Las filas eliminadas pierden sus ajustes, sus elementos pasan a No utilizados y las columnas que abarcan varias filas se acortan."
+    "style_row_count_confirm": "¿Reducir a __count__ filas? Las filas eliminadas pierden sus ajustes, sus elementos pasan a No utilizados y las columnas que abarcan varias filas se acortan.",
+    "style_preset_settings": "Ajustes",
+    "style_button_shape": "Forma del botón",
+    "style_button_round": "Redondo",
+    "style_button_square": "Cuadrado",
+    "style_shape_override": "Personalizar para este tamaño",
+    "style_shape_hint": "La forma se aplica a todos los tamaños por defecto. Active esta opción para cambiar solo este tamaño.",
+    "style_button_border": "Color del borde"
   },
   "timer_not_running": "El temporizador __name__ no está en marcha.",
   "stopwatch_not_running": "El cronómetro __name__ no está en marcha.",

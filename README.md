@@ -60,6 +60,7 @@ Layouts can be copied between sizes without replacing other size-specific
 settings. Undo and redo apply to the currently selected design or scheme.
 Switching away from an unsaved design or scheme prompts to discard its changes;
 the browser may also warn before leaving with unsaved settings.
+The preview highlights the selected widget, row, column or visible element.
 Press Ctrl+C in the terminal to stop the server. Set
 `CHRONOGRAPH_PREVIEW_PORT` before starting it to use another port.
 
@@ -103,6 +104,12 @@ Application image by [Agê Barros](https://unsplash.com/@agebarros?utm_source=un
 * Export and import individual widget designs and color schemes as JSON files.
 * Added layout copying between design sizes and a three-tile multi-widget preview.
 * Added a link to the widget designer guide.
+* Configure the number of rows per design size, and customize button shapes and borders.
+* Added a Settings design and matching color scheme.
+* Show field labels on focus and highlight selected designer items in the preview.
+* Preview multi-widget row separation and line colors.
+* Fixed a false discard warning when migrating older local preview presets.
+* Updated Better Logic Library to 1.0.3.
 * Customize widget button text separately for each design size.
 * Reserve space for hidden duration and status bar elements to keep widget layouts aligned.
 * Refined the built-in widget designs.

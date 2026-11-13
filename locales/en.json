@@ -267,7 +267,14 @@
     "style_preview_tile": "Tile __number__",
     "style_row_count": "Number of rows",
     "style_row_count_hint": "Rows are configured separately for each size.",
-    "style_row_count_confirm": "Reduce to __count__ rows? Removed rows lose their settings, their elements move to Unused, and spanning columns are shortened."
+    "style_row_count_confirm": "Reduce to __count__ rows? Removed rows lose their settings, their elements move to Unused, and spanning columns are shortened.",
+    "style_preset_settings": "Settings",
+    "style_button_shape": "Button shape",
+    "style_button_round": "Round",
+    "style_button_square": "Square",
+    "style_shape_override": "Override for this size",
+    "style_shape_hint": "By default, the shape applies to all sizes. Enable the override to change only this size.",
+    "style_button_border": "Border color"
   },
   "timer_not_running": "Timer __name__ is not running.",
   "stopwatch_not_running": "Stopwatch __name__ is not running.",

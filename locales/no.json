@@ -267,7 +267,14 @@
     "style_preview_tile": "Flis __number__",
     "style_row_count": "Antall rader",
     "style_row_count_hint": "Rader konfigureres separat for hver størrelse.",
-    "style_row_count_confirm": "Reduser til __count__ rader? Fjernede rader mister innstillingene, elementene flyttes til Ubrukt og kolonner over flere rader forkortes."
+    "style_row_count_confirm": "Reduser til __count__ rader? Fjernede rader mister innstillingene, elementene flyttes til Ubrukt og kolonner over flere rader forkortes.",
+    "style_preset_settings": "Innstillinger",
+    "style_button_shape": "Knappeform",
+    "style_button_round": "Rund",
+    "style_button_square": "Firkantet",
+    "style_shape_override": "Overstyr for denne størrelsen",
+    "style_shape_hint": "Formen gjelder som standard for alle størrelser. Aktiver overstyring for å endre bare denne størrelsen.",
+    "style_button_border": "Kantfarge"
   },
   "timer_not_running": "Timeren __name__ kjører ikke.",
   "stopwatch_not_running": "Stoppeklokken __name__ kjører ikke.",

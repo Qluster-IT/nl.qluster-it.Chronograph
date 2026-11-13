@@ -267,7 +267,14 @@
     "style_preview_tile": "Kachel __number__",
     "style_row_count": "Anzahl der Zeilen",
     "style_row_count_hint": "Die Zeilen werden für jede Größe separat eingestellt.",
-    "style_row_count_confirm": "Auf __count__ Zeilen reduzieren? Entfernte Zeilen verlieren ihre Einstellungen, ihre Elemente werden nach Unbenutzt verschoben und zeilenübergreifende Spalten werden verkürzt."
+    "style_row_count_confirm": "Auf __count__ Zeilen reduzieren? Entfernte Zeilen verlieren ihre Einstellungen, ihre Elemente werden nach Unbenutzt verschoben und zeilenübergreifende Spalten werden verkürzt.",
+    "style_preset_settings": "Einstellungen",
+    "style_button_shape": "Schaltflächenform",
+    "style_button_round": "Rund",
+    "style_button_square": "Quadratisch",
+    "style_shape_override": "Für diese Größe abweichend",
+    "style_shape_hint": "Die Form gilt standardmäßig für alle Größen. Aktivieren Sie die Abweichung, um nur diese Größe zu ändern.",
+    "style_button_border": "Rahmenfarbe"
   },
   "timer_not_running": "Timer __name__ läuft nicht.",
   "stopwatch_not_running": "Stopuhr __name__ läuft nicht.",

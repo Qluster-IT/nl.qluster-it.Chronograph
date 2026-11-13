@@ -267,7 +267,14 @@
     "style_preview_tile": "Tuile __number__",
     "style_row_count": "Nombre de lignes",
     "style_row_count_hint": "Les lignes sont configurées séparément pour chaque taille.",
-    "style_row_count_confirm": "Réduire à __count__ lignes ? Les lignes supprimées perdent leurs réglages, leurs éléments passent dans Non utilisés et les colonnes sur plusieurs lignes sont raccourcies."
+    "style_row_count_confirm": "Réduire à __count__ lignes ? Les lignes supprimées perdent leurs réglages, leurs éléments passent dans Non utilisés et les colonnes sur plusieurs lignes sont raccourcies.",
+    "style_preset_settings": "Paramètres",
+    "style_button_shape": "Forme du bouton",
+    "style_button_round": "Rond",
+    "style_button_square": "Carré",
+    "style_shape_override": "Personnaliser pour cette taille",
+    "style_shape_hint": "Par défaut, la forme s’applique à toutes les tailles. Activez cette option pour modifier uniquement cette taille.",
+    "style_button_border": "Couleur de bordure"
   },
   "timer_not_running": "Le minuteur __name__ n’est pas en cours d’exécution.",
   "stopwatch_not_running": "Le chronomètre __name__ n’est pas en cours d’exécution.",

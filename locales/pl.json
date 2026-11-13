@@ -267,7 +267,14 @@
     "style_preview_tile": "Kafelek __number__",
     "style_row_count": "Liczba wierszy",
     "style_row_count_hint": "Wiersze są konfigurowane osobno dla każdego rozmiaru.",
-    "style_row_count_confirm": "Zmniejszyć do __count__ wierszy? Usunięte wiersze tracą ustawienia, ich elementy trafiają do Nieużywane, a kolumny obejmujące wiele wierszy zostają skrócone."
+    "style_row_count_confirm": "Zmniejszyć do __count__ wierszy? Usunięte wiersze tracą ustawienia, ich elementy trafiają do Nieużywane, a kolumny obejmujące wiele wierszy zostają skrócone.",
+    "style_preset_settings": "Ustawienia",
+    "style_button_shape": "Kształt przycisku",
+    "style_button_round": "Okrągły",
+    "style_button_square": "Kwadratowy",
+    "style_shape_override": "Zmień dla tego rozmiaru",
+    "style_shape_hint": "Domyślnie kształt dotyczy wszystkich rozmiarów. Włącz zmianę, aby dostosować tylko ten rozmiar.",
+    "style_button_border": "Kolor obramowania"
   },
   "timer_not_running": "Timer __name__ nie działa.",
   "stopwatch_not_running": "Stoper __name__ nie działa.",

@@ -267,7 +267,14 @@
     "style_preview_tile": "Riquadro __number__",
     "style_row_count": "Numero di righe",
     "style_row_count_hint": "Le righe sono configurate separatamente per ogni dimensione.",
-    "style_row_count_confirm": "Ridurre a __count__ righe? Le righe rimosse perdono le impostazioni, i loro elementi passano a Non utilizzati e le colonne su più righe vengono accorciate."
+    "style_row_count_confirm": "Ridurre a __count__ righe? Le righe rimosse perdono le impostazioni, i loro elementi passano a Non utilizzati e le colonne su più righe vengono accorciate.",
+    "style_preset_settings": "Impostazioni",
+    "style_button_shape": "Forma del pulsante",
+    "style_button_round": "Rotondo",
+    "style_button_square": "Quadrato",
+    "style_shape_override": "Personalizza per questa dimensione",
+    "style_shape_hint": "Per impostazione predefinita la forma si applica a tutte le dimensioni. Attiva questa opzione per modificare solo questa dimensione.",
+    "style_button_border": "Colore del bordo"
   },
   "timer_not_running": "Il timer __name__ non è in esecuzione.",
   "stopwatch_not_running": "Il cronometro __name__ non è in esecuzione.",

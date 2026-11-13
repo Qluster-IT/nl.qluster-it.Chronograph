@@ -267,7 +267,14 @@
     "style_preview_tile": "Flise __number__",
     "style_row_count": "Antal rækker",
     "style_row_count_hint": "Rækker indstilles separat for hver størrelse.",
-    "style_row_count_confirm": "Reducer til __count__ rækker? Fjernede rækker mister deres indstillinger, deres elementer flyttes til Ubrugt, og kolonner over flere rækker forkortes."
+    "style_row_count_confirm": "Reducer til __count__ rækker? Fjernede rækker mister deres indstillinger, deres elementer flyttes til Ubrugt, og kolonner over flere rækker forkortes.",
+    "style_preset_settings": "Indstillinger",
+    "style_button_shape": "Knapform",
+    "style_button_round": "Rund",
+    "style_button_square": "Firkantet",
+    "style_shape_override": "Tilsidesæt for denne størrelse",
+    "style_shape_hint": "Formen gælder som standard for alle størrelser. Slå tilsidesættelse til for kun at ændre denne størrelse.",
+    "style_button_border": "Kantfarve"
   },
   "timer_not_running": "Timeren __name__ kører ikke.",
   "stopwatch_not_running": "Stopuret __name__ kører ikke.",

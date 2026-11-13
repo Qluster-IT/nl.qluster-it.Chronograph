@@ -267,7 +267,14 @@
     "style_preview_tile": "المربع __number__",
     "style_row_count": "عدد الصفوف",
     "style_row_count_hint": "تُضبط الصفوف لكل حجم على حدة.",
-    "style_row_count_confirm": "هل تريد تقليل الصفوف إلى __count__؟ ستفقد الصفوف المحذوفة إعداداتها، وتُنقل عناصرها إلى غير مستخدم، وتُقصّر الأعمدة الممتدة عبر الصفوف."
+    "style_row_count_confirm": "هل تريد تقليل الصفوف إلى __count__؟ ستفقد الصفوف المحذوفة إعداداتها، وتُنقل عناصرها إلى غير مستخدم، وتُقصّر الأعمدة الممتدة عبر الصفوف.",
+    "style_preset_settings": "الإعدادات",
+    "style_button_shape": "شكل الزر",
+    "style_button_round": "دائري",
+    "style_button_square": "مربع",
+    "style_shape_override": "تخصيص لهذا الحجم",
+    "style_shape_hint": "ينطبق الشكل افتراضياً على جميع الأحجام. فعّل التخصيص لتغيير هذا الحجم فقط.",
+    "style_button_border": "لون الحدود"
   },
   "timer_not_running": "المؤقت __name__ غير قيد التشغيل.",
   "stopwatch_not_running": "ساعة الإيقاف __name__ غير قيد التشغيل.",
