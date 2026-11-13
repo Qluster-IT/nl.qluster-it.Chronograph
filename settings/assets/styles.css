@@ -377,6 +377,31 @@ body {
 	margin: 0;
 }
 
+.style-preview-rows {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	min-width: 0;
+}
+
+.style-preview-frame-multiple {
+	padding: 8px;
+	border: 1px solid rgba(128, 128, 128, 0.35);
+	border-radius: 8px;
+}
+
+.style-preview-rows[data-separator="cards"] .style-preview-columns {
+	padding: var(--homey-su-4, 16px);
+	border-radius: 16px;
+	background: var(--homey-background-color, #fff);
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.style-preview-rows[data-separator="line"] .style-preview-columns + .style-preview-columns {
+	border-top: 1px solid var(--style-preview-separator-color);
+	padding-top: 8px;
+}
+
 .style-preview-columns {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr);
@@ -424,6 +449,23 @@ body {
 
 .style-preview-measure {
 	visibility: hidden;
+	pointer-events: none;
+}
+
+.style-preview-show-selection .style-preview-selected {
+	outline: 2px solid var(--chronograph-primary);
+	outline-offset: 1px;
+}
+
+.style-preview-widget-selected {
+	outline: 2px solid var(--chronograph-primary);
+	outline-offset: -2px;
+}
+
+.style-preview-row-overlay {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
 	pointer-events: none;
 }
 

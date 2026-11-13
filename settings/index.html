@@ -216,6 +216,15 @@
 							<option value="2">2</option>
 							<option value="3">3</option>
 						</select>
+						<label ng-if="editor.previewColumns === '1' || editor.previewColumns === '2'" class="hy-nostyle" for="preview-separator">{{ t('settings.multiple_row_separator') }}</label>
+						<select ng-if="editor.previewColumns === '1' || editor.previewColumns === '2'" id="preview-separator" class="form-select" ng-model="editor.previewSeparator">
+							<option value="none">{{ t('settings.style_color_none') }}</option>
+							<option value="cards">{{ t('settings.multiple_separator_cards') }}</option>
+							<option value="line">{{ t('settings.multiple_separator_line') }}</option>
+						</select>
+						<label ng-if="(editor.previewColumns === '1' || editor.previewColumns === '2') && editor.previewSeparator === 'line'" class="hy-nostyle" for="preview-separator-color">{{ t('settings.multiple_separator_color') }}</label>
+						<select ng-if="(editor.previewColumns === '1' || editor.previewColumns === '2') && editor.previewSeparator === 'line'" id="preview-separator-color" class="form-select" ng-model="editor.previewSeparatorColor"
+							ng-options="color.id as color.label for color in elementColorOptions"></select>
 						<p id="preview-columns-hint" class="help-text style-progress-full-row" ng-if="editor.previewColumns !== 'single'">{{ t('settings.style_preview_columns_hint') }}</p>
 						<div class="style-preview-tile-controls style-progress-full-row" ng-if="editor.previewColumns !== 'single'">
 							<label class="hy-nostyle" ng-repeat="tile in previewTiles track by $index">
@@ -238,15 +247,21 @@
 							<option value="large">{{ t('settings.style_large') }}</option>
 						</select>
 					</div>
-					<div class="style-preview-columns" ng-style="editor.previewColumns === 'single' ? {} : { 'grid-template-columns': 'repeat(' + editor.previewColumns + ', minmax(0, 1fr))' }">
-						<div class="style-preview style-preview-height" ng-repeat="previewTile in visiblePreviewTiles() track by $index"
-							ng-class="['style-preview-' + editor.previewSize, { 'style-preview-multiple': editor.previewColumns !== 'single' }]"
-							ng-attr-data-allow-shrink="{{ allowDesignShrink() }}"
-							ng-attr-data-background="{{ previewColor('background', false, previewTileState(null, previewTile.type)) }}">
-							<div class="style-preview-layer" ng-include="getSelectedStyle().groups ? 'grouped-preview.html' : 'cell-preview.html'"></div>
-							<div class="style-preview-measure" ng-if="heightMode() !== 'auto'" aria-hidden="true" inert>
-								<div class="style-preview-layer" ng-repeat="previewScenario in measureHeightScenarios() track by previewScenario.id">
-									<div ng-include="getSelectedStyle().groups ? 'grouped-preview.html' : 'cell-preview.html'"></div>
+					<div class="style-preview-rows" ng-class="{ 'style-preview-frame-multiple': editor.previewColumns !== 'single' }"
+						ng-attr-data-separator="{{ editor.previewColumns === '1' || editor.previewColumns === '2' ? editor.previewSeparator : 'none' }}"
+						ng-attr-style="--style-preview-separator-color: {{ previewSeparatorColor() }}">
+						<div class="style-preview-columns" ng-repeat="previewRow in previewRows() track by $index"
+							ng-style="editor.previewColumns === 'single' ? {} : { 'grid-template-columns': 'repeat(' + editor.previewColumns + ', minmax(0, 1fr))' }">
+							<div class="style-preview style-preview-height" ng-repeat="previewTile in previewRow track by $index"
+								ng-class="['style-preview-' + editor.previewSize, { 'style-preview-multiple': editor.previewColumns !== 'single', 'style-preview-widget-selected': editor.selectedBackground && (editor.mode === 'design' ? !isDesignReadOnly() : !isSchemeReadOnly()) }]"
+								ng-attr-data-allow-shrink="{{ allowDesignShrink() }}"
+								ng-attr-data-background="{{ previewColor('background', false, previewTileState(null, previewTile.type)) }}">
+								<div class="style-preview-layer" ng-class="{ 'style-preview-show-selection': editor.mode === 'design' ? !isDesignReadOnly() : !isSchemeReadOnly() }"
+									ng-include="getSelectedStyle().groups ? 'grouped-preview.html' : 'cell-preview.html'"></div>
+								<div class="style-preview-measure" ng-if="heightMode() !== 'auto'" aria-hidden="true" inert>
+									<div class="style-preview-layer" ng-repeat="previewScenario in measureHeightScenarios() track by previewScenario.id">
+										<div ng-include="getSelectedStyle().groups ? 'grouped-preview.html' : 'cell-preview.html'"></div>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -557,10 +572,11 @@
 		<div class="style-grouped-preview" ng-attr-data-row-spanning="{{ previewRowLayout(previewScenario, previewTile.type).spanning }}"
 			ng-style="previewRowLayout(previewScenario, previewTile.type).spanning ? { 'grid-template-columns': previewRowLayout(previewScenario, previewTile.type).tracks, 'grid-template-rows': previewRowLayout(previewScenario, previewTile.type).rowTracks } : {}">
 			<div class="style-preview-row" ng-repeat="row in previewRowLayout(previewScenario, previewTile.type).rows track by row.id"
+				ng-class="{ 'style-preview-selected': !previewScenario && !previewRowLayout(previewScenario, previewTile.type).spanning && editor.selectedRow === row.id }"
 				ng-attr-data-row-alignment="{{ row.alignment }}" ng-attr-data-preview-row="{{ row.id }}"
 				ng-style="{ 'grid-template-columns': row.tracks, 'padding-top': row.topPadding + 'px' }">
 				<div class="style-preview-group" ng-repeat="group in row.groups track by group.id"
-					ng-class="{ 'style-preview-group-wrap': group.wrap }"
+					ng-class="{ 'style-preview-group-wrap': group.wrap, 'style-preview-selected': !previewScenario && editor.selectedColumn && editor.selectedColumn.row === row.id && editor.selectedColumn.group === group.id }"
 					ng-style="previewRowLayout(previewScenario, previewTile.type).spanning ? { 'grid-column': group.gridColumn, 'grid-row': group.gridRow, 'padding-top': group.rowTopPadding + 'px' } : {}"
 					ng-attr-data-row-span="{{ group.rowSpan }}"
 					ng-attr-data-grid-last="{{ group.gridEnd >= 0.999999999 ? 'true' : undefined }}"
@@ -569,7 +585,7 @@
 					ng-attr-data-direction="{{ group.direction }}"
 					ng-attr-data-preview-group="{{ row.id }}:{{ group.id }}">
 					<span ng-repeat="element in group.renderElements track by element" class="style-widget-element"
-						ng-class="['style-widget-' + element, { 'style-widget-placeholder': group.placeholders.indexOf(element) !== -1 }]"
+						ng-class="['style-widget-' + element, { 'style-widget-placeholder': group.placeholders.indexOf(element) !== -1, 'style-preview-selected': !previewScenario && editor.selectedElement === element && group.placeholders.indexOf(element) === -1 }]"
 						ng-attr-aria-hidden="{{ group.placeholders.indexOf(element) !== -1 ? 'true' : undefined }}"
 						ng-attr-style="--element-size: {{ elementSize(element) }}px"
 						ng-attr-data-palette="{{ isButtonElement(element) ? previewColor(element) : 'default' }}"
@@ -604,6 +620,9 @@
 						<span ng-if="element === 'fields'"><span ng-include="'preview-fields.html'"></span></span>
 					</span>
 				</div>
+				<div class="style-preview-row-overlay style-preview-selected" aria-hidden="true"
+					ng-if="!previewScenario && previewRowLayout(previewScenario, previewTile.type).spanning && editor.selectedRow === row.id"
+					ng-style="{ 'grid-column': '1 / -1', 'grid-row': previewRowTrack(row) }"></div>
 			</div>
 		</div>
 	</script>
@@ -611,7 +630,7 @@
 		<div class="style-showcase">
 			<div class="style-showcase-cell" ng-repeat="element in getPreviewCells(previewScenario, previewTile.type) track by $index">
 				<span ng-if="!(previewScenario && previewScenario.excludeFields && element === 'fields') && previewVisible(element, previewScenario && previewScenario.state, previewTile.type)" class="style-cell-content"
-					ng-class="'style-widget-' + element" ng-attr-style="--element-size: {{ elementSize(element) }}px"
+					ng-class="['style-widget-' + element, { 'style-preview-selected': !previewScenario && editor.selectedElement === element }]" ng-attr-style="--element-size: {{ elementSize(element) }}px"
 					ng-attr-data-palette="{{ isButtonElement(element) ? previewColor(element, false, previewTileState(previewScenario, previewTile.type)) : 'default' }}"
 					ng-attr-data-foreground="{{ previewForeground(element, false, previewTileState(previewScenario, previewTile.type)) }}">
 					<i ng-if="element === 'icon'" class="fa-solid" ng-class="previewIcon(previewTile.type)" aria-hidden="true"></i>
@@ -630,7 +649,7 @@
 			</div>
 			<button ng-if="previewTileState(previewScenario, previewTile.type) === 'starting'" class="hy-nostyle style-widget-element style-widget-action style-widget-cancel" type="button"
 				ng-style="previewButtonStyle('cancel', previewTileState(previewScenario, previewTile.type))"
-				ng-class="{ 'style-widget-button-text': buttonText('cancel') }"
+				ng-class="{ 'style-widget-button-text': buttonText('cancel'), 'style-preview-selected': !previewScenario && editor.selectedElement === 'cancel' }"
 				ng-attr-data-palette="{{ previewColor('cancel') }}"
 				ng-attr-data-foreground="{{ previewForeground('cancel') }}"
 				ng-click="previewAction('cancel', previewTile.type)" ng-attr-aria-label="{{ previewActionLabel('cancel') }}" ng-attr-title="{{ previewActionLabel('cancel') }}"><i class="fa-solid fa-xmark" aria-hidden="true"></i><span ng-if="buttonText('cancel')">{{ buttonText('cancel') }}</span></button>

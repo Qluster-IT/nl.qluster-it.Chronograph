@@ -28,6 +28,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		var savedPreviewBuiltIns;
 		var previewBuiltInsLoaded = false;
 		var groupedRowsCache = {};
+		var previewRowsCache = {};
 		var designerRowLayouts = new WeakMap();
 		var colorOptionsCache = {};
 		var startFormTimer;
@@ -56,6 +57,8 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			previewSize: 'normal',
 			previewState: 'running',
 			previewColumns: 'single',
+			previewSeparator: 'none',
+			previewSeparatorColor: 'default',
 			copyLayoutFrom: 'compact',
 			editStatus: false,
 			selectedCell: null,
@@ -73,6 +76,19 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		$scope.previewTiles = [{ type: 'timer' }, { type: 'stopwatch' }, { type: 'transition' }];
 		$scope.visiblePreviewTiles = function () {
 			return $scope.editor.previewColumns === 'single' ? [null] : $scope.previewTiles;
+		};
+		$scope.previewRows = function () {
+			if (previewRowsCache[$scope.editor.previewColumns]) return previewRowsCache[$scope.editor.previewColumns];
+			var tiles = $scope.visiblePreviewTiles();
+			var columns = $scope.editor.previewColumns === 'single' ? 1 : Number($scope.editor.previewColumns);
+			var rows = [];
+			for (var index = 0; index < tiles.length; index += columns) rows.push(tiles.slice(index, index + columns));
+			previewRowsCache[$scope.editor.previewColumns] = rows;
+			return rows;
+		};
+		$scope.previewSeparatorColor = function () {
+			return $scope.editor.previewSeparatorColor === 'default'
+				? 'currentColor' : window.ChronographWidgetStyle.valueColor($scope.editor.previewSeparatorColor);
 		};
 		$scope.layoutGroups = [1, 2, 3, 4];
 		$scope.layoutOrders = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
@@ -1207,6 +1223,10 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		$scope.previewRowLayout = function (scenario, type) {
 			return sizeRuntime.layoutSpanningRows($scope.groupedRows(true, scenario, type));
 		};
+		$scope.previewRowTrack = function (row) {
+			var start = Number(row.groups[0].gridRow.split(' / ')[0]);
+			return start + ' / ' + (start + 1);
+		};
 		$scope.previewTileState = function (scenario, type) {
 			var state = scenario ? scenario.state : $scope.editor.previewState;
 			return (type || $scope.editor.previewType) === 'stopwatch' && state === 'starting' ? 'inactive' : state;
@@ -2062,9 +2082,11 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 							$scope.builtInDesigns = $scope.builtInDesigns.map(function (item) { return builtInDesigns[item.id]; });
 							$scope.builtInSchemes = $scope.builtInSchemes.map(function (item) { return builtInSchemes[item.id]; });
 						}
-						savedPreviewBuiltIns = previewBuiltIns();
 						Object.keys(builtInDesigns).forEach(function (id) {
 							migratePreviewRowCounts(builtInDesigns[id], sizeRuntime.builtInDesign(id));
+						});
+						savedPreviewBuiltIns = previewBuiltIns();
+						Object.keys(builtInDesigns).forEach(function (id) {
 							normalizeDesignSpans(builtInDesigns[id]);
 						});
 						previewBuiltInsLoaded = true;

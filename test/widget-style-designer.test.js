@@ -119,7 +119,11 @@ describe('Widget style designer preview', () => {
 		dashboard.rowTopPadding = { compact: { 5: 8 } };
 		const snapshot = { version: 2, styles: designs, colorSchemes: [] };
 		designs.forEach(design => assert.strictEqual(initial.editor.isValidCollection({ version: 2, styles: [design], colorSchemes: [] }), true, design.id));
-		const { scope, writes } = loadSettings(null, null, null, true, snapshot);
+		let prompts = 0;
+		const { scope, writes } = loadSettings(null, (message, type, callback) => {
+			prompts++;
+			callback(null, false);
+		}, null, true, snapshot);
 		assert.strictEqual(writes.length, 0);
 		assert.strictEqual(scope.getSelectedStyle().rowCounts.compact, 3);
 		assert.strictEqual(scope.builtInDesigns.find(item => item.id === 'builtin:centered').rowCounts.compact, 5);
@@ -127,7 +131,15 @@ describe('Widget style designer preview', () => {
 		const migrated = scope.builtInDesigns.find(item => item.id === 'builtin:vertical');
 		assert.strictEqual(migrated.rowCounts.compact, 4);
 		assert.strictEqual(migrated.columnRowSpans.compact[1][0], 4);
-		assert.strictEqual(scope.isDirty(), true);
+		assert.strictEqual(scope.isDirty(), false);
+		scope.editor.previewColumns = '3';
+		scope.selectEditingStyle('builtin:centered');
+		assert.strictEqual(scope.editor.selectedStyleId, 'builtin:centered');
+		assert.strictEqual(prompts, 0);
+		scope.getSelectedStyle().name = 'Modified';
+		scope.selectEditingStyle('builtin:current');
+		assert.strictEqual(scope.editor.selectedStyleId, 'builtin:centered');
+		assert.strictEqual(prompts, 1);
 		scope.saveSettings();
 		assert.strictEqual(writes[0].key, 'previewBuiltIns');
 		const reloaded = loadSettings(null, null, null, true, writes[0].value).scope;
@@ -515,6 +527,33 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(scope.isDirty(), false);
 	});
 
+	it('highlights selected visible elements without highlighting placeholders or measurements', () => {
+		const grouped = html.slice(html.indexOf('id="grouped-preview.html"'), html.indexOf('id="cell-preview.html"'));
+		const legacy = html.slice(html.indexOf('id="cell-preview.html"'), html.indexOf('id="preview-fields.html"'));
+		assert.ok(grouped.includes("'style-preview-selected': !previewScenario && editor.selectedElement === element && group.placeholders.indexOf(element) === -1"));
+		assert.ok(legacy.includes("'style-preview-selected': !previewScenario && editor.selectedElement === element"));
+		assert.ok(legacy.includes("'style-preview-selected': !previewScenario && editor.selectedElement === 'cancel'"));
+		assert.ok(html.includes("'style-preview-show-selection': editor.mode === 'design' ? !isDesignReadOnly() : !isSchemeReadOnly()"));
+		assert.match(css, /\.style-preview-show-selection \.style-preview-selected\s*\{[^}]*outline:\s*2px solid/);
+	});
+
+	it('highlights the selected widget, row or column without affecting spanning-row layout', () => {
+		const { scope } = loadSettings();
+		scope.editor.selectedStyleId = 'builtin:vertical';
+		const layout = scope.previewRowLayout(null, 'timer');
+		assert.strictEqual(layout.spanning, true);
+		for (const row of layout.rows) {
+			const start = Number(row.groups[0].gridRow.split(' / ')[0]);
+			assert.strictEqual(scope.previewRowTrack(row), start + ' / ' + (start + 1));
+		}
+		const grouped = html.slice(html.indexOf('id="grouped-preview.html"'), html.indexOf('id="cell-preview.html"'));
+		assert.match(html, /'style-preview-widget-selected': editor\.selectedBackground/);
+		assert.match(grouped, /editor\.selectedRow === row\.id/);
+		assert.match(grouped, /editor\.selectedColumn\.row === row\.id && editor\.selectedColumn\.group === group\.id/);
+		assert.match(grouped, /'grid-row': previewRowTrack\(row\)/);
+		assert.match(css, /\.style-preview-row-overlay\s*\{[^}]*position:\s*absolute;[^}]*pointer-events:\s*none;/);
+	});
+
 	it('keeps the multi-widget column preview separate from saved designs', () => {
 		const { scope, writes } = loadSettings();
 		const originalStyle = JSON.stringify(scope.getSelectedStyle());
@@ -528,6 +567,37 @@ describe('Widget style designer preview', () => {
 		assert.match(html, /id="preview-columns"[^>]*ng-model="editor\.previewColumns"/);
 		assert.match(html, /grid-template-columns': 'repeat\(' \+ editor\.previewColumns \+ ', minmax\(0, 1fr\)\)'/);
 		assert.match(css, /\.style-preview-columns\s*\{[^}]*gap:\s*8px;/);
+	});
+
+	it('previews row separation and colors without changing saved designs', () => {
+		const { scope, writes, window } = loadSettings();
+		const manifest = require('../widgets/multiple_chronographs/widget.compose.json');
+		const separator = manifest.settings.find(setting => setting.id === 'rowSeparator');
+		const colors = manifest.settings.find(setting => setting.id === 'rowSeparatorColor');
+		assert.strictEqual(scope.editor.previewSeparator, separator.value);
+		assert.strictEqual(scope.editor.previewSeparatorColor, colors.value);
+		assert.strictEqual(scope.previewSeparatorColor(), 'currentColor');
+		for (const [columns, expected] of [['1', [1, 1, 1]], ['2', [2, 1]], ['3', [3]], ['single', [1]]]) {
+			scope.editor.previewColumns = columns;
+			assert.deepStrictEqual(Array.from(scope.previewRows(), row => row.length), expected);
+			assert.strictEqual(scope.previewRows(), scope.previewRows());
+		}
+		scope.editor.previewColumns = '2';
+		scope.previewTiles[1].type = 'timer';
+		assert.strictEqual(scope.previewRows()[0][1].type, 'timer');
+		for (const color of colors.values) {
+			scope.editor.previewSeparatorColor = color.id;
+			assert.strictEqual(scope.previewSeparatorColor(), color.id === 'default'
+				? 'currentColor' : window.ChronographWidgetStyle.valueColor(color.id));
+		}
+		scope.editor.previewSeparator = 'line';
+		assert.strictEqual(scope.isDirty(), false);
+		assert.strictEqual(writes.length, 0);
+		assert.match(html, /id="preview-separator"[^>]*ng-model="editor\.previewSeparator"/);
+		assert.match(html, /id="preview-separator-color"[^>]*ng-model="editor\.previewSeparatorColor"/);
+		assert.match(css, /\.style-preview-frame-multiple\s*\{[^}]*border:\s*1px solid/);
+		assert.match(css, /\[data-separator="line"\] \.style-preview-columns \+ \.style-preview-columns/);
+		assert.match(css, /\[data-separator="cards"\] \.style-preview-columns/);
 	});
 
 	it('localizes chronograph operation errors in settings and preserves unknown errors', () => {

@@ -49,7 +49,8 @@ Homey device, so final appearance and behavior still require a Homey check.
 The designer can also preview three independently selectable chronograph types
 in a one-, two-, or three-column multi-widget; tile width depends on the
 available preview space. All tiles share the selected design, size, state and
-color scheme.
+color scheme. For one or two columns, preview the widget's row separation
+and line color as well.
 Button text can be customized per design size. Default text is translated;
 the default appears as a placeholder in the designer. Custom text is shared
 across languages, and empty custom text shows only the icon.
