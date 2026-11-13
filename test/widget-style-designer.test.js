@@ -81,6 +81,27 @@ function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns, extr
 }
 
 describe('Widget style designer preview', () => {
+	it('switches saved designs without confirmation after changing only preview options', () => {
+		const prompts = [];
+		const { scope } = loadSettings(null, (message, type, callback) => {
+			prompts.push(message);
+			callback(null, false);
+		}, null, true);
+		scope.editor.previewType = 'transition';
+		scope.editor.previewState = 'paused';
+		scope.editor.previewSize = 'compact';
+		scope.editor.previewColumns = '3';
+		scope.$digest();
+		assert.strictEqual(scope.isDirty(), false);
+		for (const id of ['builtin:centered', 'builtin:settings', 'builtin:current']) {
+			scope.selectEditingStyle(id);
+			scope.$digest();
+			assert.strictEqual(scope.editor.selectedStyleId, id);
+			assert.strictEqual(scope.isDirty(), false);
+		}
+		assert.deepStrictEqual(prompts, []);
+	});
+
 	it('migrates older preview preset row counts without losing edits or writing automatically', () => {
 		const runtime = require('../assets/js/chronograph-widget-style.js');
 		const initial = loadSettings(null, null, null, true);
