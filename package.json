@@ -30,6 +30,6 @@
 	},
 	"homepage": "https://github.com/Qluster-IT/nl.qluster-it.Chronograph#readme",
 	"dependencies": {
-		"betterlogiclibrary": "^1.0.3"
+		"betterlogiclibrary": "^1.0.5"
 	}
 }
