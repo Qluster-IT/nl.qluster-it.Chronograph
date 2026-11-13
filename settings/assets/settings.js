@@ -140,6 +140,38 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			});
 		}
 
+		function migratePreviewRowCounts(style, defaults) {
+			if (!style.groups || style.rowCounts !== undefined) return;
+			style.rowCounts = {};
+			['compact', 'normal', 'large'].forEach(function (size) {
+				var layout = style.groups[size];
+				var count = sizeRuntime.rowCount(defaults, size);
+				var defaultCount = count;
+				[layout.elements].concat(Object.keys(layout.overrides).map(function (state) { return layout.overrides[state]; }))
+					.forEach(function (positions) {
+						Object.keys(positions).forEach(function (element) { count = Math.max(count, positions[element].row); });
+					});
+				['rowVisibility', 'rowColumns', 'columnSpans', 'columnAlignments', 'columnVerticalAlignments',
+					'columnDirections', 'columnWidths', 'columnRowSpans', 'rowAlignments', 'rowTopPadding'].forEach(function (key) {
+					var rows = style[key] && style[key][size] || {};
+					var defaultRows = defaults[key] && defaults[key][size] || {};
+					Object.keys(rows).forEach(function (row) {
+						if (Number(row) > defaultCount && !angular.equals(rows[row], defaultRows[row])) count = Math.max(count, Number(row));
+					});
+				});
+				var spans = style.columnRowSpans && style.columnRowSpans[size] || {};
+				Object.keys(spans).forEach(function (row) {
+					spans[row].forEach(function (span, index) {
+						if (style.id === 'builtin:vertical' && Number(row) === 1 && index === 0 && span === 5 && count <= 4) {
+							spans[row][index] = span = 4;
+						}
+						count = Math.max(count, Number(row) + span - 1);
+					});
+				});
+				style.rowCounts[size] = count;
+			});
+		}
+
 		$scope.getSelectedStyle = function () {
 			if (Object.prototype.hasOwnProperty.call(builtInDesigns, $scope.editor.selectedStyleId)) return builtInDesigns[$scope.editor.selectedStyleId];
 			var id = $scope.editor.selectedStyleId.slice(7);
@@ -413,6 +445,46 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		$scope.buttonText = function (element) {
 			return sizeRuntime.buttonText($scope.getSelectedStyle(), $scope.editor.previewSize, element, Homey.__('settings.widget_start'));
 		};
+		$scope.buttonShapeOverride = function (value) {
+			var style = $scope.getSelectedStyle(), size = $scope.editor.previewSize, element = $scope.editor.selectedElement;
+			if (!style || !$scope.isButtonElement(element)) return false;
+			var overrides = style.buttonShapes && style.buttonShapes.overrides;
+			if (arguments.length && !$scope.savingSettings && !$scope.isDesignReadOnly()) {
+				if (value) {
+					var shape = sizeRuntime.buttonShape(style, size, element);
+					if (!style.buttonShapes) style.buttonShapes = {};
+					if (!style.buttonShapes.overrides) style.buttonShapes.overrides = {};
+					if (!style.buttonShapes.overrides[size]) style.buttonShapes.overrides[size] = {};
+					style.buttonShapes.overrides[size][element] = shape;
+				} else if (overrides && overrides[size]) {
+					delete overrides[size][element];
+				}
+			}
+			return !!(style.buttonShapes && style.buttonShapes.overrides && style.buttonShapes.overrides[size]
+				&& style.buttonShapes.overrides[size][element]);
+		};
+		$scope.editButtonShape = function (value) {
+			var style = $scope.getSelectedStyle(), size = $scope.editor.previewSize, element = $scope.editor.selectedElement;
+			if (!style || !$scope.isButtonElement(element)) return 'round';
+			if (arguments.length && !$scope.savingSettings && !$scope.isDesignReadOnly()
+				&& ['round', 'square'].indexOf(value) !== -1) {
+				if (!style.buttonShapes) style.buttonShapes = {};
+				if ($scope.buttonShapeOverride()) style.buttonShapes.overrides[size][element] = value;
+				else {
+					if (!style.buttonShapes.base) style.buttonShapes.base = {};
+					style.buttonShapes.base[element] = value;
+				}
+			}
+			return sizeRuntime.buttonShape(style, size, element);
+		};
+		$scope.previewButtonStyle = function (element, state) {
+			var style = sizeRuntime.buttonShapeStyle($scope.getSelectedStyle(), $scope.editor.previewSize, element);
+			var scheme = $scope.getSelectedScheme();
+			var colorStyle = sizeRuntime.elementStyle(scheme, state || $scope.editor.previewState, element);
+			if (colorStyle.border) style.border = colorStyle.border;
+			if (sizeRuntime.resolveColor(scheme, state || $scope.editor.previewState, element) === 'none') style.backgroundColor = 'transparent';
+			return style;
+		};
 		$scope.useDefaultButtonText = function (value) {
 			var style = $scope.getSelectedStyle();
 			var size = $scope.editor.previewSize;
@@ -598,7 +670,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 
 		$scope.stateColorOptions = function (key) {
 			var inherited = $scope.previewColor(key, true);
-			var options = key === 'background' ? $scope.backgroundOptions : $scope.colorOptions;
+			var options = key === 'background' ? $scope.backgroundOptions : $scope.isButtonElement(key) ? $scope.buttonBackgroundOptions : $scope.colorOptions;
 			var cached = colorOptionsCache[key];
 			if (cached && cached.inherited === inherited && cached.options === options) return cached.values;
 			var values = [{
@@ -612,6 +684,33 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		$scope.previewForeground = function (key, inheritedOnly, state) {
 			var style = $scope.getSelectedScheme();
 			return style ? widgetStyleEditor.resolveForeground(style, state || $scope.editor.previewState, key, inheritedOnly) : 'default';
+		};
+		$scope.buttonBorder = function (value) {
+			var scheme = $scope.getSelectedScheme(), key = $scope.editor.selectedElement, state = $scope.editor.previewState;
+			if (!scheme || !$scope.isButtonElement(key)) return 'none';
+			var base = scheme.borderColors && scheme.borderColors[key] || (key === 'cancel' ? 'default' : 'none');
+			var overrides = scheme.borderOverrides && scheme.borderOverrides[state];
+			if (arguments.length && !$scope.savingSettings && !$scope.isSchemeReadOnly()
+				&& (value === 'inherit' && state !== 'inactive' || value === 'default' && state === 'inactive'
+					|| $scope.borderOptions.some(function (item) { return item.id === value; }))) {
+				if (state === 'inactive') {
+					if (value === 'default') {
+						if (scheme.borderColors) delete scheme.borderColors[key];
+					} else {
+						if (!scheme.borderColors) scheme.borderColors = {};
+						scheme.borderColors[key] = value;
+					}
+				} else if (value === 'inherit') {
+					if (overrides) delete overrides[key];
+				} else {
+					if (!scheme.borderOverrides) scheme.borderOverrides = {};
+					if (!scheme.borderOverrides[state]) scheme.borderOverrides[state] = {};
+					scheme.borderOverrides[state][key] = value;
+				}
+				overrides = scheme.borderOverrides && scheme.borderOverrides[state];
+				base = scheme.borderColors && scheme.borderColors[key] || (key === 'cancel' ? 'default' : 'none');
+			}
+			return state === 'inactive' ? base : overrides && overrides[key] || 'inherit';
 		};
 
 		$scope.updateForeground = function (key) {
@@ -1809,6 +1908,10 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			$scope.backgroundOptions = widgetStyleEditor.backgroundIds.map(function (id) {
 				return { id: id, label: Homey.__('settings.style_color_' + id) };
 			});
+			$scope.buttonBackgroundOptions = [{ id: 'none', label: Homey.__('settings.style_color_none') }].concat($scope.colorOptions);
+			$scope.borderOptions = [{ id: 'none', label: Homey.__('settings.style_color_none') }].concat($scope.foregroundOptions.filter(function (color) { return color.id !== 'default'; }));
+			$scope.baseBorderOptions = [{ id: 'default', label: Homey.__('settings.style_color_default') }].concat($scope.borderOptions);
+			$scope.stateBorderOptions = [{ id: 'inherit', label: Homey.__('settings.style_color_inherit') }].concat($scope.borderOptions);
 			$scope.sections = [
 				{
 					key: 'stopwatch',
@@ -1961,6 +2064,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 						}
 						savedPreviewBuiltIns = previewBuiltIns();
 						Object.keys(builtInDesigns).forEach(function (id) {
+							migratePreviewRowCounts(builtInDesigns[id], sizeRuntime.builtInDesign(id));
 							normalizeDesignSpans(builtInDesigns[id]);
 						});
 						previewBuiltInsLoaded = true;

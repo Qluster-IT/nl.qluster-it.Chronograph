@@ -51,6 +51,7 @@ describe('Widget chronograph autocomplete', () => {
 		const listeners = {};
 		const names = {
 			'settings.style_current': 'Default',
+			'settings.style_preset_settings': 'Settings',
 			'settings.style_scheme_ocean': 'Ocean',
 			'settings.style_scheme_forest': 'Forest',
 			'settings.style_scheme_sunset': 'Sunset',
@@ -77,11 +78,13 @@ describe('Widget chronograph autocomplete', () => {
 			}) }
 		} };
 		module.exports.prototype._registerChronographWidgetAutocomplete.call(app);
+		const englishNames = Object.assign({}, names);
 		for (const type of ['timer', 'stopwatch', 'transition']) {
+			Object.assign(names, englishNames);
 			const results = await listeners[type + ':colorScheme']('');
 			assert.deepStrictEqual(Array.from(results, item => item.id), [
 				'builtin:current', 'builtin:amber', 'builtin:blossom', 'builtin:forest', 'builtin:ocean',
-				'builtin:sky', 'builtin:sunset', 'builtin:twilight', 'custom', 'ocean-copy'
+				'builtin:settings', 'builtin:sky', 'builtin:sunset', 'builtin:twilight', 'custom', 'ocean-copy'
 			]);
 			assert.strictEqual(results.find(item => item.id === 'builtin:ocean').name, 'Ocean');
 			assert.strictEqual(results.find(item => item.id === 'builtin:ocean').description, 'Built-in');
@@ -91,11 +94,11 @@ describe('Widget chronograph autocomplete', () => {
 			assert.deepStrictEqual(Array.from(await listeners[type + ':colorScheme']('OCE'), item => item.id), ['builtin:ocean', 'ocean-copy']);
 			assert.deepStrictEqual(Array.from(await listeners[type + ':colorScheme']('ocean (built-in)'), item => item.id), ['builtin:ocean']);
 			const designs = await listeners[type + ':designStyle']('');
-			assert.deepStrictEqual(Array.from(designs, item => item.id), ['builtin:current', 'builtin:centered', 'builtin:dashboard', 'builtin:focus', 'builtin:small', 'builtin:tiny', 'builtin:vertical', 'design']);
+			assert.deepStrictEqual(Array.from(designs, item => item.id), ['builtin:current', 'builtin:centered', 'builtin:dashboard', 'builtin:focus', 'builtin:settings', 'builtin:small', 'builtin:tiny', 'builtin:vertical', 'design']);
 			assert.strictEqual(designs[0].name, 'Default');
 			assert.strictEqual(designs[0].description, 'Built-in');
-			assert.strictEqual(designs[7].name, 'A design');
-			assert.strictEqual(designs[7].description, 'Custom');
+			assert.strictEqual(designs[8].name, 'A design');
+			assert.strictEqual(designs[8].description, 'Custom');
 			assert.deepStrictEqual(Array.from(await listeners[type + ':designStyle']('dash'), item => item.id), ['builtin:dashboard']);
 			names['settings.style_current'] = 'Zzz';
 			assert.strictEqual((await listeners[type + ':designStyle'](''))[0].id, 'builtin:current');

@@ -697,9 +697,41 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 				&& !Array.isArray(values) && Object.keys(values).every(function (key) {
 					return key === 'background'
 						? backgroundIds.indexOf(values[key]) !== -1
-						: colorKeys.indexOf(key) !== -1 && colorIds.indexOf(values[key]) !== -1;
+						: colorKeys.indexOf(key) !== -1
+							&& (colorIds.indexOf(values[key]) !== -1 || buttonIds.indexOf(key) !== -1 && values[key] === 'none');
 				});
 		});
+	}
+
+	function validButtonShapes(value) {
+		function validButtons(buttons) {
+			return buttons && typeof buttons === 'object' && !Array.isArray(buttons)
+				&& Object.keys(buttons).every(function (key) {
+					return buttonIds.indexOf(key) !== -1 && ['round', 'square'].indexOf(buttons[key]) !== -1;
+				});
+		}
+		return value === undefined || (value && typeof value === 'object' && !Array.isArray(value)
+			&& Object.keys(value).every(function (key) { return key === 'base' || key === 'overrides'; })
+			&& (value.base === undefined || validButtons(value.base))
+			&& (value.overrides === undefined || (value.overrides && typeof value.overrides === 'object'
+				&& !Array.isArray(value.overrides) && Object.keys(value.overrides).every(function (size) {
+					return sizes.indexOf(size) !== -1 && validButtons(value.overrides[size]);
+				}))));
+	}
+
+	function validBorderColors(colors) {
+		return colors === undefined || (colors && typeof colors === 'object' && !Array.isArray(colors)
+			&& Object.keys(colors).every(function (key) {
+				return buttonIds.indexOf(key) !== -1 && ['none'].concat(foregroundIds.slice(1)).indexOf(colors[key]) !== -1;
+			}));
+	}
+
+	function validBorderOverrides(overrides) {
+		return overrides === undefined || (overrides && typeof overrides === 'object' && !Array.isArray(overrides)
+			&& Object.keys(overrides).every(function (state) {
+				return state !== 'inactive' && layoutStates.indexOf(state) !== -1
+					&& overrides[state] !== undefined && validBorderColors(overrides[state]);
+			}));
 	}
 
 	function resolveColor(style, state, key, inheritedOnly) {
@@ -832,6 +864,8 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			|| !validInputFieldRows(style.inputFieldRows)
 			|| !validElementSizes(style.elementSizes)
 			|| !validButtonTexts(style.buttonTexts)
+			|| !validButtonShapes(style.buttonShapes)
+			|| !validBorderColors(style.borderColors) || !validBorderOverrides(style.borderOverrides)
 			|| !validReservedElements(style.reservedElements)
 			|| (style.allowShrink !== undefined && typeof style.allowShrink !== 'boolean')
 			|| (style.wrapNarrowElements !== undefined && typeof style.wrapNarrowElements !== 'boolean')
@@ -849,7 +883,8 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 				&& cells.every(function (id) { return id === '' || elementIds.indexOf(id) !== -1; })
 				&& elementIds.every(function (id) { return cells.filter(function (cell) { return cell === id; }).length === 1; });
 		}) && validColumnPositions(style) && colorKeys.every(function (key) {
-			return ((key === 'start' || key === 'cancel') && style.colors[key] === undefined) || colorIds.indexOf(style.colors[key]) !== -1;
+			return ((key === 'start' || key === 'cancel') && style.colors[key] === undefined)
+				|| colorIds.indexOf(style.colors[key]) !== -1 || buttonIds.indexOf(key) !== -1 && style.colors[key] === 'none';
 		}) && backgroundKeys.every(function (key) {
 			return backgroundIds.indexOf(style.colors[key]) !== -1;
 		});
@@ -1038,10 +1073,11 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 				|| !scheme.colors || typeof scheme.colors !== 'object' || Array.isArray(scheme.colors)
 				|| !validColorOverrides(scheme.colorOverrides) || (scheme.colorOverrides && scheme.colorOverrides.inactive)
 				|| !validForegroundColors(scheme.foregroundColors) || !validForegroundOverrides(scheme.foregroundOverrides)
+				|| !validBorderColors(scheme.borderColors) || !validBorderOverrides(scheme.borderOverrides)
 				|| !validProgressSettings({ groups: true, progressSettings: scheme.progressColors })) return false;
 			if (!colorKeys.every(function (key) {
 				return ((key === 'start' || key === 'cancel') && scheme.colors[key] === undefined)
-					|| colorIds.indexOf(scheme.colors[key]) !== -1;
+					|| colorIds.indexOf(scheme.colors[key]) !== -1 || buttonIds.indexOf(key) !== -1 && scheme.colors[key] === 'none';
 			}) || !backgroundKeys.every(function (key) { return backgroundIds.indexOf(scheme.colors[key]) !== -1; })) return false;
 			if (scheme.progressColors && !Object.keys(scheme.progressColors).every(function (size) {
 				return Object.keys(scheme.progressColors[size]).every(function (key) { return key === 'background' || key === 'foreground'; });
@@ -1052,7 +1088,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 	}
 
 	function isValidDesign(style) {
-		if (!style || ['colors', 'colorModel', 'colorOverrides', 'foregroundColors', 'foregroundOverrides', 'foregroundModel']
+		if (!style || ['colors', 'colorModel', 'colorOverrides', 'foregroundColors', 'foregroundOverrides', 'foregroundModel', 'borderColors', 'borderOverrides']
 			.some(function (key) { return Object.prototype.hasOwnProperty.call(style, key); })) return false;
 		if (style.groups && !sizes.every(function (size) {
 			return style.groups[size] && style.groups[size].elements
@@ -1069,7 +1105,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 
 	function designFromStyle(style) {
 		var design = angular.copy(style);
-		['colors', 'colorModel', 'colorOverrides', 'foregroundColors', 'foregroundOverrides', 'foregroundModel'].forEach(function (key) {
+		['colors', 'colorModel', 'colorOverrides', 'foregroundColors', 'foregroundOverrides', 'foregroundModel', 'borderColors', 'borderOverrides'].forEach(function (key) {
 			delete design[key];
 		});
 		Object.keys(design.progressSettings || {}).forEach(function (size) {
@@ -1081,7 +1117,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 
 	function colorSchemeFromStyle(style) {
 		var scheme = { id: style.id, name: style.name, colors: angular.copy(style.colors) };
-		['colorOverrides', 'foregroundColors', 'foregroundOverrides'].forEach(function (key) {
+		['colorOverrides', 'foregroundColors', 'foregroundOverrides', 'borderColors', 'borderOverrides'].forEach(function (key) {
 			if (style[key] !== undefined) scheme[key] = angular.copy(style[key]);
 		});
 		Object.keys(style.progressSettings || {}).forEach(function (size) {

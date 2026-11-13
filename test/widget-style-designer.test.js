@@ -81,6 +81,90 @@ function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns, extr
 }
 
 describe('Widget style designer preview', () => {
+	it('migrates older preview preset row counts without losing edits or writing automatically', () => {
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		const initial = loadSettings(null, null, null, true);
+		const designs = ['builtin:current', ...runtime.builtInDesignDefinitions.map(item => item.id)]
+			.map(id => JSON.parse(JSON.stringify(initial.editor.designFromStyle(id === 'builtin:current'
+				? initial.scope.getSelectedStyle() : initial.scope.builtInDesigns.find(item => item.id === id)))));
+		designs.forEach(design => { delete design.rowCounts; });
+		const vertical = designs.find(design => design.id === 'builtin:vertical');
+		vertical.columnRowSpans.compact[1][0] = 5;
+		vertical.columnRowSpans.normal[1][0] = 5;
+		vertical.columnRowSpans.large[1][0] = 5;
+		const centered = designs.find(design => design.id === 'builtin:centered');
+		centered.groups.compact.elements.name.row = 5;
+		const dashboard = designs.find(design => design.id === 'builtin:dashboard');
+		dashboard.rowTopPadding = { compact: { 5: 8 } };
+		const snapshot = { version: 2, styles: designs, colorSchemes: [] };
+		designs.forEach(design => assert.strictEqual(initial.editor.isValidCollection({ version: 2, styles: [design], colorSchemes: [] }), true, design.id));
+		const { scope, writes } = loadSettings(null, null, null, true, snapshot);
+		assert.strictEqual(writes.length, 0);
+		assert.strictEqual(scope.getSelectedStyle().rowCounts.compact, 3);
+		assert.strictEqual(scope.builtInDesigns.find(item => item.id === 'builtin:centered').rowCounts.compact, 5);
+		assert.strictEqual(scope.builtInDesigns.find(item => item.id === 'builtin:dashboard').rowCounts.compact, 5);
+		const migrated = scope.builtInDesigns.find(item => item.id === 'builtin:vertical');
+		assert.strictEqual(migrated.rowCounts.compact, 4);
+		assert.strictEqual(migrated.columnRowSpans.compact[1][0], 4);
+		assert.strictEqual(scope.isDirty(), true);
+		scope.saveSettings();
+		assert.strictEqual(writes[0].key, 'previewBuiltIns');
+		const reloaded = loadSettings(null, null, null, true, writes[0].value).scope;
+		assert.strictEqual(reloaded.getSelectedStyle().rowCounts.compact, 3);
+	});
+
+	it('shares button shapes across sizes until a size override is enabled', () => {
+		const { scope, editor, writes } = loadSettings();
+		scope.createStyle(true);
+		scope.selectLayoutElement('play');
+		scope.editButtonShape('square');
+		scope.editor.previewSize = 'compact';
+		assert.strictEqual(scope.editButtonShape(), 'square');
+		scope.buttonShapeOverride(true);
+		scope.editButtonShape('round');
+		scope.editor.previewSize = 'normal';
+		assert.strictEqual(scope.editButtonShape(), 'square');
+		scope.editButtonShape('round');
+		scope.editButtonShape('square');
+		scope.editor.previewSize = 'compact';
+		assert.strictEqual(scope.editButtonShape(), 'round');
+		scope.buttonShapeOverride(false);
+		assert.strictEqual(scope.editButtonShape(), 'square');
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
+		const style = scope.getSelectedStyle();
+		style.buttonShapes.base.play = 'invalid';
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), false);
+		style.buttonShapes.base.play = 'square';
+		scope.saveSettings();
+		assert.strictEqual(loadSettings(writes[0].value).scope.widgetStyles.styles[0].buttonShapes.base.play, 'square');
+	});
+
+	it('saves per-state button borders and transparent backgrounds in a color scheme', () => {
+		const { scope, editor, writes } = loadSettings();
+		scope.selectEditorMode('color');
+		scope.createStyle(true);
+		scope.selectLayoutElement('play');
+		scope.editor.previewState = 'inactive';
+		scope.buttonBorder('grey');
+		scope.editor.colorValues.play = 'none';
+		scope.updateColorOverride('play');
+		scope.editor.previewState = 'running';
+		assert.strictEqual(scope.buttonBorder(), 'inherit');
+		scope.buttonBorder('red');
+		assert.strictEqual(scope.getSelectedScheme().borderOverrides.running.play, 'red');
+		scope.buttonBorder('inherit');
+		assert.strictEqual(scope.buttonBorder(), 'inherit');
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
+		scope.getSelectedScheme().borderOverrides.running.play = 'invalid';
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), false);
+		delete scope.getSelectedScheme().borderOverrides.running.play;
+		scope.saveSettings();
+		const reloaded = loadSettings(writes[0].value).scope;
+		const scheme = reloaded.widgetStyles.colorSchemes[0];
+		assert.strictEqual(scheme.borderColors.play, 'grey');
+		assert.strictEqual(scheme.colors.play, 'none');
+	});
+
 	it('adds up to ten rows per size and saves, reloads, reorders and copies their layouts', () => {
 		const { scope, writes, editor } = loadSettings();
 		scope.createStyle(true);
@@ -205,11 +289,14 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(scope.isDirty(), true);
 		assert.strictEqual(JSON.stringify(exported.item), first);
 		scope.getSelectedStyle().name = 'Morning / evening';
+		scope.getSelectedStyle().buttonShapes = { base: { play: 'square' } };
 		scope.exportStyle();
 		assert.strictEqual(downloads[1], 'chronograph-design-Morning - evening.json');
+		assert.strictEqual(exported.item.buttonShapes.base.play, 'square');
 		scope.saveSettings();
 		assert.strictEqual(writes.length, 1);
 		scope.selectEditorMode('color');
+		scope.getSelectedScheme().borderColors = { play: 'grey' };
 		scope.exportStyle();
 		assert.strictEqual(downloads[2], 'chronograph-color-settings.style_current.json');
 		assert.strictEqual(exported.type, 'color');
@@ -219,6 +306,7 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(scope.widgetStyles.colorSchemes.length, 1);
 		assert.notStrictEqual(scope.getSelectedScheme().id, exported.item.id);
 		assert.strictEqual(JSON.stringify(scope.getSelectedScheme().colors), JSON.stringify(exported.item.colors));
+		assert.strictEqual(scope.getSelectedScheme().borderColors.play, 'grey');
 		assert.strictEqual(scope.isDirty(), true);
 		assert.deepStrictEqual(alerts, ['settings.saved']);
 		assert.strictEqual(readers.length, 2);
@@ -1013,9 +1101,9 @@ describe('Widget style designer preview', () => {
 			scope.createStyle(true);
 			const copy = scope.getSelectedScheme();
 			assert.strictEqual(scope.isBuiltInStyle(), false);
-			assert.deepStrictEqual(JSON.parse(JSON.stringify(copy.progressColors)), runtime.builtInScheme(preset.id).progressColors);
+			assert.deepStrictEqual(copy.progressColors && JSON.parse(JSON.stringify(copy.progressColors)), runtime.builtInScheme(preset.id).progressColors);
 			copy.colors.icon = 'red';
-			assert.strictEqual(selected.colors.icon, preset.accent);
+			assert.strictEqual(selected.colors.icon, preset.id === 'builtin:settings' ? 'blue' : preset.accent);
 		}
 		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
 		scope.saveSettings();

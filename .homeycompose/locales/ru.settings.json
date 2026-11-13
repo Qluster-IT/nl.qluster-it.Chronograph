@@ -263,5 +263,12 @@
 	"multiple_invalid_settings": "Некоторые настройки виджета недействительны. Проверьте настройки виджета.",
 	"widget_type_timer": "Таймер",
 	"widget_type_stopwatch": "Секундомер",
-	"widget_type_transition": "Переход"
+	"widget_type_transition": "Переход",
+	"style_preset_settings": "Настройки",
+	"style_button_shape": "Форма кнопки",
+	"style_button_round": "Круглая",
+	"style_button_square": "Квадратная",
+	"style_shape_override": "Переопределить для этого размера",
+	"style_shape_hint": "По умолчанию форма применяется ко всем размерам. Включите переопределение, чтобы изменить только этот размер.",
+	"style_button_border": "Цвет рамки"
 }

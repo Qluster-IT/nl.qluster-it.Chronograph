@@ -263,5 +263,12 @@
 	"multiple_invalid_settings": "Sommige widgetinstellingen zijn ongeldig. Controleer de widgetinstellingen.",
 	"widget_type_timer": "Timer",
 	"widget_type_stopwatch": "Stopwatch",
-	"widget_type_transition": "Transitie"
+	"widget_type_transition": "Transitie",
+	"style_preset_settings": "Instellingen",
+	"style_button_shape": "Knopvorm",
+	"style_button_round": "Rond",
+	"style_button_square": "Vierkant",
+	"style_shape_override": "Afwijken voor deze grootte",
+	"style_shape_hint": "De vorm geldt standaard voor alle groottes. Schakel de afwijking in om alleen deze grootte te wijzigen.",
+	"style_button_border": "Randkleur"
 }

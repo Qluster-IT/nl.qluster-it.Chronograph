@@ -110,6 +110,7 @@ body {
 .chronograph-field-tooltip {
 	position: fixed;
 	z-index: 1000;
+	box-sizing: border-box;
 	max-width: calc(100vw - 8px);
 	padding: 3px 7px;
 	border-radius: 4px;

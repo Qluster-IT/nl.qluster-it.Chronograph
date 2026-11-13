@@ -259,7 +259,8 @@ function onHomeyReady(Homey) {
 				return !activeDesign || activeDesign.allowShrink !== false;
 			};
 			$scope.designButtonStyle = function (element) {
-				return widgetStyleRuntime.elementStyle(activeDesignScheme, $scope.designState, element);
+				return Object.assign(widgetStyleRuntime.elementStyle(activeDesignScheme, $scope.designState, element),
+					widgetStyleRuntime.buttonShapeStyle(activeDesign, $scope.layout, element));
 			};
 			$scope.designButtonColor = function (element) {
 				return widgetStyleRuntime.buttonColor(activeDesignScheme, $scope.designState, element);
@@ -268,10 +269,13 @@ function onHomeyReady(Homey) {
 				return widgetStyleRuntime.backgroundStyle(activeDesignScheme, $scope.designState);
 			};
 			$scope.schemeElementStyle = function (element) {
-				if (!activeColorScheme) return {};
 				var state = $scope.selectedChronograph && $scope.selectedChronograph.active
 					? $scope.selectedChronograph.running ? 'running' : 'paused' : 'inactive';
-				return widgetStyleRuntime.elementStyle(activeColorScheme, state, element);
+				var style = activeColorScheme ? widgetStyleRuntime.elementStyle(activeColorScheme, state, element) : {};
+				if (['play', 'pause', 'stop', 'start', 'cancel'].indexOf(element) !== -1) {
+					Object.assign(style, widgetStyleRuntime.buttonShapeStyle(activeDesign, $scope.layout, element));
+				}
+				return style;
 			};
 			$scope.designProgressDirection = function () {
 				var progress = activeDesign && activeDesign.progressSettings

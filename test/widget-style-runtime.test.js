@@ -4,6 +4,26 @@ const assert = require('assert');
 const widgetStyle = require('../assets/js/chronograph-widget-style.js');
 
 describe('Widget style runtime', () => {
+	it('renders Settings buttons as outlined squares and preserves inherited defaults', () => {
+		const design = widgetStyle.builtInDesign('builtin:settings');
+		const scheme = widgetStyle.builtInScheme('builtin:settings');
+		for (const size of ['compact', 'normal', 'large']) {
+			for (const state of ['running', 'paused']) {
+				const rows = widgetStyle.buildRows(design, size, state, 'timer', false);
+				const elements = rows.flatMap(row => row.groups.flatMap(group => group.elements));
+				assert.ok(elements.includes('name') && elements.includes('status') && elements.includes('duration'));
+				assert.ok(!elements.includes('icon') && !elements.includes('progress'));
+				const button = state === 'running' ? 'pause' : 'play';
+				assert.deepStrictEqual(widgetStyle.buttonShapeStyle(design, size, button), { borderRadius: '4px' });
+				assert.deepStrictEqual(widgetStyle.elementStyle(scheme, state, button), {
+					backgroundColor: 'transparent', color: '#9a9ca6', border: '1px solid #9a9ca6'
+				});
+			}
+		}
+		assert.deepStrictEqual(widgetStyle.buttonShapeStyle(null, 'normal', 'play'), {});
+		scheme.borderOverrides = { running: { pause: 'none' } };
+		assert.strictEqual(widgetStyle.elementStyle(scheme, 'running', 'pause').border, '0');
+	});
 	it('renders configured rows beyond five and preserves legacy layouts', () => {
 		const design = widgetStyle.currentDesign();
 		design.rowCounts.normal = 10;
@@ -18,7 +38,7 @@ describe('Widget style runtime', () => {
 	it('uses the occupied row counts for built-in presets', () => {
 		for (const id of ['builtin:current', ...widgetStyle.builtInDesignDefinitions.map(item => item.id)]) {
 			const design = widgetStyle.builtInDesign(id);
-			const expected = id === 'builtin:vertical' ? [4, 4, 4]
+			const expected = id === 'builtin:settings' ? [3, 4, 4] : id === 'builtin:vertical' ? [4, 4, 4]
 				: id === 'builtin:small' || id === 'builtin:tiny' ? [5, 5, 5] : [3, 5, 5];
 			assert.deepStrictEqual(['compact', 'normal', 'large'].map(size => widgetStyle.rowCount(design, size)), expected);
 		}
@@ -347,8 +367,8 @@ describe('Widget style runtime', () => {
 		for (const preset of widgetStyle.builtInDesignDefinitions) {
 			const design = widgetStyle.builtInDesign(preset.id);
 			const fresh = widgetStyle.findStyle(null, preset.id);
-			design.groups.normal.elements.icon.row = 0;
-			assert.strictEqual(fresh.groups.normal.elements.icon.row, 1);
+			design.groups.normal.elements.icon.row = 9;
+			assert.notStrictEqual(fresh.groups.normal.elements.icon.row, 9);
 			for (const size of ['compact', 'normal', 'large']) {
 				for (const type of ['timer', 'transition', 'stopwatch']) {
 					const elements = (state, showForm) => widgetStyle.buildRows(fresh, size, state, type, showForm)
@@ -379,6 +399,11 @@ describe('Widget style runtime', () => {
 			const first = widgetStyle.findScheme(null, preset.id);
 			const second = widgetStyle.builtInScheme(preset.id);
 			first.colors.icon = 'red';
+			if (preset.id === 'builtin:settings') {
+				first.borderColors.play = 'red';
+				assert.strictEqual(second.borderColors.play, 'grey');
+				continue;
+			}
 			first.progressColors.compact.foreground = 'red';
 			assert.strictEqual(second.colors.icon, preset.accent);
 			assert.strictEqual(second.progressColors.compact.foreground, preset.accent);

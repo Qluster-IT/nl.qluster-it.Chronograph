@@ -45,6 +45,16 @@
 		return typeof value === 'string' ? value : element === 'start' ? defaultStartText : '';
 	}
 
+	function buttonShape(style, size, element) {
+		var shapes = style && style.buttonShapes || {};
+		var overrides = shapes.overrides && shapes.overrides[size];
+		return overrides && overrides[element] || shapes.base && shapes.base[element] || 'round';
+	}
+
+	function buttonShapeStyle(style, size, element) {
+		return buttonShape(style, size, element) === 'square' ? { borderRadius: '4px' } : {};
+	}
+
 	function reserveElement(style, size, element) {
 		return !!(style && style.reservedElements && style.reservedElements[size]
 			&& style.reservedElements[size][element] === true);
@@ -144,6 +154,8 @@
 			colorOverrides: legacy.colorOverrides || {},
 			foregroundColors: legacy.foregroundColors || {},
 			foregroundOverrides: legacy.foregroundOverrides || {},
+			borderColors: legacy.borderColors || {},
+			borderOverrides: legacy.borderOverrides || {},
 			progressColors: progressColors
 		};
 	}
@@ -169,6 +181,7 @@
 	}
 
 	var builtInSchemeDefinitions = [
+		{ id: 'builtin:settings', nameKey: 'settings.style_preset_settings' },
 		{ id: 'builtin:ocean', nameKey: 'settings.style_scheme_ocean', accent: 'teal', buttonText: 'black' },
 		{ id: 'builtin:forest', nameKey: 'settings.style_scheme_forest', accent: 'green', buttonText: 'black' },
 		{ id: 'builtin:sunset', nameKey: 'settings.style_scheme_sunset', accent: 'orange', buttonText: 'black' },
@@ -183,6 +196,18 @@
 		var definition = builtInSchemeDefinitions.find(function (item) { return item.id === id; });
 		if (!definition) return undefined;
 		var scheme = currentScheme();
+		if (id === 'builtin:settings') {
+			scheme.colorOverrides = {};
+			scheme.foregroundColors = {};
+			scheme.borderColors = {};
+			buttonIds.forEach(function (button) {
+				var color = button === 'stop' ? 'red' : 'grey';
+				scheme.colors[button] = 'none';
+				scheme.foregroundColors[button] = color;
+				scheme.borderColors[button] = color;
+			});
+			return scheme;
+		}
 		scheme.colors.icon = definition.accent;
 		scheme.colors.play = definition.accent;
 		scheme.colors.start = definition.accent;
@@ -296,6 +321,7 @@
 	}
 
 	var builtInDesignDefinitions = [
+		{ id: 'builtin:settings', nameKey: 'settings.style_preset_settings' },
 		{ id: 'builtin:centered', nameKey: 'settings.style_design_centered' },
 		{ id: 'builtin:dashboard', nameKey: 'settings.style_design_dashboard' },
 		{ id: 'builtin:focus', nameKey: 'settings.style_design_focus' },
@@ -348,7 +374,38 @@
 		if (id === 'builtin:current') return currentDesign();
 		if (!builtInDesignDefinitions.some(function (item) { return item.id === id; })) return undefined;
 		var design = currentDesign();
-		if (id === 'builtin:small' || id === 'builtin:tiny') {
+		if (id === 'builtin:settings') {
+			design.buttonShapes = { base: {} };
+			design.rowCounts = { compact: 3, normal: 4, large: 4 };
+			design.columnRowSpans = {};
+			buttonIds.forEach(function (button) { design.buttonShapes.base[button] = 'square'; });
+			['compact', 'normal', 'large'].forEach(function (size) {
+				var elements = design.groups[size].elements;
+				elements.icon = { row: 0, group: 1, order: 1 };
+				elements.progress = { row: 0, group: 1, order: 1 };
+				elements.name = { row: 1, group: 1, order: 1 };
+				elements.status = { row: 2, group: 1, order: 1 };
+				elements.duration = { row: 2, group: 1, order: 2 };
+				elements.play = { row: 1, group: 2, order: 1 };
+				elements.pause = { row: 1, group: 2, order: 1 };
+				elements.stop = { row: 1, group: 2, order: 2 };
+				design.rowColumns[size][1] = 2;
+				design.rowColumns[size][2] = 1;
+				design.columnSpans[size][1] = [3, 1];
+				design.columnSpans[size][2] = [3];
+				design.columnWidths[size][1] = ['span', 'content'];
+				design.columnWidths[size][2] = ['span'];
+				design.columnAlignments[size][1] = ['left', 'right'];
+				design.columnAlignments[size][2] = ['left'];
+				design.columnDirections[size][1] = ['horizontal', 'horizontal'];
+				design.columnDirections[size][2] = ['horizontal'];
+				design.columnVerticalAlignments[size][1] = ['middle', 'middle'];
+				design.columnVerticalAlignments[size][2] = ['middle'];
+				design.columnRowSpans[size] = { 1: [1, 2] };
+				design.rowVisibility[size][2] = { states: ['inactive', 'running', 'paused'], actions: {}, startForm: true };
+				design.elementSizes.overrides[size] = { name: 14, status: 12, duration: 14, play: 32, pause: 32, stop: 32 };
+			});
+		} else if (id === 'builtin:small' || id === 'builtin:tiny') {
 			narrowDesign(design, id === 'builtin:tiny');
 		} else if (id === 'builtin:centered') {
 			['compact', 'normal', 'large'].forEach(function (size) {
@@ -700,9 +757,14 @@
 	function elementStyle(scheme, state, element) {
 		var style = {};
 		if (buttonIds.indexOf(element) !== -1) {
-			style.backgroundColor = valueColor(buttonColor(scheme, state, element));
+			var background = resolveColor(scheme, state, element);
+			style.backgroundColor = background === 'none' ? 'transparent' : valueColor(buttonColor(scheme, state, element));
 			var foreground = resolveForeground(scheme, state, element);
 			if (foreground !== 'default') style.color = valueColor(foreground);
+			var borders = scheme && scheme.borderColors || {};
+			var overrides = scheme && scheme.borderOverrides && scheme.borderOverrides[state];
+			var border = overrides && overrides[element] !== undefined ? overrides[element] : borders[element];
+			if (border) style.border = border === 'none' ? '0' : '1px solid ' + valueColor(border);
 		} else {
 			var color = resolveForeground(scheme, state, element);
 			if (color !== 'default') style.color = valueColor(color);
@@ -737,6 +799,8 @@
 		migrateElementSizes: migrateElementSizes,
 		elementSize: elementSize,
 		buttonText: buttonText,
+		buttonShape: buttonShape,
+		buttonShapeStyle: buttonShapeStyle,
 		reserveElement: reserveElement,
 		inputFieldRows: inputFieldRows,
 		inputFieldLayout: inputFieldLayout,

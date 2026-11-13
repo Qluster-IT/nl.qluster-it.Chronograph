@@ -412,8 +412,16 @@
 						</div>
 					</fieldset>
 					<fieldset class="hy-nostyle style-progress-controls" ng-if="editor.mode === 'design' && isButtonElement(editor.selectedElement)">
-						<legend>{{ styleLabels[editor.selectedElement] }} - {{ t('settings.style_button_text') }} ({{ t('settings.style_' + editor.previewSize) }})</legend>
+						<legend>{{ styleLabels[editor.selectedElement] }} ({{ t('settings.style_' + editor.previewSize) }})</legend>
 						<div class="style-position-controls">
+							<label class="hy-nostyle" for="style-button-shape">{{ t('settings.style_button_shape') }}</label>
+							<select id="style-button-shape" class="form-select" ng-model="editButtonShape" ng-model-options="{ getterSetter: true }" ng-disabled="savingSettings || isDesignReadOnly()">
+								<option value="round">{{ t('settings.style_button_round') }}</option>
+								<option value="square">{{ t('settings.style_button_square') }}</option>
+							</select>
+							<label class="hy-nostyle style-progress-full-row"><input class="hy-nostyle" type="checkbox"
+								ng-model="buttonShapeOverride" ng-model-options="{ getterSetter: true }" ng-disabled="savingSettings || isDesignReadOnly()"> {{ t('settings.style_shape_override') }}</label>
+							<p class="help-text style-progress-full-row">{{ t('settings.style_shape_hint') }}</p>
 							<label class="hy-nostyle style-progress-full-row"><input class="hy-nostyle" type="checkbox"
 								ng-model="useDefaultButtonText" ng-model-options="{ getterSetter: true }" ng-disabled="savingSettings"> {{ t('settings.style_button_text_default') }}</label>
 							<label class="hy-nostyle" for="style-button-text">{{ t('settings.style_button_text') }}</label>
@@ -489,10 +497,15 @@
 						<div class="style-color-row" ng-if="isButtonElement(key)">
 							<label class="hy-nostyle" ng-attr-for="style-color-{{ key }}">{{ t('settings.style_background') }}</label>
 							<select ng-if="editor.previewState === 'inactive'" class="form-select" ng-attr-id="style-color-{{ key }}"
-								ng-model="editor.colorValues[key]" ng-change="updateColorOverride(key)" ng-options="color.id as color.label for color in colorOptions"></select>
+								ng-model="editor.colorValues[key]" ng-change="updateColorOverride(key)" ng-options="color.id as color.label for color in buttonBackgroundOptions"></select>
 							<select class="form-select" ng-attr-id="style-color-{{ key }}"
 								ng-if="editor.previewState !== 'inactive'"
 								ng-model="editor.colorValues[key]" ng-change="updateColorOverride(key)" ng-options="color.id as color.label for color in stateColorOptions(key)"></select>
+						</div>
+						<div class="style-color-row" ng-if="isButtonElement(key)">
+							<label class="hy-nostyle" for="style-button-border">{{ t('settings.style_button_border') }}</label>
+							<select id="style-button-border" class="form-select" ng-model="buttonBorder" ng-model-options="{ getterSetter: true }"
+								ng-options="color.id as color.label for color in (editor.previewState === 'inactive' ? baseBorderOptions : stateBorderOptions)"></select>
 						</div>
 						<div class="style-color-row" ng-if="key !== 'background'">
 							<label class="hy-nostyle" ng-attr-for="style-foreground-{{ key }}">{{ t(isButtonElement(key) ? 'settings.style_foreground' : 'settings.style_color') }}</label>
@@ -578,9 +591,11 @@
 								ng-style="(progressDirection() === 'left-right' || progressDirection() === 'right-left') ? { left: marker + '%' } : { top: marker + '%' }"></span>
 						</span>
 						<button ng-if="element === 'cancel'" class="hy-nostyle style-widget-action style-widget-cancel" type="button"
+							ng-style="previewButtonStyle(element, previewTileState(previewScenario, previewTile.type))"
 							ng-class="{ 'style-widget-button-text': buttonText(element) }"
 							ng-click="previewAction(element, previewTile.type)" ng-attr-aria-label="{{ previewActionLabel(element) }}" ng-attr-title="{{ previewActionLabel(element) }}"><i class="fa-solid fa-xmark" aria-hidden="true"></i><span ng-if="buttonText(element)">{{ buttonText(element) }}</span></button>
 						<button ng-if="element === 'start' || element === 'play' || element === 'pause' || element === 'stop'" class="hy-nostyle style-widget-action" type="button"
+							ng-style="previewButtonStyle(element, previewTileState(previewScenario, previewTile.type))"
 							ng-click="previewAction(element, previewTile.type)" ng-attr-aria-label="{{ previewActionLabel(element) }}" ng-attr-title="{{ previewActionLabel(element) }}"
 							ng-class="{ 'style-widget-start': element === 'start' && buttonText(element), 'style-widget-button-text': buttonText(element) }">
 							<i class="fa-solid" ng-class="element === 'start' || element === 'play' ? 'fa-play' : (element === 'pause' ? 'fa-pause' : 'fa-stop')" aria-hidden="true"></i>
@@ -604,6 +619,7 @@
 					<span ng-if="element === 'status'">{{ previewTileState(previewScenario, previewTile.type) === 'running' ? labels.running : (previewTileState(previewScenario, previewTile.type) === 'paused' ? labels.paused : t('settings.widget_not_running')) }}</span>
 					<span ng-if="element === 'duration'">12:34.56</span>
 					<button ng-if="element === 'play' || element === 'pause' || element === 'stop'" class="hy-nostyle style-showcase-action" type="button"
+						ng-style="previewButtonStyle(element, previewTileState(previewScenario, previewTile.type))"
 						ng-class="{ 'style-widget-button-text': buttonText(element) }"
 						ng-click="previewAction(element, previewTile.type)" ng-attr-aria-label="{{ previewActionLabel(element) }}" ng-attr-title="{{ previewActionLabel(element) }}">
 						<i class="fa-solid" ng-class="element === 'play' ? 'fa-play' : (element === 'pause' ? 'fa-pause' : 'fa-stop')" aria-hidden="true"></i>
@@ -613,6 +629,7 @@
 				</span>
 			</div>
 			<button ng-if="previewTileState(previewScenario, previewTile.type) === 'starting'" class="hy-nostyle style-widget-element style-widget-action style-widget-cancel" type="button"
+				ng-style="previewButtonStyle('cancel', previewTileState(previewScenario, previewTile.type))"
 				ng-class="{ 'style-widget-button-text': buttonText('cancel') }"
 				ng-attr-data-palette="{{ previewColor('cancel') }}"
 				ng-attr-data-foreground="{{ previewForeground('cancel') }}"

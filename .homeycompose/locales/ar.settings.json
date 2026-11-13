@@ -263,5 +263,12 @@
 	"multiple_invalid_settings": "بعض إعدادات الأداة غير صالحة. يرجى التحقق من إعدادات الأداة.",
 	"widget_type_timer": "مؤقت",
 	"widget_type_stopwatch": "ساعة التوقيف",
-	"widget_type_transition": "انتقال"
+	"widget_type_transition": "انتقال",
+	"style_preset_settings": "الإعدادات",
+	"style_button_shape": "شكل الزر",
+	"style_button_round": "دائري",
+	"style_button_square": "مربع",
+	"style_shape_override": "تخصيص لهذا الحجم",
+	"style_shape_hint": "ينطبق الشكل افتراضياً على جميع الأحجام. فعّل التخصيص لتغيير هذا الحجم فقط.",
+	"style_button_border": "لون الحدود"
 }

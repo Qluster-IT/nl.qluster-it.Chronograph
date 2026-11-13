@@ -263,5 +263,12 @@
 	"multiple_invalid_settings": "Noen widgetinnstillinger er ugyldige. Kontroller widgetinnstillingene.",
 	"widget_type_timer": "Timer",
 	"widget_type_stopwatch": "Stoppeklokke",
-	"widget_type_transition": "Overgang"
+	"widget_type_transition": "Overgang",
+	"style_preset_settings": "Innstillinger",
+	"style_button_shape": "Knappeform",
+	"style_button_round": "Rund",
+	"style_button_square": "Firkantet",
+	"style_shape_override": "Overstyr for denne størrelsen",
+	"style_shape_hint": "Formen gjelder som standard for alle størrelser. Aktiver overstyring for å endre bare denne størrelsen.",
+	"style_button_border": "Kantfarge"
 }

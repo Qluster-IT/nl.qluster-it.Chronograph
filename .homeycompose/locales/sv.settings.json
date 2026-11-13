@@ -263,5 +263,12 @@
 	"multiple_invalid_settings": "Vissa widgetinställningar är ogiltiga. Kontrollera widgetinställningarna.",
 	"widget_type_timer": "Timer",
 	"widget_type_stopwatch": "Stoppur",
-	"widget_type_transition": "Övergång"
+	"widget_type_transition": "Övergång",
+	"style_preset_settings": "Inställningar",
+	"style_button_shape": "Knappform",
+	"style_button_round": "Rund",
+	"style_button_square": "Fyrkantig",
+	"style_shape_override": "Åsidosätt för denna storlek",
+	"style_shape_hint": "Formen gäller som standard för alla storlekar. Aktivera åsidosättning för att bara ändra denna storlek.",
+	"style_button_border": "Kantfärg"
 }

@@ -263,5 +263,12 @@
 	"multiple_invalid_settings": "Einige Widget-Einstellungen sind ungültig. Bitte überprüfe die Widget-Einstellungen.",
 	"widget_type_timer": "Timer",
 	"widget_type_stopwatch": "Stoppuhr",
-	"widget_type_transition": "Übergang"
+	"widget_type_transition": "Übergang",
+	"style_preset_settings": "Einstellungen",
+	"style_button_shape": "Schaltflächenform",
+	"style_button_round": "Rund",
+	"style_button_square": "Quadratisch",
+	"style_shape_override": "Für diese Größe abweichend",
+	"style_shape_hint": "Die Form gilt standardmäßig für alle Größen. Aktivieren Sie die Abweichung, um nur diese Größe zu ändern.",
+	"style_button_border": "Rahmenfarbe"
 }

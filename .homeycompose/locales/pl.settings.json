@@ -263,5 +263,12 @@
 	"multiple_invalid_settings": "Niektóre ustawienia widżetu są nieprawidłowe. Sprawdź ustawienia widżetu.",
 	"widget_type_timer": "Stoper",
 	"widget_type_stopwatch": "Stoper",
-	"widget_type_transition": "Przejście"
+	"widget_type_transition": "Przejście",
+	"style_preset_settings": "Ustawienia",
+	"style_button_shape": "Kształt przycisku",
+	"style_button_round": "Okrągły",
+	"style_button_square": "Kwadratowy",
+	"style_shape_override": "Zmień dla tego rozmiaru",
+	"style_shape_hint": "Domyślnie kształt dotyczy wszystkich rozmiarów. Włącz zmianę, aby dostosować tylko ten rozmiar.",
+	"style_button_border": "Kolor obramowania"
 }

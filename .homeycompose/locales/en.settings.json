@@ -263,5 +263,12 @@
 	"multiple_invalid_settings": "Some widget settings are invalid. Please check the widget settings.",
 	"widget_type_timer": "Timer",
 	"widget_type_stopwatch": "Stopwatch",
-	"widget_type_transition": "Transition"
+	"widget_type_transition": "Transition",
+	"style_preset_settings": "Settings",
+	"style_button_shape": "Button shape",
+	"style_button_round": "Round",
+	"style_button_square": "Square",
+	"style_shape_override": "Override for this size",
+	"style_shape_hint": "By default, the shape applies to all sizes. Enable the override to change only this size.",
+	"style_button_border": "Border color"
 }

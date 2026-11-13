@@ -263,5 +263,12 @@
 	"multiple_invalid_settings": "Algunos ajustes del widget no son válidos. Comprueba los ajustes del widget.",
 	"widget_type_timer": "Temporizador",
 	"widget_type_stopwatch": "Cronómetro",
-	"widget_type_transition": "Transición"
+	"widget_type_transition": "Transición",
+	"style_preset_settings": "Ajustes",
+	"style_button_shape": "Forma del botón",
+	"style_button_round": "Redondo",
+	"style_button_square": "Cuadrado",
+	"style_shape_override": "Personalizar para este tamaño",
+	"style_shape_hint": "La forma se aplica a todos los tamaños por defecto. Active esta opción para cambiar solo este tamaño.",
+	"style_button_border": "Color del borde"
 }

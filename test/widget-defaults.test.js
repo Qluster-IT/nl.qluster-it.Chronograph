@@ -287,7 +287,7 @@ describe('Widget duration defaults', () => {
 						assert.ok(elements.includes('duration'), preset.id + ' ' + type + ' ' + layout);
 						assert.ok(elements.includes(running ? 'pause' : 'play'));
 						assert.ok(elements.includes('stop'));
-						assert.strictEqual(elements.includes('progress'), type !== 'stopwatch');
+						assert.strictEqual(elements.includes('progress'), type !== 'stopwatch' && preset.id !== 'builtin:settings');
 					}
 				}
 			}
@@ -303,6 +303,7 @@ describe('Widget duration defaults', () => {
 	it('renders built-in color schemes across widget types and sizes without loading saved styles', async () => {
 		const runtime = require('../assets/js/chronograph-widget-style.js');
 		for (const preset of runtime.builtInSchemeDefinitions) {
+			if (preset.id === 'builtin:settings') continue;
 			for (const type of ['timer', 'stopwatch', 'transition']) {
 				for (const layout of ['compact', 'normal', 'large']) {
 					const widget = await loadWidget(type, { layout, colorScheme: { id: preset.id } }, {});
@@ -323,6 +324,20 @@ describe('Widget duration defaults', () => {
 			});
 			assert.strictEqual(widget.scope.iconColor, preset.accent);
 			assert.strictEqual(widget.requests.filter(request => request.url === '/widget-styles').length, 1);
+		}
+	});
+
+	it('applies the Settings preset buttons in widgets without loading saved styles', async () => {
+		for (const type of ['timer', 'stopwatch', 'transition']) {
+			for (const layout of ['compact', 'normal', 'large']) {
+				const widget = await loadWidget(type, { layout, designStyle: { id: 'builtin:settings' }, colorScheme: { id: 'builtin:settings' } }, {});
+				assert.strictEqual(widget.scope.designEnabled, true);
+				const button = widget.scope.designButtonStyle('pause');
+				assert.strictEqual(button.borderRadius, '4px');
+				assert.strictEqual(button.backgroundColor, 'transparent');
+				assert.strictEqual(button.border, '1px solid #9a9ca6');
+				assert.ok(!widget.requests.some(request => request.url === '/widget-styles'));
+			}
 		}
 	});
 
