@@ -241,7 +241,7 @@ describe('Widget duration defaults', () => {
 			for (const layout of ['compact', 'normal', 'large']) {
 				const empty = await loadWidget(type, { layout, iconColor: 'red' }, {});
 				const explicit = await loadWidget(type, {
-					layout, designStyle: { id: 'builtin:current' }, colorScheme: { id: 'builtin:current' }
+					layout, designStyle: { id: 'builtin:current' }, colorTheme: { id: 'builtin:current' }
 				}, {});
 				assert.strictEqual(empty.scope.designEnabled, true, type + ' ' + layout);
 				assert.deepStrictEqual(JSON.parse(JSON.stringify(empty.scope.designRows)), JSON.parse(JSON.stringify(explicit.scope.designRows)));
@@ -261,7 +261,7 @@ describe('Widget duration defaults', () => {
 	it('uses the default design and selected scheme independently', async () => {
 		const collection = { version: 2, styles: [], colorSchemes: [{ id: 'scheme-a', colors: { icon: 'red', name: 'green' } }] };
 		const icon = 'data:image/svg+xml;base64,PHN2Zy8+';
-		const { scope, requests } = await loadWidget('timer', { colorScheme: { id: 'scheme-a' }, icon: { image: icon } }, {}, collection);
+		const { scope, requests } = await loadWidget('timer', { colorTheme: { id: 'scheme-a' }, icon: { image: icon } }, {}, collection);
 		assert.strictEqual(scope.designEnabled, true);
 		assert.deepStrictEqual(Array.from(scope.designRows, row => row.id), [1, 2, 4]);
 		assert.strictEqual(scope.iconColor, 'red');
@@ -270,12 +270,20 @@ describe('Widget duration defaults', () => {
 		assert.strictEqual(requests.filter(request => request.url === '/widget-styles').length, 1);
 	});
 
+	it('uses the renamed theme setting and falls back to the legacy setting only when absent', async () => {
+		const collection = { version: 3, styles: [], themes: [{ id: 'legacy', colors: { icon: 'red' } }] };
+		const legacy = await loadWidget('timer', { colorScheme: { id: 'legacy' } }, {}, collection);
+		assert.strictEqual(legacy.scope.iconColor, 'red');
+		const cleared = await loadWidget('timer', { colorTheme: null, colorScheme: { id: 'legacy' } }, {}, collection);
+		assert.notStrictEqual(cleared.scope.iconColor, 'red');
+	});
+
 	it('renders built-in designs independently across types, sizes and states', async () => {
 		const runtime = require('../assets/js/chronograph-widget-style.js');
 		for (const preset of runtime.builtInDesignDefinitions) {
 			for (const type of ['timer', 'stopwatch', 'transition']) {
 				for (const layout of ['compact', 'normal', 'large']) {
-					const widget = await loadWidget(type, { layout, designStyle: { id: preset.id }, colorScheme: { id: 'builtin:ocean' } }, {});
+					const widget = await loadWidget(type, { layout, designStyle: { id: preset.id }, colorTheme: { id: 'builtin:ocean' } }, {});
 					assert.strictEqual(widget.scope.designEnabled, true, preset.id + ' ' + type + ' ' + layout);
 					assert.ok(!widget.requests.some(request => request.url === '/widget-styles'));
 					assert.strictEqual(widget.scope.designElementSize('duration'), runtime.elementSize(runtime.builtInDesign(preset.id), layout, 'duration'));
@@ -291,7 +299,7 @@ describe('Widget duration defaults', () => {
 					}
 				}
 			}
-			const widget = await loadWidget('timer', { designStyle: { id: preset.id }, colorScheme: { id: 'custom' } }, {}, {
+			const widget = await loadWidget('timer', { designStyle: { id: preset.id }, colorTheme: { id: 'custom' } }, {}, {
 				version: 2, styles: [], colorSchemes: [{ id: 'custom', colors: { icon: 'red' } }]
 			});
 			assert.strictEqual(widget.scope.designEnabled, true);
@@ -306,7 +314,7 @@ describe('Widget duration defaults', () => {
 			if (preset.id === 'builtin:settings') continue;
 			for (const type of ['timer', 'stopwatch', 'transition']) {
 				for (const layout of ['compact', 'normal', 'large']) {
-					const widget = await loadWidget(type, { layout, colorScheme: { id: preset.id } }, {});
+					const widget = await loadWidget(type, { layout, colorTheme: { id: preset.id } }, {});
 					assert.strictEqual(widget.scope.designEnabled, true);
 					assert.strictEqual(widget.scope.iconColor, preset.accent);
 					assert.strictEqual(widget.scope.designProgressForeground(), runtime.valueColor(preset.accent));
@@ -319,7 +327,7 @@ describe('Widget duration defaults', () => {
 			}
 			const design = runtime.currentDesign();
 			design.id = 'custom-design';
-			const widget = await loadWidget('timer', { designStyle: { id: design.id }, colorScheme: { id: preset.id } }, {}, {
+			const widget = await loadWidget('timer', { designStyle: { id: design.id }, colorTheme: { id: preset.id } }, {}, {
 				version: 2, styles: [design], colorSchemes: []
 			});
 			assert.strictEqual(widget.scope.iconColor, preset.accent);
@@ -330,7 +338,7 @@ describe('Widget duration defaults', () => {
 	it('applies the Settings preset buttons in widgets without loading saved styles', async () => {
 		for (const type of ['timer', 'stopwatch', 'transition']) {
 			for (const layout of ['compact', 'normal', 'large']) {
-				const widget = await loadWidget(type, { layout, designStyle: { id: 'builtin:settings' }, colorScheme: { id: 'builtin:settings' } }, {});
+				const widget = await loadWidget(type, { layout, designStyle: { id: 'builtin:settings' }, colorTheme: { id: 'builtin:settings' } }, {});
 				assert.strictEqual(widget.scope.designEnabled, true);
 				const button = widget.scope.designButtonStyle('pause');
 				assert.strictEqual(button.borderRadius, '4px');
@@ -424,7 +432,7 @@ describe('Widget duration defaults', () => {
 	it('reports an unavailable selected design or scheme instead of treating it as Default', async () => {
 		for (const [settings, expected] of [
 			[{ designStyle: { id: 'missing' } }, 'settings.widget_design_unavailable'],
-			[{ colorScheme: { id: 'missing' } }, 'settings.widget_scheme_unavailable']
+			[{ colorTheme: { id: 'missing' } }, 'settings.widget_scheme_unavailable']
 		]) {
 			const { scope } = await loadWidget('timer', settings, {}, { version: 2, styles: [], colorSchemes: [] });
 			assert.strictEqual(scope.error, expected);
@@ -459,17 +467,22 @@ describe('Widget duration defaults', () => {
 			name: 'Scheme A',
 			colors: { icon: 'red', name: 'green', start: 'orange', inactive: 'none' }
 		};
-		const { scope } = await loadWidget('timer', {
-			designStyle: { id: 'design-a' },
-			colorScheme: { data: { id: 'scheme-a' } },
-			layout: 'normal'
-		}, {}, { version: 2, styles: [design], colorSchemes: [scheme] });
-		assert.strictEqual(scope.designEnabled, true);
-		assert.deepStrictEqual(Array.from(scope.designRows, row => row.id), [1, 2]);
-		assert.strictEqual(scope.designRows[1].groups[1].elements.includes('start'), true);
-		assert.strictEqual(scope.iconColor, 'red');
-		assert.strictEqual(scope.playColor, 'blue');
-		assert.strictEqual(scope.schemeElementStyle('name').color, 'var(--homey-color-green, #71d51b)');
+		for (const collection of [
+			{ version: 2, styles: [design], colorSchemes: [scheme] },
+			{ version: 3, styles: [design], themes: [scheme] }
+		]) {
+			const { scope } = await loadWidget('timer', {
+				designStyle: { id: 'design-a' },
+				colorTheme: { data: { id: 'scheme-a' } },
+				layout: 'normal'
+			}, {}, collection);
+			assert.strictEqual(scope.designEnabled, true);
+			assert.deepStrictEqual(Array.from(scope.designRows, row => row.id), [1, 2]);
+			assert.strictEqual(scope.designRows[1].groups[1].elements.includes('start'), true);
+			assert.strictEqual(scope.iconColor, 'red');
+			assert.strictEqual(scope.playColor, 'blue');
+			assert.strictEqual(scope.schemeElementStyle('name').color, 'var(--homey-color-green, #71d51b)');
+		}
 	});
 
 	for (const type of ['timer', 'transition']) {

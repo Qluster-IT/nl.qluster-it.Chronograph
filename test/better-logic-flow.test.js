@@ -129,6 +129,12 @@ describe('Better Logic Flow arguments', () => {
 		assert.strictEqual(timer._splits[0].time, 8000);
 	});
 
+	it('rejects a start without a name with the name-required error for every type', async () => {
+		for (const start of [Chronograph.timer_startRunListener, Chronograph.stopwatch_startRunListener, Chronograph.transition_startRunListener]) {
+			await assert.rejects(start(homey, { time: 10, unit: 'seconds', from: 0, to: 1, steps: 2 }), { message: 'name_required' });
+		}
+	});
+
 	it('propagates decoder failures before replacing an existing chronograph', async () => {
 		await Chronograph.timer_startRunListener(homey, { name: 'Kitchen timer', time: 10, unit: 'seconds' });
 		const id = Utils.generateId(ChronographType.TIMER, 'Kitchen timer');

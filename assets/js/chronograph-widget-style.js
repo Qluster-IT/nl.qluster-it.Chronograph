@@ -136,7 +136,7 @@
 	function findScheme(collection, id) {
 		var builtIn = builtInScheme(id);
 		if (builtIn) return builtIn;
-		var scheme = findItem(collection && collection.colorSchemes, id);
+		var scheme = findItem(collection && (collection.version === 3 ? collection.themes : collection.colorSchemes), id);
 		if (scheme) return scheme;
 		var legacy = collection && collection.version === 1 && findItem(collection.styles, id);
 		if (!legacy) return undefined;

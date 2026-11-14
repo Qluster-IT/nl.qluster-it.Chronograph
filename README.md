@@ -27,6 +27,13 @@ See the [Chronograph wiki](https://github.com/Qluster-IT/nl.qluster-it.Chronogra
 
 ## Development
 
+### Flow card structure
+
+Timer, stopwatch and transition trigger modules share matching, dispatch and
+argument-storage helpers in `lib/flow-cards.js`. The individual modules retain
+their published card IDs, tokens and settings keys. Trigger and argument-storage
+failures are logged through Homey.
+
 ### Local settings preview
 
 The root `locales/` directory contains an empty JSON object for each language.
@@ -40,7 +47,7 @@ default tab. The preview loads translations for the browser language; add `?lang
 `?lang=en` to choose a language. It reads translations directly from the Homey
 Compose locale sources, without requiring generated locale files. Settings saved in this preview are stored
 in the browser's local storage, not on Homey. In this local preview, all built-in
-designs and color schemes are editable; Save stores a separate browser-only
+designs and themes are editable; Save stores a separate browser-only
 snapshot under `chronograph-settings-preview:previewBuiltIns`. These changes
 survive reloads but do not modify the app defaults or Homey. Share the saved
 preview when requesting changes to the actual defaults. Chronographs are
@@ -49,7 +56,7 @@ Homey device, so final appearance and behavior still require a Homey check.
 The designer can also preview three independently selectable chronograph types
 in a one-, two-, or three-column multi-widget; tile width depends on the
 available preview space. All tiles share the selected design, size, state and
-color scheme. For one or two columns, preview the widget's row separation
+theme. For one or two columns, preview the widget's row separation
 and line color as well.
 Button text can be customized per design size. Default text is translated;
 the default appears as a placeholder in the designer. Custom text is shared
@@ -57,8 +64,8 @@ across languages, and empty custom text shows only the icon.
 Duration and status bar elements can reserve space when hidden, separately for
 each design size.
 Layouts can be copied between sizes without replacing other size-specific
-settings. Undo and redo apply to the currently selected design or scheme.
-Switching away from an unsaved design or scheme prompts to discard its changes;
+settings. Undo and redo apply to the currently selected design or theme.
+Switching away from an unsaved design or theme prompts to discard its changes;
 the browser may also warn before leaving with unsaved settings.
 The preview highlights the selected widget, row, column or visible element.
 Nothing is selected initially; tap or click the selected item again to deselect it.
@@ -93,25 +100,33 @@ If you like this project, perhaps you can support us by making a donation?
 
 Widget icons use [Font Awesome Free 7.3.1](https://fontawesome.com), including solid, regular and brand icons. Choose an icon color from the widget settings; existing widgets default to blue. After None and the three default icons, results are grouped by regular, solid and brands. Search for `solid`, `regular`, or `brands` to filter by style, optionally combined with an icon name (for example, `regular clock`). Font Awesome's license is included in `assets/licenses/fontawesome-LICENSE.txt`.
 
+Template preview images use html-to-image; its license is in `assets/licenses/html-to-image-LICENSE.txt`.
+
 To regenerate the widget icon previews after updating the icon catalog, run `npm ci --prefix tools/icon-previews` followed by `npm run generate:icon-previews`. The generator and its dependencies are excluded from the Homey app; the generated preview catalog remains in `assets/`.
 
 Application image by [Agê Barros](https://unsplash.com/@agebarros?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/search/photos/time?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText).
 
 ## Changelog
 
+### Unreleased
+
+* Share saved custom widget designs and themes as compact templates, with a visual import review.
+* Copy a template forum post with three size-and-state preview grids for timers, stopwatches and transitions.
+* Renamed widget color scheme settings to themes; existing dashboard settings require migration.
+
 ### v3.0.5
 
 * Start with no designer selection and tap or click the selected item again to deselect it.
-* Export custom designs and color schemes; built-in items can be copied first.
+* Export custom designs and themes; built-in items can be copied first.
 
 ### v3.0.4
 
-* Added per-design and per-scheme undo/redo and unsaved-change protection.
-* Export and import custom widget designs and color schemes as JSON files.
+* Added per-design and per-theme undo/redo and unsaved-change protection.
+* Export and import custom widget designs and themes as JSON files.
 * Added layout copying between design sizes and a three-tile multi-widget preview.
 * Added a link to the widget designer guide.
 * Configure the number of rows per design size, and customize button shapes and borders.
-* Added a Settings design and matching color scheme.
+* Added a Settings design and matching theme.
 * Show field labels on focus and highlight selected designer items in the preview.
 * Preview multi-widget row separation and line colors.
 * Fixed a false discard warning when migrating older local preview presets.
@@ -136,7 +151,7 @@ Application image by [Agê Barros](https://unsplash.com/@agebarros?utm_source=un
 ### v3.0.0
 
 * Added a multi-Chronograph widget with individually configurable tiles and up to three columns.
-* Create custom widget layouts and color schemes with the widget designer.
+* Create custom widget layouts and themes with the widget designer.
 * Improved translations.
 * Improved app and widget performance and reduced resource usage.
 * The Chronograph API now uses names instead of IDs. Update your scripts and integrations; see the [API wiki](https://github.com/Qluster-IT/nl.qluster-it.Chronograph/wiki).

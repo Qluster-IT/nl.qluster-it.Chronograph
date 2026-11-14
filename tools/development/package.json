@@ -12,6 +12,7 @@
 		}
 	},
 	"devDependencies": {
+		"html-to-image": "1.11.13",
 		"husky": "^3.1.0",
 		"mocha": "^6.2.2"
 	}

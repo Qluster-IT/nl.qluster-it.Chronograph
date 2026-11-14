@@ -343,6 +343,22 @@ body {
 	font-weight: 600;
 }
 
+.style-template-screen section > label,
+.style-template-screen section > div > label {
+	display: block;
+	margin-top: 12px;
+}
+
+.style-template-screen textarea {
+	width: 100%;
+	overflow-wrap: anywhere;
+}
+
+.style-template-screen section > button,
+.style-template-screen section > div > button {
+	margin-top: 10px;
+}
+
 .style-design-selectors {
 	display: grid;
 	grid-template-columns: minmax(0, 40%) minmax(0, 1fr);

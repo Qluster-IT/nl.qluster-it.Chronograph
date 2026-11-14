@@ -100,9 +100,9 @@ describe('Chronograph widget API', () => {
 		assert.strictEqual(await widgetApi.getWidgetStyles({ homey }), collection);
 		delete savedStartArgs.widgetStyles;
 		assert.deepStrictEqual(await widgetApi.getWidgetStyles({ homey }), {
-			version: 2,
+			version: 3,
 			styles: [],
-			colorSchemes: []
+			themes: []
 		});
 	});
 

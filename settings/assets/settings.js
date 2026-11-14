@@ -17,7 +17,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		var refreshInterval;
 		var durationInterval;
 		var refreshInProgress = false;
-		var savedStyles = { version: 2, styles: [], colorSchemes: [] };
+		var savedStyles = { version: 3, styles: [], themes: [] };
 		var decimalsLoaded = false;
 		var stylesLoaded = false;
 		var migrationPending = false;
@@ -48,7 +48,9 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			return index;
 		});
 		$scope.savingSettings = false;
-		$scope.widgetStyles = { version: 2, styles: [], colorSchemes: [] };
+		$scope.widgetStyles = { version: 3, styles: [], themes: [] };
+		$scope.templates = { open: false, section: 'export', designId: null, themeId: null, text: '',
+			previewDesignId: 'builtin:current', previewThemeId: 'builtin:current', review: null, busy: false };
 		$scope.editor = {
 			mode: 'design',
 			selectedStyleId: '',
@@ -137,16 +139,17 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 
 		function previewBuiltIns() {
 			return {
-				version: 2,
+				version: 3,
 				styles: Object.keys(builtInDesigns).map(function (id) { return widgetStyleEditor.designFromStyle(builtInDesigns[id]); }),
-				colorSchemes: Object.keys(builtInSchemes).map(function (id) { return angular.copy(builtInSchemes[id]); })
+				themes: Object.keys(builtInSchemes).map(function (id) { return angular.copy(builtInSchemes[id]); })
 			};
 		}
 
 		function validPreviewBuiltIns(value) {
-			if (!value || value.version !== 2 || !widgetStyleEditor.isValidCollection(value)) return false;
+			if (!value || (value.version !== 2 && value.version !== 3) || !widgetStyleEditor.isValidCollection(value)) return false;
 			return value.styles.every(function (item) { return Object.prototype.hasOwnProperty.call(builtInDesigns, item.id); })
-				&& value.colorSchemes.every(function (item) { return Object.prototype.hasOwnProperty.call(builtInSchemes, item.id); });
+				&& (value.version === 3 ? value.themes : value.colorSchemes)
+					.every(function (item) { return Object.prototype.hasOwnProperty.call(builtInSchemes, item.id); });
 		}
 
 		function normalizeDesignSpans(style) {
@@ -188,11 +191,22 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			});
 		}
 
-		$scope.getSelectedStyle = function () {
-			if (Object.prototype.hasOwnProperty.call(builtInDesigns, $scope.editor.selectedStyleId)) return builtInDesigns[$scope.editor.selectedStyleId];
-			var id = $scope.editor.selectedStyleId.slice(7);
-			if ($scope.editor.selectedStyleId.indexOf('custom:') !== 0) return undefined;
+		function designById(selection) {
+			if (Object.prototype.hasOwnProperty.call(builtInDesigns, selection)) return builtInDesigns[selection];
+			var id = selection.slice(7);
+			if (selection.indexOf('custom:') !== 0) return undefined;
 			return $scope.widgetStyles.styles.find(function (style) { return style.id === id; });
+		}
+		$scope.getSelectedStyle = function () {
+			var template = $scope.templates;
+			if (template.open && template.section === 'export' && template.exportText) {
+				return template.designId ? designById('custom:' + template.designId) : builtInStyle;
+			}
+			if (template.open && template.section === 'import' && template.review) {
+				if (template.includeDesign && template.review.design) return template.review.design;
+				return designById(template.previewDesignId);
+			}
+			return designById($scope.editor.selectedStyleId);
 		};
 
 		$scope.isBuiltInStyle = function () {
@@ -218,11 +232,22 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		$scope.defaultDesignName = function () { return builtInDesigns['builtin:current'] && builtInDesigns['builtin:current'].name; };
 		$scope.defaultSchemeName = function () { return builtInSchemes['builtin:current'] && builtInSchemes['builtin:current'].name; };
 
+		function themeById(selection) {
+			if (Object.prototype.hasOwnProperty.call(builtInSchemes, selection)) return builtInSchemes[selection];
+			if (selection.indexOf('custom:') !== 0) return undefined;
+			var id = selection.slice(7);
+			return ($scope.widgetStyles.themes || []).find(function (scheme) { return scheme.id === id; });
+		}
 		$scope.getSelectedScheme = function () {
-			if (Object.prototype.hasOwnProperty.call(builtInSchemes, $scope.editor.selectedSchemeId)) return builtInSchemes[$scope.editor.selectedSchemeId];
-			if ($scope.editor.selectedSchemeId.indexOf('custom:') !== 0) return undefined;
-			var id = $scope.editor.selectedSchemeId.slice(7);
-			return ($scope.widgetStyles.colorSchemes || []).find(function (scheme) { return scheme.id === id; });
+			var template = $scope.templates;
+			if (template.open && template.section === 'export' && template.exportText) {
+				return template.themeId ? themeById('custom:' + template.themeId) : builtInScheme;
+			}
+			if (template.open && template.section === 'import' && template.review) {
+				if (template.includeTheme && template.review.theme) return template.review.theme;
+				return themeById(template.previewThemeId);
+			}
+			return themeById($scope.editor.selectedSchemeId);
 		};
 		$scope.getEditingItem = function () {
 			return $scope.editor.mode === 'color' ? $scope.getSelectedScheme() : $scope.getSelectedStyle();
@@ -232,6 +257,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				? $scope.editor.selectedSchemeId : $scope.editor.selectedStyleId);
 		}
 		function captureEditHistory() {
+			if ($scope.templates.open) return;
 			var item = $scope.getEditingItem();
 			if (!item) { editHistory = null; return; }
 			var key = editingKey();
@@ -278,7 +304,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			refreshEditedItem();
 		};
 		function savedEditingItem(item, colorMode) {
-			var collection = colorMode ? 'colorSchemes' : 'styles';
+			var collection = colorMode ? 'themes' : 'styles';
 			if ($scope.isBuiltInStyle()) {
 				return savedPreviewBuiltIns && savedPreviewBuiltIns[collection].find(function (saved) { return saved.id === item.id; });
 			}
@@ -304,7 +330,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 					if (!confirmed || $scope.savingSettings || $scope.getEditingItem() !== item) return;
 					if (saved) replaceItem(item, saved);
 					else {
-						var items = colorMode ? $scope.widgetStyles.colorSchemes : $scope.widgetStyles.styles;
+						var items = colorMode ? $scope.widgetStyles.themes : $scope.widgetStyles.styles;
 						var index = items.indexOf(item);
 						if (index !== -1) items.splice(index, 1);
 						if (colorMode) $scope.editor.selectedSchemeId = 'builtin:current';
@@ -612,6 +638,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 
 		$scope.$watchGroup(['editor.selectedStyleId', 'editor.previewSize'], function () {
 			$scope.resetRowPreview();
+			if ($scope.templates.open) return;
 			if ($scope.editor.selectedRow !== null) refreshRowRule();
 			if ($scope.editor.selectedColumn) {
 				var style = $scope.getSelectedStyle();
@@ -780,7 +807,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		$scope.createStyle = function (copy) {
 			if (!stylesLoaded || $scope.savingSettings) return;
 			var colorMode = $scope.editor.mode === 'color';
-			var items = colorMode ? $scope.widgetStyles.colorSchemes : $scope.widgetStyles.styles;
+			var items = colorMode ? $scope.widgetStyles.themes : $scope.widgetStyles.styles;
 			var source = $scope.getEditingItem();
 			if (copy && !source) return;
 			var sourceCopy = copy ? angular.copy(source) : null;
@@ -817,14 +844,328 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		function validStyleTransfer(value) {
 			if (!value || value.format !== 'chronograph-widget-style' || value.version !== 1
 				|| (value.type !== 'design' && value.type !== 'color')) return false;
-			var collection = { version: 2, styles: [], colorSchemes: [] };
-			collection[value.type === 'color' ? 'colorSchemes' : 'styles'].push(value.item);
+			var collection = { version: 3, styles: [], themes: [] };
+			collection[value.type === 'color' ? 'themes' : 'styles'].push(value.item);
 			try {
 				return widgetStyleEditor.isValidCollection(collection);
 			} catch (error) {
 				return false;
 			}
 		}
+
+		function uniqueStyleName(name, items, builtIns) {
+			name = name.trim().slice(0, 80);
+			var candidate = name;
+			var number = 2;
+			var names = items.concat(Object.keys(builtIns).map(function (id) { return builtIns[id]; }))
+				.map(function (item) { return item.name.toLocaleLowerCase(); });
+			while (names.indexOf(candidate.toLocaleLowerCase()) !== -1) {
+				var suffix = ' (' + number++ + ')';
+				candidate = name.slice(0, 80 - suffix.length) + suffix;
+			}
+			return candidate;
+		}
+
+		$scope.openTemplates = function () {
+			if (!$scope.stylesAvailable || $scope.templates.busy) return;
+			leaveEditingItem(function () {
+				$scope.templates.open = true;
+				$scope.templates.section = 'export';
+				$scope.templates.review = null;
+			});
+		};
+
+		$scope.closeTemplates = function () {
+			if ($scope.templates.busy) return;
+			$scope.templates.open = false;
+			$scope.templates.review = null;
+			$scope.refreshLayoutElement();
+		};
+
+		$scope.selectTemplateSection = function (section) {
+			if ($scope.templates.busy || ['export', 'import', 'catalog'].indexOf(section) === -1) return;
+			$scope.templates.section = section;
+			$scope.templates.review = null;
+		};
+
+		$scope.generateWidgetTemplate = function () {
+			var template = $scope.templates;
+			if (template.busy || $scope.isDirty()) return;
+			var design = savedStyles.styles.find(function (item) { return item.id === template.designId; });
+			var theme = savedStyles.themes.find(function (item) { return item.id === template.themeId; });
+			if (!design && !theme) {
+				Homey.alert(Homey.__('settings.template_select_item'));
+				return;
+			}
+			template.busy = true;
+			Homey.api('POST', '/widget-templates/encode', {
+				design: design ? widgetStyleEditor.designFromStyle(design) : undefined,
+				theme: theme ? angular.copy(theme) : undefined
+			}, function (error, text) {
+				$scope.$applyAsync(function () {
+					template.busy = false;
+					if (error) { showError(error); return; }
+					template.exportText = text;
+					template.exportTitle = (design || theme).name;
+				});
+			});
+		};
+
+		$scope.templateForumPost = function () {
+			var template = $scope.templates;
+			return template.exportText ? '# ' + template.exportTitle + '\n\n'
+				+ Homey.__('settings.template_post_description') + '\n\nTWF:\n```\n' + template.exportText + '\n```' : '';
+		};
+
+		$scope.copyWidgetTemplate = function (id) {
+			var field = document.getElementById(id);
+			if (!field || !field.value) return;
+			field.focus();
+			field.select();
+			if (!document.execCommand('copy')) Homey.alert(Homey.__('settings.template_copy_error'));
+		};
+
+		async function templatePreviewImage() {
+			var template = $scope.templates;
+			var preview = document.getElementById('template-export-preview');
+			if (!preview || !window.htmlToImage) throw new Error('Template preview is unavailable');
+			var response = await fetch('../assets/webfonts/fa-solid-900.woff2');
+			if (!response.ok) throw new Error('Could not load preview font');
+			var bytes = new Uint8Array(await response.arrayBuffer());
+			var binary = '';
+			for (var index = 0; index < bytes.length; index += 8192) {
+				binary += String.fromCharCode.apply(null, bytes.subarray(index, index + 8192));
+			}
+			var fontCSS = '@font-face{font-family:"Font Awesome 7 Free";font-style:normal;font-weight:900;src:url(data:font/woff2;base64,'
+				+ btoa(binary) + ')}';
+			var original = {
+				size: $scope.editor.previewSize,
+				type: $scope.editor.previewType,
+				state: $scope.editor.previewState,
+				width: preview.style.width
+			};
+			var types = ['stopwatch', 'timer', 'transition'];
+			var sizes = ['compact', 'normal', 'large'];
+			var states = ['running', 'paused', 'inactive'];
+			var typeLabels = { stopwatch: 'stopwatches', timer: 'timers', transition: 'transitions' };
+			var stateLabels = { running: 'widget_running', paused: 'widget_paused', inactive: 'widget_not_running' };
+			var images = [];
+			try {
+				preview.style.width = '300px';
+				for (var type of types) {
+					var rows = [];
+					for (var state of states) {
+						var row = [];
+						for (var size of sizes) {
+							await new Promise(function (resolve) {
+								$scope.$applyAsync(function () {
+									$scope.editor.previewSize = size;
+									$scope.editor.previewType = type;
+									$scope.editor.previewState = state;
+									window.setTimeout(resolve, 20);
+								});
+							});
+							row.push(await new Promise(function (resolve, reject) {
+								var timer = window.setTimeout(function () { reject(new Error('Preview image timed out')); }, 15000);
+								window.htmlToImage.toCanvas(preview, { fontEmbedCSS: fontCSS, pixelRatio: 1 }).then(function (image) {
+									window.clearTimeout(timer);
+									resolve(image);
+								}, function (error) {
+									window.clearTimeout(timer);
+									reject(error);
+								});
+							}));
+							$scope.$applyAsync(function () { template.imageProgress++; });
+						}
+						rows.push(row);
+					}
+					images.push({ type: type, rows: rows });
+				}
+			} finally {
+				preview.style.width = original.width;
+				$scope.$applyAsync(function () {
+					$scope.editor.previewSize = original.size;
+					$scope.editor.previewType = original.type;
+					$scope.editor.previewState = original.state;
+				});
+			}
+			var canvas = document.createElement('canvas');
+			var padding = 16, gap = 12, rowLabelWidth = 110, headingHeight = 32, columnHeight = 28;
+			var cellWidth = Math.max.apply(null, images.flatMap(function (panel) {
+				return panel.rows.flatMap(function (row) { return row.map(function (image) { return image.width; }); });
+			}));
+			images.forEach(function (panel) {
+				panel.rowHeights = panel.rows.map(function (row) {
+					return Math.max.apply(null, row.map(function (image) { return image.height; }));
+				});
+			});
+			canvas.width = padding * 2 + rowLabelWidth + cellWidth * 3 + gap * 2;
+			canvas.height = padding + images.reduce(function (height, panel) {
+				return height + headingHeight + columnHeight + panel.rowHeights.reduce(function (sum, value) { return sum + value + gap; }, 0) + padding;
+			}, 0);
+			var context = canvas.getContext('2d');
+			var bodyStyle = window.getComputedStyle(document.body);
+			var background = bodyStyle.backgroundColor;
+			if (!background || background === 'rgba(0, 0, 0, 0)' || background === 'transparent') {
+				background = window.getComputedStyle(document.documentElement).backgroundColor;
+			}
+			if (!background || background === 'rgba(0, 0, 0, 0)' || background === 'transparent') {
+				var rgb = bodyStyle.color.match(/\d+/g) || [];
+				background = rgb.length >= 3 && (Number(rgb[0]) * 299 + Number(rgb[1]) * 587 + Number(rgb[2]) * 114) / 1000 > 160
+					? '#1a1a1a' : '#ffffff';
+			}
+			context.fillStyle = background;
+			context.fillRect(0, 0, canvas.width, canvas.height);
+			context.fillStyle = bodyStyle.color;
+			context.textBaseline = 'middle';
+			var y = padding;
+			images.forEach(function (panel) {
+				context.font = '600 20px sans-serif';
+				context.fillText(Homey.__('settings.' + typeLabels[panel.type]), padding, y + headingHeight / 2);
+				y += headingHeight;
+				context.font = '600 14px sans-serif';
+				sizes.forEach(function (size, column) {
+					context.fillText(Homey.__('settings.style_' + size), padding + rowLabelWidth + column * (cellWidth + gap), y + columnHeight / 2);
+				});
+				y += columnHeight;
+				panel.rows.forEach(function (row, rowIndex) {
+					context.fillText(Homey.__('settings.' + stateLabels[states[rowIndex]]), padding, y + panel.rowHeights[rowIndex] / 2, rowLabelWidth - gap);
+					row.forEach(function (image, column) {
+						context.drawImage(image, padding + rowLabelWidth + column * (cellWidth + gap), y);
+					});
+					y += panel.rowHeights[rowIndex] + gap;
+				});
+				y += padding;
+			});
+			return new Promise(function (resolve, reject) {
+				canvas.toBlob(function (blob) {
+					if (blob) resolve(blob);
+					else reject(new Error('Could not create preview image'));
+				}, 'image/png');
+			});
+		}
+
+		$scope.copyTemplateForumPost = function () {
+			var template = $scope.templates;
+			if (template.busy || !template.exportText) return;
+			if (!navigator.clipboard || !navigator.clipboard.write || !window.ClipboardItem) {
+				Homey.alert(Homey.__('settings.template_clipboard_image_error'));
+				return;
+			}
+			template.busy = true;
+			template.imageProgress = 0;
+			var imagePromise = templatePreviewImage();
+			imagePromise.catch(function () {});
+			function finish(error) {
+				$scope.$applyAsync(function () {
+					template.busy = false;
+					template.imageProgress = null;
+					if (error) Homey.alert(Homey.__('settings.template_clipboard_image_error') + '\n' + window.chronographErrorMessage(Homey, error));
+				});
+			}
+			function fail(error) {
+				imagePromise.then(function () { finish(error); }, function () { finish(error); });
+			}
+			try {
+				var item = new window.ClipboardItem({
+					'text/plain': new Blob([$scope.templateForumPost()], { type: 'text/plain' }),
+					'image/png': imagePromise
+				});
+				navigator.clipboard.write([item]).then(function () {
+					imagePromise.then(function () { finish(); }, finish);
+				}, fail);
+			} catch (error) {
+				fail(error);
+			}
+		};
+
+		function validTemplateItem(item, type) {
+			if (!item || typeof item !== 'object' || Array.isArray(item)) return false;
+			var copy = angular.copy(item);
+			copy.id = 'template-preview';
+			return validStyleTransfer({ format: 'chronograph-widget-style', version: 1, type: type, item: copy });
+		}
+
+		$scope.readWidgetTemplate = function () {
+			var template = $scope.templates;
+			if (template.busy || !template.importText) return;
+			var text = template.importText;
+			template.busy = true;
+			template.review = null;
+			Homey.api('POST', '/widget-templates/decode', { text: text }, function (error, value) {
+				$scope.$applyAsync(function () {
+					template.busy = false;
+					if (error) { showError(error); return; }
+					if (text !== template.importText || !template.open || template.section !== 'import') return;
+					if (!value || (!value.design && !value.theme)
+						|| value.design && !validTemplateItem(value.design, 'design')
+						|| value.theme && !validTemplateItem(value.theme, 'color')) {
+						Homey.alert(Homey.__('settings.style_transfer_invalid'));
+						return;
+					}
+					template.review = angular.copy(value);
+					if (template.review.design) {
+						template.review.design.id = 'template-preview';
+						template.designName = uniqueStyleName(template.review.design.name, $scope.widgetStyles.styles, builtInDesigns);
+					}
+					if (template.review.theme) {
+						template.review.theme.id = 'template-preview';
+						template.themeName = uniqueStyleName(template.review.theme.name, $scope.widgetStyles.themes, builtInSchemes);
+					}
+					template.includeDesign = !!template.review.design;
+					template.includeTheme = !!template.review.theme;
+					template.previewDesignId = 'builtin:current';
+					template.previewThemeId = 'builtin:current';
+				});
+			});
+		};
+
+		$scope.saveWidgetTemplate = function () {
+			var template = $scope.templates;
+			if (template.busy || !template.review || (!template.includeDesign && !template.includeTheme)) return;
+			if (!angular.equals($scope.widgetStyles, savedStyles) || migrationPending) {
+				Homey.alert(Homey.__('settings.template_save_first'));
+				return;
+			}
+			var collection = angular.copy(savedStyles);
+			var selections = [
+				{ enabled: template.includeDesign, item: template.review.design, name: template.designName,
+					items: collection.styles, builtIns: builtInDesigns, type: 'design' },
+				{ enabled: template.includeTheme, item: template.review.theme, name: template.themeName,
+					items: collection.themes, builtIns: builtInSchemes, type: 'color' }
+			];
+			for (var i = 0; i < selections.length; i++) {
+				var selection = selections[i];
+				if (!selection.enabled) continue;
+				if (!selection.item || typeof selection.name !== 'string' || !selection.name.trim()
+					|| selection.name.length > 80 || !validTemplateItem(selection.item, selection.type)) {
+					Homey.alert(Homey.__('settings.style_transfer_invalid'));
+					return;
+				}
+				var imported = angular.copy(selection.item);
+				imported.id = widgetStyleEditor.newId(selection.items);
+				imported.name = uniqueStyleName(selection.name, selection.items, selection.builtIns);
+				if (selection.type === 'design') normalizeDesignSpans(imported);
+				selection.items.push(imported);
+			}
+			if (!widgetStyleEditor.isValidCollection(collection)) {
+				Homey.alert(Homey.__('settings.style_transfer_invalid'));
+				return;
+			}
+			template.busy = true;
+			Homey.set('widgetStyles', collection, function (error) {
+				$scope.$applyAsync(function () {
+					template.busy = false;
+					if (error) { showError(error); return; }
+					$scope.widgetStyles = angular.copy(collection);
+					savedStyles = angular.copy(collection);
+					migrationPending = false;
+					template.review = null;
+					template.importText = '';
+					Homey.alert(Homey.__('settings.saved'));
+				});
+			});
+		};
 
 		$scope.exportStyle = function () {
 			var item = $scope.getEditingItem();
@@ -899,20 +1240,11 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 					}
 					leaveEditingItem(function () {
 						var colorMode = value.type === 'color';
-						var items = colorMode ? $scope.widgetStyles.colorSchemes : $scope.widgetStyles.styles;
+						var items = colorMode ? $scope.widgetStyles.themes : $scope.widgetStyles.styles;
 						var builtIns = colorMode ? builtInSchemes : builtInDesigns;
 						var imported = angular.copy(value.item);
-						var name = imported.name.trim().slice(0, 80);
-						var candidate = name;
-						var number = 2;
-						var names = items.concat(Object.keys(builtIns).map(function (id) { return builtIns[id]; }))
-							.map(function (item) { return item.name.toLocaleLowerCase(); });
-						while (names.indexOf(candidate.toLocaleLowerCase()) !== -1) {
-							var suffix = ' (' + number++ + ')';
-							candidate = name.slice(0, 80 - suffix.length) + suffix;
-						}
 						imported.id = widgetStyleEditor.newId(items);
-						imported.name = candidate;
+						imported.name = uniqueStyleName(imported.name, items, builtIns);
 						if (!colorMode) normalizeDesignSpans(imported);
 						items.push(imported);
 						$scope.editor.mode = value.type;
@@ -933,7 +1265,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 
 		$scope.deleteStyle = function () {
 			var colorMode = $scope.editor.mode === 'color';
-			var collectionKey = colorMode ? 'colorSchemes' : 'styles';
+			var collectionKey = colorMode ? 'themes' : 'styles';
 			var selectionKey = colorMode ? 'selectedSchemeId' : 'selectedStyleId';
 			var style = $scope.getEditingItem();
 			if (!stylesLoaded || $scope.savingSettings || !style || $scope.isBuiltInStyle()) return;
@@ -1264,17 +1596,18 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			if (!style || !style.groups) return [];
 			type = type || $scope.editor.previewType;
 			var state = preview ? $scope.previewTileState(scenario, type) : $scope.editor.previewState;
+			var showStateOverrides = $scope.editor.editStatus || (preview && $scope.templates.open);
 			var cacheKey = (scenario ? 'measure:' + scenario.id : preview ? 'preview' : 'editor') + ':' + type;
 			var fingerprint = angular.toJson([
 				style.id, style.groups[$scope.editor.previewSize], $scope.editor.previewSize,
-				state, type, $scope.editor.editStatus,
+				state, type, showStateOverrides,
 				style.rowCounts, style.rowVisibility, style.rowColumns, style.rowAlignments, style.rowTopPadding, style.columnSpans, style.columnRowSpans, style.columnAlignments, style.columnVerticalAlignments, style.columnDirections, style.columnWidths, style.reservedElements,
 				$scope.getStartFieldsVisibility()
 			]);
 			if (groupedRowsCache[cacheKey] && groupedRowsCache[cacheKey].fingerprint === fingerprint) {
 				return groupedRowsCache[cacheKey].rows;
 			}
-			var layout = $scope.editor.editStatus
+			var layout = showStateOverrides
 				? widgetStyleEditor.resolvedGroups(style, $scope.editor.previewSize, state)
 				: style.groups[$scope.editor.previewSize].elements;
 			var rows = layoutRows().map(function (row) {
@@ -1352,7 +1685,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 
 		$scope.getPreviewCells = function (scenario, type) {
 			var style = $scope.getSelectedStyle();
-			if (style && $scope.editor.editStatus) {
+			if (style && ($scope.editor.editStatus || $scope.templates.open)) {
 				return widgetStyleEditor.resolveLayout(style, $scope.editor.previewSize, $scope.previewTileState(scenario, type));
 			}
 			return $scope.getStyleCells();
@@ -1662,6 +1995,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		};
 
 		$scope.previewAction = function (action, previewType) {
+			if ($scope.templates.busy) return;
 			var state = $scope.previewTileState(null, previewType);
 			if (action === 'start') {
 				state = 'running';
@@ -2056,7 +2390,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 						completeInitialLoad(error);
 						return;
 					}
-					if (value === null || value === undefined) value = { version: 2, styles: [], colorSchemes: [] };
+					if (value === null || value === undefined) value = { version: 3, styles: [], themes: [] };
 					if (!widgetStyleEditor.isValidCollection(value)) {
 						completeInitialLoad(new Error(Homey.__('settings.style_load_error')));
 						return;
@@ -2073,6 +2407,11 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 						$scope.widgetStyles.styles = $scope.widgetStyles.styles.map(widgetStyleEditor.designFromStyle);
 						$scope.widgetStyles.version = 2;
 						migrationPending = $scope.widgetStyles.styles.length > 0;
+					}
+					if ($scope.widgetStyles.version === 2) {
+						$scope.widgetStyles.themes = $scope.widgetStyles.colorSchemes;
+						delete $scope.widgetStyles.colorSchemes;
+						$scope.widgetStyles.version = 3;
 					}
 					savedStyles = angular.copy($scope.widgetStyles);
 					$scope.widgetStyles.styles.forEach(normalizeDesignSpans);
@@ -2104,7 +2443,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 								}
 								builtInDesigns[item.id] = design;
 							});
-							value.colorSchemes.forEach(function (item) {
+							(value.version === 3 ? value.themes : value.colorSchemes).forEach(function (item) {
 								builtInSchemes[item.id] = angular.copy(item);
 							});
 							$scope.builtInDesigns = $scope.builtInDesigns.map(function (item) { return builtInDesigns[item.id]; });

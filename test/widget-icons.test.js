@@ -167,11 +167,11 @@ describe('Widget icon autocomplete', () => {
 			const ids = compose.settings.map(setting => setting.id);
 			assert.strictEqual(ids.indexOf('icon'), ids.indexOf('layout') + 1);
 			assert.strictEqual(ids.indexOf('designStyle'), ids.indexOf('alternativeName') + 1);
-			assert.strictEqual(ids.indexOf('colorScheme'), ids.indexOf('designStyle') + 1);
-			assert.strictEqual(ids.indexOf('layout'), ids.indexOf('colorScheme') + 1);
-			assert.deepStrictEqual(ids.filter(id => /color/i.test(id)), ['colorScheme']);
+			assert.strictEqual(ids.indexOf('colorTheme'), ids.indexOf('designStyle') + 1);
+			assert.strictEqual(ids.indexOf('layout'), ids.indexOf('colorTheme') + 1);
+			assert.deepStrictEqual(ids.filter(id => /color/i.test(id)), ['colorTheme']);
 			assert.strictEqual(compose.settings.find(item => item.id === 'designStyle').type, 'autocomplete');
-			assert.strictEqual(compose.settings.find(item => item.id === 'colorScheme').type, 'autocomplete');
+			assert.strictEqual(compose.settings.find(item => item.id === 'colorTheme').type, 'autocomplete');
 			const html = fs.readFileSync(path.join(__dirname, '..', 'widgets', type, 'public', 'index.html'), 'utf8');
 			assert.ok(!html.includes('assets/css/bootstrap.min.css'));
 			assert.ok(html.includes('ng-attr-data-button-color="{{ iconColor }}"'));
@@ -183,7 +183,7 @@ describe('Widget icon autocomplete', () => {
 	it('explains where to create designs and color schemes in every widget', () => {
 		for (const type of ['timer', 'stopwatch', 'transition']) {
 			const compose = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'widgets', type, 'widget.compose.json'), 'utf8'));
-			for (const id of ['designStyle', 'colorScheme']) {
+			for (const id of ['designStyle', 'colorTheme']) {
 				const hint = compose.settings.find(setting => setting.id === id).hint;
 				assert.match(hint.en, /Create your own in Chronograph App Settings under Widgets\./);
 				assert.match(hint.nl, /Maak je eigen .+ in de Chronograph-appinstellingen onder Widgets\./);

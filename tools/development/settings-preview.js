@@ -3,6 +3,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const widgetTemplate = require('../../lib/widget-template.js');
 
 const root = path.resolve(__dirname, '..', '..');
 const port = Number(process.env.CHRONOGRAPH_PREVIEW_PORT || 4178);
@@ -19,6 +20,25 @@ const mime = {
 };
 
 const server = http.createServer((request, response) => {
+	if (request.method === 'POST' && ['/__preview/widget-templates/encode', '/__preview/widget-templates/decode'].includes(request.url)) {
+		let body = '';
+		request.setEncoding('utf8');
+		request.on('data', chunk => {
+			body += chunk;
+			if (body.length > 1024 * 1024) request.destroy();
+		});
+		request.on('end', async () => {
+			try {
+				const value = JSON.parse(body);
+				const result = request.url.endsWith('/encode')
+					? await widgetTemplate.encodeTemplate(value) : await widgetTemplate.decodeTemplate(value.text);
+				response.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }).end(JSON.stringify(result));
+			} catch (error) {
+				response.writeHead(400, { 'Content-Type': 'application/json' }).end(JSON.stringify({ error: error.message }));
+			}
+		});
+		return;
+	}
 	if (request.method !== 'GET' && request.method !== 'HEAD') {
 		response.writeHead(405, { Allow: 'GET, HEAD' }).end();
 		return;

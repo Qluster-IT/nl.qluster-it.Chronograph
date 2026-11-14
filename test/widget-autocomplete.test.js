@@ -35,7 +35,7 @@ describe('Widget chronograph autocomplete', () => {
 			assert.strictEqual(matches[1].data.name, 'Same');
 			assert.strictEqual(matches[0].description, 'settings.widget_type_timer');
 			assert.strictEqual((await listeners[prefix + 'DesignStyle'](''))[0].id, 'builtin:current');
-			assert.strictEqual((await listeners[prefix + 'ColorScheme'](''))[0].id, 'builtin:current');
+			assert.strictEqual((await listeners[prefix + 'ColorTheme'](''))[0].id, 'builtin:current');
 			assert.strictEqual(typeof listeners[prefix + 'Icon'], 'function');
 		}
 	});
@@ -68,20 +68,23 @@ describe('Widget chronograph autocomplete', () => {
 			'settings.style_builtin_label': 'Built-in',
 			'settings.style_custom_label': 'Custom'
 		};
+		let collection = { version: 2, styles: [{ id: 'design', name: 'A design' }], colorSchemes: [
+			{ id: 'custom', name: 'A custom' }, { id: 'ocean-copy', name: 'Ocean' }
+		] };
 		const app = { homey: {
 			__: key => names[key],
-			settings: { get: () => ({ version: 2, styles: [{ id: 'design', name: 'A design' }], colorSchemes: [
-				{ id: 'custom', name: 'A custom' }, { id: 'ocean-copy', name: 'Ocean' }
-			] }) },
+			settings: { get: () => collection },
 			dashboards: { getWidget: type => ({
 				registerSettingAutocompleteListener: (setting, listener) => { listeners[type + ':' + setting] = listener; }
 			}) }
 		} };
 		module.exports.prototype._registerChronographWidgetAutocomplete.call(app);
+		assert.ok((await listeners['timer:colorTheme']('')).some(item => item.id === 'custom'));
+		collection = { version: 3, styles: collection.styles, themes: collection.colorSchemes };
 		const englishNames = Object.assign({}, names);
 		for (const type of ['timer', 'stopwatch', 'transition']) {
 			Object.assign(names, englishNames);
-			const results = await listeners[type + ':colorScheme']('');
+			const results = await listeners[type + ':colorTheme']('');
 			assert.deepStrictEqual(Array.from(results, item => item.id), [
 				'builtin:current', 'builtin:amber', 'builtin:blossom', 'builtin:forest', 'builtin:ocean',
 				'builtin:settings', 'builtin:sky', 'builtin:sunset', 'builtin:twilight', 'custom', 'ocean-copy'
@@ -91,8 +94,8 @@ describe('Widget chronograph autocomplete', () => {
 			assert.strictEqual(results.find(item => item.id === 'ocean-copy').name, 'Ocean');
 			assert.strictEqual(results.find(item => item.id === 'ocean-copy').description, 'Custom');
 			assert.strictEqual(results.find(item => item.id === 'builtin:ocean').data.id, 'builtin:ocean');
-			assert.deepStrictEqual(Array.from(await listeners[type + ':colorScheme']('OCE'), item => item.id), ['builtin:ocean', 'ocean-copy']);
-			assert.deepStrictEqual(Array.from(await listeners[type + ':colorScheme']('ocean (built-in)'), item => item.id), ['builtin:ocean']);
+			assert.deepStrictEqual(Array.from(await listeners[type + ':colorTheme']('OCE'), item => item.id), ['builtin:ocean', 'ocean-copy']);
+			assert.deepStrictEqual(Array.from(await listeners[type + ':colorTheme']('ocean (built-in)'), item => item.id), ['builtin:ocean']);
 			const designs = await listeners[type + ':designStyle']('');
 			assert.deepStrictEqual(Array.from(designs, item => item.id), ['builtin:current', 'builtin:centered', 'builtin:dashboard', 'builtin:focus', 'builtin:settings', 'builtin:small', 'builtin:tiny', 'builtin:vertical', 'design']);
 			assert.strictEqual(designs[0].name, 'Default');
@@ -102,13 +105,13 @@ describe('Widget chronograph autocomplete', () => {
 			assert.deepStrictEqual(Array.from(await listeners[type + ':designStyle']('dash'), item => item.id), ['builtin:dashboard']);
 			names['settings.style_current'] = 'Zzz';
 			assert.strictEqual((await listeners[type + ':designStyle'](''))[0].id, 'builtin:current');
-			assert.strictEqual((await listeners[type + ':colorScheme'](''))[0].id, 'builtin:current');
+			assert.strictEqual((await listeners[type + ':colorTheme'](''))[0].id, 'builtin:current');
 			const localeDir = path.join(__dirname, '..', '.homeycompose', 'locales');
 			for (const file of fs.readdirSync(localeDir).filter(file => file.endsWith('.settings.json'))) {
 				const translations = JSON.parse(fs.readFileSync(path.join(localeDir, file), 'utf8'));
 				for (const key of Object.keys(names)) names[key] = translations[key.replace('settings.', '')];
 				assert.strictEqual((await listeners[type + ':designStyle'](''))[0].id, 'builtin:current', file);
-				assert.strictEqual((await listeners[type + ':colorScheme'](''))[0].id, 'builtin:current', file);
+				assert.strictEqual((await listeners[type + ':colorTheme'](''))[0].id, 'builtin:current', file);
 			}
 			Object.assign(names, {
 				'settings.style_scheme_ocean': 'Ocean', 'settings.style_scheme_forest': 'Forest',
@@ -122,6 +125,35 @@ describe('Widget chronograph autocomplete', () => {
 			});
 			names['settings.style_current'] = 'Default';
 		}
+	});
+
+	it('loads the widget icon and style modules only when their autocomplete is used', async () => {
+		const lazy = ['./lib/widget-icons.js', './assets/js/chronograph-widget-style.js'];
+		const loaded = [];
+		const module = { exports: {} };
+		vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8'), {
+			module,
+			require: id => {
+				if (lazy.includes(id)) loaded.push(id);
+				if (id === 'homey') return { App: class {} };
+				if (id === './lib/widget-icons.js') return { searchIcons: (query, noneLabel) => [{ id: 'none', name: noneLabel }] };
+				if (id === './assets/js/chronograph-widget-style.js') return require('../assets/js/chronograph-widget-style.js');
+				return {};
+			}
+		});
+		const listeners = {};
+		const app = { homey: {
+			__: key => key, settings: { get: () => ({}) },
+			dashboards: { getWidget: type => ({
+				registerSettingAutocompleteListener: (setting, listener) => { listeners[type + ':' + setting] = listener; }
+			}) }
+		} };
+		module.exports.prototype._registerChronographWidgetAutocomplete.call(app);
+		assert.deepStrictEqual(loaded, []);
+		assert.deepStrictEqual(await listeners['timer:icon']('clock'), [{ id: 'none', name: 'settings.widget_icon_none' }]);
+		assert.ok((await listeners['timer:colorTheme']('')).some(item => item.id === 'builtin:ocean'));
+		assert.ok((await listeners['stopwatch:designStyle']('')).some(item => item.id === 'builtin:dashboard'));
+		assert.deepStrictEqual([...new Set(loaded)], lazy);
 	});
 
 	it('sorts filtered names without changing the configured order or item data', async () => {

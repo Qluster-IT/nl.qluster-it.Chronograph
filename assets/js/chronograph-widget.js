@@ -21,7 +21,9 @@ function onHomeyReady(Homey) {
 			var settings = multipleEntry ? multipleEntry.settings : Homey.getSettings() || {};
 		var widgetStyleRuntime = window.ChronographWidgetStyle;
 		var designStyleId = widgetStyleRuntime.settingId(settings.designStyle) || 'builtin:current';
-		var colorSchemeId = widgetStyleRuntime.settingId(settings.colorScheme) || 'builtin:current';
+		var colorSchemeId = widgetStyleRuntime.settingId(
+			Object.prototype.hasOwnProperty.call(settings, 'colorTheme') ? settings.colorTheme : settings.colorScheme
+		) || 'builtin:current';
 		var activeDesign;
 		var activeColorScheme;
 		var activeDesignScheme = widgetStyleRuntime.currentScheme();

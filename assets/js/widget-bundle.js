@@ -489,7 +489,7 @@ c){var e=a|0,f=c;void 0===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0=
 	function findScheme(collection, id) {
 		var builtIn = builtInScheme(id);
 		if (builtIn) return builtIn;
-		var scheme = findItem(collection && collection.colorSchemes, id);
+		var scheme = findItem(collection && (collection.version === 3 ? collection.themes : collection.colorSchemes), id);
 		if (scheme) return scheme;
 		var legacy = collection && collection.version === 1 && findItem(collection.styles, id);
 		if (!legacy) return undefined;
@@ -1218,7 +1218,9 @@ function onHomeyReady(Homey) {
 			var settings = multipleEntry ? multipleEntry.settings : Homey.getSettings() || {};
 		var widgetStyleRuntime = window.ChronographWidgetStyle;
 		var designStyleId = widgetStyleRuntime.settingId(settings.designStyle) || 'builtin:current';
-		var colorSchemeId = widgetStyleRuntime.settingId(settings.colorScheme) || 'builtin:current';
+		var colorSchemeId = widgetStyleRuntime.settingId(
+			Object.prototype.hasOwnProperty.call(settings, 'colorTheme') ? settings.colorTheme : settings.colorScheme
+		) || 'builtin:current';
 		var activeDesign;
 		var activeColorScheme;
 		var activeDesignScheme = widgetStyleRuntime.currentScheme();
@@ -2030,7 +2032,8 @@ window.registerMultipleChronographsWidget = function (Homey) {
 						chronograph: { name: name },
 						alternativeName: settings[prefix + 'AlternativeName'],
 						designStyle: designStyle,
-						colorScheme: settings[prefix + 'ColorScheme'],
+						colorTheme: Object.prototype.hasOwnProperty.call(settings, prefix + 'ColorTheme')
+							? settings[prefix + 'ColorTheme'] : settings[prefix + 'ColorScheme'],
 						layout: layout,
 						icon: settings[prefix + 'Icon'],
 						showMilliseconds: settings[prefix + 'ShowMilliseconds']

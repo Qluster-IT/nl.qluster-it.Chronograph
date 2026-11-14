@@ -3,9 +3,10 @@
 const Homey = require('homey');
 const Chronograph = require('./lib/chronograph.js');
 const { Utils, ChronographType, LogLevel } = require('./lib/utils.js');
-const { searchIcons } = require('./lib/widget-icons.js');
 const { BL, resolveSplitNames } = require('./lib/flow-arguments.js');
-const widgetStyleRuntime = require('./assets/js/chronograph-widget-style.js');
+// Only widget setting autocompletes need these, so they load on first use.
+const searchIcons = (query, noneLabel) => require('./lib/widget-icons.js').searchIcons(query, noneLabel);
+const getWidgetStyleRuntime = () => require('./assets/js/chronograph-widget-style.js');
 
 // Actions.
 const TimerGetDuration = require('./lib/timer/actions/timer_get_duration.js');
@@ -228,17 +229,18 @@ class Application extends Homey.App {
 			widget.registerSettingAutocompleteListener(prefix ? prefix + 'Icon' : 'icon', async query => {
 				return searchIcons(query, this.homey.__('settings.widget_icon_none'));
 			});
-			['designStyle', 'colorScheme'].forEach(settingId => {
+			['designStyle', 'colorTheme'].forEach(settingId => {
 				const registeredId = prefix ? prefix + settingId[0].toUpperCase() + settingId.slice(1) : settingId;
 				widget.registerSettingAutocompleteListener(registeredId, async query => {
 					const collection = this.homey.settings.get('widgetStyles') || {};
 					const key = settingId === 'designStyle' ? 'styles'
-						: collection.version === 1 ? 'styles' : 'colorSchemes';
+						: collection.version === 1 ? 'styles' : collection.version === 3 ? 'themes' : 'colorSchemes';
 					const savedItems = Array.isArray(collection[key]) ? collection[key] : [];
 					const search = (query || '').toLowerCase();
 					const current = this.homey.__('settings.style_current');
 					const builtIns = [{ id: 'builtin:current', name: current, data: { id: 'builtin:current' } }];
-					if (settingId === 'colorScheme') widgetStyleRuntime.builtInSchemeDefinitions.forEach(item => {
+					const widgetStyleRuntime = getWidgetStyleRuntime();
+					if (settingId === 'colorTheme') widgetStyleRuntime.builtInSchemeDefinitions.forEach(item => {
 						builtIns.push({ id: item.id, name: this.homey.__(item.nameKey), data: { id: item.id } });
 					});
 					if (settingId === 'designStyle') widgetStyleRuntime.builtInDesignDefinitions.forEach(item => {

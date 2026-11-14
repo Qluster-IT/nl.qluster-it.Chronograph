@@ -80,6 +80,21 @@ async function loadWidget(settings, states) {
 }
 
 describe('Multiple Chronographs widget', () => {
+	it('uses each renamed theme setting and supports existing legacy selections', async () => {
+		const states = { 'timer:A': { name: 'A', active: false } };
+		const selection = { type: 'timer', name: 'A' };
+		const legacy = { id: 'builtin:ocean' };
+		const theme = { id: 'builtin:forest' };
+		for (const [settings, expected] of [
+			[{ chronograph1ColorScheme: legacy }, legacy],
+			[{ chronograph1ColorScheme: legacy, chronograph1ColorTheme: theme }, theme],
+			[{ chronograph1ColorScheme: legacy, chronograph1ColorTheme: null }, null]
+		]) {
+			const widget = await loadWidget({ chronograph1: selection, ...settings }, states);
+			assert.strictEqual(widget.parent.entries[0].settings.colorTheme, expected);
+		}
+	});
+
 	it('chooses Compact for partial-width entries only when the layout is automatic', async () => {
 		const states = { 'timer:A': { name: 'A', active: false } };
 		for (const [columns, span, expected] of [
@@ -186,7 +201,7 @@ describe('Multiple Chronographs widget', () => {
 			['none', 'cards', 'line']);
 		assert.strictEqual(manifest.settings.find(setting => setting.id === 'rowSeparator').value, 'none');
 		for (let slot = 1; slot <= 10; slot++) {
-			for (const suffix of ['', 'ColumnSpan', 'AlternativeName', 'DesignStyle', 'ColorScheme', 'Layout', 'Icon', 'ShowMilliseconds']) {
+			for (const suffix of ['', 'ColumnSpan', 'AlternativeName', 'DesignStyle', 'ColorTheme', 'Layout', 'Icon', 'ShowMilliseconds']) {
 				const setting = manifest.settings.find(item => item.id === 'chronograph' + slot + suffix);
 				assert.ok(setting);
 				assert.ok(!Object.prototype.hasOwnProperty.call(setting, 'value'));

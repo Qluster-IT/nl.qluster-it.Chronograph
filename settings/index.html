@@ -18,21 +18,21 @@
 			<button class="hy-nostyle settings-tab nav-link" type="button" role="tab"
 				ng-class="{ active: activeTab === 'chronographs' }"
 				ng-attr-aria-selected="{{ activeTab === 'chronographs' }}"
-				ng-click="selectTab('chronographs')">
+				ng-click="selectTab('chronographs')" ng-disabled="templates.busy">
 				<i class="fa-solid fa-stopwatch" aria-hidden="true"></i>
 				<span>{{ labels.chronographs }}</span>
 			</button>
 			<button class="hy-nostyle settings-tab nav-link" type="button" role="tab"
 				ng-class="{ active: activeTab === 'widgets' }"
 				ng-attr-aria-selected="{{ activeTab === 'widgets' }}"
-				ng-click="selectTab('widgets')">
+				ng-click="selectTab('widgets')" ng-disabled="templates.busy">
 				<i class="fa-solid fa-palette" aria-hidden="true"></i>
 				<span>{{ labels.widgets }}</span>
 			</button>
 			<button class="hy-nostyle settings-tab nav-link" type="button" role="tab"
 				ng-class="{ active: activeTab === 'general' }"
 				ng-attr-aria-selected="{{ activeTab === 'general' }}"
-				ng-click="selectTab('general')">
+				ng-click="selectTab('general')" ng-disabled="templates.busy">
 				<i class="fa-solid fa-gear" aria-hidden="true"></i>
 				<span>{{ labels.general }}</span>
 			</button>
@@ -89,6 +89,9 @@
 
 		<section class="settings-content" role="tabpanel" ng-show="activeTab === 'widgets'">
 			<h2>{{ labels.widgetStyles }}</h2>
+			<button ng-if="!templates.open" class="hy-nostyle btn btn-outline-primary btn-sm" type="button"
+				ng-click="openTemplates()" ng-disabled="!stylesAvailable || savingSettings">{{ t('settings.template_title') }}</button>
+			<div ng-if="!templates.open">
 			<p class="help-text">{{ t('settings.style_editor_intro') }}</p>
 			<p class="help-text">{{ t('settings.style_onboarding') }} <a href="https://github.com/Qluster-IT/nl.qluster-it.Chronograph/wiki/Widget-Designer" target="_blank" rel="noopener noreferrer">{{ t('settings.style_onboarding_link') }}</a></p>
 			<fieldset class="hy-nostyle style-editor" ng-disabled="!stylesAvailable || savingSettings">
@@ -116,7 +119,7 @@
 							<option ng-repeat="scheme in sortedStyleOptions(builtInSchemes) track by scheme.id" value="{{ scheme.id }}">{{ scheme.name }}</option>
 						</optgroup>
 						<optgroup label="{{ t('settings.style_custom_label') }}">
-							<option ng-repeat="scheme in sortedStyleOptions(widgetStyles.colorSchemes) track by scheme.id" value="custom:{{ scheme.id }}">{{ scheme.name }}</option>
+							<option ng-repeat="scheme in sortedStyleOptions(widgetStyles.themes) track by scheme.id" value="custom:{{ scheme.id }}">{{ scheme.name }}</option>
 						</optgroup>
 					</select>
 					<div class="style-actions">
@@ -182,7 +185,7 @@
 								<option ng-repeat="scheme in sortedStyleOptions(builtInSchemes) track by scheme.id" value="{{ scheme.id }}">{{ scheme.name }}</option>
 							</optgroup>
 							<optgroup label="{{ t('settings.style_custom_label') }}">
-								<option ng-repeat="scheme in sortedStyleOptions(widgetStyles.colorSchemes) track by scheme.id" value="custom:{{ scheme.id }}">{{ scheme.name }}</option>
+								<option ng-repeat="scheme in sortedStyleOptions(widgetStyles.themes) track by scheme.id" value="custom:{{ scheme.id }}">{{ scheme.name }}</option>
 							</optgroup>
 						</select>
 						<label ng-if="editor.mode === 'color'" class="hy-nostyle" for="preview-design">{{ t('settings.style_design_styles') }}</label>
@@ -543,6 +546,117 @@
 					</div>
 				</div>
 			</fieldset>
+			</div>
+			<div ng-if="templates.open" class="style-design style-template-screen">
+				<div class="style-actions">
+					<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="closeTemplates()" ng-disabled="templates.busy">{{ t('settings.template_back') }}</button>
+					<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="selectTemplateSection('export')" ng-attr-aria-pressed="{{ templates.section === 'export' }}" ng-disabled="templates.busy">{{ t('settings.style_export') }}</button>
+					<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="selectTemplateSection('import')" ng-attr-aria-pressed="{{ templates.section === 'import' }}" ng-disabled="templates.busy">{{ t('settings.style_import') }}</button>
+					<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="selectTemplateSection('catalog')" ng-attr-aria-pressed="{{ templates.section === 'catalog' }}" ng-disabled="templates.busy">{{ t('settings.template_catalog') }}</button>
+				</div>
+				<section ng-if="templates.section === 'export'">
+					<h3>{{ t('settings.template_export_title') }}</h3>
+					<p class="help-text">{{ t('settings.template_export_hint') }}</p>
+					<p ng-if="isDirty()" class="help-text">{{ t('settings.template_save_first') }}</p>
+					<label class="hy-nostyle" for="template-export-design">{{ t('settings.style_design_styles') }}</label>
+					<select id="template-export-design" class="form-select" ng-model="templates.designId" ng-disabled="templates.busy"
+						ng-change="templates.exportText = ''" ng-options="item.id as item.name for item in sortedStyleOptions(widgetStyles.styles)">
+						<option value="">{{ t('settings.template_none') }}</option>
+					</select>
+					<label class="hy-nostyle" for="template-export-theme">{{ t('settings.style_color_schemes') }}</label>
+					<select id="template-export-theme" class="form-select" ng-model="templates.themeId" ng-disabled="templates.busy"
+						ng-change="templates.exportText = ''" ng-options="item.id as item.name for item in sortedStyleOptions(widgetStyles.themes)">
+						<option value="">{{ t('settings.template_none') }}</option>
+					</select>
+					<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="generateWidgetTemplate()"
+						ng-disabled="templates.busy || isDirty() || (!templates.designId && !templates.themeId)">{{ t('settings.template_create') }}</button>
+					<div ng-if="templates.exportText">
+						<h3>{{ t('settings.style_preview') }}</h3>
+						<p class="help-text">{{ t('settings.template_image_hint') }}</p>
+						<div class="style-design-selectors">
+							<label class="hy-nostyle" for="template-export-size">{{ t('settings.style_size') }}</label>
+							<select id="template-export-size" class="form-select" ng-model="editor.previewSize" ng-disabled="templates.busy">
+								<option value="compact">{{ t('settings.style_compact') }}</option><option value="normal">{{ t('settings.style_normal') }}</option><option value="large">{{ t('settings.style_large') }}</option>
+							</select>
+							<label class="hy-nostyle" for="template-export-type">{{ t('settings.widget_type') }}</label>
+							<select id="template-export-type" class="form-select" ng-model="editor.previewType" ng-change="resetRowPreview()" ng-disabled="templates.busy">
+								<option value="timer">{{ t('settings.timers') }}</option><option value="stopwatch">{{ t('settings.stopwatches') }}</option><option value="transition">{{ t('settings.transitions') }}</option>
+							</select>
+							<label class="hy-nostyle" for="template-export-state">{{ t('settings.style_state') }}</label>
+							<select id="template-export-state" class="form-select" ng-model="editor.previewState" ng-change="resetRowPreview()" ng-disabled="templates.busy">
+								<option value="inactive">{{ t('settings.widget_not_running') }}</option><option value="paused">{{ labels.paused }}</option><option value="running">{{ labels.running }}</option><option value="starting">{{ t('settings.style_starting') }}</option>
+							</select>
+						</div>
+						<div id="template-export-preview" class="style-preview style-preview-height" ng-class="'style-preview-' + editor.previewSize"
+							ng-attr-data-allow-shrink="{{ allowDesignShrink() }}" ng-attr-data-background="{{ previewColor('background', false) }}">
+							<div class="style-preview-layer" ng-include="getSelectedStyle().groups ? 'grouped-preview.html' : 'cell-preview.html'"></div>
+						</div>
+						<label class="hy-nostyle" for="template-export-text">TWF</label>
+						<textarea id="template-export-text" class="form-control" rows="3" readonly ng-value="templates.exportText"></textarea>
+						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="copyWidgetTemplate('template-export-text')" ng-disabled="templates.busy">{{ t('settings.template_copy') }}</button>
+						<label class="hy-nostyle" for="template-forum-post">{{ t('settings.template_forum_post') }}</label>
+						<textarea id="template-forum-post" class="form-control" rows="5" readonly ng-value="templateForumPost()"></textarea>
+						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="copyTemplateForumPost()" ng-disabled="templates.busy">{{ t('settings.template_copy_post') }}</button>
+						<p class="help-text" role="status" ng-if="templates.busy && templates.imageProgress !== null && templates.imageProgress !== undefined">{{ t('settings.template_rendering') }} {{ templates.imageProgress }}/27</p>
+					</div>
+				</section>
+				<section ng-if="templates.section === 'import'">
+					<h3>{{ t('settings.template_import_title') }}</h3>
+					<label class="hy-nostyle" for="template-import-text">{{ t('settings.template_import_hint') }}</label>
+					<textarea id="template-import-text" class="form-control" rows="4" ng-model="templates.importText" ng-disabled="templates.busy" ng-change="templates.review = null"></textarea>
+					<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="readWidgetTemplate()" ng-disabled="templates.busy || !templates.importText">{{ t('settings.template_read') }}</button>
+					<div ng-if="templates.review">
+						<h3>{{ t('settings.template_review') }}</h3>
+						<div ng-if="templates.review.design">
+							<label class="hy-nostyle"><input class="hy-nostyle" type="checkbox" ng-model="templates.includeDesign" ng-disabled="templates.busy"> {{ t('settings.style_design') }}</label>
+							<label class="hy-nostyle" for="template-design-name">{{ t('settings.style_name') }}</label>
+							<input class="hy-nostyle form-control" id="template-design-name" ng-model="templates.designName" maxlength="80" ng-disabled="templates.busy || !templates.includeDesign">
+						</div>
+						<div ng-if="templates.review.theme">
+							<label class="hy-nostyle"><input class="hy-nostyle" type="checkbox" ng-model="templates.includeTheme" ng-disabled="templates.busy"> {{ t('settings.template_theme') }}</label>
+							<label class="hy-nostyle" for="template-theme-name">{{ t('settings.style_name') }}</label>
+							<input class="hy-nostyle form-control" id="template-theme-name" ng-model="templates.themeName" maxlength="80" ng-disabled="templates.busy || !templates.includeTheme">
+						</div>
+						<label ng-if="!templates.includeDesign" class="hy-nostyle" for="template-preview-design">{{ t('settings.template_preview_design') }}</label>
+						<select ng-if="!templates.includeDesign" id="template-preview-design" class="form-select" ng-model="templates.previewDesignId">
+							<option value="builtin:current">{{ defaultDesignName() }}</option>
+							<option ng-repeat="style in sortedStyleOptions(builtInDesigns) track by style.id" value="{{ style.id }}">{{ style.name }}</option>
+							<option ng-repeat="style in sortedStyleOptions(widgetStyles.styles) track by style.id" value="custom:{{ style.id }}">{{ style.name }}</option>
+						</select>
+						<label ng-if="!templates.includeTheme" class="hy-nostyle" for="template-preview-theme">{{ t('settings.template_preview_theme') }}</label>
+						<select ng-if="!templates.includeTheme" id="template-preview-theme" class="form-select" ng-model="templates.previewThemeId">
+							<option value="builtin:current">{{ defaultSchemeName() }}</option>
+							<option ng-repeat="scheme in sortedStyleOptions(builtInSchemes) track by scheme.id" value="{{ scheme.id }}">{{ scheme.name }}</option>
+							<option ng-repeat="scheme in sortedStyleOptions(widgetStyles.themes) track by scheme.id" value="custom:{{ scheme.id }}">{{ scheme.name }}</option>
+						</select>
+						<h3>{{ t('settings.style_preview') }}</h3>
+						<div class="style-design-selectors">
+							<label class="hy-nostyle" for="template-preview-size">{{ t('settings.style_size') }}</label>
+							<select id="template-preview-size" class="form-select" ng-model="editor.previewSize">
+								<option value="compact">{{ t('settings.style_compact') }}</option><option value="normal">{{ t('settings.style_normal') }}</option><option value="large">{{ t('settings.style_large') }}</option>
+							</select>
+							<label class="hy-nostyle" for="template-preview-type">{{ t('settings.widget_type') }}</label>
+							<select id="template-preview-type" class="form-select" ng-model="editor.previewType" ng-change="resetRowPreview()">
+								<option value="timer">{{ t('settings.timers') }}</option><option value="stopwatch">{{ t('settings.stopwatches') }}</option><option value="transition">{{ t('settings.transitions') }}</option>
+							</select>
+							<label class="hy-nostyle" for="template-preview-state">{{ t('settings.style_state') }}</label>
+							<select id="template-preview-state" class="form-select" ng-model="editor.previewState" ng-change="resetRowPreview()">
+								<option value="inactive">{{ t('settings.widget_not_running') }}</option><option value="paused">{{ labels.paused }}</option><option value="running">{{ labels.running }}</option><option value="starting">{{ t('settings.style_starting') }}</option>
+							</select>
+						</div>
+						<div class="style-preview style-preview-height" ng-class="'style-preview-' + editor.previewSize"
+							ng-attr-data-allow-shrink="{{ allowDesignShrink() }}" ng-attr-data-background="{{ previewColor('background', false) }}">
+							<div class="style-preview-layer" ng-include="getSelectedStyle().groups ? 'grouped-preview.html' : 'cell-preview.html'"></div>
+						</div>
+						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="saveWidgetTemplate()"
+							ng-disabled="templates.busy || (!templates.includeDesign && !templates.includeTheme)">{{ labels.save }}</button>
+					</div>
+				</section>
+				<section ng-if="templates.section === 'catalog'">
+					<h3>{{ t('settings.template_catalog') }}</h3>
+					<p class="help-text">{{ t('settings.template_catalog_unavailable') }}</p>
+				</section>
+			</div>
 		</section>
 
 		<section class="settings-content" role="tabpanel" ng-show="activeTab === 'general'">
@@ -558,7 +672,7 @@
 			</div>
 		</section>
 
-		<footer class="settings-savebar">
+		<footer class="settings-savebar" ng-show="!templates.open || activeTab !== 'widgets'">
 			<button class="hy-nostyle btn settings-history-button" type="button" ng-click="undoEdit()" ng-disabled="!canUndoEdit() || savingSettings">{{ t('settings.style_undo') }}</button>
 			<button class="hy-nostyle btn settings-save-button" type="button" ng-click="saveSettings()"
 				ng-class="{ 'is-dirty': isDirty() }" ng-disabled="!isDirty() || savingSettings">
@@ -690,6 +804,7 @@
 		</span>
 	</script>
 	<script type="text/javascript" src="../assets/js/chronograph-errors.js"></script>
+	<script type="text/javascript" src="../assets/js/html-to-image.min.js"></script>
 	<script type="text/javascript" src="assets/settings.js"></script>
 	<script type="text/javascript" src="../assets/js/chronograph-widget-style.js"></script>
 	<script type="text/javascript" src="assets/widget-style-editor.js"></script>

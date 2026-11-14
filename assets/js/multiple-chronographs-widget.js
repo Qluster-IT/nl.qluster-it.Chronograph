@@ -73,7 +73,8 @@ window.registerMultipleChronographsWidget = function (Homey) {
 						chronograph: { name: name },
 						alternativeName: settings[prefix + 'AlternativeName'],
 						designStyle: designStyle,
-						colorScheme: settings[prefix + 'ColorScheme'],
+						colorTheme: Object.prototype.hasOwnProperty.call(settings, prefix + 'ColorTheme')
+							? settings[prefix + 'ColorTheme'] : settings[prefix + 'ColorScheme'],
 						layout: layout,
 						icon: settings[prefix + 'Icon'],
 						showMilliseconds: settings[prefix + 'ShowMilliseconds']

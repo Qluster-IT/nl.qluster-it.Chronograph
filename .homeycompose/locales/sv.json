@@ -9,5 +9,5 @@
 	"existing": "Befintlig",
 	"new": "Ny",
 	"name_based_api_notice": "Chronograph-API:et har ändrats: använd namn i stället för ID:n. Uppdatera skript och integrationer; se API-wikin.",
-	"widget_features_notice": "Chronograph har nu dashboardwidgetar! Öppna appinställningarna för att hantera kronografer och skapa widgetlayouter och färgscheman."
+	"widget_features_notice": "Chronograph har nu dashboardwidgetar! Öppna appinställningarna för att hantera kronografer och skapa widgetlayouter och teman."
 }

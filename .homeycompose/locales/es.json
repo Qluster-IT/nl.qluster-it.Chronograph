@@ -9,5 +9,5 @@
 	"existing": "Existente",
 	"new": "Nuevo",
 	"name_based_api_notice": "La API de Chronograph ha cambiado: usa nombres en lugar de ID. Actualiza tus scripts e integraciones; consulta la wiki de la API.",
-	"widget_features_notice": "¡Chronograph ya tiene widgets para el panel! Abre los ajustes de la aplicación para gestionar cronógrafos y diseñar disposiciones y esquemas de colores para widgets."
+	"widget_features_notice": "¡Chronograph ya tiene widgets para el panel! Abre los ajustes de la aplicación para gestionar cronógrafos y diseñar disposiciones y temas para widgets."
 }

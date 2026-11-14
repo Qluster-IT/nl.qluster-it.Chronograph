@@ -1056,7 +1056,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 	}
 
 	function isValidCollection(value) {
-		if (!value || (value.version !== 1 && value.version !== 2) || !Array.isArray(value.styles)) return false;
+		if (!value || (value.version !== 1 && value.version !== 2 && value.version !== 3) || !Array.isArray(value.styles)) return false;
 		var ids = [];
 		if (!value.styles.every(function (style) {
 			var valid = value.version === 1 ? isValidStyle(style) : isValidDesign(style);
@@ -1064,10 +1064,12 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			ids.push(style.id);
 			return true;
 		})) return false;
-		if (value.version === 1) return value.colorSchemes === undefined;
-		if (!Array.isArray(value.colorSchemes)) return false;
+		if (value.version === 1) return value.colorSchemes === undefined && value.themes === undefined;
+		if (value.version === 2 ? value.themes !== undefined : value.colorSchemes !== undefined) return false;
+		var themes = value.version === 3 ? value.themes : value.colorSchemes;
+		if (!Array.isArray(themes)) return false;
 		ids = [];
-		return value.colorSchemes.every(function (scheme) {
+		return themes.every(function (scheme) {
 			if (!scheme || typeof scheme.id !== 'string' || !scheme.id || ids.indexOf(scheme.id) !== -1
 				|| typeof scheme.name !== 'string' || !scheme.name.trim()
 				|| !scheme.colors || typeof scheme.colors !== 'object' || Array.isArray(scheme.colors)

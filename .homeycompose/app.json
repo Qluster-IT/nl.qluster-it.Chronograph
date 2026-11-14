@@ -107,6 +107,14 @@
 		]
 	},
 	"api": {
+		"encodeWidgetTemplate": {
+			"method": "POST",
+			"path": "/widget-templates/encode"
+		},
+		"decodeWidgetTemplate": {
+			"method": "POST",
+			"path": "/widget-templates/decode"
+		},
 		"getTimers": {
 			"method": "GET",
 			"path": "/timers/"

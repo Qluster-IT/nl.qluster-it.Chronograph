@@ -9,5 +9,5 @@
 	"existing": "Existing",
 	"new": "New",
 	"name_based_api_notice": "Chronograph API changed: use names instead of IDs. Update your scripts and integrations; see the API wiki.",
-	"widget_features_notice": "Chronograph now has dashboard widgets! Open the app settings to manage chronographs and design widget layouts and color schemes."
+	"widget_features_notice": "Chronograph now has dashboard widgets! Open the app settings to manage chronographs and design widget layouts and themes."
 }

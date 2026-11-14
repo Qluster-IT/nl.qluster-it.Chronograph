@@ -58,6 +58,17 @@
 					}
 				},
 				api: function (method, url, data, callback) {
+					if (method === 'POST' && (url === '/widget-templates/encode' || url === '/widget-templates/decode')) {
+						fetch('/__preview' + url, {
+							method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
+						}).then(function (response) {
+							return response.json().then(function (value) {
+								if (!response.ok) throw new Error(value.error);
+								return value;
+							});
+						}).then(function (result) { callback(null, result); }, callback);
+						return;
+					}
 					if (method === 'GET' && url === '/chronographs/') {
 						callback(null, JSON.parse(JSON.stringify(chronographs)));
 						return;
