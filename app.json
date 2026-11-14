@@ -110,6 +110,10 @@
     ]
   },
   "api": {
+    "getWidgetTemplateCatalog": {
+      "method": "GET",
+      "path": "/widget-templates/catalog"
+    },
     "encodeWidgetTemplate": {
       "method": "POST",
       "path": "/widget-templates/encode"

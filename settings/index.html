@@ -9,6 +9,7 @@
 	<link rel="stylesheet" href="../assets/css/bootstrap.min.css">
 	<link rel="stylesheet" href="../assets/css/fontawesome.min.css">
 	<link rel="stylesheet" href="../assets/css/solid.min.css">
+	<link rel="stylesheet" href="../assets/css/regular.min.css">
 	<link rel="stylesheet" href="assets/styles.css">
 </head>
 
@@ -88,7 +89,7 @@
 		</section>
 
 		<section class="settings-content" role="tabpanel" ng-show="activeTab === 'widgets'">
-			<h2>{{ labels.widgetStyles }}</h2>
+			<h2 ng-if="!templates.open">{{ labels.widgetStyles }}</h2>
 			<button ng-if="!templates.open" class="hy-nostyle btn btn-outline-primary btn-sm" type="button"
 				ng-click="openTemplates()" ng-disabled="!stylesAvailable || savingSettings">{{ t('settings.template_title') }}</button>
 			<div ng-if="!templates.open">
@@ -270,10 +271,16 @@
 						</div>
 					</div>
 					<div ng-if="editor.mode === 'design' ? !isDesignReadOnly() : !isSchemeReadOnly()">
+					<div ng-if="editor.mode === 'design'" class="style-grid-hint">
+						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="toggleStyleHelp()"
+							ng-disabled="!styleHelpAvailable || styleHelpSaving" ng-attr-aria-expanded="{{ styleHelpExpanded }}" aria-controls="style-designer-help">
+							{{ t('settings.style_designer_help') }} <i class="fa" ng-class="styleHelpExpanded ? 'fa-chevron-up' : 'fa-chevron-down'" aria-hidden="true"></i>
+						</button>
+						<p id="style-designer-help" class="help-text" ng-show="styleHelpExpanded">{{ t(getSelectedStyle().groups ? 'settings.style_group_hint' : 'settings.style_drag_hint') }} {{ t('settings.style_select_before_drag') }}</p>
+					</div>
 					<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button"
 						ng-if="editor.mode === 'design' && !getSelectedStyle().groups" ng-click="upgradeLayout()">{{ t('settings.style_upgrade') }}</button>
 					<div ng-if="editor.mode === 'design' && getSelectedStyle().groups">
-						<p class="help-text style-grid-hint">{{ t('settings.style_group_hint') }} {{ t('settings.style_select_before_drag') }}</p>
 						<div class="style-group-editor">
 							<button class="hy-nostyle style-row-select style-widget-select" type="button"
 								ng-click="toggleWidgetBackground()" ng-class="{ 'style-row-selected': editor.selectedBackground }"
@@ -462,7 +469,6 @@
 							<p class="help-text style-progress-full-row">{{ t('settings.style_field_rows_hint') }}</p>
 						</div>
 					</fieldset>
-					<p class="help-text style-grid-hint" ng-if="editor.mode === 'design' && !getSelectedStyle().groups">{{ t('settings.style_drag_hint') }} {{ t('settings.style_select_before_drag') }}</p>
 					<button ng-if="editor.mode === 'design' && !getSelectedStyle().groups" class="hy-nostyle style-row-select style-widget-select" type="button"
 						ng-click="toggleWidgetBackground()" ng-class="{ 'style-row-selected': editor.selectedBackground }"
 						ng-attr-aria-pressed="{{ editor.selectedBackground }}">{{ t('settings.style_widget') }}</button>
@@ -548,55 +554,54 @@
 			</fieldset>
 			</div>
 			<div ng-if="templates.open" class="style-design style-template-screen">
-				<div class="style-actions">
-					<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="closeTemplates()" ng-disabled="templates.busy">{{ t('settings.template_back') }}</button>
-					<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="selectTemplateSection('export')" ng-attr-aria-pressed="{{ templates.section === 'export' }}" ng-disabled="templates.busy">{{ t('settings.style_export') }}</button>
-					<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="selectTemplateSection('import')" ng-attr-aria-pressed="{{ templates.section === 'import' }}" ng-disabled="templates.busy">{{ t('settings.style_import') }}</button>
-					<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="selectTemplateSection('catalog')" ng-attr-aria-pressed="{{ templates.section === 'catalog' }}" ng-disabled="templates.busy">{{ t('settings.template_catalog') }}</button>
+				<div class="template-header">
+					<h2>{{ t('settings.template_catalog') }}</h2>
+					<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="openWidgetExchange()" ng-disabled="templates.busy">{{ t('settings.template_catalog_forum') }}</button>
 				</div>
+				<nav class="template-navigation" ng-attr-aria-label="{{ t('settings.template_catalog') }}">
+					<button class="hy-nostyle" type="button" ng-click="selectTemplateSection('export')" ng-attr-aria-pressed="{{ templates.section === 'export' }}" ng-disabled="templates.busy"><i class="fa-solid fa-file-export" aria-hidden="true"></i> {{ t('settings.style_export') }}</button>
+					<button class="hy-nostyle" type="button" ng-click="selectTemplateSection('import')" ng-attr-aria-pressed="{{ templates.section === 'import' }}" ng-disabled="templates.busy"><i class="fa-solid fa-file-import" aria-hidden="true"></i> {{ t('settings.style_import') }}</button>
+					<button class="hy-nostyle" type="button" ng-click="selectTemplateSection('catalog')" ng-attr-aria-pressed="{{ templates.section === 'catalog' }}" ng-disabled="templates.busy"><i class="fa-solid fa-list" aria-hidden="true"></i> {{ t('settings.template_title') }}</button>
+				</nav>
 				<section ng-if="templates.section === 'export'">
 					<h3>{{ t('settings.template_export_title') }}</h3>
 					<p class="help-text">{{ t('settings.template_export_hint') }}</p>
 					<p ng-if="isDirty()" class="help-text">{{ t('settings.template_save_first') }}</p>
 					<label class="hy-nostyle" for="template-export-design">{{ t('settings.style_design_styles') }}</label>
 					<select id="template-export-design" class="form-select" ng-model="templates.designId" ng-disabled="templates.busy"
-						ng-change="templates.exportText = ''" ng-options="item.id as item.name for item in sortedStyleOptions(widgetStyles.styles)">
+						ng-change="clearTemplateExport()" ng-options="item.id as item.name for item in sortedStyleOptions(widgetStyles.styles)">
 						<option value="">{{ t('settings.template_none') }}</option>
 					</select>
 					<label class="hy-nostyle" for="template-export-theme">{{ t('settings.style_color_schemes') }}</label>
 					<select id="template-export-theme" class="form-select" ng-model="templates.themeId" ng-disabled="templates.busy"
-						ng-change="templates.exportText = ''" ng-options="item.id as item.name for item in sortedStyleOptions(widgetStyles.themes)">
+						ng-change="clearTemplateExport()" ng-options="item.id as item.name for item in sortedStyleOptions(widgetStyles.themes)">
 						<option value="">{{ t('settings.template_none') }}</option>
 					</select>
-					<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="generateWidgetTemplate()"
-						ng-disabled="templates.busy || isDirty() || (!templates.designId && !templates.themeId)">{{ t('settings.template_create') }}</button>
-					<div ng-if="templates.exportText">
+					<div ng-if="templates.designId || templates.themeId">
 						<h3>{{ t('settings.style_preview') }}</h3>
 						<p class="help-text">{{ t('settings.template_image_hint') }}</p>
-						<div class="style-design-selectors">
-							<label class="hy-nostyle" for="template-export-size">{{ t('settings.style_size') }}</label>
-							<select id="template-export-size" class="form-select" ng-model="editor.previewSize" ng-disabled="templates.busy">
-								<option value="compact">{{ t('settings.style_compact') }}</option><option value="normal">{{ t('settings.style_normal') }}</option><option value="large">{{ t('settings.style_large') }}</option>
-							</select>
-							<label class="hy-nostyle" for="template-export-type">{{ t('settings.widget_type') }}</label>
-							<select id="template-export-type" class="form-select" ng-model="editor.previewType" ng-change="resetRowPreview()" ng-disabled="templates.busy">
-								<option value="timer">{{ t('settings.timers') }}</option><option value="stopwatch">{{ t('settings.stopwatches') }}</option><option value="transition">{{ t('settings.transitions') }}</option>
-							</select>
-							<label class="hy-nostyle" for="template-export-state">{{ t('settings.style_state') }}</label>
-							<select id="template-export-state" class="form-select" ng-model="editor.previewState" ng-change="resetRowPreview()" ng-disabled="templates.busy">
-								<option value="inactive">{{ t('settings.widget_not_running') }}</option><option value="paused">{{ labels.paused }}</option><option value="running">{{ labels.running }}</option><option value="starting">{{ t('settings.style_starting') }}</option>
-							</select>
-						</div>
 						<div id="template-export-preview" class="style-preview style-preview-height" ng-class="'style-preview-' + editor.previewSize"
 							ng-attr-data-allow-shrink="{{ allowDesignShrink() }}" ng-attr-data-background="{{ previewColor('background', false) }}">
 							<div class="style-preview-layer" ng-include="getSelectedStyle().groups ? 'grouped-preview.html' : 'cell-preview.html'"></div>
 						</div>
+					</div>
+					<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="generateWidgetTemplate()"
+						ng-disabled="templates.busy || isDirty() || (!templates.designId && !templates.themeId)">{{ t('settings.template_create') }}</button>
+					<div ng-if="templates.exportText">
 						<label class="hy-nostyle" for="template-export-text">TWF</label>
 						<textarea id="template-export-text" class="form-control" rows="3" readonly ng-value="templates.exportText"></textarea>
 						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="copyWidgetTemplate('template-export-text')" ng-disabled="templates.busy">{{ t('settings.template_copy') }}</button>
 						<label class="hy-nostyle" for="template-forum-post">{{ t('settings.template_forum_post') }}</label>
 						<textarea id="template-forum-post" class="form-control" rows="5" readonly ng-value="templateForumPost()"></textarea>
-						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="copyTemplateForumPost()" ng-disabled="templates.busy">{{ t('settings.template_copy_post') }}</button>
+						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="copyTemplateForumPost()" ng-disabled="templates.busy || !templates.imageData">{{ t('settings.template_copy_post') }}</button>
+						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="openWidgetExchange()" ng-disabled="templates.busy">{{ t('settings.template_post_forum') }}</button>
+						<p class="help-text" role="status" ng-if="templates.copyStatus">
+							<strong ng-if="templates.copyStatus === 'copied'">{{ t('settings.template_copy_copied') }}</strong>
+							<span ng-if="templates.copyStatus !== 'copied'">{{ t('settings.template_copy_' + templates.copyStatus) }}</span>
+						</p>
+						<p class="help-text"><strong>{{ t('settings.template_paste_image_hint') }}</strong></p>
+						<p class="help-text">{{ t('settings.template_editor_switch') }}</p>
+						<img class="template-editor-switch" src="assets/forum-editor-switch.png" ng-attr-alt="{{ t('settings.template_editor_switch') }}">
 						<p class="help-text" role="status" ng-if="templates.busy && templates.imageProgress !== null && templates.imageProgress !== undefined">{{ t('settings.template_rendering') }} {{ templates.imageProgress }}/27</p>
 					</div>
 				</section>
@@ -608,12 +613,12 @@
 					<div ng-if="templates.review">
 						<h3>{{ t('settings.template_review') }}</h3>
 						<div ng-if="templates.review.design">
-							<label class="hy-nostyle"><input class="hy-nostyle" type="checkbox" ng-model="templates.includeDesign" ng-disabled="templates.busy"> {{ t('settings.style_design') }}</label>
+							<label class="hy-nostyle"><input class="hy-nostyle" type="checkbox" ng-model="templates.includeDesign" ng-disabled="templates.busy"> {{ t('settings.template_import_design') }}</label>
 							<label class="hy-nostyle" for="template-design-name">{{ t('settings.style_name') }}</label>
 							<input class="hy-nostyle form-control" id="template-design-name" ng-model="templates.designName" maxlength="80" ng-disabled="templates.busy || !templates.includeDesign">
 						</div>
 						<div ng-if="templates.review.theme">
-							<label class="hy-nostyle"><input class="hy-nostyle" type="checkbox" ng-model="templates.includeTheme" ng-disabled="templates.busy"> {{ t('settings.template_theme') }}</label>
+							<label class="hy-nostyle"><input class="hy-nostyle" type="checkbox" ng-model="templates.includeTheme" ng-disabled="templates.busy"> {{ t('settings.template_import_theme') }}</label>
 							<label class="hy-nostyle" for="template-theme-name">{{ t('settings.style_name') }}</label>
 							<input class="hy-nostyle form-control" id="template-theme-name" ng-model="templates.themeName" maxlength="80" ng-disabled="templates.busy || !templates.includeTheme">
 						</div>
@@ -653,8 +658,49 @@
 					</div>
 				</section>
 				<section ng-if="templates.section === 'catalog'">
-					<h3>{{ t('settings.template_catalog') }}</h3>
-					<p class="help-text">{{ t('settings.template_catalog_unavailable') }}</p>
+					<p class="help-text" role="status" ng-if="templates.busy">{{ t('settings.template_catalog_loading') }}</p>
+						<div class="template-catalog-toolbar">
+							<button class="hy-nostyle template-catalog-icon" type="button" ng-click="toggleTemplatePreviews()"
+								ng-disabled="templates.previewsSaving || !templates.previewsAvailable"
+								ng-attr-aria-pressed="{{ templates.showPreviews }}" ng-attr-title="{{ t('settings.template_show_examples') }}"
+								ng-attr-aria-label="{{ t('settings.template_show_examples') }}">
+								<i class="fa-solid" ng-class="templates.showPreviews ? 'fa-eye' : 'fa-eye-slash'" aria-hidden="true"></i>
+							</button>
+							<input class="hy-nostyle form-control" id="template-catalog-search" type="search" ng-model="templates.catalogQuery"
+								ng-disabled="!templates.catalog" ng-attr-placeholder="{{ t('settings.template_catalog_search') }}" ng-attr-aria-label="{{ t('settings.template_catalog_search') }}">
+							<select id="template-catalog-sort" class="form-select" ng-model="templates.catalogOrder" ng-disabled="!templates.catalog" ng-attr-aria-label="{{ t('settings.template_catalog_sort') }}">
+								<option value="-number">{{ t('settings.template_catalog_newest') }}</option>
+								<option value="title">{{ t('settings.style_name') }}</option>
+								<option value="-likes">{{ t('settings.template_catalog_likes') }}</option>
+								<option value="-favorite">{{ t('settings.template_catalog_favorites') }}</option>
+							</select>
+							<button class="hy-nostyle template-catalog-icon" type="button" ng-click="refreshTemplateCatalog()" ng-disabled="templates.busy"
+								ng-attr-title="{{ t('settings.template_catalog_refresh') }}" ng-attr-aria-label="{{ t('settings.template_catalog_refresh') }}"><i class="fa-solid fa-rotate" aria-hidden="true"></i></button>
+						</div>
+					<div ng-if="templates.catalog">
+						<p class="help-text" ng-if="!(templates.catalog | filter:catalogMatches).length">{{ t('settings.template_catalog_empty') }}</p>
+						<div role="list">
+						<div role="listitem" ng-repeat="item in templates.catalog | filter:catalogMatches | orderBy:[templates.catalogOrder, 'title'] track by item.id">
+							<div class="template-catalog-row">
+								<button class="hy-nostyle template-catalog-icon" type="button" ng-click="toggleTemplateFavorite(item)"
+									ng-disabled="templates.busy" ng-attr-aria-pressed="{{ item.favorite }}" ng-attr-title="{{ t(item.favorite ? 'settings.template_catalog_unfavorite' : 'settings.template_catalog_favorite') }}"
+									ng-attr-aria-label="{{ t(item.favorite ? 'settings.template_catalog_unfavorite' : 'settings.template_catalog_favorite') }}: {{ item.title }}"><i class="fa-star" ng-class="item.favorite ? 'fa-solid' : 'fa-regular'" aria-hidden="true"></i></button>
+								<button class="hy-nostyle template-catalog-title" type="button" ng-click="templates.selectedCatalogId = templates.selectedCatalogId === item.id ? null : item.id"
+									ng-attr-aria-expanded="{{ templates.selectedCatalogId === item.id }}">
+									<span>{{ item.title }}</span>
+									<img ng-if="templates.showPreviews && item.images.length" class="template-catalog-thumbnail" ng-src="{{ item.images[0] }}" alt="" loading="lazy">
+								</button>
+							</div>
+							<div class="template-catalog-details" ng-if="templates.selectedCatalogId === item.id">
+								<p>{{ item.author }} · {{ item.likes }} {{ t('settings.template_catalog_likes') }}</p>
+								<p class="template-catalog-description" ng-bind="item.description"></p>
+								<img class="template-catalog-image" ng-repeat="image in item.images track by $index" ng-src="{{ image }}" ng-attr-alt="{{ item.title }}" loading="lazy">
+								<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="importCatalogTemplate(item)" ng-disabled="templates.busy">{{ t('settings.style_import') }}</button>
+								<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="openWidgetExchange(item.number)" ng-disabled="templates.busy">{{ t('settings.template_catalog_post') }}</button>
+							</div>
+						</div>
+						</div>
+					</div>
 				</section>
 			</div>
 		</section>
@@ -673,12 +719,17 @@
 		</section>
 
 		<footer class="settings-savebar" ng-show="!templates.open || activeTab !== 'widgets'">
-			<button class="hy-nostyle btn settings-history-button" type="button" ng-click="undoEdit()" ng-disabled="!canUndoEdit() || savingSettings">{{ t('settings.style_undo') }}</button>
+			<button class="hy-nostyle btn settings-history-button" type="button" ng-click="undoEdit()" ng-disabled="!canUndoEdit() || savingSettings"
+				ng-attr-title="{{ t('settings.style_undo') }}" ng-attr-aria-label="{{ t('settings.style_undo') }}"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button>
 			<button class="hy-nostyle btn settings-save-button" type="button" ng-click="saveSettings()"
 				ng-class="{ 'is-dirty': isDirty() }" ng-disabled="!isDirty() || savingSettings">
 				{{ labels.save }}
 			</button>
-			<button class="hy-nostyle btn settings-history-button" type="button" ng-click="redoEdit()" ng-disabled="!canRedoEdit() || savingSettings">{{ t('settings.style_redo') }}</button>
+			<button class="hy-nostyle btn settings-history-button" type="button" ng-click="redoEdit()" ng-disabled="!canRedoEdit() || savingSettings"
+				ng-attr-title="{{ t('settings.style_redo') }}" ng-attr-aria-label="{{ t('settings.style_redo') }}"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></button>
+		</footer>
+		<footer class="settings-template-footer" ng-show="templates.open && activeTab === 'widgets'">
+			<button class="hy-nostyle btn settings-history-button" type="button" ng-click="closeTemplates()" ng-disabled="templates.busy">{{ t('settings.template_back') }}</button>
 		</footer>
 	</main>
 

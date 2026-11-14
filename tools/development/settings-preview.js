@@ -4,6 +4,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const widgetTemplate = require('../../lib/widget-template.js');
+const widgetTemplateCatalog = require('../../lib/widget-template-catalog.js');
 
 const root = path.resolve(__dirname, '..', '..');
 const port = Number(process.env.CHRONOGRAPH_PREVIEW_PORT || 4178);
@@ -20,6 +21,14 @@ const mime = {
 };
 
 const server = http.createServer((request, response) => {
+	if (request.method === 'GET' && request.url === '/__preview/widget-templates/catalog') {
+		widgetTemplateCatalog.getCatalog().then(result => {
+			response.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }).end(JSON.stringify(result));
+		}, error => {
+			response.writeHead(502, { 'Content-Type': 'application/json' }).end(JSON.stringify({ error: error.message }));
+		});
+		return;
+	}
 	if (request.method === 'POST' && ['/__preview/widget-templates/encode', '/__preview/widget-templates/decode'].includes(request.url)) {
 		let body = '';
 		request.setEncoding('utf8');

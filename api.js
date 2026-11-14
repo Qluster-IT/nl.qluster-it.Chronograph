@@ -3,6 +3,7 @@
 const Chronograph = require('./lib/chronograph.js');
 const api = require('./lib/chronograph-api.js');
 const widgetTemplate = require('./lib/widget-template.js');
+const widgetTemplateCatalog = require('./lib/widget-template-catalog.js');
 
 function list(type) {
 	const chronographType = type ? api.getType(type) : null;
@@ -29,6 +30,7 @@ function stop(type, params) {
 module.exports = {
 	async encodeWidgetTemplate({ body }) { return widgetTemplate.encodeTemplate(body); },
 	async decodeWidgetTemplate({ body }) { return widgetTemplate.decodeTemplate(body && body.text); },
+	async getWidgetTemplateCatalog() { return widgetTemplateCatalog.getCatalog(); },
 
 	async getTimers() { return list('timer'); },
 	async getTimer({ params }) { return get('timer', params); },

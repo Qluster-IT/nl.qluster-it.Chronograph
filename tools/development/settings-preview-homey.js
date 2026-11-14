@@ -39,6 +39,7 @@
 				},
 				ready: function () {},
 				on: function () {},
+				openURL: function (url) { window.open(url, '_blank', 'noopener'); },
 				alert: function (message) { window.alert(message); },
 				confirm: function (message, type, callback) { callback(null, window.confirm(message)); },
 				get: function (key, callback) {
@@ -58,6 +59,15 @@
 					}
 				},
 				api: function (method, url, data, callback) {
+					if (method === 'GET' && url === '/widget-templates/catalog') {
+						fetch('/__preview' + url).then(function (response) {
+							return response.json().then(function (value) {
+								if (!response.ok) throw new Error(value.error);
+								return value;
+							});
+						}).then(function (result) { callback(null, result); }, callback);
+						return;
+					}
 					if (method === 'POST' && (url === '/widget-templates/encode' || url === '/widget-templates/decode')) {
 						fetch('/__preview' + url, {
 							method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)

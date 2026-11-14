@@ -48,9 +48,14 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			return index;
 		});
 		$scope.savingSettings = false;
+		$scope.styleHelpExpanded = true;
+		$scope.styleHelpAvailable = false;
+		$scope.styleHelpSaving = false;
 		$scope.widgetStyles = { version: 3, styles: [], themes: [] };
 		$scope.templates = { open: false, section: 'export', designId: null, themeId: null, text: '',
-			previewDesignId: 'builtin:current', previewThemeId: 'builtin:current', review: null, busy: false };
+			previewDesignId: 'builtin:current', previewThemeId: 'builtin:current', review: null, busy: false,
+			catalog: null, catalogQuery: '', catalogOrder: '-number', favorites: {},
+			showPreviews: false, previewsAvailable: false, previewsSaving: false };
 		$scope.editor = {
 			mode: 'design',
 			selectedStyleId: '',
@@ -101,6 +106,19 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		function showError(error) {
 			Homey.alert(window.chronographErrorMessage(Homey, error));
 		}
+
+		$scope.toggleStyleHelp = function () {
+			if (!$scope.styleHelpAvailable || $scope.styleHelpSaving) return;
+			var expanded = !$scope.styleHelpExpanded;
+			$scope.styleHelpSaving = true;
+			Homey.set('widgetDesignerHelpExpanded', expanded, function (error) {
+				$scope.$applyAsync(function () {
+					$scope.styleHelpSaving = false;
+					if (error) { showError(error); return; }
+					$scope.styleHelpExpanded = expanded;
+				});
+			});
+		};
 
 		function setConfiguredChronographs(value) {
 			$scope.chronographsNames = value && typeof value === 'object' ? value : {};
@@ -199,7 +217,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		}
 		$scope.getSelectedStyle = function () {
 			var template = $scope.templates;
-			if (template.open && template.section === 'export' && template.exportText) {
+			if (template.open && template.section === 'export') {
 				return template.designId ? designById('custom:' + template.designId) : builtInStyle;
 			}
 			if (template.open && template.section === 'import' && template.review) {
@@ -240,7 +258,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		}
 		$scope.getSelectedScheme = function () {
 			var template = $scope.templates;
-			if (template.open && template.section === 'export' && template.exportText) {
+			if (template.open && template.section === 'export') {
 				return template.themeId ? themeById('custom:' + template.themeId) : builtInScheme;
 			}
 			if (template.open && template.section === 'import' && template.review) {
@@ -866,26 +884,134 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			return candidate;
 		}
 
+		var exportPreviewState;
+		function clearTemplateImage() {
+			$scope.templates.imageData = null;
+			$scope.templates.copyStatus = null;
+		}
+
+		$scope.clearTemplateExport = function () {
+			$scope.templates.exportText = '';
+			clearTemplateImage();
+		};
+
+		function enterExportPreview() {
+			exportPreviewState = {
+				size: $scope.editor.previewSize,
+				type: $scope.editor.previewType,
+				state: $scope.editor.previewState
+			};
+			$scope.editor.previewSize = 'normal';
+			$scope.editor.previewType = 'timer';
+			$scope.editor.previewState = 'running';
+			$scope.resetRowPreview();
+		}
+
+		function leaveExportPreview() {
+			if (!exportPreviewState) return;
+			$scope.editor.previewSize = exportPreviewState.size;
+			$scope.editor.previewType = exportPreviewState.type;
+			$scope.editor.previewState = exportPreviewState.state;
+			exportPreviewState = null;
+		}
+
 		$scope.openTemplates = function () {
 			if (!$scope.stylesAvailable || $scope.templates.busy) return;
 			leaveEditingItem(function () {
 				$scope.templates.open = true;
 				$scope.templates.section = 'export';
 				$scope.templates.review = null;
+				enterExportPreview();
 			});
 		};
 
 		$scope.closeTemplates = function () {
 			if ($scope.templates.busy) return;
+			if ($scope.templates.section === 'export') leaveExportPreview();
 			$scope.templates.open = false;
 			$scope.templates.review = null;
+			$scope.clearTemplateExport();
+			$scope.resetRowPreview();
 			$scope.refreshLayoutElement();
 		};
 
 		$scope.selectTemplateSection = function (section) {
 			if ($scope.templates.busy || ['export', 'import', 'catalog'].indexOf(section) === -1) return;
+			if (section !== $scope.templates.section) {
+				if ($scope.templates.section === 'export') leaveExportPreview();
+				if (section === 'export') enterExportPreview();
+			}
 			$scope.templates.section = section;
 			$scope.templates.review = null;
+			$scope.resetRowPreview();
+			if (section === 'catalog' && !$scope.templates.catalog) $scope.refreshTemplateCatalog();
+		};
+
+		$scope.toggleTemplatePreviews = function () {
+			var template = $scope.templates;
+			if (template.previewsSaving || !template.previewsAvailable) return;
+			var enabled = !template.showPreviews;
+			template.previewsSaving = true;
+			Homey.set('widgetTemplateShowPreviews', enabled, function (error) {
+				$scope.$applyAsync(function () {
+					template.previewsSaving = false;
+					if (error) { showError(error); return; }
+					template.showPreviews = enabled;
+				});
+			});
+		};
+
+		$scope.refreshTemplateCatalog = function () {
+			var template = $scope.templates;
+			if (template.busy) return;
+			template.busy = true;
+			Homey.get('widgetTemplateFavorites', function (error, favorites) {
+				if (error) {
+					$scope.$applyAsync(function () { template.busy = false; showError(error); });
+					return;
+				}
+				Homey.api('GET', '/widget-templates/catalog', null, function (apiError, result) {
+					$scope.$applyAsync(function () {
+						template.busy = false;
+						if (apiError) { showError(apiError); return; }
+						if (!Array.isArray(result)) { showError(new Error('Invalid community catalog')); return; }
+						template.favorites = favorites && typeof favorites === 'object' && !Array.isArray(favorites) ? favorites : {};
+						template.catalog = result;
+						template.catalog.forEach(function (item) { item.favorite = !!template.favorites[item.postId]; });
+					});
+				});
+			});
+		};
+
+		$scope.catalogMatches = function (item) {
+			var query = $scope.templates.catalogQuery.trim().toLowerCase();
+			return !query || [item.title, item.description, item.author].some(function (value) {
+				return String(value || '').toLowerCase().indexOf(query) !== -1;
+			});
+		};
+
+		$scope.toggleTemplateFavorite = function (item) {
+			var template = $scope.templates;
+			if (template.busy) return;
+			var favorites = angular.copy(template.favorites);
+			if (favorites[item.postId]) delete favorites[item.postId];
+			else favorites[item.postId] = true;
+			template.busy = true;
+			Homey.set('widgetTemplateFavorites', favorites, function (error) {
+				$scope.$applyAsync(function () {
+					template.busy = false;
+					if (error) { showError(error); return; }
+					template.favorites = favorites;
+					template.catalog.forEach(function (entry) { entry.favorite = !!favorites[entry.postId]; });
+				});
+			});
+		};
+
+		$scope.importCatalogTemplate = function (item) {
+			if ($scope.templates.busy) return;
+			$scope.selectTemplateSection('import');
+			$scope.templates.importText = item.text;
+			$scope.readWidgetTemplate();
 		};
 
 		$scope.generateWidgetTemplate = function () {
@@ -905,21 +1031,37 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				$scope.$applyAsync(function () {
 					template.busy = false;
 					if (error) { showError(error); return; }
+					clearTemplateImage();
 					template.exportText = text;
-					template.exportTitle = (design || theme).name;
+					template.exportDesignName = design && design.name;
+					template.exportThemeName = theme && theme.name;
+					$scope.prepareTemplateImage();
 				});
 			});
 		};
 
 		$scope.templateForumPost = function () {
 			var template = $scope.templates;
-			return template.exportText ? '# ' + template.exportTitle + '\n\n'
-				+ Homey.__('settings.template_post_description') + '\n\nTWF:\n```\n' + template.exportText + '\n```' : '';
+			if (!template.exportText) return '';
+			var heading = [];
+			if (template.exportDesignName) heading.push('Design: ' + template.exportDesignName.replace(/\s+/g, ' ').trim());
+			if (template.exportThemeName) heading.push('Theme: ' + template.exportThemeName.replace(/\s+/g, ' ').trim());
+			return '# ' + heading.join(' | ') + '\n\n'
+				+ 'Describe your template here.\n\nTWF:\n```javascript\n' + template.exportText + '\n```';
+		};
+
+		$scope.openWidgetExchange = function (number) {
+			if (number !== undefined && (!Number.isSafeInteger(number) || number < 1)) {
+				showError(new Error('Invalid forum post number'));
+				return;
+			}
+			Homey.openURL('https://community.homey.app/t/162213' + (number === undefined ? '' : '/' + number));
 		};
 
 		$scope.copyWidgetTemplate = function (id) {
 			var field = document.getElementById(id);
 			if (!field || !field.value) return;
+			$scope.templates.copyStatus = null;
 			field.focus();
 			field.select();
 			if (!document.execCommand('copy')) Homey.alert(Homey.__('settings.template_copy_error'));
@@ -942,7 +1084,8 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				size: $scope.editor.previewSize,
 				type: $scope.editor.previewType,
 				state: $scope.editor.previewState,
-				width: preview.style.width
+				width: preview.style.width,
+				boxSizing: preview.style.boxSizing
 			};
 			var types = ['stopwatch', 'timer', 'transition'];
 			var sizes = ['compact', 'normal', 'large'];
@@ -951,7 +1094,8 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			var stateLabels = { running: 'widget_running', paused: 'widget_paused', inactive: 'widget_not_running' };
 			var images = [];
 			try {
-				preview.style.width = '300px';
+				preview.style.width = '350px';
+				preview.style.boxSizing = 'border-box';
 				for (var type of types) {
 					var rows = [];
 					for (var state of states) {
@@ -965,16 +1109,23 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 									window.setTimeout(resolve, 20);
 								});
 							});
-							row.push(await new Promise(function (resolve, reject) {
-								var timer = window.setTimeout(function () { reject(new Error('Preview image timed out')); }, 15000);
-								window.htmlToImage.toCanvas(preview, { fontEmbedCSS: fontCSS, pixelRatio: 1 }).then(function (image) {
-									window.clearTimeout(timer);
-									resolve(image);
-								}, function (error) {
-									window.clearTimeout(timer);
-									reject(error);
-								});
-							}));
+							var numberFields = Array.from(preview.querySelectorAll('input[type="number"]'));
+							try {
+								// Native number spinners can appear in the rendered image even when not visible in the preview.
+								numberFields.forEach(function (field) { field.type = 'text'; });
+								row.push(await new Promise(function (resolve, reject) {
+									var timer = window.setTimeout(function () { reject(new Error('Preview image timed out')); }, 15000);
+									window.htmlToImage.toCanvas(preview, { fontEmbedCSS: fontCSS, pixelRatio: 1 }).then(function (image) {
+										window.clearTimeout(timer);
+										resolve(image);
+									}, function (error) {
+										window.clearTimeout(timer);
+										reject(error);
+									});
+								}));
+							} finally {
+								numberFields.forEach(function (field) { field.type = 'number'; });
+							}
 							$scope.$applyAsync(function () { template.imageProgress++; });
 						}
 						rows.push(row);
@@ -983,6 +1134,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				}
 			} finally {
 				preview.style.width = original.width;
+				preview.style.boxSizing = original.boxSizing;
 				$scope.$applyAsync(function () {
 					$scope.editor.previewSize = original.size;
 					$scope.editor.previewType = original.type;
@@ -1037,45 +1189,109 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				});
 				y += padding;
 			});
-			return new Promise(function (resolve, reject) {
-				canvas.toBlob(function (blob) {
-					if (blob) resolve(blob);
-					else reject(new Error('Could not create preview image'));
-				}, 'image/png');
-			});
+			return canvas.toDataURL('image/png');
 		}
 
-		$scope.copyTemplateForumPost = function () {
+		$scope.prepareTemplateImage = function () {
 			var template = $scope.templates;
 			if (template.busy || !template.exportText) return;
-			if (!navigator.clipboard || !navigator.clipboard.write || !window.ClipboardItem) {
-				Homey.alert(Homey.__('settings.template_clipboard_image_error'));
-				return;
-			}
+			clearTemplateImage();
 			template.busy = true;
 			template.imageProgress = 0;
-			var imagePromise = templatePreviewImage();
-			imagePromise.catch(function () {});
-			function finish(error) {
+			return templatePreviewImage().then(function (image) {
+				$scope.$applyAsync(function () {
+					template.imageData = image;
+					template.busy = false;
+					template.imageProgress = null;
+					$scope.copyTemplateForumPost(true);
+				});
+			}, function (error) {
 				$scope.$applyAsync(function () {
 					template.busy = false;
 					template.imageProgress = null;
-					if (error) Homey.alert(Homey.__('settings.template_clipboard_image_error') + '\n' + window.chronographErrorMessage(Homey, error));
+					Homey.alert(Homey.__('settings.template_prepare_image_error') + '\n' + window.chronographErrorMessage(Homey, error));
+				});
+			});
+		};
+
+		$scope.copyTemplateForumPost = function (automatic) {
+			var template = $scope.templates;
+			if (template.busy || !template.exportText || !template.imageData) return;
+			template.copyStatus = null;
+			function escapeHtml(value) {
+				return value.replace(/[&<>"']/g, function (character) {
+					return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character];
 				});
 			}
-			function fail(error) {
-				imagePromise.then(function () { finish(error); }, function () { finish(error); });
+			var text = $scope.templateForumPost();
+			var heading = text.slice(2, text.indexOf('\n\n'));
+			var html = '<h1>' + escapeHtml(heading) + '</h1><p>Describe your template here.</p>'
+				+ '<p><img alt="Widget preview" src="' + template.imageData + '"></p>'
+				+ '<p>TWF:</p><pre data-params="javascript"><code class="language-javascript">' + escapeHtml(template.exportText) + '</code></pre>';
+			var copied = false;
+			function onCopy(event) {
+				event.preventDefault();
+				event.clipboardData.setData('text/plain', text);
+				event.clipboardData.setData('text/html', html);
+				copied = true;
 			}
+			var copyError;
 			try {
-				var item = new window.ClipboardItem({
-					'text/plain': new Blob([$scope.templateForumPost()], { type: 'text/plain' }),
-					'image/png': imagePromise
-				});
-				navigator.clipboard.write([item]).then(function () {
-					imagePromise.then(function () { finish(); }, finish);
-				}, fail);
+				var field = document.getElementById('template-forum-post');
+				if (!field) throw new Error('Forum post is unavailable');
+				field.focus();
+				field.select();
+				document.addEventListener('copy', onCopy);
+				var successful = document.execCommand('copy');
+				if ((!successful || !copied) && document.createRange && window.getSelection && field.setSelectionRange) {
+					var editable = field.contentEditable;
+					var readOnly = field.readOnly;
+					try {
+						field.contentEditable = true;
+						field.readOnly = false;
+						var range = document.createRange();
+						range.selectNodeContents(field);
+						var selection = window.getSelection();
+						selection.removeAllRanges();
+						selection.addRange(range);
+						field.setSelectionRange(0, field.value.length);
+						successful = document.execCommand('copy');
+					} finally {
+						field.contentEditable = editable;
+						field.readOnly = readOnly;
+					}
+				}
+				if (!successful || !copied) throw new Error('Clipboard copy was blocked');
 			} catch (error) {
-				fail(error);
+				copyError = error;
+			} finally {
+				document.removeEventListener('copy', onCopy);
+			}
+			function finish(error) {
+				template.busy = false;
+				template.copyStatus = error ? 'retry' : 'copied';
+				if (error && !automatic) {
+					Homey.alert(Homey.__('settings.template_clipboard_image_error') + '\n' + window.chronographErrorMessage(Homey, error));
+				}
+			}
+			if (!copyError) { finish(); return; }
+			try {
+				if (!window.navigator || !window.navigator.clipboard || !window.navigator.clipboard.write || !window.ClipboardItem) {
+					finish(copyError);
+					return;
+				}
+				template.busy = true;
+				var item = new window.ClipboardItem({
+					'text/plain': new Blob([text], { type: 'text/plain' }),
+					'text/html': new Blob([html], { type: 'text/html' })
+				});
+				window.navigator.clipboard.write([item]).then(function () {
+					$scope.$applyAsync(function () { finish(); });
+				}, function (error) {
+					$scope.$applyAsync(function () { finish(error); });
+				});
+			} catch (error) {
+				finish(error);
 			}
 		};
 
@@ -1995,7 +2211,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		};
 
 		$scope.previewAction = function (action, previewType) {
-			if ($scope.templates.busy) return;
+			if ($scope.templates.busy || ($scope.templates.open && $scope.templates.section === 'export')) return;
 			var state = $scope.previewTileState(null, previewType);
 			if (action === 'start') {
 				state = 'running';
@@ -2208,6 +2424,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		};
 
 		$scope.$on('$destroy', function () {
+			clearTemplateImage();
 			if (refreshInterval) $interval.cancel(refreshInterval);
 			if (durationInterval) $interval.cancel(durationInterval);
 			if (startFormTimer) $timeout.cancel(startFormTimer);
@@ -2323,7 +2540,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			function completeInitialLoad(error) {
 				if (error) showError(error);
 				readyRequests += 1;
-				if (readyRequests !== ($scope.localPreview ? 5 : 4)) return;
+				if (readyRequests !== ($scope.localPreview ? 6 : 5)) return;
 
 				Homey.on('chronograph_event', function (event) {
 					$scope.$applyAsync(function () {
@@ -2382,6 +2599,34 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 					setConfiguredChronographs(value);
 				});
 				completeInitialLoad();
+			});
+
+			Homey.get('widgetDesignerHelpExpanded', function (error, value) {
+				$scope.$applyAsync(function () {
+					if (error) {
+						completeInitialLoad(error);
+						return;
+					}
+					if (value !== null && value !== undefined && typeof value !== 'boolean') {
+						completeInitialLoad(new Error('Invalid widget designer help preference'));
+						return;
+					}
+					$scope.styleHelpExpanded = value !== false;
+					$scope.styleHelpAvailable = true;
+					completeInitialLoad();
+				});
+			});
+
+			Homey.get('widgetTemplateShowPreviews', function (error, value) {
+				$scope.$applyAsync(function () {
+					if (error) { showError(error); return; }
+					if (value !== null && value !== undefined && typeof value !== 'boolean') {
+						showError(new Error('Invalid template previews preference'));
+						return;
+					}
+					$scope.templates.showPreviews = value === true;
+					$scope.templates.previewsAvailable = true;
+				});
 			});
 
 			Homey.get('widgetStyles', function (error, value) {

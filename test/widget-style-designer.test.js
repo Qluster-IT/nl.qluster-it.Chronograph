@@ -13,7 +13,7 @@ const settingsScript = fs.readFileSync(path.join(root, 'settings', 'assets', 'se
 const html = fs.readFileSync(path.join(root, 'settings', 'index.html'), 'utf8');
 const css = fs.readFileSync(path.join(root, 'settings', 'assets', 'styles.css'), 'utf8');
 
-function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns, extras, noSelection) {
+function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns, extras, noSelection, helpPreference, renderExport, previewsPreference) {
 	let editor;
 	let controller;
 	const module = {
@@ -59,7 +59,8 @@ function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns, extr
 		__: key => key,
 		get(key, callback) {
 			callback(null, key === 'roundOfDurationsFlowcards' ? 2 : key === 'widgetStyles' ? widgetStyles
-				: key === 'previewBuiltIns' ? previewBuiltIns : null);
+				: key === 'previewBuiltIns' ? previewBuiltIns : key === 'widgetDesignerHelpExpanded' ? helpPreference
+					: key === 'widgetTemplateShowPreviews' ? previewsPreference : null);
 		},
 		set: set || ((key, value, callback) => { writes.push({ key, value }); callback(null); }),
 		api(method, url, data, callback) { callback(null, []); },
@@ -76,44 +77,302 @@ function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns, extr
 	timeout.cancel = timer => { timer.cancelled = true; };
 	controller(scope, () => {}, timeout, editor);
 	scope.initialize(homey);
+	if (!renderExport) scope.prepareTemplateImage = () => {};
 	if (!noSelection) scope.selectVisibilityRow(1);
 	return { scope, writes, timers, editor, homey, listeners, window: context.window };
 }
 
 describe('Widget style designer preview', () => {
-	it('copies the forum text with three 3-by-3 widget preview grids', async () => {
+	it('remembers the designer help preference without changing the design', () => {
+		const { scope, writes } = loadSettings();
+		assert.strictEqual(scope.styleHelpExpanded, true);
+		assert.strictEqual(scope.styleHelpAvailable, true);
+		scope.toggleStyleHelp();
+		assert.strictEqual(scope.styleHelpExpanded, false);
+		assert.strictEqual(scope.isDirty(), false);
+		assert.strictEqual(writes[0].key, 'widgetDesignerHelpExpanded');
+		assert.strictEqual(writes[0].value, false);
+		const reopened = loadSettings(null, null, null, false, null, null, false, writes[0].value).scope;
+		assert.strictEqual(reopened.styleHelpExpanded, false);
+		reopened.toggleStyleHelp();
+		assert.strictEqual(reopened.styleHelpExpanded, true);
+		assert.match(html, /aria-controls="style-designer-help"/);
+		assert.match(html, /ng-show="styleHelpExpanded"/);
+	});
+
+	it('reports preference save and load failures without claiming a saved change', () => {
+		const { scope, homey } = loadSettings();
+		const alerts = [];
+		homey.alert = message => alerts.push(message);
+		homey.set = (key, value, callback) => callback(new Error('Save failed'));
+		scope.toggleStyleHelp();
+		assert.strictEqual(scope.styleHelpExpanded, true);
+		assert.strictEqual(scope.styleHelpSaving, false);
+		assert.match(alerts[0], /Save failed/);
+		const get = homey.get;
+		homey.get = (key, callback) => key === 'widgetDesignerHelpExpanded'
+			? callback(new Error('Load failed')) : get(key, callback);
+		scope.styleHelpAvailable = false;
+		scope.initialize(homey);
+		assert.strictEqual(scope.styleHelpAvailable, false);
+		assert.match(alerts[1], /Load failed/);
+	});
+
+	it('loads, searches, favorites and imports community templates', () => {
+		const { scope, homey, writes } = loadSettings();
+		const item = { id: '42:0', postId: 42, title: 'Blue', description: 'Dark theme', author: 'Creator', text: 'shared-template' };
+		const theme = JSON.parse(JSON.stringify(scope.getSelectedScheme()));
+		homey.api = (method, url, data, callback) => {
+			if (url === '/widget-templates/catalog') callback(null, [item]);
+			else if (url === '/widget-templates/decode') {
+				assert.strictEqual(data.text, item.text);
+				callback(null, { theme });
+			} else throw new Error('Unexpected API request');
+		};
+		scope.openTemplates();
+		scope.selectTemplateSection('catalog');
+		assert.strictEqual(scope.templates.catalog.length, 1);
+		scope.templates.catalogQuery = 'dark';
+		assert.strictEqual(scope.catalogMatches(item), true);
+		scope.templates.catalogQuery = 'missing';
+		assert.strictEqual(scope.catalogMatches(item), false);
+		scope.toggleTemplateFavorite(item);
+		assert.strictEqual(item.favorite, true);
+		assert.strictEqual(writes[writes.length - 1].value[42], true);
+		scope.importCatalogTemplate(item);
+		assert.strictEqual(scope.templates.section, 'import');
+		assert.strictEqual(scope.templates.review.theme.name, theme.name);
+	});
+
+	it('shows list previews only when enabled and saves the preference without changing the catalog', () => {
+		const { scope, homey, writes } = loadSettings();
+		let requests = 0;
+		const item = { id: '42:0', postId: 42, images: ['preview.png'] };
+		homey.api = (method, url, data, callback) => { requests++; callback(null, [item]); };
+		scope.openTemplates();
+		scope.selectTemplateSection('catalog');
+		assert.strictEqual(scope.templates.showPreviews, false);
+		scope.toggleTemplatePreviews();
+		assert.strictEqual(scope.templates.showPreviews, true);
+		assert.strictEqual(writes[0].key, 'widgetTemplateShowPreviews');
+		assert.strictEqual(writes[0].value, true);
+		assert.strictEqual(scope.templates.catalog[0], item);
+		assert.strictEqual(requests, 1);
+		const reopened = loadSettings(null, null, null, false, null, null, false, null, false, true);
+		assert.strictEqual(reopened.scope.templates.showPreviews, true);
+		scope.toggleTemplatePreviews();
+		assert.strictEqual(scope.templates.showPreviews, false);
+		assert.strictEqual(scope.templates.catalog[0], item);
+		assert.strictEqual(requests, 1);
+		assert.match(html, /ng-if="templates\.showPreviews && item\.images\.length" class="template-catalog-thumbnail"/);
+		assert.match(html, /class="template-catalog-image" ng-repeat="image in item\.images/);
+		assert.match(html, /ng-click="toggleTemplatePreviews\(\)"[\s\S]*?ng-attr-aria-pressed="\{\{ templates\.showPreviews \}\}"[\s\S]*?ng-attr-aria-label="\{\{ t\('settings\.template_show_examples'\) \}\}"/);
+		assert.match(html, /templates\.showPreviews \? 'fa-eye' : 'fa-eye-slash'/);
+	});
+
+	it('reports preview preference save and load failures', () => {
+		const { scope, homey } = loadSettings();
+		const alerts = [];
+		homey.alert = message => alerts.push(message);
+		homey.set = (key, value, callback) => callback(new Error('Save failed'));
+		scope.toggleTemplatePreviews();
+		assert.strictEqual(scope.templates.showPreviews, false);
+		assert.strictEqual(scope.templates.previewsSaving, false);
+		assert.match(alerts[0], /Save failed/);
+		const get = homey.get;
+		homey.get = (key, callback) => key === 'widgetTemplateShowPreviews'
+			? callback(new Error('Load failed')) : get(key, callback);
+		scope.templates.previewsAvailable = false;
+		scope.initialize(homey);
+		assert.strictEqual(scope.templates.previewsAvailable, false);
+		assert.match(alerts[1], /Load failed/);
+	});
+
+	it('keeps the previous preview state while a save is pending', () => {
+		const { scope, homey } = loadSettings();
+		let finish;
+		let calls = 0;
+		homey.set = (key, value, callback) => { calls++; finish = callback; };
+		scope.toggleTemplatePreviews();
+		scope.toggleTemplatePreviews();
+		assert.strictEqual(calls, 1);
+		assert.strictEqual(scope.templates.showPreviews, false);
+		assert.strictEqual(scope.templates.previewsSaving, true);
+		finish(null);
+		assert.strictEqual(scope.templates.showPreviews, true);
+		assert.strictEqual(scope.templates.previewsSaving, false);
+	});
+
+	it('applies a delayed preview preference to an already loaded catalog', () => {
+		const { scope, homey } = loadSettings();
+		homey.api = (method, url, data, callback) => callback(null, [{ id: '42:0', postId: 42 }]);
+		const get = homey.get;
+		let resolvePreference;
+		homey.get = (key, callback) => {
+			if (key === 'widgetTemplateShowPreviews') resolvePreference = callback;
+			else get(key, callback);
+		};
+		scope.initialize(homey);
+		scope.openTemplates();
+		scope.selectTemplateSection('catalog');
+		assert.strictEqual(scope.templates.catalog.length, 1);
+		assert.strictEqual(scope.templates.showPreviews, false);
+		resolvePreference(null, true);
+		assert.strictEqual(scope.templates.catalog.length, 1);
+		assert.strictEqual(scope.templates.showPreviews, true);
+	});
+
+	it('reports community catalog and favorite save failures', () => {
+		const { scope, homey } = loadSettings();
+		const alerts = [];
+		homey.alert = message => alerts.push(message);
+		homey.api = (method, url, data, callback) => callback(new Error('Forum unavailable'));
+		scope.openTemplates();
+		scope.selectTemplateSection('catalog');
+		assert.match(alerts[0], /Forum unavailable/);
+		assert.strictEqual(scope.templates.catalog, null);
+		assert.strictEqual(scope.templates.busy, false);
+		const item = { postId: 42, favorite: false };
+		scope.templates.catalog = [item];
+		homey.set = (key, value, callback) => callback(new Error('Save failed'));
+		scope.toggleTemplateFavorite(item);
+		assert.match(alerts[1], /Save failed/);
+		assert.strictEqual(item.favorite, false);
+		assert.strictEqual(scope.templates.busy, false);
+	});
+
+	it('shows selected exports immediately as a normal running timer and restores the previous preview', () => {
+		const { scope } = loadSettings();
+		scope.createStyle(true);
+		scope.saveSettings();
+		const design = scope.getSelectedStyle();
+		scope.selectEditorMode('color');
+		scope.createStyle(true);
+		scope.saveSettings();
+		const theme = scope.getSelectedScheme();
+		scope.editor.previewSize = 'large';
+		scope.editor.previewType = 'transition';
+		scope.editor.previewState = 'paused';
+		scope.openTemplates();
+		assert.deepStrictEqual([scope.editor.previewSize, scope.editor.previewType, scope.editor.previewState], ['normal', 'timer', 'running']);
+		scope.templates.designId = design.id;
+		assert.strictEqual(scope.getSelectedStyle().id, design.id);
+		assert.strictEqual(scope.getSelectedScheme().id, 'builtin:current');
+		scope.templates.themeId = theme.id;
+		assert.strictEqual(scope.getSelectedScheme().id, theme.id);
+		scope.templates.designId = '';
+		assert.strictEqual(scope.getSelectedStyle().id, 'builtin:current');
+		assert.strictEqual(scope.getSelectedScheme().id, theme.id);
+		assert.ok(!scope.templates.exportText);
+		scope.previewAction('pause');
+		assert.strictEqual(scope.editor.previewState, 'running');
+		scope.selectTemplateSection('import');
+		assert.deepStrictEqual([scope.editor.previewSize, scope.editor.previewType, scope.editor.previewState], ['large', 'transition', 'paused']);
+		scope.editor.previewSize = 'compact';
+		scope.selectTemplateSection('export');
+		assert.deepStrictEqual([scope.editor.previewSize, scope.editor.previewType, scope.editor.previewState], ['normal', 'timer', 'running']);
+		scope.closeTemplates();
+		assert.deepStrictEqual([scope.editor.previewSize, scope.editor.previewType, scope.editor.previewState], ['compact', 'transition', 'paused']);
+		const exportSection = html.split('<section ng-if="templates.section === \'export\'">')[1].split('</section>')[0];
+		assert.match(exportSection, /ng-if="templates\.designId \|\| templates\.themeId"/);
+		assert.doesNotMatch(exportSection, /id="template-export-(?:size|type|state)"/);
+	});
+
+	it('labels only the design and theme included in the exported forum post', () => {
+		const { scope, homey } = loadSettings();
+		scope.createStyle(true);
+		scope.getSelectedStyle().name = 'Control Deck';
+		scope.saveSettings();
+		const design = scope.getSelectedStyle();
+		scope.selectEditorMode('color');
+		scope.createStyle(true);
+		scope.getSelectedScheme().name = 'Lagoon Pulse';
+		scope.saveSettings();
+		const theme = scope.getSelectedScheme();
+		homey.__ = key => ({
+			'settings.style_design': 'Ontwerp',
+			'settings.template_theme': 'Thema',
+			'settings.template_post_description': 'Beschrijf je sjabloon hier.'
+		}[key] || key);
+		homey.api = (method, url, data, callback) => callback(null, 'encoded-template');
+		scope.openTemplates();
+		scope.templates.designId = design.id;
+		scope.templates.themeId = theme.id;
+		scope.generateWidgetTemplate();
+		assert.strictEqual(scope.templateForumPost(), '# Design: Control Deck | Theme: Lagoon Pulse\n\nDescribe your template here.\n\nTWF:\n```javascript\nencoded-template\n```');
+		scope.templates.themeId = '';
+		scope.generateWidgetTemplate();
+		assert.ok(scope.templateForumPost().startsWith('# Design: Control Deck\n'));
+		scope.templates.designId = '';
+		scope.templates.themeId = theme.id;
+		scope.generateWidgetTemplate();
+		assert.ok(scope.templateForumPost().startsWith('# Theme: Lagoon Pulse\n'));
+	});
+
+	it('opens the exchange and its posts through the Homey bridge', () => {
+		const { scope, homey } = loadSettings();
+		const opened = [];
+		const alerts = [];
+		homey.openURL = url => opened.push(url);
+		homey.alert = message => alerts.push(message);
+		scope.openWidgetExchange();
+		scope.openWidgetExchange(42);
+		scope.openWidgetExchange('https://example.com');
+		assert.deepStrictEqual(opened, [
+			'https://community.homey.app/t/162213',
+			'https://community.homey.app/t/162213/42'
+		]);
+		assert.strictEqual(alerts.length, 1);
+		assert.match(html, /ng-click="openWidgetExchange\(\)"/);
+		assert.match(html, /ng-click="openWidgetExchange\(item\.number\)"/);
+		assert.match(html, /<div class="template-header">[\s\S]*?ng-click="openWidgetExchange\(\)"[\s\S]*?<\/div>/);
+	});
+
+	it('prepares three 3-by-3 preview grids and copies the post as rich text', async () => {
 		const previews = [];
 		const labels = [];
-		let resolveCopy;
-		const copied = new Promise(resolve => { resolveCopy = resolve; });
-		const navigator = { clipboard: { write: async items => {
-			const image = await items[0].data['image/png'];
-			resolveCopy({ image, text: await items[0].data['text/plain'].text() });
-		} } };
+		let copyHandler;
+		const copied = {};
 		const context = {
 			fillRect() {}, drawImage() {},
 			fillText(text) { labels.push(text); }
 		};
+		const field = { focus() {}, select() {} };
+		const numberFields = [{ type: 'number', value: '1' }, { type: 'number', value: '' }];
+		const preview = {
+			style: { width: '80%', boxSizing: 'content-box' },
+			querySelectorAll(selector) { assert.strictEqual(selector, 'input[type="number"]'); return numberFields; }
+		};
 		const document = {
 			body: {},
-			getElementById: () => ({ style: { width: '' } }),
-			createElement: () => ({ getContext: () => context, toBlob: callback => callback(new Blob(['png'], { type: 'image/png' })) })
+			getElementById: id => id === 'template-forum-post' ? field : preview,
+			createElement: () => ({ getContext: () => context, toDataURL: () => 'data:image/png;base64,cG5n' }),
+			addEventListener(name, handler) { assert.strictEqual(name, 'copy'); copyHandler = handler; },
+			removeEventListener(name, handler) { assert.strictEqual(handler, copyHandler); copyHandler = null; },
+			execCommand() {
+				copyHandler({ preventDefault() {}, clipboardData: { setData(type, value) { copied[type] = value; } } });
+				return true;
+			}
 		};
 		const extras = {
-			navigator, document, Blob,
+			document,
 			fetch: async () => ({ ok: true, arrayBuffer: async () => new Uint8Array([1, 2]).buffer }),
 			btoa: value => Buffer.from(value, 'binary').toString('base64')
 		};
-		const { scope, homey, window } = loadSettings(null, null, null, false, null, extras);
-		window.ClipboardItem = class { constructor(data) { this.data = data; } };
+		const { scope, homey, window } = loadSettings(null, null, null, false, null, extras, false, null, true);
 		window.setTimeout = (fn, delay) => setTimeout(fn, delay === 20 ? 0 : delay);
 		window.clearTimeout = clearTimeout;
 		window.getComputedStyle = () => ({ backgroundColor: 'rgb(255, 255, 255)', color: 'rgb(0, 0, 0)' });
 		window.htmlToImage = { toCanvas: async () => {
+			assert.strictEqual(preview.style.width, '350px');
+			assert.strictEqual(preview.style.boxSizing, 'border-box');
+			assert.deepStrictEqual(numberFields.map(field => field.type), ['text', 'text']);
+			assert.deepStrictEqual(numberFields.map(field => field.value), ['1', '']);
 			previews.push([scope.editor.previewType, scope.editor.previewState, scope.editor.previewSize]);
-			return { width: 400, height: 100 };
+			return { width: 350, height: 100 };
 		} };
 		scope.createStyle(true);
+		scope.getSelectedStyle().name = 'Design <example>';
 		scope.saveSettings();
 		const design = scope.getSelectedStyle();
 		homey.api = (method, url, data, callback) => callback(null, 'encoded-template');
@@ -122,9 +381,16 @@ describe('Widget style designer preview', () => {
 		scope.generateWidgetTemplate();
 		assert.strictEqual(scope.getSelectedStyle().id, design.id);
 		assert.strictEqual(scope.getSelectedScheme().id, 'builtin:current');
-		scope.copyTemplateForumPost();
-		const result = await copied;
-		await new Promise(resolve => setImmediate(resolve));
+		await new Promise((resolve, reject) => {
+			const deadline = Date.now() + 3000;
+			function wait() {
+				if (!scope.templates.busy) return resolve();
+				if (Date.now() > deadline) return reject(new Error('Image preparation timed out'));
+				setTimeout(wait, 10);
+			}
+			wait();
+		});
+		assert.strictEqual(scope.templates.copyStatus, 'copied');
 		assert.deepStrictEqual(previews, ['stopwatch', 'timer', 'transition'].flatMap(type =>
 			['running', 'paused', 'inactive'].flatMap(state =>
 				['compact', 'normal', 'large'].map(size => [type, state, size]))));
@@ -135,42 +401,116 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(labels.filter(label => label === 'settings.widget_running').length, 3);
 		assert.strictEqual(labels.filter(label => label === 'settings.widget_paused').length, 3);
 		assert.strictEqual(labels.filter(label => label === 'settings.widget_not_running').length, 3);
-		assert.strictEqual(result.image.type, 'image/png');
-		assert.ok(result.text.includes('encoded-template'));
+		assert.ok(copied['text/plain'].includes('```javascript\nencoded-template\n```'));
+		assert.ok(copied['text/html'].includes('<h1>Design: Design &lt;example&gt;</h1>'));
+		assert.ok(copied['text/html'].includes('<img alt="Widget preview" src="data:image/png;base64,cG5n">'));
+		assert.ok(copied['text/html'].includes('<pre data-params="javascript"><code class="language-javascript">encoded-template</code></pre>'));
 		assert.strictEqual(scope.editor.previewSize, 'normal');
+		assert.strictEqual(preview.style.width, '80%');
+		assert.strictEqual(preview.style.boxSizing, 'content-box');
+		assert.deepStrictEqual(numberFields.map(field => field.type), ['number', 'number']);
 		assert.strictEqual(scope.templates.busy, false);
+		scope.clearTemplateExport();
+		assert.strictEqual(scope.templates.imageData, null);
+		assert.strictEqual(scope.templates.exportText, '');
+		assert.strictEqual(scope.templates.copyStatus, null);
+		const actions = html.split('<label class="hy-nostyle" for="template-forum-post">')[1].split('</div>')[0];
+		assert.strictEqual((actions.match(/<button\b/g) || []).length, 2);
+		assert.match(actions, /forum-editor-switch\.png/);
+		assert.match(actions, /<strong>\{\{ t\('settings\.template_paste_image_hint'\) \}\}<\/strong>/);
+		assert.match(actions, /role="status" ng-if="templates\.copyStatus"/);
+		assert.match(actions, /<strong ng-if="templates\.copyStatus === 'copied'">\{\{ t\('settings\.template_copy_copied'\) \}\}<\/strong>/);
 	});
 
-	it('reports unavailable clipboard image support without modifying the export', () => {
-		const { scope, homey } = loadSettings(null, null, null, false, null, { navigator: {} });
+	it('reports blocked rich clipboard copying without modifying the export', () => {
+		const document = {
+			getElementById: () => ({ focus() {}, select() {} }),
+			addEventListener() {}, removeEventListener() {},
+			execCommand: () => false
+		};
+		const { scope, homey } = loadSettings(null, null, null, false, null, { document });
 		let message;
 		homey.alert = value => { message = value; };
 		scope.templates.exportText = 'encoded-template';
+		scope.templates.imageData = 'data:image/png;base64,cG5n';
 		scope.copyTemplateForumPost();
-		assert.strictEqual(message, 'settings.template_clipboard_image_error');
+		assert.match(message, /Clipboard copy was blocked/);
+		document.execCommand = () => true;
+		message = null;
+		scope.copyTemplateForumPost();
+		assert.match(message, /Clipboard copy was blocked/);
 		assert.strictEqual(scope.templates.exportText, 'encoded-template');
+		assert.strictEqual(scope.templates.busy, false);
+		assert.strictEqual(scope.templates.copyStatus, 'retry');
+	});
+
+	it('uses the rich asynchronous clipboard fallback and reports failures', async () => {
+		const document = {
+			getElementById: () => ({ focus() {}, select() {} }),
+			addEventListener() {}, removeEventListener() {},
+			execCommand: () => false
+		};
+		const { scope, window } = loadSettings(null, null, null, false, null, { document, Blob });
+		let resolveWrite;
+		let item;
+		window.ClipboardItem = function (data) { item = data; };
+		window.navigator = { clipboard: { write: () => new Promise(resolve => { resolveWrite = resolve; }) } };
+		scope.templates.exportText = 'encoded-template';
+		scope.templates.imageData = 'data:image/png;base64,cG5n';
+		scope.copyTemplateForumPost(true);
+		assert.strictEqual(scope.templates.busy, true);
+		assert.strictEqual(scope.templates.copyStatus, null);
+		assert.match(await item['text/html'].text(), /<img[^>]+data:image\/png;base64,cG5n/);
+		assert.match(await item['text/plain'].text(), /encoded-template/);
+		resolveWrite();
+		await new Promise(resolve => setImmediate(resolve));
+		assert.strictEqual(scope.templates.copyStatus, 'copied');
+		assert.strictEqual(scope.templates.busy, false);
+		window.navigator.clipboard.write = () => Promise.reject(new Error('Permission denied'));
+		scope.copyTemplateForumPost(true);
+		assert.strictEqual(scope.templates.copyStatus, null);
+		await new Promise(resolve => setImmediate(resolve));
+		assert.strictEqual(scope.templates.copyStatus, 'retry');
 		assert.strictEqual(scope.templates.busy, false);
 	});
 
+	it('keeps exchange translations intact in every settings locale', () => {
+		const directory = path.join(root, '.homeycompose', 'locales');
+		const keys = ['template_paste_image_hint', 'template_prepare_image_error', 'template_clipboard_image_error',
+			'template_editor_switch', 'template_copy_copied', 'template_copy_retry'];
+		for (const file of fs.readdirSync(directory).filter(name => name.endsWith('.settings.json'))) {
+			const locale = JSON.parse(fs.readFileSync(path.join(directory, file), 'utf8'));
+			for (const key of keys) {
+				assert.ok(locale[key], `${file}: missing ${key}`);
+				assert.doesNotMatch(locale[key], /[?\uFFFD]/, `${file}: corrupt ${key}`);
+			}
+		}
+	});
+
 	it('reports image-rendering failures and restores the preview size', async () => {
+		const numberField = { type: 'number', value: '1' };
 		const { scope, homey, window } = loadSettings(null, null, null, false, null, {
-			navigator: { clipboard: { write: items => items[0].data['image/png'].then(() => {}) } },
-			document: { body: {}, getElementById: () => ({ style: { width: '' } }) }, Blob,
+			document: { body: {}, getElementById: () => ({ style: { width: '' }, querySelectorAll: () => [numberField] }) },
 			fetch: async () => ({ ok: true, arrayBuffer: async () => new Uint8Array([1]).buffer }),
 			btoa: value => Buffer.from(value, 'binary').toString('base64')
-		});
-		window.ClipboardItem = class { constructor(data) { this.data = data; } };
+		}, false, null, true);
 		window.setTimeout = (fn, delay) => setTimeout(fn, delay === 20 ? 0 : delay);
 		window.clearTimeout = clearTimeout;
-		window.htmlToImage = { toCanvas: async () => { throw new Error('Render failed'); } };
+		window.htmlToImage = { toCanvas: async () => {
+			assert.strictEqual(numberField.type, 'text');
+			throw new Error('Render failed');
+		} };
 		let resolveAlert;
 		const alert = new Promise(resolve => { resolveAlert = resolve; });
 		homey.alert = resolveAlert;
 		scope.templates.exportText = 'encoded-template';
-		scope.copyTemplateForumPost();
+		scope.prepareTemplateImage();
 		assert.match(await alert, /Render failed/);
 		assert.strictEqual(scope.editor.previewSize, 'normal');
 		assert.strictEqual(scope.templates.busy, false);
+		assert.strictEqual(scope.templates.imageData, null);
+		assert.strictEqual(numberField.type, 'number');
+		assert.strictEqual(numberField.value, '1');
 	});
 
 	it('previews a theme-only export using the default design', () => {
@@ -734,7 +1074,9 @@ describe('Widget style designer preview', () => {
 		const savebar = html.match(/<footer class="settings-savebar"[^>]*>[\s\S]*?<\/footer>/)[0];
 		assert.ok(savebar.indexOf('ng-click="undoEdit()"') < savebar.indexOf('ng-click="saveSettings()"'));
 		assert.ok(savebar.indexOf('ng-click="saveSettings()"') < savebar.indexOf('ng-click="redoEdit()"'));
-		assert.match(css, /\.settings-savebar\s*\{[^}]*grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\)/);
+		assert.match(savebar, /ng-attr-aria-label="\{\{ t\('settings\.style_undo'\) \}\}"><i class="fa-solid fa-rotate-left" aria-hidden="true"><\/i>/);
+		assert.match(savebar, /ng-attr-aria-label="\{\{ t\('settings\.style_redo'\) \}\}"><i class="fa-solid fa-rotate-right" aria-hidden="true"><\/i>/);
+		assert.match(css, /\.settings-savebar\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)\s+minmax\(0,\s*2fr\)\s+minmax\(0,\s*1fr\)/);
 		let confirmed = false;
 		const { scope } = loadSettings(null, (message, type, callback) => callback(null, confirmed));
 		scope.createStyle(true);
