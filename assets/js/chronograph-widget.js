@@ -141,6 +141,7 @@ function onHomeyReady(Homey) {
 				paused: Homey.__('settings.widget_paused'),
 				notRunning: Homey.__('settings.widget_not_running'),
 				duration: Homey.__('settings.widget_duration'),
+				remaining: Homey.__('settings.widget_remaining'),
 				unit: Homey.__('settings.widget_unit'),
 				from: Homey.__('settings.widget_from'),
 				to: Homey.__('settings.widget_to'),
@@ -448,13 +449,13 @@ function onHomeyReady(Homey) {
 					});
 			}
 
-			$scope.formatDuration = function (chronograph) {
+			$scope.formatDuration = function (chronograph, remaining) {
 				var elapsed = chronograph.duration;
 
 				if (chronograph.running) {
 					elapsed += Math.max(0, $scope.clock - chronograph.updatedAt);
 				}
-				var duration = chronograph.type === 'Timer'
+				var duration = chronograph.type === 'Timer' || remaining
 					? Math.max(0, chronograph.targetDuration - elapsed)
 					: elapsed;
 

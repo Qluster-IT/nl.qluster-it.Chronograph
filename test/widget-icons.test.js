@@ -92,11 +92,12 @@ describe('Widget icon autocomplete', () => {
 		assert.deepStrictEqual(png.slice(0, 8), Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
 	});
 
-	it('serves bounded icon searches to the settings designer without preview images', async () => {
+	it('serves the complete icon catalog to the settings designer without preview images', async () => {
 		const api = require('../api.js');
 		const homey = { __: () => 'None' };
 		const results = await api.searchWidgetIcons({ homey, body: { query: '' } });
-		assert.strictEqual(results.length, 60);
+		assert.strictEqual(results.length, searchIcons('', 'None').length);
+		assert.ok(results.length > 2000);
 		assert.strictEqual(results[0].id, 'none');
 		assert.ok(results.every(item => !Object.prototype.hasOwnProperty.call(item, 'image')));
 		const transitions = await api.searchWidgetIcons({ homey, body: { query: 'transitie' } });

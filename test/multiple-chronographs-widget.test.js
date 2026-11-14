@@ -80,6 +80,26 @@ async function loadWidget(settings, states) {
 }
 
 describe('Multiple Chronographs widget', () => {
+	it('formats transition elapsed and remaining durations with live updates and clamping', async () => {
+		const widget = await loadWidget({ chronograph1: { type: 'transition', name: 'A' } }, {
+			'transition:A': { name: 'A', type: 'Transition', active: true, running: false, duration: 1234, targetDuration: 10000 }
+		});
+		const scope = widget.children[0];
+		const transition = { type: 'Transition', duration: 1234, targetDuration: 10000, running: true, updatedAt: 1000 };
+		scope.clock = 3000;
+		assert.strictEqual(scope.formatDuration(transition), '00:00:03');
+		assert.strictEqual(scope.formatDuration(transition, true), '00:00:06');
+		scope.showMilliseconds = true;
+		assert.strictEqual(scope.formatDuration(transition, true), '00:00:06.766');
+		transition.running = false;
+		assert.strictEqual(scope.formatDuration(transition, true), '00:00:08.766');
+		transition.running = true;
+		scope.clock = 20000;
+		assert.strictEqual(scope.formatDuration(transition, true), '00:00:00.000');
+		assert.strictEqual(scope.formatDuration({ type: 'Timer', duration: 1000, targetDuration: 5000 }), '00:00:04.000');
+		assert.strictEqual(scope.formatDuration({ type: 'Stopwatch', duration: 1000 }), '00:00:01.000');
+	});
+
 	it('uses each renamed theme setting and supports existing legacy selections', async () => {
 		const states = { 'timer:A': { name: 'A', active: false } };
 		const selection = { type: 'timer', name: 'A' };

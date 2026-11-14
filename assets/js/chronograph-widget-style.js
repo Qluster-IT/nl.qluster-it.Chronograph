@@ -3,7 +3,7 @@
 	if (typeof module === 'object' && module.exports) module.exports = runtime;
 	root.ChronographWidgetStyle = runtime;
 }(typeof window === 'undefined' ? globalThis : window, function () {
-	var elementIds = ['icon', 'name', 'status', 'duration', 'play', 'pause', 'stop', 'fields', 'cancel', 'start', 'progress'];
+	var elementIds = ['icon', 'name', 'status', 'duration', 'play', 'pause', 'stop', 'fields', 'cancel', 'start', 'progress', 'remaining'];
 	var buttonIds = ['play', 'pause', 'stop', 'cancel', 'start'];
 	var states = ['inactive', 'running', 'paused', 'starting'];
 	var maxRows = 10;
@@ -17,11 +17,11 @@
 		return Number.isInteger(count) && count >= 1 && count <= maxRows ? count : 5;
 	}
 	var defaultElementSizes = {
-		base: { icon: 16, name: 14, status: 12, duration: 14, play: 28, pause: 28, stop: 28, fields: 32, cancel: 28, start: 32, progress: 6 },
+		base: { icon: 16, name: 14, status: 12, duration: 14, remaining: 14, play: 28, pause: 28, stop: 28, fields: 32, cancel: 28, start: 32, progress: 6 },
 		overrides: {
 			compact: {},
-			normal: { duration: 20, play: 32, pause: 32, stop: 32, cancel: 32, progress: 8 },
-			large: { icon: 20, name: 20, status: 14, duration: 32, play: 40, pause: 40, stop: 40, fields: 40, cancel: 32, start: 40, progress: 8 }
+			normal: { duration: 20, remaining: 20, play: 32, pause: 32, stop: 32, cancel: 32, progress: 8 },
+			large: { icon: 20, name: 20, status: 14, duration: 32, remaining: 32, play: 40, pause: 40, stop: 40, fields: 40, cancel: 32, start: 40, progress: 8 }
 		}
 	};
 
@@ -244,7 +244,8 @@
 				stop: position(compact ? 1 : 3, compact ? 3 : 2, 2),
 				fields: position(compact ? 3 : 4, 1, 1),
 				cancel: compact ? position(3, 2, 2) : position(0, 1, 1),
-				progress: position(compact ? 2 : 5, 1, 1)
+				progress: position(compact ? 2 : 5, 1, 1),
+				remaining: position(0, 1, 1)
 			},
 			overrides: compact
 				? { starting: { fields: position(3, 1, 1), start: position(3, 2, 1) } }
@@ -345,7 +346,7 @@
 			design.groups[size] = { elements: {
 				icon: position(1, 1, 1), name: position(1, 1, 2),
 				status: position(2, 1, 1), duration: position(tiny ? 3 : 2, 1, tiny ? 1 : 2),
-				progress: position(5, 1, 1), fields: position(3, 1, 1),
+				progress: position(5, 1, 1), remaining: position(0, 1, 1), fields: position(3, 1, 1),
 				play: position(4, 1, 1), pause: position(4, 1, 1), stop: position(4, 1, 2),
 				start: size === 'compact' ? position(0, 1, 1) : position(4, 1, 1),
 				cancel: size === 'compact' ? position(4, 1, 2) : position(0, 1, 1)
@@ -643,6 +644,7 @@
 		if (element === 'icon') return iconVisible !== false;
 		if (element === 'progress') return type !== 'stopwatch';
 		if (element === 'duration') return state === 'running' || state === 'paused';
+		if (element === 'remaining') return type === 'transition' && (state === 'running' || state === 'paused');
 		if (element === 'fields') return type !== 'stopwatch' && showForm;
 		if (element === 'cancel') return state === 'starting' && showForm;
 		if (element === 'start') return state === 'starting' || (state === 'inactive' && type === 'stopwatch');
@@ -688,7 +690,7 @@
 				}).sort(function (left, right) {
 					return positions[left].order - positions[right].order || elementIds.indexOf(left) - elementIds.indexOf(right);
 				});
-				var placeholders = ['icon', 'duration', 'progress'].filter(function (id) {
+				var placeholders = ['icon', 'duration', 'remaining', 'progress'].filter(function (id) {
 					var position = positions[id];
 					return reserveElement(style, size, id) && position && position.row === rowId && position.group === groupId
 						&& elements.indexOf(id) === -1;

@@ -60,6 +60,7 @@
 	"widget_paused": "In pausa",
 	"widget_not_running": "Non in esecuzione",
 	"widget_duration": "Durata",
+	"widget_remaining": "Tempo rimanente",
 	"widget_unit": "Unità di durata",
 	"widget_from": "Da",
 	"widget_to": "A",

@@ -60,6 +60,7 @@
 	"widget_paused": "Sat på pause",
 	"widget_not_running": "Kører ikke",
 	"widget_duration": "Varighed",
+	"widget_remaining": "Resterende tid",
 	"widget_unit": "Varighedsenhed",
 	"widget_from": "Fra",
 	"widget_to": "Til",

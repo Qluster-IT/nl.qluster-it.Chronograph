@@ -81,9 +81,9 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		};
 		$scope.rowCountOptions = Array.from({ length: window.ChronographWidgetStyle.maxRows }, function (unused, index) { return index + 1; });
 		$scope.iconPickers = {
-			timer: { query: '', results: [], open: false, busy: false, request: 0 },
-			stopwatch: { query: '', results: [], open: false, busy: false, request: 0 },
-			transition: { query: '', results: [], open: false, busy: false, request: 0 }
+			timer: { query: '', results: [], visibleCount: 60, open: false, busy: false, request: 0 },
+			stopwatch: { query: '', results: [], visibleCount: 60, open: false, busy: false, request: 0 },
+			transition: { query: '', results: [], visibleCount: 60, open: false, busy: false, request: 0 }
 		};
 		$scope.previewTiles = [{ type: 'timer' }, { type: 'stopwatch' }, { type: 'transition' }];
 		$scope.visiblePreviewTiles = function () {
@@ -103,7 +103,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				? 'currentColor' : window.ChronographWidgetStyle.valueColor($scope.editor.previewSeparatorColor);
 		};
 		$scope.layoutGroups = [1, 2, 3, 4];
-		$scope.layoutOrders = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+		$scope.layoutOrders = Array.from({ length: widgetStyleEditor.elementIds.length }, function (unused, index) { return index + 1; });
 		$scope.styleElements = widgetStyleEditor.elementIds;
 		$scope.stylesAvailable = false;
 		$scope.decimalsAvailable = false;
@@ -175,8 +175,16 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 					.every(function (item) { return Object.prototype.hasOwnProperty.call(builtInSchemes, item.id); });
 		}
 
+		function addRemainingPosition(style) {
+			if (!style || !style.groups) return;
+			['compact', 'normal', 'large'].forEach(function (size) {
+				if (!style.groups[size].elements.remaining) style.groups[size].elements.remaining = { row: 0, group: 1, order: 1 };
+			});
+		}
+
 		function normalizeDesignSpans(style) {
 			if (!style || !style.groups) return;
+			addRemainingPosition(style);
 			['compact', 'normal', 'large'].forEach(function (size) {
 				widgetStyleEditor.normalizeColumnSpans(style, size);
 			});
@@ -587,7 +595,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			var style = $scope.getSelectedStyle();
 			var size = $scope.editor.previewSize;
 			var element = $scope.editor.selectedElement;
-			if (!style || ['icon', 'duration', 'progress'].indexOf(element) === -1) return false;
+			if (!style || ['icon', 'duration', 'remaining', 'progress'].indexOf(element) === -1) return false;
 			if (arguments.length && typeof value === 'boolean' && !$scope.savingSettings && !$scope.isDesignReadOnly()) {
 				if (!style.reservedElements) style.reservedElements = {};
 				if (!style.reservedElements[size]) style.reservedElements[size] = {};
@@ -1354,6 +1362,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 					}
 					template.review = angular.copy(value);
 					if (template.review.design) {
+						addRemainingPosition(template.review.design);
 						template.review.design.id = 'template-preview';
 						template.designName = uniqueStyleName(template.review.design.name, $scope.widgetStyles.styles);
 					}
@@ -1882,7 +1891,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 							return visible && layout[id].row === row && layout[id].group === group
 								&& (!preview || (!(scenario && scenario.excludeFields && id === 'fields') && $scope.previewVisible(id, state, type)));
 						}).sort(function (a, b) { return layout[a].order - layout[b].order || $scope.styleElements.indexOf(a) - $scope.styleElements.indexOf(b); });
-						var placeholders = preview ? ['icon', 'duration', 'progress'].filter(function (id) {
+						var placeholders = preview ? ['icon', 'duration', 'remaining', 'progress'].filter(function (id) {
 							return layout[id].row === row && layout[id].group === group && elements.indexOf(id) === -1
 								&& sizeRuntime.reserveElement(style, $scope.editor.previewSize, id);
 						}) : [];
@@ -1979,6 +1988,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			var state = $scope.previewTileState(previewState ? { state: previewState } : null, type);
 			if (element === 'icon') return !!$scope.previewIcon(type);
 			if (element === 'progress') return type !== 'stopwatch';
+			if (element === 'remaining') return type === 'transition' && (state === 'running' || state === 'paused');
 			if (element === 'cancel') return state === 'starting';
 			if (element === 'fields') return (state === 'starting'
 				|| (state === 'inactive' && ($scope.hasFieldsRowRule(state) || $scope.showStartFieldsWhenInactive())))
@@ -2329,6 +2339,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 					if (request !== picker.request || !picker.open) return;
 					picker.busy = false;
 					if (error) { picker.results = []; showError(error); return; }
+					picker.visibleCount = 60;
 					picker.results = results;
 				});
 			});
@@ -2596,6 +2607,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				name: Homey.__('settings.style_name'),
 				status: Homey.__('settings.style_status'),
 				duration: Homey.__('settings.widget_duration'),
+				remaining: Homey.__('settings.widget_remaining'),
 				play: Homey.__('settings.style_play'),
 				start: Homey.__('settings.widget_start'),
 				pause: Homey.__('settings.pause'),
@@ -2768,6 +2780,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 						delete $scope.widgetStyles.colorSchemes;
 						$scope.widgetStyles.version = 3;
 					}
+					$scope.widgetStyles.styles.forEach(addRemainingPosition);
 					savedStyles = angular.copy($scope.widgetStyles);
 					$scope.widgetStyles.styles.forEach(normalizeDesignSpans);
 					if (!angular.equals($scope.widgetStyles, savedStyles)) migrationPending = true;
@@ -2793,6 +2806,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 							}
 							value.styles.forEach(function (item) {
 								var design = angular.copy(item);
+								addRemainingPosition(design);
 								if (design.reservedElements === undefined && builtInDesigns[item.id].reservedElements) {
 									design.reservedElements = angular.copy(builtInDesigns[item.id].reservedElements);
 								}
@@ -2827,7 +2841,47 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 
 		if (pendingHomey) $scope.initialize(pendingHomey);
 	}
-]).directive('styleImportFile', function () {
+]).directive('stickyBorder', function () {
+	return {
+		restrict: 'A',
+		link: function (scope, element) {
+			var sticky = element[0];
+			var scrollContainer = sticky.closest('.settings-content');
+			function update() {
+				var containerStyle = window.getComputedStyle(scrollContainer);
+				var offset = parseFloat(containerStyle.borderTopWidth) + parseFloat(containerStyle.paddingTop)
+					+ parseFloat(window.getComputedStyle(sticky).top);
+				sticky.classList.toggle('is-stuck', scrollContainer.clientHeight > 0
+					&& sticky.getBoundingClientRect().top <= scrollContainer.getBoundingClientRect().top + offset + 0.5);
+			}
+			scrollContainer.addEventListener('scroll', update);
+			window.addEventListener('resize', update);
+			scope.$watch('activeTab', function () { scope.$evalAsync(update); });
+			update();
+			scope.$on('$destroy', function () {
+				scrollContainer.removeEventListener('scroll', update);
+				window.removeEventListener('resize', update);
+			});
+		}
+	};
+}).directive('iconResultsScroll', function () {
+	return {
+		restrict: 'A',
+		link: function (scope, element) {
+			function scroll() {
+				var list = element[0];
+				if (list.scrollTop + list.clientHeight < list.scrollHeight - 40) return;
+				scope.$applyAsync(function () {
+					var picker = scope.iconPickers[scope.type];
+					picker.visibleCount = Math.min(picker.visibleCount + 60, picker.results.length);
+				});
+			}
+			scope.$watch(function () { return scope.iconPickers[scope.type].results; }, function () { element[0].scrollTop = 0; });
+			element.on('scroll', scroll);
+			scope.$on('$destroy', function () { element.off('scroll', scroll); });
+		}
+	};
+}).directive('styleImportFile', function () {
 	return {
 		restrict: 'A',
 		link: function (scope, element) {

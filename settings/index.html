@@ -246,7 +246,7 @@
 							</label>
 						</div>
 					</div>
-					<div class="style-size-sticky">
+					<div class="style-size-sticky" sticky-border>
 						<label class="hy-nostyle" for="preview-size">{{ t('settings.style_size') }}</label>
 						<select id="preview-size" class="form-select" ng-model="editor.previewSize"
 							ng-disabled="editor.rowPaddingForm.$invalid || editor.elementSizeForm.$invalid"
@@ -434,7 +434,7 @@
 								ng-model="overrideElementSize" ng-model-options="{ getterSetter: true, allowInvalid: true }" ng-disabled="savingSettings">
 							<p class="help-text style-progress-full-row">{{ t('settings.style_size_default').replace('__size__', defaultElementSize()) }}</p>
 							<p class="help-text style-progress-full-row">{{ t('settings.style_size_hint') }}</p>
-							<label class="hy-nostyle style-progress-full-row" ng-if="editor.selectedElement === 'icon' || editor.selectedElement === 'duration' || editor.selectedElement === 'progress'">
+							<label class="hy-nostyle style-progress-full-row" ng-if="editor.selectedElement === 'icon' || editor.selectedElement === 'duration' || editor.selectedElement === 'remaining' || editor.selectedElement === 'progress'">
 								<input class="hy-nostyle" type="checkbox" ng-model="reserveElementSpace" ng-model-options="{ getterSetter: true }"
 									ng-disabled="savingSettings || isDesignReadOnly()"> {{ t('settings.style_reserve_hidden_space') }}
 							</label>
@@ -461,11 +461,13 @@
 									<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="setDefaultIcon(type, null)">{{ t('settings.style_current') }}</button>
 									<p class="help-text" ng-if="iconPickers[type].busy">{{ t('settings.style_icon_loading') }}</p>
 									<p class="help-text" ng-if="!iconPickers[type].busy && !iconPickers[type].results.length">{{ t('settings.style_icon_empty') }}</p>
-									<button class="hy-nostyle style-icon-option" type="button" ng-repeat="icon in iconPickers[type].results track by icon.id"
-										ng-click="setDefaultIcon(type, icon.id)" ng-disabled="iconPickers[type].busy">
-										<i ng-if="icon.id !== 'none'" ng-class="[iconStyle(icon.id), iconClass(icon.id)]" aria-hidden="true"></i>
-										<span>{{ icon.name }}</span><small ng-if="icon.description">{{ icon.description }}</small>
-									</button>
+									<div class="style-icon-list" icon-results-scroll>
+										<button class="hy-nostyle style-icon-option" type="button" ng-repeat="icon in iconPickers[type].results | limitTo:iconPickers[type].visibleCount track by icon.id"
+											ng-click="setDefaultIcon(type, icon.id)" ng-disabled="iconPickers[type].busy">
+											<i ng-if="icon.id !== 'none'" ng-class="[iconStyle(icon.id), iconClass(icon.id)]" aria-hidden="true"></i>
+											<span>{{ icon.name }}</span><small ng-if="icon.description">{{ icon.description }}</small>
+										</button>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -523,6 +525,7 @@
 									<strong ng-if="element === 'name'">{{ t('settings.widget_chronograph') }}</strong>
 									<span ng-if="element === 'status'">{{ editor.previewState === 'running' ? labels.running : (editor.previewState === 'paused' ? labels.paused : t('settings.widget_not_running')) }}</span>
 									<span ng-if="element === 'duration'">12:34.56</span>
+									<span ng-if="element === 'remaining'">07:25.44</span>
 									<i ng-if="element === 'play'" class="fa-solid fa-play" aria-hidden="true"></i>
 									<i ng-if="element === 'pause'" class="fa-solid fa-pause" aria-hidden="true"></i>
 									<i ng-if="element === 'stop'" class="fa-solid fa-stop" aria-hidden="true"></i>
@@ -793,6 +796,7 @@
 						<strong ng-if="element === 'name'">{{ previewTile ? t('settings.' + (previewTile.type === 'stopwatch' ? 'stopwatches' : (previewTile.type === 'timer' ? 'timers' : 'transitions'))) : t('settings.widget_chronograph') }}</strong>
 						<span ng-if="element === 'status'">{{ previewTileState(previewScenario, previewTile.type) === 'running' ? labels.running : (previewTileState(previewScenario, previewTile.type) === 'paused' ? labels.paused : t('settings.widget_not_running')) }}</span>
 						<span ng-if="element === 'duration'">12:34.56</span>
+						<span ng-if="element === 'remaining'">07:25.44</span>
 						<span ng-if="element === 'progress'" class="style-progress" ng-attr-data-direction="{{ progressDirection() }}"
 							ng-attr-data-foreground="{{ progressBackground() }}" role="progressbar"
 							ng-attr-aria-label="{{ t('settings.style_progress') }}" aria-valuemin="0" aria-valuemax="100"
@@ -836,6 +840,7 @@
 					<strong ng-if="element === 'name'">{{ (previewTile ? previewTile.type : editor.previewType) === 'stopwatch' ? t('settings.stopwatches') : ((previewTile ? previewTile.type : editor.previewType) === 'timer' ? t('settings.timers') : t('settings.transitions')) }}</strong>
 					<span ng-if="element === 'status'">{{ previewTileState(previewScenario, previewTile.type) === 'running' ? labels.running : (previewTileState(previewScenario, previewTile.type) === 'paused' ? labels.paused : t('settings.widget_not_running')) }}</span>
 					<span ng-if="element === 'duration'">12:34.56</span>
+					<span ng-if="element === 'remaining'">07:25.44</span>
 					<button ng-if="element === 'play' || element === 'pause' || element === 'stop'" class="hy-nostyle style-showcase-action" type="button"
 						ng-style="previewButtonStyle(element, previewTileState(previewScenario, previewTile.type))"
 						ng-class="{ 'style-widget-button-text': buttonText(element) }"

@@ -60,6 +60,7 @@
 	"widget_paused": "متوقف مؤقتًا",
 	"widget_not_running": "غير قيد التشغيل",
 	"widget_duration": "المدة",
+	"widget_remaining": "الوقت المتبقي",
 	"widget_unit": "وحدة المدة",
 	"widget_from": "من",
 	"widget_to": "إلى",

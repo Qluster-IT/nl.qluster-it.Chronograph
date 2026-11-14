@@ -29,6 +29,9 @@
 				<p ng-switch-when="duration" class="chronograph-duration" aria-live="polite">
 					{{ group.placeholders.indexOf(element) !== -1 ? '00:00' : formatDuration(selectedChronograph) }}
 				</p>
+				<p ng-switch-when="remaining" class="chronograph-duration" aria-live="polite">
+					<span class="visually-hidden">{{ labels.remaining }}: </span>{{ group.placeholders.indexOf(element) !== -1 ? '00:00' : formatDuration(selectedChronograph, true) }}
+				</p>
 				<div ng-switch-when="fields" class="chronograph-fields chronograph-design-fields"
 					ng-style="{ 'grid-template-columns': 'repeat(' + designFieldLayout().columns + ', minmax(0, 1fr))' }">
 					<div class="chronograph-duration-fields" ng-if="!isStopwatch">

@@ -21,6 +21,21 @@ describe('Widget template transfer', () => {
 		})));
 	});
 
+	it('round trips remaining-time positions, sizes, reservations and theme colors', async () => {
+		const design = widgetStyles.currentDesign();
+		design.groups.normal.elements.remaining = { row: 2, group: 1, order: 2 };
+		design.groups.normal.overrides.paused = { remaining: { row: 3, group: 1, order: 1 } };
+		design.elementSizes.overrides.normal.remaining = 24;
+		design.reservedElements.normal.remaining = true;
+		const theme = widgetStyles.currentScheme();
+		theme.foregroundColors = { remaining: 'red' };
+		const decoded = await decodeTemplate(await encodeTemplate({ design, theme }));
+		const expected = JSON.parse(JSON.stringify({ design, theme }));
+		delete expected.design.id;
+		delete expected.theme.id;
+		assert.deepStrictEqual(JSON.parse(JSON.stringify(decoded)), expected);
+	});
+
 	it('supports either item and rejects mismatched or unsupported payloads', async () => {
 		const text = await encodeTemplate({ theme: { id: 'x', name: 'Theme', colors: {} } });
 		assert.match(text, /^\[twf:Chronograph:THEME:/);

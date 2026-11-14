@@ -72,6 +72,9 @@
 						fetch('/__preview' + url, {
 							method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
 						}).then(function (response) {
+							if (url === '/widget-icons/search' && response.status === 405) {
+								throw new Error('The local preview server needs to be restarted for icon search. Restart it and reload the page.');
+							}
 							return response.json().then(function (value) {
 								if (!response.ok) throw new Error(value.error);
 								return value;

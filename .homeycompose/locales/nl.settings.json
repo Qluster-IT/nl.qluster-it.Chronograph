@@ -60,6 +60,7 @@
 	"widget_paused": "Gepauzeerd",
 	"widget_not_running": "Niet actief",
 	"widget_duration": "Duur",
+	"widget_remaining": "Resterende tijd",
 	"widget_unit": "Tijdseenheid",
 	"widget_from": "Van",
 	"widget_to": "Naar",

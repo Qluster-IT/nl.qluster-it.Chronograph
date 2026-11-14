@@ -60,6 +60,7 @@
 	"widget_paused": "Pausad",
 	"widget_not_running": "Kör inte",
 	"widget_duration": "Varaktighet",
+	"widget_remaining": "Återstående tid",
 	"widget_unit": "Varaktighetsenhet",
 	"widget_from": "Från",
 	"widget_to": "Till",

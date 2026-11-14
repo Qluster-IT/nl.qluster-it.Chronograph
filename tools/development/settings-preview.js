@@ -45,8 +45,7 @@ const server = http.createServer((request, response) => {
 				else if (request.url.endsWith('/decode')) result = await widgetTemplate.decodeTemplate(value.text);
 				else {
 					if (!value || typeof value.query !== 'string' || value.query.length > 100) throw new Error('Invalid icon search');
-					result = widgetIcons.searchIcons(value.query, 'None', 60)
-						.map(({ id, name, description }) => ({ id, name, description }));
+					result = widgetIcons.searchIcons(value.query, 'None', { includeImages: false });
 				}
 				response.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }).end(JSON.stringify(result));
 			} catch (error) {

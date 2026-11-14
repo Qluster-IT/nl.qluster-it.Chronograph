@@ -2,7 +2,7 @@
 
 angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 	var elementIds = ['icon', 'name', 'status', 'duration', 'play', 'pause', 'stop', 'fields'];
-	var groupedElementIds = elementIds.concat(['cancel', 'start', 'progress']);
+	var groupedElementIds = elementIds.concat(['cancel', 'start', 'progress', 'remaining']);
 	var sizes = ['compact', 'normal', 'large'];
 	var colorIds = ['default', 'blue', 'red', 'orange', 'yellow', 'green', 'purple', 'teal', 'cyan', 'indigo', 'pink', 'brown', 'grey'];
 	var foregroundIds = colorIds.concat(['black', 'white']);
@@ -40,6 +40,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			var base = positions(style.layouts[size]);
 			base.cancel = position(4, 4, 2);
 			base.progress = position(0, 1, 1);
+			base.remaining = position(0, 1, 1);
 			var overrides = {};
 			layoutStates.forEach(function (state) {
 				var resolved = positions(resolveLayout(style, size, state));
@@ -621,7 +622,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 		function validElements(value, complete) {
 			return value && typeof value === 'object' && !Array.isArray(value)
 				&& Object.keys(value).every(function (id) { return groupedElementIds.indexOf(id) !== -1 && validPosition(value[id]); })
-				&& (!complete || groupedElementIds.every(function (id) { return id === 'start' || id === 'progress' || validPosition(value[id]); }));
+				&& (!complete || groupedElementIds.every(function (id) { return id === 'start' || id === 'progress' || id === 'remaining' || validPosition(value[id]); }));
 		}
 		return sizes.every(function (size) {
 			var layout = groups[size];
@@ -982,7 +983,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 				var elements = value[size];
 				return sizes.indexOf(size) !== -1 && elements && typeof elements === 'object' && !Array.isArray(elements)
 					&& Object.keys(elements).every(function (element) {
-						return ['icon', 'duration', 'progress'].indexOf(element) !== -1 && typeof elements[element] === 'boolean';
+						return ['icon', 'duration', 'remaining', 'progress'].indexOf(element) !== -1 && typeof elements[element] === 'boolean';
 					});
 			}));
 	}
@@ -999,7 +1000,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 		return value && typeof value === 'object' && !Array.isArray(value)
 			&& Object.keys(value).every(function (key) { return key === 'base' || key === 'overrides'; })
 			&& (value.base === undefined || (validMap(value.base) && groupedElementIds.every(function (key) {
-				return Object.prototype.hasOwnProperty.call(value.base, key);
+				return key === 'remaining' || Object.prototype.hasOwnProperty.call(value.base, key);
 			}))) && value.overrides && typeof value.overrides === 'object'
 			&& !Array.isArray(value.overrides)
 			&& Object.keys(value.overrides).every(function (size) {

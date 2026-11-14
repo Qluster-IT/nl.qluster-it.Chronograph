@@ -61,7 +61,7 @@ and line color as well.
 Button text can be customized per design size. Default text is translated;
 the default appears as a placeholder in the designer. Custom text is shared
 across languages, and empty custom text shows only the icon.
-Icon, duration and status bar elements can reserve space when hidden, separately
+Icon, duration, remaining time and status bar elements can reserve space when hidden, separately
 for each design size. Built-in designs reserve icon space by default. Icons are
 centered in a square using the configured icon size.
 Designs can store separate default icons for timers, stopwatches and transitions;
@@ -115,6 +115,7 @@ Application image by [Agê Barros](https://unsplash.com/@agebarros?utm_source=un
 
 ### Unreleased
 
+* Add an optional remaining-time element for transitions to widget designs.
 * Share saved custom widget designs and themes as compact templates, with a visual import review.
 * Copy a template forum post with three size-and-state preview grids for timers, stopwatches and transitions.
 * Renamed widget color scheme settings to themes; existing dashboard settings require migration.

@@ -4,6 +4,29 @@ const assert = require('assert');
 const widgetStyle = require('../assets/js/chronograph-widget-style.js');
 
 describe('Widget style runtime', () => {
+	it('shows optional remaining time only for active transitions and reserves it when requested', () => {
+		for (const preset of ['builtin:current', ...widgetStyle.builtInDesignDefinitions.map(item => item.id)]) {
+			const design = widgetStyle.builtInDesign(preset);
+			for (const size of ['compact', 'normal', 'large']) {
+				assert.strictEqual(design.groups[size].elements.remaining.row, 0);
+			}
+		}
+		const design = widgetStyle.currentDesign();
+		design.groups.normal.elements.remaining = { row: 1, group: 1, order: 2 };
+		const group = (state, type) => widgetStyle.buildRows(design, 'normal', state, type, false)
+			.find(row => row.id === 1).groups[0];
+		for (const state of ['running', 'paused']) {
+			assert.ok(group(state, 'transition').elements.includes('remaining'));
+			for (const type of ['timer', 'stopwatch']) assert.ok(!group(state, type).elements.includes('remaining'));
+		}
+		for (const state of ['inactive', 'starting']) assert.ok(!group(state, 'transition').elements.includes('remaining'));
+		design.reservedElements.normal.remaining = true;
+		assert.ok(group('inactive', 'transition').placeholders.includes('remaining'));
+		assert.ok(group('running', 'timer').placeholders.includes('remaining'));
+		delete design.groups.normal.elements.remaining;
+		assert.doesNotThrow(() => widgetStyle.buildRows(design, 'normal', 'running', 'transition', false));
+	});
+
 	it('renders Settings buttons as outlined squares and preserves inherited defaults', () => {
 		const design = widgetStyle.builtInDesign('builtin:settings');
 		const scheme = widgetStyle.builtInScheme('builtin:settings');

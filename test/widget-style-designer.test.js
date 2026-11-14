@@ -16,9 +16,10 @@ const css = fs.readFileSync(path.join(root, 'settings', 'assets', 'styles.css'),
 function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns, extras, noSelection, helpPreference, renderExport, previewsPreference) {
 	let editor;
 	let controller;
+	const directives = {};
 	const module = {
 		factory(name, factory) { if (name === 'widgetStyleEditor') editor = factory(); return this; },
-		directive() { return this; },
+		directive(name, factory) { directives[name] = factory; return this; },
 		controller(name, definition) { controller = definition[definition.length - 1]; return this; }
 	};
 	const angular = {
@@ -79,10 +80,81 @@ function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns, extr
 	scope.initialize(homey);
 	if (!renderExport) scope.prepareTemplateImage = () => {};
 	if (!noSelection) scope.selectVisibilityRow(1);
-	return { scope, writes, timers, editor, homey, listeners, window: context.window };
+	return { scope, writes, timers, editor, homey, listeners, directives, window: context.window };
 }
 
 describe('Widget style designer preview', () => {
+	it('edits and saves transition remaining time independently of duration', () => {
+		const { scope, writes, editor } = loadSettings();
+		scope.createStyle(true);
+		assert.ok(scope.unusedElements().includes('remaining'));
+		scope.moveGroupedElement('remaining', 2, 1);
+		scope.editor.previewType = 'transition';
+		scope.editor.previewState = 'running';
+		assert.ok(scope.groupedRows(true).some(row => row.groups.some(group => group.elements.includes('remaining'))));
+		scope.editor.previewType = 'timer';
+		assert.ok(!scope.groupedRows(true).some(row => row.groups.some(group => group.elements.includes('remaining'))));
+		scope.editor.previewType = 'transition';
+		scope.editor.previewState = 'paused';
+		assert.strictEqual(scope.previewVisible('remaining'), true);
+		scope.editor.editStatus = true;
+		scope.moveGroupedElement('remaining', 3, 1);
+		assert.ok(scope.groupedRows(true).find(row => row.id === 3).groups[0].elements.includes('remaining'));
+		assert.strictEqual(scope.getSelectedStyle().groups.normal.elements.remaining.row, 2);
+		scope.editor.editStatus = false;
+		scope.editor.previewState = 'inactive';
+		assert.strictEqual(scope.previewVisible('remaining'), false);
+		scope.selectLayoutElement('remaining');
+		scope.overrideElementSize(25);
+		scope.reserveElementSpace(true);
+		assert.ok(scope.groupedRows(true).some(row => row.groups.some(group => group.placeholders.includes('remaining'))));
+		assert.strictEqual(scope.elementSize('duration'), 20);
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
+		scope.saveSettings();
+		const reloaded = loadSettings(writes[0].value).scope;
+		reloaded.editor.selectedStyleId = 'custom:' + writes[0].value.styles[0].id;
+		assert.strictEqual(reloaded.getSelectedStyle().groups.normal.elements.remaining.row, 2);
+		assert.strictEqual(reloaded.getSelectedStyle().groups.normal.overrides.paused.remaining.row, 3);
+		assert.strictEqual(reloaded.elementSize('remaining'), 25);
+		assert.strictEqual(reloaded.getSelectedStyle().reservedElements.normal.remaining, true);
+		reloaded.selectEditorMode('color');
+		reloaded.createStyle(true);
+		reloaded.selectLayoutElement('remaining');
+		reloaded.editor.previewState = 'inactive';
+		reloaded.editor.foregroundValues.remaining = 'red';
+		reloaded.updateForeground('remaining');
+		assert.strictEqual(reloaded.getSelectedScheme().foregroundColors.remaining, 'red');
+		assert.strictEqual(editor.isValidCollection(reloaded.widgetStyles), true);
+	});
+
+	it('opens older designs and local preview snapshots without making them dirty', () => {
+		const initial = loadSettings();
+		initial.scope.createStyle(true);
+		initial.scope.saveSettings();
+		const old = JSON.parse(JSON.stringify(initial.writes[0].value));
+		for (const size of ['compact', 'normal', 'large']) delete old.styles[0].groups[size].elements.remaining;
+		old.styles[0].elementSizes = {
+			base: { icon: 16, name: 14, status: 12, duration: 14, play: 28, pause: 28, stop: 28, fields: 32, cancel: 28, start: 32, progress: 6 },
+			overrides: { compact: {}, normal: {}, large: {} }
+		};
+		const reopened = loadSettings(old);
+		assert.strictEqual(reopened.editor.isValidCollection(old), true);
+		assert.strictEqual(reopened.scope.isDirty(), false);
+		reopened.scope.editor.selectedStyleId = 'custom:' + old.styles[0].id;
+		assert.ok(reopened.scope.unusedElements().includes('remaining'));
+
+		const preview = loadSettings(null, null, null, true);
+		preview.scope.getSelectedStyle().name = 'Edited';
+		preview.scope.saveSettings();
+		const snapshot = JSON.parse(JSON.stringify(preview.writes[0].value));
+		for (const style of snapshot.styles) {
+			for (const size of ['compact', 'normal', 'large']) delete style.groups[size].elements.remaining;
+		}
+		const restored = loadSettings(null, null, null, true, snapshot).scope;
+		assert.strictEqual(restored.isDirty(), false);
+		assert.ok(restored.unusedElements().includes('remaining'));
+	});
+
 	it('uses the widget default icons in previews and chronograph lists', () => {
 		const { scope } = loadSettings();
 		for (const [type, icon] of [['stopwatch', 'fa-stopwatch'], ['timer', 'fa-hourglass-half'], ['transition', 'fa-chronograph-transition']]) {
@@ -144,6 +216,37 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(scope.iconPickers.timer.results[0].id, 'fas:clock');
 		scope.setDefaultIcon('timer', 'none');
 		assert.strictEqual(scope.getSelectedStyle().defaultIcons, undefined);
+	});
+
+	it('loads further icon options as the list is scrolled and resets for a new search', () => {
+		const { directives } = loadSettings();
+		const handlers = {};
+		const list = { scrollTop: 0, clientHeight: 200, scrollHeight: 2000 };
+		let watch, destroy;
+		const picker = { visibleCount: 60, results: Array.from({ length: 135 }) };
+		const scope = {
+			type: 'timer', iconPickers: { timer: picker },
+			$applyAsync: callback => callback(),
+			$watch: (getter, callback) => { watch = callback; },
+			$on: (name, callback) => { destroy = callback; }
+		};
+		const element = {
+			0: list,
+			on: (name, callback) => { handlers[name] = callback; },
+			off: name => { delete handlers[name]; }
+		};
+		directives.iconResultsScroll().link(scope, element);
+		handlers.scroll();
+		assert.strictEqual(picker.visibleCount, 60);
+		list.scrollTop = 1800;
+		handlers.scroll();
+		assert.strictEqual(picker.visibleCount, 120);
+		handlers.scroll();
+		assert.strictEqual(picker.visibleCount, 135);
+		watch();
+		assert.strictEqual(list.scrollTop, 0);
+		destroy();
+		assert.strictEqual(handlers.scroll, undefined);
 	});
 
 	it('excludes designer-only default icons from template exports', () => {
@@ -654,6 +757,20 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(scope.groupedRows(true).find(row => row.id === 2).groups[0].elements.includes('duration'), true);
 	});
 
+	it('reviews older templates with remaining time in the unused row', () => {
+		const { scope, homey, editor } = loadSettings();
+		const design = JSON.parse(JSON.stringify(editor.designFromStyle(scope.getSelectedStyle())));
+		for (const size of ['compact', 'normal', 'large']) delete design.groups[size].elements.remaining;
+		delete design.id;
+		homey.api = (method, url, data, callback) => callback(null, { design });
+		scope.openTemplates();
+		scope.selectTemplateSection('import');
+		scope.templates.importText = 'old-template';
+		scope.readWidgetTemplate();
+		assert.strictEqual(scope.templates.review.design.groups.normal.elements.remaining.row, 0);
+		assert.doesNotThrow(() => scope.groupedRows(true));
+	});
+
 	it('reviews and selectively saves a shared template without changing existing selections', () => {
 		const { scope, homey, writes } = loadSettings();
 		scope.createStyle(true);
@@ -1031,6 +1148,8 @@ describe('Widget style designer preview', () => {
 		assert.ok(options !== -1 && options < tiles && tiles < size && size < preview);
 		assert.match(html.slice(size, preview), /id="preview-size"[^>]*ng-model="editor\.previewSize"/);
 		assert.match(css, /\.style-size-sticky\s*\{[^}]*position:\s*sticky;[^}]*top:\s*-18px;/);
+		assert.match(html.slice(size, preview), /sticky-border/);
+		assert.match(css, /\.style-size-sticky\.is-stuck::after\s*\{[^}]*border-bottom:/);
 	});
 
 	it('exports and imports individual designs and schemes as new, unsaved copies', () => {
@@ -1060,10 +1179,12 @@ describe('Widget style designer preview', () => {
 		scope.exportStyle();
 		assert.strictEqual(downloads.length, 0);
 		scope.createStyle(true);
+		scope.moveGroupedElement('remaining', 2, 1);
 		scope.exportStyle();
 		assert.strictEqual(downloads[0], 'chronograph-design-settings.style_current - settings.style_copy.json');
 		assert.strictEqual(exported.type, 'design');
 		assert.strictEqual(exported.item.colors, undefined);
+		assert.strictEqual(exported.item.groups.normal.elements.remaining.row, 2);
 		const first = JSON.stringify(exported.item);
 		scope.importStyleFile({ text: JSON.stringify(exported) });
 		assert.strictEqual(scope.widgetStyles.styles.length, 1);
