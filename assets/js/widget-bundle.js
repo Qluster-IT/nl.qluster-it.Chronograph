@@ -361,6 +361,10 @@ c){var e=a|0,f=c;void 0===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0=
 	var states = ['inactive', 'running', 'paused', 'starting'];
 	var maxRows = 10;
 
+	function defaultIcon(type) {
+		return { stopwatch: 'stopwatch', timer: 'hourglass-half', transition: 'chronograph-transition' }[type];
+	}
+
 	function rowCount(style, size) {
 		var count = style && style.rowCounts && style.rowCounts[size];
 		return Number.isInteger(count) && count >= 1 && count <= maxRows ? count : 5;
@@ -666,6 +670,7 @@ c){var e=a|0,f=c;void 0===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0=
 		var style = {
 			groups: currentGroups(),
 			rowVisibility: currentRowVisibility(),
+			reservedElements: { compact: { icon: true }, normal: { icon: true }, large: { icon: true } },
 			startFieldsVisibility: { compact: 'play', normal: 'inactive', large: 'inactive' }
 		};
 		configureCurrentColumns(style);
@@ -714,7 +719,7 @@ c){var e=a|0,f=c;void 0===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0=
 				5: { states: ['running', 'paused'], actions: {}, startForm: false }
 			};
 			design.inputFieldRows[size] = { timer: 2, transition: 5 };
-			design.reservedElements[size] = { duration: true };
+			design.reservedElements[size] = { duration: true, icon: true };
 			design.elementSizes.overrides[size] = {
 				icon: 16, name: size === 'large' ? 16 : 14, status: 12,
 				duration: size === 'large' ? 18 : size === 'normal' ? 16 : 14,
@@ -832,7 +837,7 @@ c){var e=a|0,f=c;void 0===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0=
 				design.columnVerticalAlignments[size][3] = ['middle', size === 'compact' ? 'top' : 'bottom'];
 				design.columnVerticalAlignments[size][4] = ['middle', size === 'compact' ? 'top' : 'bottom'];
 				design.columnRowSpans[size] = { 1: [4, 1] };
-				design.reservedElements[size] = { progress: true };
+				design.reservedElements[size] = { progress: true, icon: true };
 				design.progressSettings[size].direction = 'bottom-top';
 			});
 		}
@@ -987,7 +992,8 @@ c){var e=a|0,f=c;void 0===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0=
 		return positions;
 	}
 
-	function isElementVisible(element, state, type, showForm, style, size) {
+	function isElementVisible(element, state, type, showForm, style, size, iconVisible) {
+		if (element === 'icon') return iconVisible !== false;
 		if (element === 'progress') return type !== 'stopwatch';
 		if (element === 'duration') return state === 'running' || state === 'paused';
 		if (element === 'fields') return type !== 'stopwatch' && showForm;
@@ -1002,7 +1008,7 @@ c){var e=a|0,f=c;void 0===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0=
 		return true;
 	}
 
-	function buildRows(style, size, state, type, showForm, excludeFields) {
+	function buildRows(style, size, state, type, showForm, excludeFields, iconVisible) {
 		if (!style || !states.includes(state) || !['compact', 'normal', 'large'].includes(size)) return [];
 		var positions = resolvePositions(style, size, state);
 		var rowVisibility = style.rowVisibility && style.rowVisibility[size] || {};
@@ -1031,11 +1037,11 @@ c){var e=a|0,f=c;void 0===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0=
 					var position = positions[id];
 					return visible && !(excludeFields && id === 'fields')
 						&& position && position.row === rowId && position.group === groupId
-						&& isElementVisible(id, state, type, showForm, style, size);
+						&& isElementVisible(id, state, type, showForm, style, size, iconVisible);
 				}).sort(function (left, right) {
 					return positions[left].order - positions[right].order || elementIds.indexOf(left) - elementIds.indexOf(right);
 				});
-				var placeholders = ['duration', 'progress'].filter(function (id) {
+				var placeholders = ['icon', 'duration', 'progress'].filter(function (id) {
 					var position = positions[id];
 					return reserveElement(style, size, id) && position && position.row === rowId && position.group === groupId
 						&& elements.indexOf(id) === -1;
@@ -1130,6 +1136,7 @@ c){var e=a|0,f=c;void 0===f&&(f=Math.min(b(a),3));Math.pow(10,f);return 1==e&&0=
 	}
 
 	return {
+		defaultIcon: defaultIcon,
 		settingId: settingId,
 		findItem: findItem,
 		findStyle: findStyle,
@@ -1227,7 +1234,6 @@ function onHomeyReady(Homey) {
 		var styleError = null;
 		var widgetType = multipleEntry ? multipleEntry.type : document.body.getAttribute('data-chronograph-type');
 			$scope.widgetInputPrefix = multipleEntry ? 'chronograph-' + multipleEntry.slot + '-' : '';
-			var defaultIcons = { timer: 'clock', stopwatch: 'stopwatch', transition: 'shuffle' };
 			var selectedIcon = settings.icon;
 			$scope.iconClass = '';
 			$scope.iconImage = '';
@@ -1235,7 +1241,9 @@ function onHomeyReady(Homey) {
 				var iconId = typeof selectedIcon.id === 'string'
 					? /^(fas|far|fab):([a-z0-9-]+)$/.exec(selectedIcon.id)
 					: null;
-				if (selectedIcon.id !== 'none' && typeof selectedIcon.image === 'string'
+				if (selectedIcon.id === 'chronograph:transition') {
+					$scope.iconClass = 'fa-solid fa-chronograph-transition';
+				} else if (selectedIcon.id !== 'none' && typeof selectedIcon.image === 'string'
 					&& (selectedIcon.image.indexOf('data:image/svg+xml;base64,') === 0
 						|| selectedIcon.image.indexOf('data:image/png;base64,') === 0)) {
 					$scope.iconImage = selectedIcon.image;
@@ -1244,7 +1252,7 @@ function onHomeyReady(Homey) {
 					$scope.iconClass = iconStyles[iconId[1]] + ' fa-' + iconId[2];
 				}
 			} else {
-				var legacyIcon = typeof selectedIcon === 'string' ? selectedIcon : defaultIcons[widgetType];
+				var legacyIcon = typeof selectedIcon === 'string' ? selectedIcon : widgetStyleRuntime.defaultIcon(widgetType);
 				if (legacyIcon && legacyIcon !== 'none' && /^[a-z0-9-]+$/.test(legacyIcon)) {
 					$scope.iconClass = 'fa-solid fa-' + legacyIcon;
 				}
@@ -1411,7 +1419,8 @@ function onHomeyReady(Homey) {
 					? chronograph.running ? 'running' : 'paused'
 					: hasDesignStartForm() ? 'starting' : 'inactive';
 				$scope.designState = state;
-				$scope.designRows = widgetStyleRuntime.buildRows(activeDesign, $scope.layout, state, widgetType, hasDesignStartForm());
+				var hasIcon = !!($scope.iconClass || $scope.iconImage);
+				$scope.designRows = widgetStyleRuntime.buildRows(activeDesign, $scope.layout, state, widgetType, hasDesignStartForm(), false, hasIcon);
 				$scope.designEnabled = $scope.designRows.length > 0;
 				var current = widgetStyleRuntime.layoutSpanningRows($scope.designRows);
 				$scope.designLayers = [{ id: 'current', state: state, rows: current.rows, spanning: current.spanning, tracks: current.tracks, rowTracks: current.rowTracks, measure: false }];
@@ -1425,7 +1434,7 @@ function onHomeyReady(Homey) {
 								&& (!activeDesign.startFieldsVisibility || activeDesign.startFieldsVisibility[$scope.layout] === 'inactive'));
 						var scenarioState = scenario === 'inactive' && showForm ? 'starting' : scenario;
 						var scenarioRows = widgetStyleRuntime.buildRows(activeDesign, $scope.layout, scenarioState, widgetType, showForm,
-							mode === 'minimum-without-inputs');
+							mode === 'minimum-without-inputs', hasIcon);
 						var scenarioLayout = widgetStyleRuntime.layoutSpanningRows(scenarioRows);
 						$scope.designLayers.push({
 							id: scenario,

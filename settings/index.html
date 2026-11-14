@@ -10,6 +10,8 @@
 	<link rel="stylesheet" href="../assets/css/fontawesome.min.css">
 	<link rel="stylesheet" href="../assets/css/solid.min.css">
 	<link rel="stylesheet" href="../assets/css/regular.min.css">
+	<link rel="stylesheet" href="../assets/css/brands.min.css">
+	<link rel="stylesheet" href="../assets/css/chronograph-icons.css">
 	<link rel="stylesheet" href="assets/styles.css">
 </head>
 
@@ -89,9 +91,11 @@
 		</section>
 
 		<section class="settings-content" role="tabpanel" ng-show="activeTab === 'widgets'">
-			<h2 ng-if="!templates.open">{{ labels.widgetStyles }}</h2>
-			<button ng-if="!templates.open" class="hy-nostyle btn btn-outline-primary btn-sm" type="button"
-				ng-click="openTemplates()" ng-disabled="!stylesAvailable || savingSettings">{{ t('settings.template_title') }}</button>
+			<div ng-if="!templates.open" class="template-header style-editor-header">
+				<h2>{{ labels.widgetStyles }}</h2>
+				<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button"
+					ng-click="openTemplates()" ng-disabled="!stylesAvailable || savingSettings">{{ t('settings.template_title') }}</button>
+			</div>
 			<div ng-if="!templates.open">
 			<p class="help-text">{{ t('settings.style_editor_intro') }}</p>
 			<p class="help-text">{{ t('settings.style_onboarding') }} <a href="https://github.com/Qluster-IT/nl.qluster-it.Chronograph/wiki/Widget-Designer" target="_blank" rel="noopener noreferrer">{{ t('settings.style_onboarding_link') }}</a></p>
@@ -151,6 +155,7 @@
 					<label ng-if="editor.mode === 'color' ? !isSchemeReadOnly() : !isDesignReadOnly()" class="hy-nostyle" for="widget-style-name">{{ t('settings.style_name') }}</label>
 					<input ng-if="editor.mode === 'color' ? !isSchemeReadOnly() : !isDesignReadOnly()" class="hy-nostyle form-control" id="widget-style-name" type="text"
 						ng-model="getEditingItem().name" ng-disabled="editor.mode === 'color' ? isSchemeReadOnly() : isDesignReadOnly()" maxlength="80" required>
+					<p class="help-text" role="alert" ng-if="duplicateEditingName()">{{ t('settings.style_duplicate_name') }}</p>
 					<p class="help-text" ng-if="isBuiltInStyle()">{{ t(localPreview ? 'settings.style_preview_builtin_hint' : (editor.mode === 'color' ? 'settings.style_scheme_builtin_hint' : 'settings.style_design_builtin_hint')) }}</p>
 
 					<div class="style-design-selectors">
@@ -429,11 +434,40 @@
 								ng-model="overrideElementSize" ng-model-options="{ getterSetter: true, allowInvalid: true }" ng-disabled="savingSettings">
 							<p class="help-text style-progress-full-row">{{ t('settings.style_size_default').replace('__size__', defaultElementSize()) }}</p>
 							<p class="help-text style-progress-full-row">{{ t('settings.style_size_hint') }}</p>
-							<label class="hy-nostyle style-progress-full-row" ng-if="editor.selectedElement === 'duration' || editor.selectedElement === 'progress'">
+							<label class="hy-nostyle style-progress-full-row" ng-if="editor.selectedElement === 'icon' || editor.selectedElement === 'duration' || editor.selectedElement === 'progress'">
 								<input class="hy-nostyle" type="checkbox" ng-model="reserveElementSpace" ng-model-options="{ getterSetter: true }"
 									ng-disabled="savingSettings || isDesignReadOnly()"> {{ t('settings.style_reserve_hidden_space') }}
 							</label>
 							<p class="help-text style-progress-full-row" role="alert" ng-if="editor.elementSizeForm.$invalid">{{ t('settings.style_size_invalid') }}</p>
+						</div>
+					</fieldset>
+					<fieldset class="hy-nostyle style-progress-controls" ng-if="editor.mode === 'design' && editor.selectedElement === 'icon'">
+						<legend>{{ t('settings.style_default_icons') }}</legend>
+						<p class="help-text">{{ t('settings.style_default_icons_hint') }}</p>
+						<div class="style-position-controls">
+							<div class="style-progress-full-row style-icon-picker" ng-repeat="type in ['timer', 'stopwatch', 'transition']">
+								<label class="hy-nostyle" ng-attr-id="style-icon-label-{{ type }}">{{ t('settings.' + (type === 'stopwatch' ? 'stopwatches' : type === 'timer' ? 'timers' : 'transitions')) }}</label>
+								<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button"
+									ng-attr-aria-labelledby="style-icon-label-{{ type }} style-icon-value-{{ type }}" ng-attr-aria-expanded="{{ iconPickers[type].open }}"
+									ng-click="toggleIconPicker(type)" ng-disabled="savingSettings || isDesignReadOnly()">
+									<i ng-if="previewIcon(type)" ng-class="[previewIconStyle(type), previewIcon(type)]" aria-hidden="true"></i>
+									<span ng-attr-id="style-icon-value-{{ type }}">{{ selectedDefaultIconName(type) }}</span>
+								</button>
+								<div class="style-icon-results" ng-if="iconPickers[type].open">
+									<input class="hy-nostyle form-control" type="search" maxlength="100"
+										ng-attr-aria-label="{{ t('settings.template_catalog_search') }}"
+										ng-attr-placeholder="{{ t('settings.template_catalog_search') }}"
+										ng-model="iconPickers[type].query" ng-model-options="{ debounce: 250 }" ng-change="searchDefaultIcons(type)">
+									<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="setDefaultIcon(type, null)">{{ t('settings.style_current') }}</button>
+									<p class="help-text" ng-if="iconPickers[type].busy">{{ t('settings.style_icon_loading') }}</p>
+									<p class="help-text" ng-if="!iconPickers[type].busy && !iconPickers[type].results.length">{{ t('settings.style_icon_empty') }}</p>
+									<button class="hy-nostyle style-icon-option" type="button" ng-repeat="icon in iconPickers[type].results track by icon.id"
+										ng-click="setDefaultIcon(type, icon.id)" ng-disabled="iconPickers[type].busy">
+										<i ng-if="icon.id !== 'none'" ng-class="[iconStyle(icon.id), iconClass(icon.id)]" aria-hidden="true"></i>
+										<span>{{ icon.name }}</span><small ng-if="icon.description">{{ icon.description }}</small>
+									</button>
+								</div>
+							</div>
 						</div>
 					</fieldset>
 					<fieldset class="hy-nostyle style-progress-controls" ng-if="editor.mode === 'design' && isButtonElement(editor.selectedElement)">
@@ -485,7 +519,7 @@
 								<span ng-if="previewVisible(element)" class="style-cell-content"
 									ng-attr-data-palette="{{ isButtonElement(element) ? previewColor(element, false, previewTileState(previewScenario, previewTile.type)) : 'default' }}"
 									ng-attr-data-foreground="{{ previewForeground(element, false, previewTileState(previewScenario, previewTile.type)) }}">
-									<i ng-if="element === 'icon'" class="fa-solid style-preview-chronograph-icon" ng-class="previewIcon()" aria-hidden="true"></i>
+									<i ng-if="element === 'icon'" class="style-preview-chronograph-icon" ng-class="[previewIconStyle(), previewIcon()]" aria-hidden="true"></i>
 									<strong ng-if="element === 'name'">{{ t('settings.widget_chronograph') }}</strong>
 									<span ng-if="element === 'status'">{{ editor.previewState === 'running' ? labels.running : (editor.previewState === 'paused' ? labels.paused : t('settings.widget_not_running')) }}</span>
 									<span ng-if="element === 'duration'">12:34.56</span>
@@ -755,7 +789,7 @@
 						ng-attr-style="--element-size: {{ elementSize(element) }}px"
 						ng-attr-data-palette="{{ isButtonElement(element) ? previewColor(element) : 'default' }}"
 						ng-attr-data-foreground="{{ previewForeground(element) }}">
-						<i ng-if="element === 'icon'" class="fa-solid style-preview-chronograph-icon" ng-class="previewIcon(previewTile.type)" aria-hidden="true"></i>
+						<i ng-if="element === 'icon'" class="style-preview-chronograph-icon" ng-class="[previewIconStyle(previewTile.type), previewIcon(previewTile.type)]" aria-hidden="true"></i>
 						<strong ng-if="element === 'name'">{{ previewTile ? t('settings.' + (previewTile.type === 'stopwatch' ? 'stopwatches' : (previewTile.type === 'timer' ? 'timers' : 'transitions'))) : t('settings.widget_chronograph') }}</strong>
 						<span ng-if="element === 'status'">{{ previewTileState(previewScenario, previewTile.type) === 'running' ? labels.running : (previewTileState(previewScenario, previewTile.type) === 'paused' ? labels.paused : t('settings.widget_not_running')) }}</span>
 						<span ng-if="element === 'duration'">12:34.56</span>
@@ -798,7 +832,7 @@
 					ng-class="['style-widget-' + element, { 'style-preview-selected': !previewScenario && editor.selectedElement === element }]" ng-attr-style="--element-size: {{ elementSize(element) }}px"
 					ng-attr-data-palette="{{ isButtonElement(element) ? previewColor(element, false, previewTileState(previewScenario, previewTile.type)) : 'default' }}"
 					ng-attr-data-foreground="{{ previewForeground(element, false, previewTileState(previewScenario, previewTile.type)) }}">
-					<i ng-if="element === 'icon'" class="fa-solid" ng-class="previewIcon(previewTile.type)" aria-hidden="true"></i>
+					<i ng-if="element === 'icon'" ng-class="[previewIconStyle(previewTile.type), previewIcon(previewTile.type)]" aria-hidden="true"></i>
 					<strong ng-if="element === 'name'">{{ (previewTile ? previewTile.type : editor.previewType) === 'stopwatch' ? t('settings.stopwatches') : ((previewTile ? previewTile.type : editor.previewType) === 'timer' ? t('settings.timers') : t('settings.transitions')) }}</strong>
 					<span ng-if="element === 'status'">{{ previewTileState(previewScenario, previewTile.type) === 'running' ? labels.running : (previewTileState(previewScenario, previewTile.type) === 'paused' ? labels.paused : t('settings.widget_not_running')) }}</span>
 					<span ng-if="element === 'duration'">12:34.56</span>

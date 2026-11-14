@@ -8,6 +8,10 @@
 	var states = ['inactive', 'running', 'paused', 'starting'];
 	var maxRows = 10;
 
+	function defaultIcon(type) {
+		return { stopwatch: 'stopwatch', timer: 'hourglass-half', transition: 'chronograph-transition' }[type];
+	}
+
 	function rowCount(style, size) {
 		var count = style && style.rowCounts && style.rowCounts[size];
 		return Number.isInteger(count) && count >= 1 && count <= maxRows ? count : 5;
@@ -313,6 +317,7 @@
 		var style = {
 			groups: currentGroups(),
 			rowVisibility: currentRowVisibility(),
+			reservedElements: { compact: { icon: true }, normal: { icon: true }, large: { icon: true } },
 			startFieldsVisibility: { compact: 'play', normal: 'inactive', large: 'inactive' }
 		};
 		configureCurrentColumns(style);
@@ -361,7 +366,7 @@
 				5: { states: ['running', 'paused'], actions: {}, startForm: false }
 			};
 			design.inputFieldRows[size] = { timer: 2, transition: 5 };
-			design.reservedElements[size] = { duration: true };
+			design.reservedElements[size] = { duration: true, icon: true };
 			design.elementSizes.overrides[size] = {
 				icon: 16, name: size === 'large' ? 16 : 14, status: 12,
 				duration: size === 'large' ? 18 : size === 'normal' ? 16 : 14,
@@ -479,7 +484,7 @@
 				design.columnVerticalAlignments[size][3] = ['middle', size === 'compact' ? 'top' : 'bottom'];
 				design.columnVerticalAlignments[size][4] = ['middle', size === 'compact' ? 'top' : 'bottom'];
 				design.columnRowSpans[size] = { 1: [4, 1] };
-				design.reservedElements[size] = { progress: true };
+				design.reservedElements[size] = { progress: true, icon: true };
 				design.progressSettings[size].direction = 'bottom-top';
 			});
 		}
@@ -634,7 +639,8 @@
 		return positions;
 	}
 
-	function isElementVisible(element, state, type, showForm, style, size) {
+	function isElementVisible(element, state, type, showForm, style, size, iconVisible) {
+		if (element === 'icon') return iconVisible !== false;
 		if (element === 'progress') return type !== 'stopwatch';
 		if (element === 'duration') return state === 'running' || state === 'paused';
 		if (element === 'fields') return type !== 'stopwatch' && showForm;
@@ -649,7 +655,7 @@
 		return true;
 	}
 
-	function buildRows(style, size, state, type, showForm, excludeFields) {
+	function buildRows(style, size, state, type, showForm, excludeFields, iconVisible) {
 		if (!style || !states.includes(state) || !['compact', 'normal', 'large'].includes(size)) return [];
 		var positions = resolvePositions(style, size, state);
 		var rowVisibility = style.rowVisibility && style.rowVisibility[size] || {};
@@ -678,11 +684,11 @@
 					var position = positions[id];
 					return visible && !(excludeFields && id === 'fields')
 						&& position && position.row === rowId && position.group === groupId
-						&& isElementVisible(id, state, type, showForm, style, size);
+						&& isElementVisible(id, state, type, showForm, style, size, iconVisible);
 				}).sort(function (left, right) {
 					return positions[left].order - positions[right].order || elementIds.indexOf(left) - elementIds.indexOf(right);
 				});
-				var placeholders = ['duration', 'progress'].filter(function (id) {
+				var placeholders = ['icon', 'duration', 'progress'].filter(function (id) {
 					var position = positions[id];
 					return reserveElement(style, size, id) && position && position.row === rowId && position.group === groupId
 						&& elements.indexOf(id) === -1;
@@ -777,6 +783,7 @@
 	}
 
 	return {
+		defaultIcon: defaultIcon,
 		settingId: settingId,
 		findItem: findItem,
 		findStyle: findStyle,

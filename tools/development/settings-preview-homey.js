@@ -68,7 +68,7 @@
 						}).then(function (result) { callback(null, result); }, callback);
 						return;
 					}
-					if (method === 'POST' && (url === '/widget-templates/encode' || url === '/widget-templates/decode')) {
+					if (method === 'POST' && (url === '/widget-templates/encode' || url === '/widget-templates/decode' || url === '/widget-icons/search')) {
 						fetch('/__preview' + url, {
 							method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
 						}).then(function (response) {
@@ -76,7 +76,12 @@
 								if (!response.ok) throw new Error(value.error);
 								return value;
 							});
-						}).then(function (result) { callback(null, result); }, callback);
+						}).then(function (result) {
+							if (url === '/widget-icons/search') result.forEach(function (item) {
+								if (item.id === 'none') item.name = homey.__('settings.widget_icon_none');
+							});
+							callback(null, result);
+						}, callback);
 						return;
 					}
 					if (method === 'GET' && url === '/chronographs/') {

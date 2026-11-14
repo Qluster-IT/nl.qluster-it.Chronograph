@@ -56,6 +56,24 @@ async function loadWidget(type, settings, defaults, widgetStyles) {
 }
 
 describe('Widget duration defaults', () => {
+	it('reserves icon space when None is selected, including measurement layers', async () => {
+		const widget = await loadWidget('timer', { icon: { id: 'none' } }, {});
+		assert.strictEqual(widget.scope.iconClass, '');
+		assert.strictEqual(widget.scope.iconImage, '');
+		for (const layer of widget.scope.designLayers) {
+			assert.ok(layer.rows.some(row => row.groups.some(group => group.placeholders.includes('icon'))));
+		}
+		const design = require('../assets/js/chronograph-widget-style.js').currentDesign();
+		design.id = 'no-icon-reservation';
+		design.reservedElements.normal.icon = false;
+		const collapsed = await loadWidget('timer', {
+			icon: { id: 'none' }, layout: 'normal', designStyle: { id: design.id }
+		}, {}, { version: 2, styles: [design] });
+		for (const layer of collapsed.scope.designLayers) {
+			assert.ok(!layer.rows.some(row => row.groups.some(group => group.renderElements.includes('icon'))));
+		}
+	});
+
 	it('updates the display clock only while the selected chronograph is running', async () => {
 		const widget = await loadWidget('timer', {}, {});
 		const activeClocks = () => widget.intervals.filter(interval => interval.delay === 250 && !interval.cancelled);

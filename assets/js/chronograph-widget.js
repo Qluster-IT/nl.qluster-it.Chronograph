@@ -30,7 +30,6 @@ function onHomeyReady(Homey) {
 		var styleError = null;
 		var widgetType = multipleEntry ? multipleEntry.type : document.body.getAttribute('data-chronograph-type');
 			$scope.widgetInputPrefix = multipleEntry ? 'chronograph-' + multipleEntry.slot + '-' : '';
-			var defaultIcons = { timer: 'clock', stopwatch: 'stopwatch', transition: 'shuffle' };
 			var selectedIcon = settings.icon;
 			$scope.iconClass = '';
 			$scope.iconImage = '';
@@ -38,7 +37,9 @@ function onHomeyReady(Homey) {
 				var iconId = typeof selectedIcon.id === 'string'
 					? /^(fas|far|fab):([a-z0-9-]+)$/.exec(selectedIcon.id)
 					: null;
-				if (selectedIcon.id !== 'none' && typeof selectedIcon.image === 'string'
+				if (selectedIcon.id === 'chronograph:transition') {
+					$scope.iconClass = 'fa-solid fa-chronograph-transition';
+				} else if (selectedIcon.id !== 'none' && typeof selectedIcon.image === 'string'
 					&& (selectedIcon.image.indexOf('data:image/svg+xml;base64,') === 0
 						|| selectedIcon.image.indexOf('data:image/png;base64,') === 0)) {
 					$scope.iconImage = selectedIcon.image;
@@ -47,7 +48,7 @@ function onHomeyReady(Homey) {
 					$scope.iconClass = iconStyles[iconId[1]] + ' fa-' + iconId[2];
 				}
 			} else {
-				var legacyIcon = typeof selectedIcon === 'string' ? selectedIcon : defaultIcons[widgetType];
+				var legacyIcon = typeof selectedIcon === 'string' ? selectedIcon : widgetStyleRuntime.defaultIcon(widgetType);
 				if (legacyIcon && legacyIcon !== 'none' && /^[a-z0-9-]+$/.test(legacyIcon)) {
 					$scope.iconClass = 'fa-solid fa-' + legacyIcon;
 				}
@@ -214,7 +215,8 @@ function onHomeyReady(Homey) {
 					? chronograph.running ? 'running' : 'paused'
 					: hasDesignStartForm() ? 'starting' : 'inactive';
 				$scope.designState = state;
-				$scope.designRows = widgetStyleRuntime.buildRows(activeDesign, $scope.layout, state, widgetType, hasDesignStartForm());
+				var hasIcon = !!($scope.iconClass || $scope.iconImage);
+				$scope.designRows = widgetStyleRuntime.buildRows(activeDesign, $scope.layout, state, widgetType, hasDesignStartForm(), false, hasIcon);
 				$scope.designEnabled = $scope.designRows.length > 0;
 				var current = widgetStyleRuntime.layoutSpanningRows($scope.designRows);
 				$scope.designLayers = [{ id: 'current', state: state, rows: current.rows, spanning: current.spanning, tracks: current.tracks, rowTracks: current.rowTracks, measure: false }];
@@ -228,7 +230,7 @@ function onHomeyReady(Homey) {
 								&& (!activeDesign.startFieldsVisibility || activeDesign.startFieldsVisibility[$scope.layout] === 'inactive'));
 						var scenarioState = scenario === 'inactive' && showForm ? 'starting' : scenario;
 						var scenarioRows = widgetStyleRuntime.buildRows(activeDesign, $scope.layout, scenarioState, widgetType, showForm,
-							mode === 'minimum-without-inputs');
+							mode === 'minimum-without-inputs', hasIcon);
 						var scenarioLayout = widgetStyleRuntime.layoutSpanningRows(scenarioRows);
 						$scope.designLayers.push({
 							id: scenario,

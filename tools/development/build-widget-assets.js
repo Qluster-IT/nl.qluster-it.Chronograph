@@ -16,6 +16,7 @@ const stylesheets = [
 	'assets/css/solid.min.css',
 	'assets/css/regular.min.css',
 	'assets/css/brands.min.css',
+	'assets/css/chronograph-icons.css',
 	'assets/css/chronograph-widget.css',
 	'assets/css/multiple-chronographs-widget.css'
 ];

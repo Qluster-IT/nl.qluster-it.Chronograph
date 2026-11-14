@@ -30,7 +30,7 @@
     "tab_widgets": "Widgets",
     "tab_general": "Allmänt",
     "running_chronographs": "Aktiva kronografer",
-    "widget_default_styles": "Standardstilar för widgets",
+    "widget_default_styles": "Standardstilar",
     "widget_styles_later": "Standardstilar för widgets kan konfigureras här senare.",
     "general_settings": "Allmänna inställningar",
     "amount_of_decimals": "Antal decimaler",
@@ -332,7 +332,12 @@
     "template_editor_switch": "Välj A till höger i den markerade växlaren för att använda redigeraren för formaterad text.",
     "template_copy_copied": "Inlägget och bilden har kopierats. Öppna forumet och klistra in dem i redigeraren för formaterad text.",
     "template_copy_retry": "Kopieringen misslyckades. Använd knappen Kopiera inlägg och bild för att försöka igen.",
-    "template_show_examples": "Visa förhandsvisningar"
+    "template_show_examples": "Visa förhandsvisningar",
+    "style_default_icons": "Standardikoner",
+    "style_default_icons_hint": "Ikonerna påverkar än så länge bara designerns förhandsvisning, inte widgetar eller mallar.",
+    "style_icon_loading": "Laddar ikoner...",
+    "style_icon_empty": "Inga matchande ikoner hittades.",
+    "style_duplicate_name": "Anpassade designer och teman måste ha unika namn inom respektive kategori. Skiftläge och omgivande blanksteg ignoreras."
   },
   "timer_not_running": "Timern __name__ körs inte.",
   "stopwatch_not_running": "Stoppuret __name__ körs inte.",

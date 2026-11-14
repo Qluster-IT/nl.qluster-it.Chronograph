@@ -30,7 +30,7 @@
     "tab_widgets": "Widgets",
     "tab_general": "General",
     "running_chronographs": "Running Chronographs",
-    "widget_default_styles": "Default Styles for Widgets",
+    "widget_default_styles": "Default Styles",
     "widget_styles_later": "Default widget styles will be configurable here later.",
     "general_settings": "General Settings",
     "amount_of_decimals": "Amount of Decimals",
@@ -332,7 +332,12 @@
     "template_editor_switch": "Select the A on the right of the outlined switch to use the rich-text editor.",
     "template_copy_copied": "The post and image were copied. Open the forum and paste them into the rich-text editor.",
     "template_copy_retry": "Copying failed. Use the Copy post and image button to try again.",
-    "template_show_examples": "Show previews"
+    "template_show_examples": "Show previews",
+    "style_default_icons": "Default icons",
+    "style_default_icons_hint": "These icons currently affect the Designer preview only; widgets and templates do not use them yet.",
+    "style_icon_loading": "Loading icons...",
+    "style_icon_empty": "No matching icons found.",
+    "style_duplicate_name": "Custom designs must have unique names, as must custom themes. Names are compared without regard to case or surrounding spaces."
   },
   "timer_not_running": "Timer __name__ is not running.",
   "stopwatch_not_running": "Stopwatch __name__ is not running.",

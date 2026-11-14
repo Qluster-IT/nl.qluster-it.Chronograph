@@ -58,13 +58,36 @@ foreach ($theme in @('light', 'dark')) {
 
 			FillCircle $graphics $blue 158 262 58
 			if ($type -eq 'transition') {
-				DrawStroke $graphics $card 6 @([System.Drawing.PointF]::new(171, 288), [System.Drawing.PointF]::new(190, 288), [System.Drawing.PointF]::new(202, 277))
-				DrawStroke $graphics $card 6 @([System.Drawing.PointF]::new(171, 299), [System.Drawing.PointF]::new(190, 299), [System.Drawing.PointF]::new(202, 307))
+				$pen = New-Object System.Drawing.Pen($card, 6.5)
+				$pen.LineJoin = [System.Drawing.Drawing2D.LineJoin]::Round
+				$path = New-Object System.Drawing.Drawing2D.GraphicsPath
+				try {
+					$path.AddBezier(174, 285, 181, 278, 193, 278, 200, 285)
+					$path.AddLine(200, 285, 197, 292)
+					$path.AddBezier(197, 292, 191, 287, 183, 287, 177, 292)
+					$path.CloseFigure()
+					$graphics.DrawPath($pen, $path)
+				} finally { $path.Dispose(); $pen.Dispose() }
+				DrawStroke $graphics $card 4 @([System.Drawing.PointF]::new(181, 282), [System.Drawing.PointF]::new(182, 285))
+				DrawStroke $graphics $card 4 @([System.Drawing.PointF]::new(187, 281), [System.Drawing.PointF]::new(187, 284))
+				DrawStroke $graphics $card 4 @([System.Drawing.PointF]::new(193, 282), [System.Drawing.PointF]::new(192, 285))
+				DrawStroke $graphics $card 6.5 @([System.Drawing.PointF]::new(187, 303), [System.Drawing.PointF]::new(192, 285))
+				FillCircle $graphics $card 181 297 12
+			} elseif ($type -eq 'timer') {
+				DrawStroke $graphics $card 5 @([System.Drawing.PointF]::new(174, 276), [System.Drawing.PointF]::new(200, 276))
+				DrawStroke $graphics $card 5 @([System.Drawing.PointF]::new(174, 307), [System.Drawing.PointF]::new(200, 307))
+				DrawStroke $graphics $card 4 @([System.Drawing.PointF]::new(177, 278), [System.Drawing.PointF]::new(177, 282), [System.Drawing.PointF]::new(187, 291), [System.Drawing.PointF]::new(197, 282), [System.Drawing.PointF]::new(197, 278))
+				$brush = New-Object System.Drawing.SolidBrush($card)
+				try {
+					$graphics.FillPolygon($brush, [System.Drawing.PointF[]]@(
+						[System.Drawing.PointF]::new(187, 290), [System.Drawing.PointF]::new(198, 304), [System.Drawing.PointF]::new(176, 304)
+					))
+				} finally { $brush.Dispose() }
 			} else {
 				$pen = New-Object System.Drawing.Pen($card, 5)
 				try { $graphics.DrawEllipse($pen, 172, 276, 30, 30) } finally { $pen.Dispose() }
 				DrawStroke $graphics $card 5 @([System.Drawing.PointF]::new(187, 281), [System.Drawing.PointF]::new(187, 291), [System.Drawing.PointF]::new(195, 296))
-				if ($type -eq 'stopwatch') { FillRounded $graphics $card 182 269 10 5 2 }
+				FillRounded $graphics $card 182 269 10 5 2
 			}
 			FillRounded $graphics $primary 238 273 265 20 10
 			FillRounded $graphics $muted 158 345 160 14 7

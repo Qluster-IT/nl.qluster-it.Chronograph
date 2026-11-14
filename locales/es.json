@@ -30,7 +30,7 @@
     "tab_widgets": "Widgets",
     "tab_general": "General",
     "running_chronographs": "Cronógrafos actuales",
-    "widget_default_styles": "Estilos predeterminados de widgets",
+    "widget_default_styles": "Estilos predeterminados",
     "widget_styles_later": "Aquí se podrán configurar más adelante los estilos predeterminados de widgets.",
     "general_settings": "Ajustes generales",
     "amount_of_decimals": "Cantidad de decimales",
@@ -332,7 +332,12 @@
     "template_editor_switch": "Selecciona la A a la derecha del selector marcado para usar el editor de texto enriquecido.",
     "template_copy_copied": "Se copiaron la publicación y la imagen. Abre el foro y pégalas en el editor de texto enriquecido.",
     "template_copy_retry": "La copia falló. Usa el botón Copiar publicación e imagen para volver a intentarlo.",
-    "template_show_examples": "Mostrar vistas previas"
+    "template_show_examples": "Mostrar vistas previas",
+    "style_default_icons": "Iconos predeterminados",
+    "style_default_icons_hint": "Estos iconos solo afectan por ahora a la vista previa del diseñador, no a los widgets ni a las plantillas.",
+    "style_icon_loading": "Cargando iconos...",
+    "style_icon_empty": "No se encontraron iconos coincidentes.",
+    "style_duplicate_name": "Los diseños personalizados y los temas personalizados deben tener nombres únicos dentro de cada grupo. Se ignoran las mayúsculas y los espacios exteriores."
   },
   "timer_not_running": "El temporizador __name__ no está en marcha.",
   "stopwatch_not_running": "El cronómetro __name__ no está en marcha.",

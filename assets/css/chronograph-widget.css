@@ -279,8 +279,21 @@ body {
 }
 
 .chronograph-design-element-icon {
+	display: flex;
 	flex: 0 0 auto;
+	align-items: center;
+	justify-content: center;
+	width: var(--element-size);
+	height: var(--element-size);
 	overflow: hidden;
+}
+
+.chronograph-design-group[data-direction="horizontal"][data-alignment="stretch"] > .chronograph-design-element-icon {
+	flex: 0 0 auto;
+}
+
+.chronograph-design-group[data-direction="vertical"][data-alignment="stretch"] > .chronograph-design-element-icon {
+	width: var(--element-size);
 }
 
 .chronograph-design-element-fields,

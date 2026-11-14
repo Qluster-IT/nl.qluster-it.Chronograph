@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const widgetTemplate = require('../../lib/widget-template.js');
 const widgetTemplateCatalog = require('../../lib/widget-template-catalog.js');
+const widgetIcons = require('../../lib/widget-icons.js');
 
 const root = path.resolve(__dirname, '..', '..');
 const port = Number(process.env.CHRONOGRAPH_PREVIEW_PORT || 4178);
@@ -29,7 +30,7 @@ const server = http.createServer((request, response) => {
 		});
 		return;
 	}
-	if (request.method === 'POST' && ['/__preview/widget-templates/encode', '/__preview/widget-templates/decode'].includes(request.url)) {
+	if (request.method === 'POST' && ['/__preview/widget-templates/encode', '/__preview/widget-templates/decode', '/__preview/widget-icons/search'].includes(request.url)) {
 		let body = '';
 		request.setEncoding('utf8');
 		request.on('data', chunk => {
@@ -39,8 +40,14 @@ const server = http.createServer((request, response) => {
 		request.on('end', async () => {
 			try {
 				const value = JSON.parse(body);
-				const result = request.url.endsWith('/encode')
-					? await widgetTemplate.encodeTemplate(value) : await widgetTemplate.decodeTemplate(value.text);
+				let result;
+				if (request.url.endsWith('/encode')) result = await widgetTemplate.encodeTemplate(value);
+				else if (request.url.endsWith('/decode')) result = await widgetTemplate.decodeTemplate(value.text);
+				else {
+					if (!value || typeof value.query !== 'string' || value.query.length > 100) throw new Error('Invalid icon search');
+					result = widgetIcons.searchIcons(value.query, 'None', 60)
+						.map(({ id, name, description }) => ({ id, name, description }));
+				}
 				response.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }).end(JSON.stringify(result));
 			} catch (error) {
 				response.writeHead(400, { 'Content-Type': 'application/json' }).end(JSON.stringify({ error: error.message }));

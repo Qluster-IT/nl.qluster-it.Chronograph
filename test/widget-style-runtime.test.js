@@ -189,6 +189,20 @@ describe('Widget style runtime', () => {
 		}
 	});
 
+	it('reserves a hidden icon only when enabled for its size', () => {
+		const design = widgetStyle.currentDesign();
+		for (const size of ['compact', 'normal', 'large']) {
+			const rows = widgetStyle.buildRows(design, size, 'running', 'timer', false, false, false);
+			const group = rows.find(row => row.id === 1).groups.find(item => item.placeholders.includes('icon'));
+			assert.ok(group, size);
+			assert.ok(!group.elements.includes('icon'));
+			assert.ok(group.renderElements.includes('icon'));
+			design.reservedElements[size].icon = false;
+			const without = widgetStyle.buildRows(design, size, 'running', 'timer', false, false, false);
+			assert.ok(!without.some(row => row.groups.some(item => item.renderElements.includes('icon'))));
+		}
+	});
+
 	it('collapses an empty spanning column even when another column spans rows', () => {
 		const rows = [
 			{ id: 1, groups: [

@@ -30,7 +30,7 @@
     "tab_widgets": "Widgets",
     "tab_general": "Général",
     "running_chronographs": "Chronographes actifs",
-    "widget_default_styles": "Styles par défaut des widgets",
+    "widget_default_styles": "Styles par défaut",
     "widget_styles_later": "Les styles par défaut des widgets pourront être configurés ici ultérieurement.",
     "general_settings": "Paramètres généraux",
     "amount_of_decimals": "Nombre de décimales",
@@ -332,7 +332,12 @@
     "template_editor_switch": "Sélectionnez le A à droite du sélecteur encadré pour utiliser l’éditeur de texte enrichi.",
     "template_copy_copied": "Le message et l’image ont été copiés. Ouvrez le forum et collez-les dans l’éditeur de texte enrichi.",
     "template_copy_retry": "La copie a échoué. Utilisez le bouton Copier le message et l’image pour réessayer.",
-    "template_show_examples": "Afficher les aperçus"
+    "template_show_examples": "Afficher les aperçus",
+    "style_default_icons": "Icônes par défaut",
+    "style_default_icons_hint": "Ces icônes ne s'appliquent pour l'instant qu'à l'aperçu du concepteur, pas aux widgets ni aux modèles.",
+    "style_icon_loading": "Chargement des icônes...",
+    "style_icon_empty": "Aucune icône correspondante.",
+    "style_duplicate_name": "Les designs personnalisés et les thèmes personnalisés doivent avoir des noms uniques dans chaque catégorie, sans tenir compte de la casse ni des espaces autour."
   },
   "timer_not_running": "Le minuteur __name__ n’est pas en cours d’exécution.",
   "stopwatch_not_running": "Le chronomètre __name__ n’est pas en cours d’exécution.",

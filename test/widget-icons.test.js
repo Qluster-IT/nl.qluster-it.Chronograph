@@ -13,6 +13,7 @@ describe('Widget icon autocomplete', () => {
 		const module = { exports: {} };
 		vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'lib', 'widget-icons.js'), 'utf8'), {
 			module,
+			Buffer,
 			__dirname: path.join(__dirname, '..', 'lib'),
 			require: id => id === 'fs'
 				? { readFileSync: (...args) => { reads++; return fs.readFileSync(...args); } }
@@ -20,22 +21,23 @@ describe('Widget icon autocomplete', () => {
 		});
 		assert.strictEqual(reads, 0);
 		assert.ok(module.exports.searchIcons('stopwatch', 'None').length);
-		assert.strictEqual(reads, 2);
+		assert.strictEqual(reads, 3);
 		module.exports.searchIcons('clock', 'None');
-		assert.strictEqual(reads, 2);
+		assert.strictEqual(reads, 3);
 	});
 
 	it('puts None and the three defaults first', () => {
 		const results = searchIcons('', 'Geen');
 		assert.deepStrictEqual(results.slice(0, 4).map(item => item.id), [
-			'none', 'fas:stopwatch', 'fas:clock', 'fas:shuffle'
+			'none', 'fas:stopwatch', 'fas:hourglass-half', 'chronograph:transition'
 		]);
 		assert.deepStrictEqual(results.slice(1, 4).map(item => item.name), [
-			'Stopwatch', 'Timer (clock)', 'Transition (shuffle)'
+			'Stopwatch', 'Timer', 'Transition'
 		]);
+		assert.deepStrictEqual(results.slice(1, 4).map(item => item.description), ['App', 'App', 'App']);
 		assert.strictEqual(results[0].name, 'Geen');
-		assert.strictEqual(results.length, 2164);
-		assert.strictEqual(new Set(results.map(item => item.id)).size, 2164);
+		assert.strictEqual(results.length, 2165);
+		assert.strictEqual(new Set(results.map(item => item.id)).size, 2165);
 		assert.strictEqual(searchIcons('stopwatch', 'Stopwatch none')[0].id, 'none');
 	});
 
@@ -59,8 +61,10 @@ describe('Widget icon autocomplete', () => {
 		assert.ok(searchIcons('github', 'None').some(item => item.id === 'fab:github'));
 		assert.ok(searchIcons('clock', 'None').some(item => item.id === 'far:clock'));
 		assert.ok(searchIcons('random', 'None').some(item => item.id === 'fas:shuffle'));
-		assert.ok(searchIcons('timer', 'None').some(item => item.id === 'fas:clock'));
-		assert.ok(searchIcons('transition', 'None').some(item => item.id === 'fas:shuffle'));
+		assert.ok(searchIcons('timer', 'None').some(item => item.id === 'fas:hourglass-half'));
+		assert.ok(searchIcons('transition', 'None').some(item => item.id === 'chronograph:transition'));
+		assert.ok(searchIcons('transitie', 'None').some(item => item.id === 'chronograph:transition'));
+		assert.ok(searchIcons('sliders', 'None').some(item => item.id === 'fas:sliders'));
 		assert.strictEqual(searchIcons('ge', 'Geen')[0].id, 'none');
 	});
 
@@ -86,6 +90,36 @@ describe('Widget icon autocomplete', () => {
 		assert.ok(icon.image.startsWith('data:image/png;base64,'));
 		const png = Buffer.from(icon.image.split(',')[1], 'base64');
 		assert.deepStrictEqual(png.slice(0, 8), Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
+	});
+
+	it('serves bounded icon searches to the settings designer without preview images', async () => {
+		const api = require('../api.js');
+		const homey = { __: () => 'None' };
+		const results = await api.searchWidgetIcons({ homey, body: { query: '' } });
+		assert.strictEqual(results.length, 60);
+		assert.strictEqual(results[0].id, 'none');
+		assert.ok(results.every(item => !Object.prototype.hasOwnProperty.call(item, 'image')));
+		const transitions = await api.searchWidgetIcons({ homey, body: { query: 'transitie' } });
+		assert.strictEqual(transitions[0].id, 'chronograph:transition');
+		await assert.rejects(api.searchWidgetIcons({ homey, body: { query: 'a'.repeat(101) } }), /Invalid icon search/);
+	});
+
+	it('uses the bold app transition artwork for autocomplete and the widget default', () => {
+		const result = searchIcons('transition', 'None')[0];
+		assert.strictEqual(result.id, 'chronograph:transition');
+		assert.strictEqual(result.description, 'App');
+		assert.ok(result.image.startsWith('data:image/png;base64,'));
+		const png = Buffer.from(result.image.split(',')[1], 'base64');
+		assert.deepStrictEqual(png.slice(0, 8), Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
+		assert.deepStrictEqual(png, fs.readFileSync(path.join(__dirname, '..', 'assets', 'transition-solid-preview.png')));
+		const artwork = fs.readFileSync(path.join(__dirname, '..', 'assets', 'transition-solid.svg'), 'utf8');
+		const paths = [...artwork.matchAll(/<path d="([^"]+)"/g)].map((match) => match[1]);
+		const indicators = paths[1];
+		assert.strictEqual((indicators.match(/M/g) || []).length, 3);
+		const needle = paths[2];
+		assert.strictEqual(needle.match(/L[\d.]+\s+[\d.]+$/)[0], indicators.match(/L[\d.]+\s+[\d.]+$/)[0]);
+		const iconCss = fs.readFileSync(path.join(__dirname, '..', 'assets', 'css', 'chronograph-icons.css'), 'utf8');
+		assert.match(iconCss, /mask:\s*url\("\.\.\/transition-solid\.svg"\)/);
 	});
 
 	it('contains every icon from the bundled Font Awesome Free 7.3.1 styles', () => {
@@ -143,15 +177,23 @@ describe('Widget icon autocomplete', () => {
 		assert.strictEqual(render(selected).iconImage, selected.image);
 		assert.strictEqual(render(searchIcons('clock', 'None').find(item => item.id === 'far:clock')).iconClass, '');
 		assert.strictEqual(render({ id: 'fab:github' }).iconClass, 'fa-brands fa-github');
-		for (const [type, name] of [['timer', 'clock'], ['stopwatch', 'stopwatch'], ['transition', 'shuffle']]) {
+		for (const [type, name] of [['timer', 'hourglass-half'], ['stopwatch', 'stopwatch']]) {
 			assert.strictEqual(render({ id: 'fas:' + name }, type).iconClass, render(undefined, type).iconClass);
 		}
+		const transition = searchIcons('transition', 'None')[0];
+		assert.strictEqual(render(transition, 'transition').iconClass, 'fa-solid fa-chronograph-transition');
+		assert.strictEqual(render({ id: 'chronograph:transition', image: 'data:image/svg+xml;base64,PHN2Zy8+' }, 'transition').iconClass, 'fa-solid fa-chronograph-transition');
+		assert.strictEqual(render({ id: 'chronograph:transition' }, 'transition').iconClass, 'fa-solid fa-chronograph-transition');
+		assert.strictEqual(render(undefined, 'transition').iconClass, 'fa-solid fa-chronograph-transition');
+		assert.strictEqual(render({ id: 'fas:sliders' }, 'transition').iconClass, 'fa-solid fa-sliders');
 		const legacySvg = 'data:image/svg+xml;base64,PHN2Zy8+';
 		assert.strictEqual(render({ image: legacySvg }).iconImage, legacySvg);
 		assert.strictEqual(render({ id: 'none' }).iconImage, '');
 		assert.strictEqual(render({ id: 'none' }).iconClass, '');
 		assert.strictEqual(render('bell').iconClass, 'fa-solid fa-bell');
-		assert.strictEqual(render(undefined).iconClass, 'fa-solid fa-clock');
+		assert.strictEqual(render(undefined).iconClass, 'fa-solid fa-hourglass-half');
+		assert.strictEqual(render('clock', 'timer').iconClass, 'fa-solid fa-clock');
+		assert.strictEqual(render({ id: 'fas:shuffle' }, 'transition').iconClass, 'fa-solid fa-shuffle');
 		assert.strictEqual(render(undefined).iconColor, 'blue');
 		assert.strictEqual(render(selected, 'timer', 'red').iconColor, 'blue');
 		assert.strictEqual(render(selected, 'timer', 'invalid').iconColor, 'blue');

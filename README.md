@@ -61,8 +61,13 @@ and line color as well.
 Button text can be customized per design size. Default text is translated;
 the default appears as a placeholder in the designer. Custom text is shared
 across languages, and empty custom text shows only the icon.
-Duration and status bar elements can reserve space when hidden, separately for
-each design size.
+Icon, duration and status bar elements can reserve space when hidden, separately
+for each design size. Built-in designs reserve icon space by default. Icons are
+centered in a square using the configured icon size.
+Designs can store separate default icons for timers, stopwatches and transitions;
+for now these affect only the designer preview and are excluded from exports.
+Custom names must be unique within designs and within themes, ignoring case and
+surrounding spaces; built-in names may be reused.
 Layouts can be copied between sizes without replacing other size-specific
 settings. Undo and redo apply to the currently selected design or theme.
 Switching away from an unsaved design or theme prompts to discard its changes;

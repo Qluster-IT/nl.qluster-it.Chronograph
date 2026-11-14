@@ -1,0 +1,12 @@
+.fa-chronograph-transition {
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+	background-color: currentColor;
+	-webkit-mask: url("../transition-solid.svg") center / contain no-repeat;
+	mask: url("../transition-solid.svg") center / contain no-repeat;
+}
+
+.fa-chronograph-transition::before {
+	content: none;
+}

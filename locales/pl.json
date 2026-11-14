@@ -30,7 +30,7 @@
     "tab_widgets": "Widżety",
     "tab_general": "Ogólne",
     "running_chronographs": "Aktywne chronografy",
-    "widget_default_styles": "Domyślne style widżetów",
+    "widget_default_styles": "Domyślne style",
     "widget_styles_later": "Domyślne style widżetów będzie można skonfigurować tutaj później.",
     "general_settings": "Ustawienia ogólne",
     "amount_of_decimals": "Liczba miejsc dziesiętnych",
@@ -332,7 +332,12 @@
     "template_editor_switch": "Wybierz A po prawej stronie zaznaczonego przełącznika, aby użyć edytora tekstu sformatowanego.",
     "template_copy_copied": "Post i obraz zostały skopiowane. Otwórz forum i wklej je w edytorze tekstu sformatowanego.",
     "template_copy_retry": "Kopiowanie nie powiodło się. Użyj przycisku Kopiuj post i obraz, aby spróbować ponownie.",
-    "template_show_examples": "Pokaż podglądy"
+    "template_show_examples": "Pokaż podglądy",
+    "style_default_icons": "Domyślne ikony",
+    "style_default_icons_hint": "Te ikony dotyczą na razie tylko podglądu projektanta, nie widżetów ani szablonów.",
+    "style_icon_loading": "Ładowanie ikon...",
+    "style_icon_empty": "Nie znaleziono pasujących ikon.",
+    "style_duplicate_name": "Własne projekty i motywy muszą mieć unikalne nazwy w swoich kategoriach. Wielkość liter i zewnętrzne spacje są ignorowane."
   },
   "timer_not_running": "Timer __name__ nie działa.",
   "stopwatch_not_running": "Stoper __name__ nie działa.",

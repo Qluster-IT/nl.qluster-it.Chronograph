@@ -131,6 +131,22 @@ describe('Widget input layout', () => {
 		}
 	});
 
+	it('centers icons in a square of the configured size even in stretched groups', () => {
+		for (const [sheet, element, group] of [
+			[css, 'chronograph-design-element-icon', 'chronograph-design-group'],
+			[previewCss, 'style-widget-icon', 'style-preview-group']
+		]) {
+			const rule = sheet.match(new RegExp('\\.' + element + '\\s*\\{([^}]*)\\}'))[1];
+			assert.match(rule, /display:\s*flex/);
+			assert.match(rule, /align-items:\s*center/);
+			assert.match(rule, /justify-content:\s*center/);
+			assert.match(rule, /width:\s*var\(--element-size\)/);
+			assert.match(rule, /height:\s*var\(--element-size\)/);
+			assert.match(sheet, new RegExp('\\.' + group + '\\[data-direction="horizontal"\\]\\[data-alignment="stretch"\\] > \\.' + element + '\\s*\\{[^}]*flex:\\s*0 0 auto'));
+			assert.match(sheet, new RegExp('\\.' + group + '\\[data-direction="vertical"\\]\\[data-alignment="stretch"\\] > \\.' + element + '\\s*\\{[^}]*width:\\s*var\\(--element-size\\)'));
+		}
+	});
+
 	it('keeps form labels accessible but out of the grid', () => {
 		assert.match(css, /\.chronograph-widget \.visually-hidden\s*\{[^}]*position:\s*absolute;[^}]*clip:\s*rect\(0,\s*0,\s*0,\s*0\)/s);
 		for (const id of ['design-duration', 'design-duration-unit', 'design-transition-from', 'design-transition-to', 'design-transition-steps']) {

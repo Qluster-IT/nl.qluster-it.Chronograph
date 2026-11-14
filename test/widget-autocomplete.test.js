@@ -7,6 +7,29 @@ const vm = require('vm');
 const { Utils, ChronographType } = require('../lib/utils.js');
 
 describe('Widget chronograph autocomplete', () => {
+	it('offers the app transition icon in every widget icon selector', async () => {
+		const module = { exports: {} };
+		vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8'), {
+			module,
+			require: id => id === 'homey' ? { App: class {} }
+				: id === './lib/widget-icons.js' ? require('../lib/widget-icons.js') : {}
+		});
+		const listeners = {};
+		const app = { homey: {
+			__: key => key,
+			dashboards: { getWidget: id => ({ registerSettingAutocompleteListener: (setting, listener) => {
+				listeners[id + ':' + setting] = listener;
+			} }) }
+		} };
+		module.exports.prototype._registerChronographWidgetAutocomplete.call(app);
+		for (const selector of ['timer:icon', 'stopwatch:icon', 'transition:icon', 'multiple_chronographs:chronograph1Icon', 'multiple_chronographs:chronograph10Icon']) {
+			const defaults = await listeners[selector]('');
+			assert.strictEqual(defaults[3].id, 'chronograph:transition', selector);
+			assert.ok(defaults[3].image.startsWith('data:image/png;base64,'), selector);
+			assert.strictEqual((await listeners[selector]('transitie'))[0].id, 'chronograph:transition', selector);
+		}
+	});
+
 	it('offers all types with distinct identities and appearance selectors in each multiple-widget slot', async () => {
 		const module = { exports: {} };
 		vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8'), {

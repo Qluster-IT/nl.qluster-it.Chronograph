@@ -28,6 +28,11 @@ function stop(type, params) {
 }
 
 module.exports = {
+	async searchWidgetIcons({ homey, body }) {
+		if (!body || typeof body.query !== 'string' || body.query.length > 100) throw new Error('Invalid icon search');
+		return require('./lib/widget-icons.js').searchIcons(body.query, homey.__('settings.widget_icon_none'), 60)
+			.map(({ id, name, description }) => ({ id, name, description }));
+	},
 	async encodeWidgetTemplate({ body }) { return widgetTemplate.encodeTemplate(body); },
 	async decodeWidgetTemplate({ body }) { return widgetTemplate.decodeTemplate(body && body.text); },
 	async getWidgetTemplateCatalog() { return widgetTemplateCatalog.getCatalog(); },

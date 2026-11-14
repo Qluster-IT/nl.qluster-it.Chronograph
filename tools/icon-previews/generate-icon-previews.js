@@ -25,3 +25,9 @@ fs.writeFileSync(
 	path.join(assets, 'fontawesome-previews.json.gz'),
 	zlib.gzipSync(Buffer.from(JSON.stringify(previews)), { level: 9 })
 );
+
+const transition = fs.readFileSync(path.join(assets, 'transition-solid.svg'), 'utf8')
+	.replace(/#000000/g, '#2f8df6');
+fs.writeFileSync(path.join(assets, 'transition-solid-preview.png'), new Resvg(transition, {
+	fitTo: { mode: 'width', value: 64 }
+}).render().asPng());

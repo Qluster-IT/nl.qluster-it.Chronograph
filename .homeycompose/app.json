@@ -107,6 +107,10 @@
 		]
 	},
 	"api": {
+		"searchWidgetIcons": {
+			"method": "POST",
+			"path": "/widget-icons/search"
+		},
 		"getWidgetTemplateCatalog": {
 			"method": "GET",
 			"path": "/widget-templates/catalog"

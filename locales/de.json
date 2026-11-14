@@ -30,7 +30,7 @@
     "tab_widgets": "Widgets",
     "tab_general": "Allgemein",
     "running_chronographs": "Aktuelle Chronographen",
-    "widget_default_styles": "Standardstile für Widgets",
+    "widget_default_styles": "Standardstile",
     "widget_styles_later": "Die Standardstile für Widgets können später hier konfiguriert werden.",
     "general_settings": "Allgemeine Einstellungen",
     "amount_of_decimals": "Anzahl der Dezimalstellen",
@@ -332,7 +332,12 @@
     "template_editor_switch": "Wähle das A rechts im markierten Schalter, um den Rich-Text-Editor zu verwenden.",
     "template_copy_copied": "Beitrag und Bild wurden kopiert. Öffne das Forum und füge sie im Rich-Text-Editor ein.",
     "template_copy_retry": "Das Kopieren ist fehlgeschlagen. Versuche es mit der Schaltfläche Beitrag und Bild kopieren erneut.",
-    "template_show_examples": "Vorschauen anzeigen"
+    "template_show_examples": "Vorschauen anzeigen",
+    "style_default_icons": "Standardsymbole",
+    "style_default_icons_hint": "Diese Symbole gelten derzeit nur für die Designer-Vorschau, noch nicht für Widgets oder Vorlagen.",
+    "style_icon_loading": "Symbole werden geladen...",
+    "style_icon_empty": "Keine passenden Symbole gefunden.",
+    "style_duplicate_name": "Eigene Designs und Themen benötigen jeweils eindeutige Namen. Großschreibung und Leerzeichen am Rand werden ignoriert."
   },
   "timer_not_running": "Timer __name__ läuft nicht.",
   "stopwatch_not_running": "Stopuhr __name__ läuft nicht.",

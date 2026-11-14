@@ -30,7 +30,7 @@
     "tab_widgets": "Widgets",
     "tab_general": "Generelt",
     "running_chronographs": "Aktive kronografer",
-    "widget_default_styles": "Standardstiler for widgets",
+    "widget_default_styles": "Standardstiler",
     "widget_styles_later": "Standardstiler for widgets kan konfigureres her senere.",
     "general_settings": "Generelle innstillinger",
     "amount_of_decimals": "Antall desimaler",
@@ -332,7 +332,12 @@
     "template_editor_switch": "Velg A til høyre i den markerte bryteren for å bruke riktekstredigering.",
     "template_copy_copied": "Innlegget og bildet er kopiert. Åpne forumet og lim dem inn i riktekstredigeringen.",
     "template_copy_retry": "Kopiering mislyktes. Bruk knappen Kopier innlegg og bilde for å prøve igjen.",
-    "template_show_examples": "Vis forhåndsvisninger"
+    "template_show_examples": "Vis forhåndsvisninger",
+    "style_default_icons": "Standardikoner",
+    "style_default_icons_hint": "Disse ikonene gjelder foreløpig bare forhåndsvisningen i designeren, ikke widgeter eller maler.",
+    "style_icon_loading": "Laster ikoner...",
+    "style_icon_empty": "Ingen samsvarende ikoner funnet.",
+    "style_duplicate_name": "Egendefinerte design og temaer må ha unike navn innenfor hver kategori. Store og små bokstaver og mellomrom rundt navnet ignoreres."
   },
   "timer_not_running": "Timeren __name__ kjører ikke.",
   "stopwatch_not_running": "Stoppeklokken __name__ kjører ikke.",

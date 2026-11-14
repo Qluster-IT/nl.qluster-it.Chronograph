@@ -83,6 +83,102 @@ function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns, extr
 }
 
 describe('Widget style designer preview', () => {
+	it('uses the widget default icons in previews and chronograph lists', () => {
+		const { scope } = loadSettings();
+		for (const [type, icon] of [['stopwatch', 'fa-stopwatch'], ['timer', 'fa-hourglass-half'], ['transition', 'fa-chronograph-transition']]) {
+			assert.strictEqual(scope.previewIcon(type), icon);
+			assert.strictEqual(scope.sections.find(section => section.key === type).icon, icon);
+		}
+	});
+
+	it('edits and saves independent default icons for each chronograph type in the designer only', () => {
+		const { scope, writes, homey, editor } = loadSettings();
+		homey.api = (method, url, data, callback) => {
+			assert.strictEqual(url, '/widget-icons/search');
+			callback(null, [
+				{ id: 'fas:clock', name: 'clock' }, { id: 'far:clock', name: 'clock' },
+				{ id: 'fab:github', name: 'github' }, { id: 'none', name: 'None' }
+			]);
+		};
+		scope.createStyle(true);
+		for (const [type, id] of [['timer', 'far:clock'], ['stopwatch', 'fab:github'], ['transition', 'none']]) {
+			scope.toggleIconPicker(type);
+			scope.setDefaultIcon(type, id);
+		}
+		assert.strictEqual(scope.previewIcon('timer'), 'fa-clock');
+		assert.strictEqual(scope.previewIconStyle('timer'), 'fa-regular');
+		assert.strictEqual(scope.previewIconStyle('stopwatch'), 'fa-brands');
+		assert.strictEqual(scope.previewIcon('transition'), undefined);
+		assert.strictEqual(scope.previewVisible('icon', 'running', 'transition'), false);
+		scope.editor.previewType = 'stopwatch';
+		assert.strictEqual(scope.previewIcon(), 'fa-github');
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
+		scope.saveSettings();
+		const saved = writes[0].value;
+		assert.deepStrictEqual(JSON.parse(JSON.stringify(saved.styles[0].defaultIcons)), {
+			timer: 'far:clock', stopwatch: 'fab:github', transition: 'none'
+		});
+		const reopened = loadSettings(saved).scope;
+		reopened.editor.selectedStyleId = 'custom:' + saved.styles[0].id;
+		assert.strictEqual(reopened.previewIcon('timer'), 'fa-clock');
+		reopened.toggleIconPicker('timer');
+		reopened.setDefaultIcon('timer', null);
+		assert.strictEqual(reopened.previewIcon('timer'), 'fa-hourglass-half');
+		const invalid = JSON.parse(JSON.stringify(saved));
+		invalid.styles[0].defaultIcons.timer = 'fas:bad icon';
+		assert.strictEqual(editor.isValidCollection(invalid), false);
+		assert.match(html, /ng-repeat="type in \['timer', 'stopwatch', 'transition'\]"/);
+	});
+
+	it('excludes designer-only default icons from template exports', () => {
+		const { scope, homey } = loadSettings();
+		scope.createStyle(true);
+		scope.getSelectedStyle().defaultIcons = { timer: 'fas:clock' };
+		const id = scope.getSelectedStyle().id;
+		scope.saveSettings();
+		let exported;
+		homey.api = (method, url, data, callback) => { exported = data.design; callback(null, 'encoded'); };
+		scope.openTemplates();
+		scope.templates.designId = id;
+		scope.generateWidgetTemplate();
+		assert.strictEqual(exported.defaultIcons, undefined);
+		assert.strictEqual(scope.getSelectedStyle().defaultIcons.timer, 'fas:clock');
+		assert.strictEqual(scope.previewIcon('timer'), 'fa-hourglass-half');
+	});
+
+	it('rejects duplicate custom names per category while allowing built-in and cross-category matches', () => {
+		const { scope, writes, homey } = loadSettings();
+		const alerts = [];
+		homey.alert = message => alerts.push(message);
+		scope.createStyle(true);
+		scope.getSelectedStyle().name = scope.defaultDesignName();
+		scope.saveSettings();
+		scope.createStyle(true);
+		scope.getSelectedStyle().name = '  ' + scope.defaultDesignName().toUpperCase() + '  ';
+		assert.strictEqual(scope.duplicateEditingName(), true);
+		scope.saveSettings();
+		assert.strictEqual(writes.length, 1);
+		assert.strictEqual(alerts[alerts.length - 1], 'settings.style_duplicate_name');
+		scope.getSelectedStyle().name = 'Another design';
+		scope.saveSettings();
+		scope.selectEditorMode('color');
+		scope.createStyle(true);
+		scope.getSelectedScheme().name = scope.defaultDesignName();
+		scope.saveSettings();
+		assert.strictEqual(writes.length, 3);
+		scope.createStyle(true);
+		scope.getSelectedScheme().name = ' ' + scope.defaultDesignName().toUpperCase() + ' ';
+		assert.strictEqual(scope.duplicateEditingName(), true);
+		scope.saveSettings();
+		assert.strictEqual(writes.length, 3);
+		assert.strictEqual(alerts[alerts.length - 1], 'settings.style_duplicate_name');
+	});
+
+	it('places the templates button beside the default styles heading', () => {
+		assert.match(html, /class="template-header style-editor-header">[\s\S]*?<h2>\{\{ labels\.widgetStyles \}\}<\/h2>[\s\S]*?ng-click="openTemplates\(\)"[\s\S]*?<\/div>/);
+		assert.match(css, /\.settings-page \.btn-outline-primary\s*\{[^}]*--bs-btn-color:\s*var\(--chronograph-primary\);[^}]*--bs-btn-border-color:\s*var\(--chronograph-primary\);/);
+	});
+
 	it('remembers the designer help preference without changing the design', () => {
 		const { scope, writes } = loadSettings();
 		assert.strictEqual(scope.styleHelpExpanded, true);
@@ -1703,6 +1799,8 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(scope.reserveElementSpace(), false);
 		scope.selectLayoutElement('progress');
 		scope.reserveElementSpace(true);
+		scope.selectLayoutElement('icon');
+		scope.reserveElementSpace(true);
 		scope.saveSettings();
 		assert.strictEqual(editor.isValidCollection(writes[0].value), true);
 		const reloaded = loadSettings(writes[0].value).scope;
@@ -1713,8 +1811,39 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(reloaded.reserveElementSpace(), false);
 		reloaded.selectLayoutElement('progress');
 		assert.strictEqual(reloaded.reserveElementSpace(), true);
+		reloaded.selectLayoutElement('icon');
+		assert.strictEqual(reloaded.reserveElementSpace(), true);
+		assert.strictEqual(editor.isValidCollection(reloaded.widgetStyles), true);
 		reloaded.getSelectedStyle().reservedElements.compact.progress = 'yes';
 		assert.strictEqual(editor.isValidCollection(reloaded.widgetStyles), false);
+	});
+
+	it('enables icon space reservation in every built-in design and size', () => {
+		const { scope } = loadSettings();
+		for (const id of ['builtin:current', ...scope.builtInDesigns.map(design => design.id)]) {
+			scope.editor.selectedStyleId = id;
+			for (const size of ['compact', 'normal', 'large']) {
+				scope.editor.previewSize = size;
+				scope.selectLayoutElement('icon');
+				assert.strictEqual(scope.reserveElementSpace(), true, id + ' ' + size);
+			}
+		}
+		assert.match(html, /editor\.selectedElement === 'icon' \|\| editor\.selectedElement === 'duration'/);
+	});
+
+	it('shows a reserved icon placeholder when its preview row is hidden', () => {
+		const { scope } = loadSettings();
+		scope.createStyle(false);
+		const style = scope.getSelectedStyle();
+		const row = style.groups.normal.elements.icon.row;
+		style.rowVisibility.normal[row] = { states: [], startForm: false, actions: {} };
+		scope.selectLayoutElement('icon');
+		scope.reserveElementSpace(true);
+		const hasIconPlaceholder = () => scope.groupedRows(true).some(item =>
+			item.groups.some(group => group.placeholders.includes('icon')));
+		assert.strictEqual(hasIconPlaceholder(), true);
+		scope.reserveElementSpace(false);
+		assert.strictEqual(hasIconPlaceholder(), false);
 	});
 
 	it('adds reservation defaults to older built-in preview snapshots without replacing edits', () => {
@@ -1726,13 +1855,15 @@ describe('Widget style designer preview', () => {
 		const vertical = saved.styles.find(style => style.id === 'builtin:vertical');
 		delete vertical.reservedElements;
 		const tiny = saved.styles.find(style => style.id === 'builtin:tiny');
-		tiny.reservedElements = { normal: { duration: false } };
+		tiny.reservedElements = { normal: { duration: false, icon: false } };
 		const reloaded = loadSettings(null, null, null, true, saved).scope;
 		reloaded.editor.selectedStyleId = 'builtin:vertical';
 		assert.strictEqual(reloaded.getSelectedStyle().name, 'Edited Vertical');
 		assert.strictEqual(reloaded.getSelectedStyle().reservedElements.normal.progress, true);
 		reloaded.editor.selectedStyleId = 'builtin:tiny';
 		assert.strictEqual(reloaded.getSelectedStyle().reservedElements.normal.duration, false);
+		assert.strictEqual(reloaded.getSelectedStyle().reservedElements.normal.icon, false);
+		assert.strictEqual(reloaded.getSelectedStyle().reservedElements.compact.icon, true);
 	});
 
 	it('rejects invalid button text settings', () => {
