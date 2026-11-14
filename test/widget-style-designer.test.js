@@ -110,6 +110,7 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(scope.previewIconStyle('stopwatch'), 'fa-brands');
 		assert.strictEqual(scope.previewIcon('transition'), undefined);
 		assert.strictEqual(scope.previewVisible('icon', 'running', 'transition'), false);
+		assert.ok(scope.groupedRows(true, null, 'transition').some(row => row.groups.some(group => group.placeholders.includes('icon'))));
 		scope.editor.previewType = 'stopwatch';
 		assert.strictEqual(scope.previewIcon(), 'fa-github');
 		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
@@ -128,6 +129,21 @@ describe('Widget style designer preview', () => {
 		invalid.styles[0].defaultIcons.timer = 'fas:bad icon';
 		assert.strictEqual(editor.isValidCollection(invalid), false);
 		assert.match(html, /ng-repeat="type in \['timer', 'stopwatch', 'transition'\]"/);
+	});
+
+	it('ignores stale icon search results', () => {
+		const { scope, homey } = loadSettings();
+		scope.createStyle(true);
+		const pending = [];
+		homey.api = (method, url, data, callback) => pending.push(callback);
+		scope.toggleIconPicker('timer');
+		scope.iconPickers.timer.query = 'clock';
+		scope.searchDefaultIcons('timer');
+		pending[1](null, [{ id: 'fas:clock', name: 'clock' }]);
+		pending[0](null, [{ id: 'none', name: 'None' }]);
+		assert.strictEqual(scope.iconPickers.timer.results[0].id, 'fas:clock');
+		scope.setDefaultIcon('timer', 'none');
+		assert.strictEqual(scope.getSelectedStyle().defaultIcons, undefined);
 	});
 
 	it('excludes designer-only default icons from template exports', () => {

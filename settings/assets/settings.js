@@ -2313,7 +2313,11 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			if (!id) return Homey.__('settings.style_current');
 			if (id === 'none') return Homey.__('settings.widget_icon_none');
 			var match = $scope.iconPickers[type].results.find(function (item) { return item.id === id; });
-			return match ? match.name : id.slice(id.indexOf(':') + 1).replace(/-/g, ' ');
+			var appNames = { 'fas:hourglass-half': 'Timer', 'fas:stopwatch': 'Stopwatch', 'chronograph:transition': 'Transition' };
+			var styleNames = { fas: 'Solid', far: 'Regular', fab: 'Brands' };
+			var name = match ? match.name : appNames[id] || id.slice(id.indexOf(':') + 1).replace(/-/g, ' ');
+			var category = match ? match.description : appNames[id] ? 'App' : styleNames[id.split(':')[0]];
+			return category ? name + ' (' + category + ')' : name;
 		};
 		$scope.searchDefaultIcons = function (type) {
 			var picker = $scope.iconPickers[type];
