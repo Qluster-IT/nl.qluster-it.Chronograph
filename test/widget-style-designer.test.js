@@ -84,6 +84,39 @@ function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns, extr
 }
 
 describe('Widget style designer preview', () => {
+	it('matches widget text line heights across sizes and narrow layouts', () => {
+		const widgetCss = fs.readFileSync(path.join(root, 'assets', 'css', 'chronograph-widget.css'), 'utf8');
+		function lineHeights(source, selector) {
+			return (source.match(/[^{}]+\{[^{}]*\}/g) || []).filter(rule =>
+				rule.slice(0, rule.indexOf('{')).split(',').some(value => value.trim() === selector)
+			).map(rule => /(?:\{|;)\s*line-height:\s*([^;]+);/.exec(rule))
+				.filter(Boolean).map(match => match[1]);
+		}
+		for (const size of ['', 'compact', 'large']) {
+			for (const element of ['name', 'status', 'duration', 'remaining', 'total']) {
+				if (size === 'compact' && ['name', 'status'].includes(element)) continue;
+				const widgetSelector = (size ? '.chronograph-layout-' + size + ' ' : '')
+					+ '.chronograph-design .chronograph-design-element-' + element
+					+ ' .chronograph-' + (['name', 'status'].includes(element) ? element : 'duration');
+				const previewSelector = (size ? '.style-preview-' + size + ' ' : '')
+					+ '.style-grouped-preview .style-widget-' + element;
+				const expected = lineHeights(widgetCss, widgetSelector);
+				assert.ok(expected.length, widgetSelector);
+				assert.deepStrictEqual(lineHeights(css, previewSelector), expected, previewSelector);
+			}
+		}
+		for (const size of ['normal', 'large']) {
+			for (const element of ['duration', 'remaining', 'total']) {
+				const expected = lineHeights(widgetCss, '.chronograph-layout-' + size
+					+ ' .chronograph-design[data-allow-shrink="true"] .chronograph-design-element-' + element
+					+ ' .chronograph-duration');
+				assert.ok(expected.length);
+				assert.deepStrictEqual(lineHeights(css, '.style-preview-' + size
+					+ '[data-allow-shrink="true"] .style-widget-' + element), expected);
+			}
+		}
+	});
+
 	it('edits and saves timer and transition elapsed duration independently of duration', () => {
 		const { scope, writes, editor } = loadSettings();
 		assert.strictEqual(scope.styleLabels.remaining, 'settings.widget_elapsed');
@@ -748,7 +781,7 @@ describe('Widget style designer preview', () => {
 		scope.templates.designId = design.id;
 		scope.templates.themeId = theme.id;
 		scope.generateWidgetTemplate();
-		assert.strictEqual(scope.templateForumPost(), '# Design: Control Deck | Theme: Lagoon Pulse\n\nDescribe your template here.\n\nTWF:\n```javascript\nencoded-template\n```');
+		assert.strictEqual(scope.templateForumPost(), '# Design: Control Deck | Theme: Lagoon Pulse\n\n\n\nTWF:\n```javascript\nencoded-template\n```');
 		scope.templates.themeId = '';
 		scope.generateWidgetTemplate();
 		assert.ok(scope.templateForumPost().startsWith('# Design: Control Deck\n'));
@@ -862,7 +895,10 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(labels.filter(label => label === 'settings.widget_paused').length, 3);
 		assert.strictEqual(labels.filter(label => label === 'settings.widget_not_running').length, 3);
 		assert.ok(copied['text/plain'].includes('```javascript\nencoded-template\n```'));
+		assert.ok(copied['text/plain'].startsWith('# Design: Design <example>\n\n\n\nTWF:'));
 		assert.ok(copied['text/html'].includes('<h1>Design: Design &lt;example&gt;</h1>'));
+		assert.ok(copied['text/html'].includes('</h1><p><br></p><p><img'));
+		assert.ok(!copied['text/html'].includes('Describe your template here.'));
 		assert.ok(copied['text/html'].includes('<img alt="Widget preview" src="data:image/png;base64,cG5n">'));
 		assert.ok(copied['text/html'].includes('<pre data-params="javascript"><code class="language-javascript">encoded-template</code></pre>'));
 		assert.strictEqual(scope.editor.previewSize, 'normal');
@@ -1402,6 +1438,7 @@ describe('Widget style designer preview', () => {
 		assert.match(html.slice(size, preview), /sticky-border/);
 		assert.match(css, /\.style-preview-sticky\.is-stuck::after\s*\{[^}]*border-bottom:/);
 		assert.match(css, /\.style-preview-sticky \.style-preview-rows\s*\{[^}]*max-height:\s*50vh;[^}]*overflow-y:\s*auto;/);
+		assert.match(css, /\.style-preview-rows,\s*\.style-preview\s*\{[^}]*box-sizing:\s*border-box;[^}]*width:\s*100%;[^}]*max-width:\s*450px;/);
 	});
 
 	it('selects theme elements from the designer without allowing layout changes', () => {

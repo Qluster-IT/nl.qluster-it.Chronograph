@@ -8,7 +8,7 @@
 	"template_post_forum": "النشر في المنتدى",
 	"template_paste_image_hint": "في المنتدى، انتقل إلى محرر النص المنسق.",
 	"template_paste_image_reason": "يتيح ذلك تضمين صورة المعاينة التي تم إنشاؤها عند لصق المنشور. الصق مرة واحدة،",
-	"template_paste_edit_description": "عدّل الوصف",
+	"template_paste_edit_description": "أضف وصفًا اختياريًا في السطر الفارغ أسفل العنوان",
 	"template_paste_wait_image": " وانتظر اكتمال تحميل الصورة قبل النشر.",
 	"template_editor_switch": "اختر الحرف A على يمين المفتاح المحدد لاستخدام محرر النص المنسق.",
 	"template_copy_copied": "تم نسخ المنشور والصورة.",

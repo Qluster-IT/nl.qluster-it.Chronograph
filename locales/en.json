@@ -345,7 +345,7 @@
     "widget_total": "Total time",
     "template_paste_image_reason": "This includes the generated preview image when you paste the post. Paste once,",
     "template_copy_next": "Open the forum and paste them into the rich-text editor.",
-    "template_paste_edit_description": "edit the description",
+    "template_paste_edit_description": "optionally add a description in the blank line below the title",
     "template_paste_wait_image": ", and wait for the image upload to finish before posting.",
     "template_image_zoom_in": "Zoom in",
     "template_image_zoom_out": "Zoom out",

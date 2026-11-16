@@ -345,7 +345,7 @@
     "widget_total": "Total tid",
     "template_paste_image_reason": "Då följer den genererade förhandsvisningsbilden med när du klistrar in inlägget. Klistra in en gång,",
     "template_copy_next": "Öppna forumet och klistra in dem i redigeraren för formaterad text.",
-    "template_paste_edit_description": "redigera beskrivningen",
+    "template_paste_edit_description": "lägg vid behov till en beskrivning på den tomma raden under rubriken",
     "template_paste_wait_image": " och vänta tills bilden har laddats upp innan du publicerar.",
     "template_image_zoom_in": "Zooma in",
     "template_image_zoom_out": "Zooma ut",

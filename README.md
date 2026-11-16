@@ -107,6 +107,12 @@ Single and multi-widget tiles use these defaults unless an explicit widget icon
 (including None) overrides them. Templates preserve references only, never icon files.
 Template previews and exported preview images use the same icons; image capture embeds
 only the bundled font styles needed by the selected design.
+Shared previews match the widgets' size-specific text line heights, including custom
+text sizes and duration spacing when shrinking on narrow widgets.
+Settings preview widgets are capped at 450px wide and fit smaller screens. Template
+images use a fixed 350px capture width per widget, independent of the screen width.
+Copied forum posts leave an empty, normal paragraph below the title for an optional
+description; the export instructions point users to it without adding placeholder text.
 The community catalogue renders one normal-size running timer from each decoded
 template when list previews are enabled, caching that preview for the loaded entry.
 Expanded entries retain the forum images; clicking an image opens a scrollable

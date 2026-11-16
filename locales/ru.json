@@ -345,7 +345,7 @@
     "widget_total": "Общее время",
     "template_paste_image_reason": "Это позволит добавить созданное изображение предпросмотра при вставке сообщения. Вставьте содержимое один раз,",
     "template_copy_next": "Откройте форум и вставьте их в редактор форматированного текста.",
-    "template_paste_edit_description": "отредактируйте описание",
+    "template_paste_edit_description": "при желании добавьте описание в пустой строке под заголовком",
     "template_paste_wait_image": " и перед публикацией дождитесь загрузки изображения.",
     "template_image_zoom_in": "Увеличить",
     "template_image_zoom_out": "Уменьшить",

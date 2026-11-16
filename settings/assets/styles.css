@@ -583,6 +583,13 @@ body {
 	overflow-y: auto;
 }
 
+.style-preview-rows,
+.style-preview {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: 450px;
+}
+
 .style-preview-rows {
 	display: flex;
 	flex-direction: column;
@@ -904,10 +911,44 @@ body {
 .style-grouped-preview .style-widget-icon,
 .style-grouped-preview .style-widget-name,
 .style-grouped-preview .style-widget-status,
+.style-preview .style-grouped-preview .style-widget-duration,
+.style-preview .style-grouped-preview .style-widget-remaining,
+.style-preview .style-grouped-preview .style-widget-total {
+	font-size: var(--element-size);
+}
+
+.style-grouped-preview .style-widget-name {
+	line-height: max(1.25em, var(--homey-line-height-small, 20px));
+}
+
+.style-grouped-preview .style-widget-status {
+	line-height: max(1.25em, 16px);
+}
+
 .style-grouped-preview .style-widget-duration,
 .style-grouped-preview .style-widget-remaining,
 .style-grouped-preview .style-widget-total {
-	font-size: var(--element-size);
+	line-height: max(1.25em, var(--homey-line-height-large, 28px));
+}
+
+.style-preview-compact .style-grouped-preview .style-widget-duration,
+.style-preview-compact .style-grouped-preview .style-widget-remaining,
+.style-preview-compact .style-grouped-preview .style-widget-total {
+	line-height: max(1.25em, var(--homey-line-height-small, 20px));
+}
+
+.style-preview-large .style-grouped-preview .style-widget-name {
+	line-height: max(1.25em, var(--homey-line-height-large, 28px));
+}
+
+.style-preview-large .style-grouped-preview .style-widget-status {
+	line-height: max(1.25em, var(--homey-line-height-small, 20px));
+}
+
+.style-preview-large .style-grouped-preview .style-widget-duration,
+.style-preview-large .style-grouped-preview .style-widget-remaining,
+.style-preview-large .style-grouped-preview .style-widget-total {
+	line-height: max(1.25em, var(--homey-line-height-xxlarge, 40px));
 }
 
 .style-showcase .style-cell-content.style-widget-icon,
@@ -993,11 +1034,13 @@ body {
 	.style-preview-normal[data-allow-shrink="true"] .style-widget-remaining,
 	.style-preview-normal[data-allow-shrink="true"] .style-widget-total {
 		font-size: min(var(--element-size), 14px);
+		line-height: max(1.25em, var(--homey-line-height-small, 20px));
 	}
 	.style-preview-large[data-allow-shrink="true"] .style-widget-duration,
 	.style-preview-large[data-allow-shrink="true"] .style-widget-remaining,
 	.style-preview-large[data-allow-shrink="true"] .style-widget-total {
 		font-size: min(var(--element-size), 20px);
+		line-height: max(1.25em, var(--homey-line-height-large, 28px));
 	}
 	.style-preview-large[data-allow-shrink="true"] .style-widget-element .style-widget-action:not(.style-widget-start):not(.style-widget-cancel):not(.style-widget-button-text) {
 		width: min(var(--element-size), 32px);

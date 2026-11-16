@@ -8,7 +8,7 @@
 	"template_post_forum": "Slå op på forummet",
 	"template_paste_image_hint": "Skift til rich text-editoren på forummet.",
 	"template_paste_image_reason": "Så kommer det genererede eksempelbillede med, når du indsætter indlægget. Indsæt én gang,",
-	"template_paste_edit_description": "rediger beskrivelsen",
+	"template_paste_edit_description": "tilføj eventuelt en beskrivelse på den tomme linje under titlen",
 	"template_paste_wait_image": ", og vent, indtil billedet er uploadet, før du sender.",
 	"template_editor_switch": "Vælg A til højre i den markerede knap for at bruge rich text-editoren.",
 	"template_copy_copied": "Indlægget og billedet er kopieret.",

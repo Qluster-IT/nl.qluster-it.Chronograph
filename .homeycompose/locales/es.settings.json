@@ -8,7 +8,7 @@
 	"template_post_forum": "Publicar en el foro",
 	"template_paste_image_hint": "En el foro, cambia al editor de texto enriquecido.",
 	"template_paste_image_reason": "Así se incluye la imagen de vista previa generada al pegar la publicación. Pega una vez,",
-	"template_paste_edit_description": "edita la descripción",
+	"template_paste_edit_description": "añade opcionalmente una descripción en la línea en blanco debajo del título",
 	"template_paste_wait_image": " y espera a que termine la carga de la imagen antes de publicar.",
 	"template_editor_switch": "Selecciona la A a la derecha del selector marcado para usar el editor de texto enriquecido.",
 	"template_copy_copied": "Se copiaron la publicación y la imagen.",

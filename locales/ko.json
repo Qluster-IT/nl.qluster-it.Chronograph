@@ -345,7 +345,7 @@
     "widget_total": "총 시간",
     "template_paste_image_reason": "이렇게 하면 게시물을 붙여넣을 때 생성된 미리보기 이미지가 포함됩니다. 한 번 붙여넣고",
     "template_copy_next": "포럼을 열고 서식 있는 텍스트 편집기에 붙여넣으세요.",
-    "template_paste_edit_description": "설명을 수정하세요",
+    "template_paste_edit_description": "원하는 경우 제목 아래 빈 줄에 설명을 추가하세요",
     "template_paste_wait_image": ". 이미지 업로드가 완료된 후 게시하세요.",
     "template_image_zoom_in": "확대",
     "template_image_zoom_out": "축소",

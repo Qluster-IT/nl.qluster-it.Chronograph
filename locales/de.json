@@ -345,7 +345,7 @@
     "widget_total": "Gesamtzeit",
     "template_paste_image_reason": "So wird das erzeugte Vorschaubild beim Einfügen des Beitrags übernommen. Füge einmal ein,",
     "template_copy_next": "Öffne das Forum und füge sie im Rich-Text-Editor ein.",
-    "template_paste_edit_description": "bearbeite die Beschreibung",
+    "template_paste_edit_description": "füge bei Bedarf eine Beschreibung in der leeren Zeile unter dem Titel hinzu",
     "template_paste_wait_image": " und warte vor dem Absenden, bis das Bild hochgeladen ist.",
     "template_image_zoom_in": "Vergrößern",
     "template_image_zoom_out": "Verkleinern",

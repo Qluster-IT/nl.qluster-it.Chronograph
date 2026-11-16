@@ -8,7 +8,7 @@
 	"template_post_forum": "Pubblica sul forum",
 	"template_paste_image_hint": "Nel forum passa all’editor di testo formattato.",
 	"template_paste_image_reason": "In questo modo viene inclusa l’immagine di anteprima generata quando incolli il messaggio. Incolla una volta,",
-	"template_paste_edit_description": "modifica la descrizione",
+	"template_paste_edit_description": "aggiungi facoltativamente una descrizione nella riga vuota sotto il titolo",
 	"template_paste_wait_image": " e attendi il caricamento dell’immagine prima di pubblicare.",
 	"template_editor_switch": "Seleziona la A a destra dell’interruttore evidenziato per usare l’editor di testo formattato.",
 	"template_copy_copied": "Il messaggio e l’immagine sono stati copiati.",

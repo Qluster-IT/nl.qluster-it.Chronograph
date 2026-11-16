@@ -345,7 +345,7 @@
     "widget_total": "Samlet tid",
     "template_paste_image_reason": "Så kommer det genererede eksempelbillede med, når du indsætter indlægget. Indsæt én gang,",
     "template_copy_next": "Åbn forummet og indsæt dem i rich text-editoren.",
-    "template_paste_edit_description": "rediger beskrivelsen",
+    "template_paste_edit_description": "tilføj eventuelt en beskrivelse på den tomme linje under titlen",
     "template_paste_wait_image": ", og vent, indtil billedet er uploadet, før du sender.",
     "template_image_zoom_in": "Zoom ind",
     "template_image_zoom_out": "Zoom ud",

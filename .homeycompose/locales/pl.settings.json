@@ -8,7 +8,7 @@
 	"template_post_forum": "Opublikuj na forum",
 	"template_paste_image_hint": "Na forum przełącz się na edytor tekstu sformatowanego.",
 	"template_paste_image_reason": "Dzięki temu podczas wklejania postu zostanie dołączony wygenerowany obraz podglądu. Wklej raz,",
-	"template_paste_edit_description": "edytuj opis",
+	"template_paste_edit_description": "opcjonalnie dodaj opis w pustym wierszu pod tytułem",
 	"template_paste_wait_image": " i przed publikacją poczekaj na przesłanie obrazu.",
 	"template_editor_switch": "Wybierz A po prawej stronie zaznaczonego przełącznika, aby użyć edytora tekstu sformatowanego.",
 	"template_copy_copied": "Post i obraz zostały skopiowane.",

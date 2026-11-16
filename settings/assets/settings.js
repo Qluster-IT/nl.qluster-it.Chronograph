@@ -1129,8 +1129,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			var heading = [];
 			if (template.exportDesignName) heading.push('Design: ' + template.exportDesignName.replace(/\s+/g, ' ').trim());
 			if (template.exportThemeName) heading.push('Theme: ' + template.exportThemeName.replace(/\s+/g, ' ').trim());
-			return '# ' + heading.join(' | ') + '\n\n'
-				+ 'Describe your template here.\n\nTWF:\n```javascript\n' + template.exportText + '\n```';
+			return '# ' + heading.join(' | ') + '\n\n\n\nTWF:\n```javascript\n' + template.exportText + '\n```';
 		};
 
 		$scope.openWidgetExchange = function (number) {
@@ -1320,7 +1319,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			}
 			var text = $scope.templateForumPost();
 			var heading = text.slice(2, text.indexOf('\n\n'));
-			var html = '<h1>' + escapeHtml(heading) + '</h1><p>Describe your template here.</p>'
+			var html = '<h1>' + escapeHtml(heading) + '</h1><p><br></p>'
 				+ '<p><img alt="Widget preview" src="' + template.imageData + '"></p>'
 				+ '<p>TWF:</p><pre data-params="javascript"><code class="language-javascript">' + escapeHtml(template.exportText) + '</code></pre>';
 			var copied = false;

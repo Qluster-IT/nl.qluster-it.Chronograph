@@ -345,7 +345,7 @@
     "widget_total": "Całkowity czas",
     "template_paste_image_reason": "Dzięki temu podczas wklejania postu zostanie dołączony wygenerowany obraz podglądu. Wklej raz,",
     "template_copy_next": "Otwórz forum i wklej je w edytorze tekstu sformatowanego.",
-    "template_paste_edit_description": "edytuj opis",
+    "template_paste_edit_description": "opcjonalnie dodaj opis w pustym wierszu pod tytułem",
     "template_paste_wait_image": " i przed publikacją poczekaj na przesłanie obrazu.",
     "template_image_zoom_in": "Powiększ",
     "template_image_zoom_out": "Pomniejsz",

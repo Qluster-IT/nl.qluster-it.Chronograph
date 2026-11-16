@@ -8,7 +8,7 @@
 	"template_post_forum": "Post on Forum",
 	"template_paste_image_hint": "Switch to the rich-text editor in the forum.",
 	"template_paste_image_reason": "This includes the generated preview image when you paste the post. Paste once,",
-	"template_paste_edit_description": "edit the description",
+	"template_paste_edit_description": "optionally add a description in the blank line below the title",
 	"template_paste_wait_image": ", and wait for the image upload to finish before posting.",
 	"template_editor_switch": "Select the A on the right of the outlined switch to use the rich-text editor.",
 	"template_copy_copied": "The post and image were copied.",

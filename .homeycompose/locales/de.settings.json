@@ -8,7 +8,7 @@
 	"template_post_forum": "Im Forum posten",
 	"template_paste_image_hint": "Wechsle im Forum zum Rich-Text-Editor.",
 	"template_paste_image_reason": "So wird das erzeugte Vorschaubild beim Einfügen des Beitrags übernommen. Füge einmal ein,",
-	"template_paste_edit_description": "bearbeite die Beschreibung",
+	"template_paste_edit_description": "füge bei Bedarf eine Beschreibung in der leeren Zeile unter dem Titel hinzu",
 	"template_paste_wait_image": " und warte vor dem Absenden, bis das Bild hochgeladen ist.",
 	"template_editor_switch": "Wähle das A rechts im markierten Schalter, um den Rich-Text-Editor zu verwenden.",
 	"template_copy_copied": "Beitrag und Bild wurden kopiert.",

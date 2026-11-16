@@ -8,7 +8,7 @@
 	"template_post_forum": "Publier sur le forum",
 	"template_paste_image_hint": "Sur le forum, passez à l’éditeur de texte enrichi.",
 	"template_paste_image_reason": "Cela permet d’inclure l’image d’aperçu générée lorsque vous collez le message. Collez une seule fois,",
-	"template_paste_edit_description": "modifiez la description",
+	"template_paste_edit_description": "ajoutez si vous le souhaitez une description sur la ligne vide sous le titre",
 	"template_paste_wait_image": " et attendez la fin du téléversement de l’image avant de publier.",
 	"template_editor_switch": "Sélectionnez le A à droite du sélecteur encadré pour utiliser l’éditeur de texte enrichi.",
 	"template_copy_copied": "Le message et l’image ont été copiés.",

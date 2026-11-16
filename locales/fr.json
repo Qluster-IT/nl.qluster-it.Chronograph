@@ -345,7 +345,7 @@
     "widget_total": "Temps total",
     "template_paste_image_reason": "Cela permet d’inclure l’image d’aperçu générée lorsque vous collez le message. Collez une seule fois,",
     "template_copy_next": "Ouvrez le forum et collez-les dans l’éditeur de texte enrichi.",
-    "template_paste_edit_description": "modifiez la description",
+    "template_paste_edit_description": "ajoutez si vous le souhaitez une description sur la ligne vide sous le titre",
     "template_paste_wait_image": " et attendez la fin du téléversement de l’image avant de publier.",
     "template_image_zoom_in": "Agrandir",
     "template_image_zoom_out": "Réduire",

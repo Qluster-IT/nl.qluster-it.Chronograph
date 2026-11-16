@@ -345,7 +345,7 @@
     "widget_total": "Tiempo total",
     "template_paste_image_reason": "Así se incluye la imagen de vista previa generada al pegar la publicación. Pega una vez,",
     "template_copy_next": "Abre el foro y pégalas en el editor de texto enriquecido.",
-    "template_paste_edit_description": "edita la descripción",
+    "template_paste_edit_description": "añade opcionalmente una descripción en la línea en blanco debajo del título",
     "template_paste_wait_image": " y espera a que termine la carga de la imagen antes de publicar.",
     "template_image_zoom_in": "Acercar",
     "template_image_zoom_out": "Alejar",

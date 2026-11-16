@@ -8,7 +8,7 @@
 	"template_post_forum": "Publiser på forumet",
 	"template_paste_image_hint": "Bytt til riktekstredigering i forumet.",
 	"template_paste_image_reason": "Da blir det genererte forhåndsvisningsbildet med når du limer inn innlegget. Lim inn én gang,",
-	"template_paste_edit_description": "rediger beskrivelsen",
+	"template_paste_edit_description": "legg eventuelt til en beskrivelse på den tomme linjen under tittelen",
 	"template_paste_wait_image": ", og vent til bildet er lastet opp før du publiserer.",
 	"template_editor_switch": "Velg A til høyre i den markerte bryteren for å bruke riktekstredigering.",
 	"template_copy_copied": "Innlegget og bildet er kopiert.",
