@@ -212,7 +212,7 @@ describe('Widget style designer preview', () => {
 		}
 	});
 
-	it('edits and saves independent default icons for each chronograph type in the designer only', () => {
+	it('edits and saves independent default icon references for each chronograph type', () => {
 		const { scope, writes, homey, editor } = loadSettings();
 		homey.api = (method, url, data, callback) => {
 			assert.strictEqual(url, '/widget-icons/search');
@@ -298,20 +298,36 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(handlers.scroll, undefined);
 	});
 
-	it('excludes designer-only default icons from template exports', () => {
-		const { scope, homey } = loadSettings();
+	it('preserves icon references in template exports, previews and saved imports', () => {
+		const { scope, homey, writes } = loadSettings();
 		scope.createStyle(true);
-		scope.getSelectedStyle().defaultIcons = { timer: 'fas:clock' };
+		const icons = { timer: 'far:clock', stopwatch: 'fab:github', transition: 'none' };
+		scope.getSelectedStyle().defaultIcons = icons;
 		const id = scope.getSelectedStyle().id;
 		scope.saveSettings();
 		let exported;
-		homey.api = (method, url, data, callback) => { exported = data.design; callback(null, 'encoded'); };
+		homey.api = (method, url, data, callback) => {
+			if (url.endsWith('encode')) { exported = data.design; callback(null, 'encoded'); }
+			else callback(null, { design: exported });
+		};
 		scope.openTemplates();
 		scope.templates.designId = id;
 		scope.generateWidgetTemplate();
-		assert.strictEqual(exported.defaultIcons, undefined);
-		assert.strictEqual(scope.getSelectedStyle().defaultIcons.timer, 'fas:clock');
-		assert.strictEqual(scope.previewIcon('timer'), 'fa-hourglass-half');
+		assert.deepStrictEqual(JSON.parse(JSON.stringify(exported.defaultIcons)), icons);
+		assert.strictEqual(scope.previewIcon('timer'), 'fa-clock');
+		assert.strictEqual(scope.previewIconStyle('timer'), 'fa-regular');
+		assert.strictEqual(scope.previewIcon('stopwatch'), 'fa-github');
+		assert.strictEqual(scope.previewIconStyle('stopwatch'), 'fa-brands');
+		assert.strictEqual(scope.previewIcon('transition'), undefined);
+		scope.selectTemplateSection('import');
+		scope.templates.importText = 'encoded';
+		scope.readWidgetTemplate();
+		assert.strictEqual(scope.previewIcon('timer'), 'fa-clock');
+		assert.strictEqual(scope.previewIconStyle('timer'), 'fa-regular');
+		assert.strictEqual(scope.previewIcon('transition'), undefined);
+		scope.saveWidgetTemplate();
+		assert.deepStrictEqual(JSON.parse(JSON.stringify(writes[writes.length - 1].value.styles[1].defaultIcons)), icons);
+		assert.deepStrictEqual(JSON.parse(JSON.stringify(scope.widgetStyles.styles[0].defaultIcons)), icons);
 	});
 
 	it('rejects duplicate custom names per category while allowing built-in and cross-category matches', () => {
@@ -428,10 +444,179 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(scope.templates.showPreviews, false);
 		assert.strictEqual(scope.templates.catalog[0], item);
 		assert.strictEqual(requests, 1);
-		assert.match(html, /ng-if="templates\.showPreviews && item\.images\.length" class="template-catalog-thumbnail"/);
-		assert.match(html, /class="template-catalog-image" ng-repeat="image in item\.images/);
+		assert.match(html, /ng-if="templates\.showPreviews" ng-init="loadCatalogPreview\(item\)"/);
+		assert.match(html, /template-catalog-preview="item\.preview"/);
+		assert.doesNotMatch(html, /ng-src="\{\{ item\.images\[0\] \}\}"/);
+		assert.match(html, /ng-repeat="image in item\.images track by \$index"[\s\S]*?ng-click="openTemplateImage\(image, item\.title\)"/);
 		assert.match(html, /ng-click="toggleTemplatePreviews\(\)"[\s\S]*?ng-attr-aria-pressed="\{\{ templates\.showPreviews \}\}"[\s\S]*?ng-attr-aria-label="\{\{ t\('settings\.template_show_examples'\) \}\}"/);
 		assert.match(html, /templates\.showPreviews \? 'fa-eye' : 'fa-eye-slash'/);
+	});
+
+	it('decodes each catalog preview once and renders only a normal running timer without changing the designer', () => {
+		const { scope, homey, editor, directives } = loadSettings();
+		const originalEditor = JSON.stringify(scope.editor);
+		const originalStyles = JSON.stringify(scope.widgetStyles);
+		const design = editor.designFromStyle(scope.getSelectedStyle());
+		design.defaultIcons = { timer: 'fab:github' };
+		let callback;
+		let requests = 0;
+		homey.api = (method, url, data, complete) => {
+			requests++;
+			assert.strictEqual(url, '/widget-templates/decode');
+			assert.strictEqual(data.text, 'template');
+			callback = complete;
+		};
+		const item = { text: 'template', images: [] };
+		scope.loadCatalogPreview(item);
+		scope.loadCatalogPreview(item);
+		assert.strictEqual(requests, 1);
+		assert.strictEqual(item.previewLoading, true);
+		callback(null, { design });
+		scope.loadCatalogPreview(item);
+		assert.strictEqual(requests, 1);
+		assert.strictEqual(item.previewLoading, false);
+		assert.strictEqual(item.preview.icon, 'fa-github');
+		assert.strictEqual(item.preview.iconStyle, 'fa-brands');
+		const directive = directives.templateCatalogPreview();
+		const preview = {
+			preview: item.preview, t: key => key, labels: scope.labels,
+			$watch(key, changed) { changed(this.preview); }
+		};
+		directive.link(preview);
+		assert.strictEqual(preview.editor.previewType, 'timer');
+		assert.strictEqual(preview.editor.previewSize, 'normal');
+		assert.strictEqual(preview.previewTileState(), 'running');
+		assert.ok(preview.previewRowLayout().rows.length);
+		assert.strictEqual(preview.previewIcon(), 'fa-github');
+		assert.strictEqual(preview.elementSize('duration'), scope.elementSize('duration'));
+		assert.strictEqual(preview.previewColor('background'), scope.previewColor('background'));
+		assert.strictEqual(preview.progressPercent(), 25);
+		assert.strictEqual(JSON.stringify(scope.editor), originalEditor);
+		assert.strictEqual(JSON.stringify(scope.widgetStyles), originalStyles);
+	});
+
+	it('previews theme-only and legacy cell templates and reports invalid catalog previews', () => {
+		const { scope, homey, editor } = loadSettings();
+		const theme = JSON.parse(JSON.stringify(scope.getSelectedScheme()));
+		theme.colors.name = 'red';
+		homey.api = (method, url, data, callback) => callback(null, { theme });
+		const themeItem = { text: 'theme' };
+		scope.loadCatalogPreview(themeItem);
+		assert.ok(themeItem.preview.design.groups.normal);
+		assert.strictEqual(themeItem.preview.theme.colors.name, 'red');
+		const design = editor.designFromStyle(editor.create('legacy', 'Legacy'));
+		delete design.groups;
+		homey.api = (method, url, data, callback) => callback(null, { design });
+		const legacyItem = { text: 'legacy' };
+		scope.loadCatalogPreview(legacyItem);
+		assert.ok(legacyItem.preview.design.groups.normal);
+		for (const result of [{}, { design: { name: 'Invalid' } }]) {
+			homey.api = (method, url, data, callback) => callback(null, result);
+			const item = { text: 'invalid' };
+			scope.loadCatalogPreview(item);
+			assert.ok(item.previewError);
+			assert.strictEqual(item.previewLoading, false);
+			assert.strictEqual(item.preview, undefined);
+		}
+		homey.api = (method, url, data, callback) => callback(new Error('Decode failed'));
+		const failed = { text: 'failed' };
+		scope.loadCatalogPreview(failed);
+		assert.match(failed.previewError, /Decode failed/);
+	});
+
+	it('refreshes enabled catalog previews even when entry IDs remain unchanged', () => {
+		const { scope, homey, editor } = loadSettings();
+		const design = editor.designFromStyle(scope.getSelectedStyle());
+		let text = 'first';
+		let decodes = 0;
+		homey.api = (method, url, data, callback) => {
+			if (url === '/widget-templates/catalog') callback(null, [{ id: '42:0', postId: 42, text }]);
+			else { decodes++; callback(null, { design }); }
+		};
+		scope.templates.showPreviews = true;
+		scope.refreshTemplateCatalog();
+		const preview = scope.templates.catalog[0].preview;
+		assert.ok(preview);
+		assert.strictEqual(decodes, 1);
+		scope.refreshTemplateCatalog();
+		assert.strictEqual(scope.templates.catalog[0].preview, preview);
+		assert.strictEqual(decodes, 1);
+		text = 'updated';
+		scope.refreshTemplateCatalog();
+		assert.ok(scope.templates.catalog[0].preview);
+		assert.notStrictEqual(scope.templates.catalog[0].preview, preview);
+		assert.strictEqual(decodes, 2);
+	});
+
+	it('opens full template images in a modal with bounded zoom and scrolling', () => {
+		let opened = 0, closed = 0;
+		const { scope } = loadSettings(null, null, null, false, null, {
+			document: { getElementById: () => ({ showModal() { opened++; }, close() { closed++; } }) }
+		});
+		scope.openTemplateImage('full-preview.png', 'Example');
+		assert.strictEqual(opened, 1);
+		assert.strictEqual(scope.templates.imageViewer.image, 'full-preview.png');
+		assert.strictEqual(scope.templates.imageZoom, 1);
+		scope.zoomTemplateImage(0.5);
+		assert.strictEqual(scope.templates.imageZoom, 1.5);
+		scope.zoomTemplateImage(100);
+		assert.strictEqual(scope.templates.imageZoom, 5);
+		scope.zoomTemplateImage(-100);
+		assert.strictEqual(scope.templates.imageZoom, 1);
+		scope.closeTemplateImage();
+		assert.strictEqual(closed, 1);
+		assert.strictEqual(scope.templates.imageViewer, null);
+		scope.openTemplateImage('another.png', 'Another');
+		assert.strictEqual(scope.templates.imageZoom, 1);
+		assert.match(html, /<dialog id="template-image-dialog"/);
+		assert.match(css, /\.template-image-viewport \{[^}]*overflow: auto/);
+	});
+
+	it('pinches around the fingers midpoint, clamps zoom, and leaves single-finger scrolling native', () => {
+		const { scope, directives } = loadSettings();
+		const handlers = {};
+		const options = {};
+		let destroy;
+		let prevented = 0;
+		scope.templates.imageZoom = 1;
+		scope.$apply = callback => callback();
+		scope.$on = (name, callback) => { if (name === '$destroy') destroy = callback; };
+		const viewport = {
+			scrollLeft: 20, scrollTop: 30,
+			getBoundingClientRect: () => ({ left: 10, top: 20 }),
+			querySelector: () => ({ getBoundingClientRect: () => ({ width: 400 * scope.templates.imageZoom }) }),
+			addEventListener(name, callback, config) { handlers[name] = callback; options[name] = config; },
+			removeEventListener(name, callback) { assert.strictEqual(callback, handlers[name]); delete handlers[name]; }
+		};
+		directives.templateImagePinch().link(scope, [viewport]);
+		const touch = (id, x, y) => ({ identifier: id, clientX: x, clientY: y });
+		const event = touches => ({ touches, cancelable: true, preventDefault() { prevented++; } });
+		handlers.touchstart(event([touch(1, 110, 120)]));
+		handlers.touchmove(event([touch(1, 120, 130)]));
+		assert.strictEqual(prevented, 0);
+		assert.strictEqual(scope.templates.imageZoom, 1);
+		handlers.touchstart(event([touch(1, 110, 120), touch(2, 210, 120)]));
+		handlers.touchmove(event([touch(2, 260, 120), touch(1, 60, 120)]));
+		assert.strictEqual(scope.templates.imageZoom, 2);
+		assert.strictEqual(viewport.scrollLeft, 190);
+		assert.strictEqual(viewport.scrollTop, 160);
+		handlers.touchmove(event([touch(1, 80, 140), touch(2, 280, 140)]));
+		assert.strictEqual(viewport.scrollLeft, 170);
+		assert.strictEqual(viewport.scrollTop, 140);
+		handlers.touchmove(event([touch(1, 0, 120), touch(2, 600, 120)]));
+		assert.strictEqual(scope.templates.imageZoom, 5);
+		handlers.touchmove(event([touch(1, 150, 120), touch(2, 160, 120)]));
+		assert.strictEqual(scope.templates.imageZoom, 1);
+		handlers.touchend(event([touch(1, 150, 120)]));
+		const stopped = prevented;
+		handlers.touchmove(event([touch(1, 0, 120), touch(2, 600, 120)]));
+		assert.strictEqual(prevented, stopped);
+		handlers.touchstart(event([touch(1, 100, 120), touch(2, 100, 120)]));
+		handlers.touchmove(event([touch(1, 0, 120), touch(2, 600, 120)]));
+		assert.strictEqual(scope.templates.imageZoom, 1);
+		assert.strictEqual(options.touchmove.passive, false);
+		destroy();
+		assert.deepStrictEqual(Object.keys(handlers), []);
 	});
 
 	it('reports preview preference save and load failures', () => {
@@ -594,6 +779,7 @@ describe('Widget style designer preview', () => {
 
 	it('prepares three 3-by-3 preview grids and copies the post as rich text', async () => {
 		const previews = [];
+		const fontRequests = [];
 		const labels = [];
 		let copyHandler;
 		const copied = {};
@@ -620,14 +806,21 @@ describe('Widget style designer preview', () => {
 		};
 		const extras = {
 			document,
-			fetch: async () => ({ ok: true, arrayBuffer: async () => new Uint8Array([1, 2]).buffer }),
+			fetch: async url => {
+				fontRequests.push(url);
+				return { ok: true, arrayBuffer: async () => new Uint8Array([1, 2]).buffer };
+			},
 			btoa: value => Buffer.from(value, 'binary').toString('base64')
 		};
 		const { scope, homey, window } = loadSettings(null, null, null, false, null, extras, false, null, true);
 		window.setTimeout = (fn, delay) => setTimeout(fn, delay === 20 ? 0 : delay);
 		window.clearTimeout = clearTimeout;
 		window.getComputedStyle = () => ({ backgroundColor: 'rgb(255, 255, 255)', color: 'rgb(0, 0, 0)' });
-		window.htmlToImage = { toCanvas: async () => {
+		window.htmlToImage = { toCanvas: async (element, options) => {
+			assert.match(options.fontEmbedCSS, /font-family:"Font Awesome 7 Free";font-style:normal;font-weight:400/);
+			assert.match(options.fontEmbedCSS, /font-family:"Font Awesome 7 Free";font-style:normal;font-weight:900/);
+			assert.match(options.fontEmbedCSS, /font-family:"Font Awesome 7 Brands";font-style:normal;font-weight:400/);
+			assert.strictEqual(scope.previewIconStyle(), { timer: 'fa-regular', stopwatch: 'fa-brands', transition: 'fa-solid' }[scope.editor.previewType]);
 			assert.strictEqual(preview.style.width, '350px');
 			assert.strictEqual(preview.style.boxSizing, 'border-box');
 			assert.deepStrictEqual(numberFields.map(field => field.type), ['text', 'text']);
@@ -637,6 +830,7 @@ describe('Widget style designer preview', () => {
 		} };
 		scope.createStyle(true);
 		scope.getSelectedStyle().name = 'Design <example>';
+		scope.getSelectedStyle().defaultIcons = { timer: 'far:clock', stopwatch: 'fab:github', transition: 'chronograph:transition' };
 		scope.saveSettings();
 		const design = scope.getSelectedStyle();
 		homey.api = (method, url, data, callback) => callback(null, 'encoded-template');
@@ -655,6 +849,8 @@ describe('Widget style designer preview', () => {
 			wait();
 		});
 		assert.strictEqual(scope.templates.copyStatus, 'copied');
+		assert.deepStrictEqual(fontRequests.sort(), ['fa-brands-400.woff2', 'fa-regular-400.woff2', 'fa-solid-900.woff2']
+			.map(file => '../assets/webfonts/' + file));
 		assert.deepStrictEqual(previews, ['stopwatch', 'timer', 'transition'].flatMap(type =>
 			['running', 'paused', 'inactive'].flatMap(state =>
 				['compact', 'normal', 'large'].map(size => [type, state, size]))));
@@ -681,9 +877,11 @@ describe('Widget style designer preview', () => {
 		const actions = html.split('<label class="hy-nostyle" for="template-forum-post">')[1].split('</div>')[0];
 		assert.strictEqual((actions.match(/<button\b/g) || []).length, 2);
 		assert.match(actions, /forum-editor-switch\.png/);
-		assert.match(actions, /<strong>\{\{ t\('settings\.template_paste_image_hint'\) \}\}<\/strong>/);
+		assert.match(actions, /<strong>\{\{ t\('settings\.template_paste_image_hint'\) \}\}<\/strong> \{\{ t\('settings\.template_paste_image_reason'\) \}\}/);
+		assert.match(actions, /<strong>\{\{ t\('settings\.template_paste_edit_description'\) \}\}<\/strong>\{\{ t\('settings\.template_paste_wait_image'\) \}\}/);
+		assert.match(actions, /<p class="help-text">\{\{ t\('settings\.template_editor_switch'\) \}\}<\/p>/);
 		assert.match(actions, /role="status" ng-if="templates\.copyStatus"/);
-		assert.match(actions, /<strong ng-if="templates\.copyStatus === 'copied'">\{\{ t\('settings\.template_copy_copied'\) \}\}<\/strong>/);
+		assert.match(actions, /<span ng-if="templates\.copyStatus === 'copied'"><strong>\{\{ t\('settings\.template_copy_copied'\) \}\}<\/strong> \{\{ t\('settings\.template_copy_next'\) \}\}<\/span>/);
 	});
 
 	it('reports blocked rich clipboard copying without modifying the export', () => {
@@ -741,7 +939,10 @@ describe('Widget style designer preview', () => {
 	it('keeps exchange translations intact in every settings locale', () => {
 		const directory = path.join(root, '.homeycompose', 'locales');
 		const keys = ['template_paste_image_hint', 'template_prepare_image_error', 'template_clipboard_image_error',
-			'template_editor_switch', 'template_copy_copied', 'template_copy_retry'];
+			'template_editor_switch', 'template_copy_copied', 'template_copy_retry',
+			'template_copy_next', 'template_paste_image_reason',
+			'template_paste_edit_description', 'template_paste_wait_image',
+			'template_image_zoom_in', 'template_image_zoom_out', 'template_image_close'];
 		for (const file of fs.readdirSync(directory).filter(name => name.endsWith('.settings.json'))) {
 			const locale = JSON.parse(fs.readFileSync(path.join(directory, file), 'utf8'));
 			for (const key of keys) {
@@ -1233,131 +1434,11 @@ describe('Widget style designer preview', () => {
 		assert.ok(html.includes('ng-if="editor.mode === \'color\' && !getSelectedStyle().groups" class="style-color-elements"'));
 	});
 
-	it('exports and imports individual designs and schemes as new, unsaved copies', () => {
-		const downloads = [];
-		const alerts = [];
-		const readers = [];
-		class Reader {
-			constructor() { readers.push(this); }
-			readAsText(file) { this.result = file.text; this.onload(); }
-		}
-		class JsonBlob {
-			constructor(parts) { this.text = parts.join(''); }
-		}
-		const extras = {
-			FileReader: Reader,
-			Blob: JsonBlob,
-			document: { createElement: () => ({ click() { downloads.push(this.download); } }) }
-		};
-		const { scope, homey, writes, window } = loadSettings(null, undefined, undefined, false, undefined, extras);
-		homey.alert = message => alerts.push(message);
-		let exported;
-		window.URL = {
-			createObjectURL(blob) { exported = JSON.parse(blob.text); return 'blob:test'; },
-			revokeObjectURL() {}
-		};
-		window.setTimeout = callback => callback();
-		scope.exportStyle();
-		assert.strictEqual(downloads.length, 0);
-		scope.createStyle(true);
-		scope.moveGroupedElement('remaining', 2, 1);
-		scope.exportStyle();
-		assert.strictEqual(downloads[0], 'chronograph-design-settings.style_current - settings.style_copy.json');
-		assert.strictEqual(exported.type, 'design');
-		assert.strictEqual(exported.item.colors, undefined);
-		assert.strictEqual(exported.item.groups.normal.elements.remaining.row, 2);
-		const first = JSON.stringify(exported.item);
-		scope.importStyleFile({ text: JSON.stringify(exported) });
-		assert.strictEqual(scope.widgetStyles.styles.length, 1);
-		assert.notStrictEqual(scope.getSelectedStyle().id, exported.item.id);
-		assert.strictEqual(scope.getSelectedStyle().name, exported.item.name);
-		assert.strictEqual(JSON.stringify(scope.getSelectedStyle().groups), JSON.stringify(exported.item.groups));
-		assert.strictEqual(scope.isDirty(), true);
-		assert.strictEqual(JSON.stringify(exported.item), first);
-		scope.getSelectedStyle().name = 'Morning / evening';
-		scope.getSelectedStyle().buttonShapes = { base: { play: 'square' } };
-		scope.exportStyle();
-		assert.strictEqual(downloads[1], 'chronograph-design-Morning - evening.json');
-		assert.strictEqual(exported.item.buttonShapes.base.play, 'square');
-		scope.saveSettings();
-		assert.strictEqual(writes.length, 1);
-		scope.selectEditorMode('color');
-		scope.exportStyle();
-		assert.strictEqual(downloads.length, 2);
-		scope.createStyle(true);
-		scope.getSelectedScheme().borderColors = { play: 'grey' };
-		scope.exportStyle();
-		assert.strictEqual(downloads[2], 'chronograph-color-settings.style_current - settings.style_copy.json');
-		assert.strictEqual(exported.type, 'color');
-		scope.selectEditorMode('design');
-		scope.importStyleFile({ text: JSON.stringify(exported) });
-		assert.strictEqual(scope.editor.mode, 'color');
-		assert.strictEqual(scope.widgetStyles.themes.length, 1);
-		assert.notStrictEqual(scope.getSelectedScheme().id, exported.item.id);
-		assert.strictEqual(JSON.stringify(scope.getSelectedScheme().colors), JSON.stringify(exported.item.colors));
-		assert.strictEqual(scope.getSelectedScheme().borderColors.play, 'grey');
-		assert.strictEqual(scope.isDirty(), true);
-		assert.deepStrictEqual(alerts, ['settings.saved']);
-		assert.strictEqual(readers.length, 2);
-	});
-
-	it('hides export for built-in designs and color schemes, including local previews', () => {
-		assert.match(html, /<button[^>]*ng-if="!isBuiltInStyle\(\)"[^>]*\s+ng-click="exportStyle\(\)"/);
-		for (const preview of [false, true]) {
-			const { scope } = loadSettings(null, null, null, preview);
-			assert.strictEqual(scope.isBuiltInStyle(), true);
-			scope.selectEditorMode('color');
-			assert.strictEqual(scope.isBuiltInStyle(), true);
-		}
-	});
-
-	it('rejects invalid files and preserves the current item when import is cancelled', () => {
-		let reader;
-		class Reader {
-			constructor() { reader = this; }
-			readAsText(file) { this.result = file.text; }
-		}
-		const messages = [];
-		const { scope, homey, editor } = loadSettings(null, (message, type, callback) => callback(null, false),
-			undefined, false, undefined, { FileReader: Reader });
-		homey.alert = message => messages.push(message);
-		scope.importStyleFile({ text: '{' });
-		reader.onload();
-		scope.importStyleFile({ text: JSON.stringify({ format: 'chronograph-widget-style', version: 2, type: 'design', item: {} }) });
-		reader.onload();
-		scope.importStyleFile({ text: JSON.stringify({ format: 'chronograph-widget-style', version: 1, type: 'design', item: { id: 'x', name: 'x', layouts: {} } }) });
-		reader.onload();
-		assert.strictEqual(messages.length, 3);
-		assert.ok(messages.every(message => message === 'settings.style_transfer_invalid'));
-		assert.strictEqual(scope.widgetStyles.styles.length, 0);
-		scope.createStyle(true);
-		const item = scope.getSelectedStyle();
-		const valid = { format: 'chronograph-widget-style', version: 1, type: 'design', item: editor.designFromStyle(item) };
-		scope.importStyleFile({ text: JSON.stringify(valid) });
-		reader.onload();
-		assert.strictEqual(scope.widgetStyles.styles.length, 1);
-		assert.strictEqual(scope.getSelectedStyle(), item);
-		scope.importStyleFile({ text: JSON.stringify(valid) });
-		reader.onerror();
-		assert.strictEqual(messages[3], 'settings.style_import_read_error');
-		assert.strictEqual(scope.importingStyle, false);
-	});
-
-	it('rejects imports when the selection changes while reading', () => {
-		let reader;
-		class Reader {
-			constructor() { reader = this; }
-			readAsText(file) { this.result = file.text; }
-		}
-		const { scope, homey, editor } = loadSettings(null, undefined, undefined, false, undefined, { FileReader: Reader });
-		const messages = [];
-		homey.alert = message => messages.push(message);
-		const item = editor.designFromStyle(scope.getSelectedStyle());
-		scope.importStyleFile({ text: JSON.stringify({ format: 'chronograph-widget-style', version: 1, type: 'design', item }) });
-		scope.selectEditingStyle('builtin:vertical');
-		reader.onload();
-		assert.deepStrictEqual(messages, ['settings.style_import_changed']);
-		assert.strictEqual(scope.widgetStyles.styles.length, 0);
+	it('offers import and export through Templates without separate JSON-file controls', () => {
+		assert.doesNotMatch(html, /exportStyle\(|chooseStyleImport\(|style-import-file/);
+		assert.match(html, /ng-click="openTemplates\(\)"/);
+		assert.match(html, /ng-click="selectTemplateSection\('export'\)"/);
+		assert.match(html, /ng-click="selectTemplateSection\('import'\)"/);
 	});
 
 	it('copies only layout settings between sizes after confirmation', () => {
@@ -1591,6 +1672,47 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(scope.previewTileState(null, 'stopwatch'), 'inactive');
 		assert.strictEqual(scope.previewTileState(null, 'transition'), 'starting');
 		assert.strictEqual(JSON.stringify(scope.getSelectedStyle()), original);
+		assert.strictEqual(scope.isDirty(), false);
+	});
+
+	it('opens hidden start fields before starting timer and transition tiles in multi-widget previews', () => {
+		const { scope, writes } = loadSettings();
+		scope.editor.previewType = 'stopwatch';
+		for (const design of ['builtin:small', 'builtin:tiny']) {
+			scope.editor.selectedStyleId = design;
+			const original = JSON.stringify(scope.getSelectedStyle());
+			for (const columns of ['1', '2', '3']) {
+				scope.editor.previewColumns = columns;
+				for (const size of ['normal', 'large']) {
+					scope.editor.previewSize = size;
+					for (const type of ['timer', 'transition']) {
+						const elements = () => scope.groupedRows(true, null, type)
+							.flatMap(row => Array.from(row.groups).flatMap(group => Array.from(group.elements)));
+						scope.editor.previewState = 'inactive';
+						assert.ok(elements().includes('start'));
+						assert.ok(!elements().includes('fields'));
+						scope.previewAction('start', type);
+						assert.strictEqual(scope.editor.previewState, 'starting');
+						assert.ok(elements().includes('fields'));
+						scope.previewAction('cancel', type);
+						assert.strictEqual(scope.editor.previewState, 'inactive');
+						scope.previewAction('start', type);
+						scope.previewAction('start', type);
+						assert.strictEqual(scope.editor.previewState, 'running');
+						assert.ok(!elements().includes('fields'));
+						scope.previewAction('pause', type);
+						scope.previewAction('play', type);
+						assert.strictEqual(scope.editor.previewState, 'running');
+						assert.ok(!elements().includes('fields'));
+					}
+				}
+			}
+			assert.strictEqual(JSON.stringify(scope.getSelectedStyle()), original);
+		}
+		scope.editor.previewState = 'inactive';
+		scope.previewAction('start', 'stopwatch');
+		assert.strictEqual(scope.editor.previewState, 'running');
+		assert.strictEqual(writes.length, 0);
 		assert.strictEqual(scope.isDirty(), false);
 	});
 
@@ -2388,6 +2510,7 @@ describe('Widget style designer preview', () => {
 				scope.progressTimerMode('remaining');
 				scope.progressShowSteps(true);
 				scope.editor.previewType = 'timer';
+				scope.editor.previewState = 'starting';
 				for (const [action, expected] of [['start', 'running'], ['pause', 'paused'],
 					['play', 'running'], ['stop', 'inactive'], ['cancel', 'inactive']]) {
 					scope.previewAction(action);

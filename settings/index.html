@@ -135,15 +135,6 @@
 							ng-click="createStyle(true)" ng-disabled="!getEditingItem() || editor.rowPaddingForm.$invalid || editor.elementSizeForm.$invalid">
 							<i class="fa-solid fa-copy" aria-hidden="true"></i> {{ labels.copy }}
 						</button>
-						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-if="!isBuiltInStyle()"
-							ng-click="exportStyle()" ng-disabled="!getEditingItem() || editor.rowPaddingForm.$invalid || editor.elementSizeForm.$invalid">
-							<i class="fa-solid fa-download" aria-hidden="true"></i> {{ t('settings.style_export') }}
-						</button>
-						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button"
-							ng-click="chooseStyleImport()" ng-disabled="importingStyle || editor.rowPaddingForm.$invalid || editor.elementSizeForm.$invalid">
-							<i class="fa-solid fa-upload" aria-hidden="true"></i> {{ t('settings.style_import') }}
-						</button>
-						<input id="style-import-file" type="file" accept=".json,application/json" style-import-file hidden>
 						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button"
 							ng-if="getEditingItem() && !isBuiltInStyle()" ng-click="deleteStyle()" ng-disabled="editor.rowPaddingForm.$invalid || editor.elementSizeForm.$invalid">
 							<i class="fa-solid fa-trash" aria-hidden="true"></i> {{ t('settings.style_delete') }}
@@ -462,13 +453,15 @@
 										ng-attr-aria-label="{{ t('settings.template_catalog_search') }}"
 										ng-attr-placeholder="{{ t('settings.template_catalog_search') }}"
 										ng-model="iconPickers[type].query" ng-model-options="{ debounce: 250 }" ng-change="searchDefaultIcons(type)">
-									<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="setDefaultIcon(type, null)">{{ t('settings.style_current') }}</button>
+									<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="setDefaultIcon(type, null)">
+										<i aria-hidden="true"></i><span>{{ t('settings.style_current') }}</span>
+									</button>
 									<p class="help-text" ng-if="iconPickers[type].busy">{{ t('settings.style_icon_loading') }}</p>
 									<p class="help-text" ng-if="!iconPickers[type].busy && !iconPickers[type].results.length">{{ t('settings.style_icon_empty') }}</p>
 									<div class="style-icon-list" icon-results-scroll>
 										<button class="hy-nostyle style-icon-option" type="button" ng-repeat="icon in iconPickers[type].results | limitTo:iconPickers[type].visibleCount track by icon.id"
 											ng-click="setDefaultIcon(type, icon.id)" ng-disabled="iconPickers[type].busy">
-											<i ng-if="icon.id !== 'none'" ng-class="[iconStyle(icon.id), iconClass(icon.id)]" aria-hidden="true"></i>
+											<i ng-class="[iconStyle(icon.id), iconClass(icon.id)]" aria-hidden="true"></i>
 											<span>{{ icon.name }}</span><small ng-if="icon.description">{{ icon.description }}</small>
 										</button>
 									</div>
@@ -637,11 +630,11 @@
 						<textarea id="template-forum-post" class="form-control" rows="5" readonly ng-value="templateForumPost()"></textarea>
 						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="copyTemplateForumPost()" ng-disabled="templates.busy || !templates.imageData">{{ t('settings.template_copy_post') }}</button>
 						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="openWidgetExchange()" ng-disabled="templates.busy">{{ t('settings.template_post_forum') }}</button>
-						<p class="help-text" role="status" ng-if="templates.copyStatus">
-							<strong ng-if="templates.copyStatus === 'copied'">{{ t('settings.template_copy_copied') }}</strong>
+						<p class="help-text template-export-instruction" role="status" ng-if="templates.copyStatus">
+							<span ng-if="templates.copyStatus === 'copied'"><strong>{{ t('settings.template_copy_copied') }}</strong> {{ t('settings.template_copy_next') }}</span>
 							<span ng-if="templates.copyStatus !== 'copied'">{{ t('settings.template_copy_' + templates.copyStatus) }}</span>
 						</p>
-						<p class="help-text"><strong>{{ t('settings.template_paste_image_hint') }}</strong></p>
+						<p class="help-text template-export-instruction"><strong>{{ t('settings.template_paste_image_hint') }}</strong> {{ t('settings.template_paste_image_reason') }} <strong>{{ t('settings.template_paste_edit_description') }}</strong>{{ t('settings.template_paste_wait_image') }}</p>
 						<p class="help-text">{{ t('settings.template_editor_switch') }}</p>
 						<img class="template-editor-switch" src="assets/forum-editor-switch.png" ng-attr-alt="{{ t('settings.template_editor_switch') }}">
 						<p class="help-text" role="status" ng-if="templates.busy && templates.imageProgress !== null && templates.imageProgress !== undefined">{{ t('settings.template_rendering') }} {{ templates.imageProgress }}/27</p>
@@ -727,16 +720,25 @@
 								<button class="hy-nostyle template-catalog-icon" type="button" ng-click="toggleTemplateFavorite(item)"
 									ng-disabled="templates.busy" ng-attr-aria-pressed="{{ item.favorite }}" ng-attr-title="{{ t(item.favorite ? 'settings.template_catalog_unfavorite' : 'settings.template_catalog_favorite') }}"
 									ng-attr-aria-label="{{ t(item.favorite ? 'settings.template_catalog_unfavorite' : 'settings.template_catalog_favorite') }}: {{ item.title }}"><i class="fa-star" ng-class="item.favorite ? 'fa-solid' : 'fa-regular'" aria-hidden="true"></i></button>
+								<div class="template-catalog-entry">
 								<button class="hy-nostyle template-catalog-title" type="button" ng-click="templates.selectedCatalogId = templates.selectedCatalogId === item.id ? null : item.id"
 									ng-attr-aria-expanded="{{ templates.selectedCatalogId === item.id }}">
 									<span>{{ item.title }}</span>
-									<img ng-if="templates.showPreviews && item.images.length" class="template-catalog-thumbnail" ng-src="{{ item.images[0] }}" alt="" loading="lazy">
 								</button>
+								<div ng-if="templates.showPreviews" ng-init="loadCatalogPreview(item)">
+									<p class="help-text" ng-if="item.previewLoading">{{ t('settings.template_catalog_loading') }}</p>
+									<p class="chronograph-error" role="alert" ng-if="item.previewError">{{ item.previewError }}</p>
+									<div ng-if="item.preview" class="template-catalog-thumbnail" template-catalog-preview="item.preview" t="t" labels="labels" inert aria-hidden="true"></div>
+								</div>
+								</div>
 							</div>
 							<div class="template-catalog-details" ng-if="templates.selectedCatalogId === item.id">
 								<p>{{ item.author }} · {{ item.likes }} {{ t('settings.template_catalog_likes') }}</p>
 								<p class="template-catalog-description" ng-bind="item.description"></p>
-								<img class="template-catalog-image" ng-repeat="image in item.images track by $index" ng-src="{{ image }}" ng-attr-alt="{{ item.title }}" loading="lazy">
+								<button class="hy-nostyle template-catalog-image-button" type="button" ng-repeat="image in item.images track by $index"
+									ng-click="openTemplateImage(image, item.title)" ng-attr-aria-label="{{ t('settings.template_image_zoom_in') }}: {{ item.title }}">
+									<img class="template-catalog-image" ng-src="{{ image }}" ng-attr-alt="{{ item.title }}" loading="lazy">
+								</button>
 								<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="importCatalogTemplate(item)" ng-disabled="templates.busy">{{ t('settings.style_import') }}</button>
 								<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="openWidgetExchange(item.number)" ng-disabled="templates.busy">{{ t('settings.template_catalog_post') }}</button>
 							</div>
@@ -779,6 +781,18 @@
 		<footer class="settings-template-footer" ng-show="templates.open && activeTab === 'widgets'">
 			<button class="hy-nostyle btn settings-history-button" type="button" ng-click="closeTemplates()" ng-disabled="templates.busy">{{ t('settings.template_back') }}</button>
 		</footer>
+		<dialog id="template-image-dialog" class="template-image-dialog" ng-attr-aria-label="{{ templates.imageViewer.title }}">
+			<div class="template-image-toolbar">
+				<button class="hy-nostyle btn btn-outline-primary" type="button" ng-click="zoomTemplateImage(-0.5)" ng-disabled="templates.imageZoom <= 1" ng-attr-aria-label="{{ t('settings.template_image_zoom_out') }}"><i class="fa-solid fa-magnifying-glass-minus" aria-hidden="true"></i></button>
+				<output>{{ templates.imageZoom * 100 | number:0 }}%</output>
+				<button class="hy-nostyle btn btn-outline-primary" type="button" ng-click="zoomTemplateImage(0.5)" ng-disabled="templates.imageZoom >= 5" ng-attr-aria-label="{{ t('settings.template_image_zoom_in') }}"><i class="fa-solid fa-magnifying-glass-plus" aria-hidden="true"></i></button>
+				<button class="hy-nostyle btn btn-outline-primary" type="button" ng-click="closeTemplateImage()"><i class="fa-solid fa-xmark" aria-hidden="true"></i> {{ t('settings.template_image_close') }}</button>
+			</div>
+			<div class="template-image-viewport" template-image-pinch>
+				<img ng-if="templates.imageViewer" ng-src="{{ templates.imageViewer.image }}" ng-attr-alt="{{ templates.imageViewer.title }}"
+					ng-style="{ width: (templates.imageZoom * 100) + '%' }">
+			</div>
+		</dialog>
 	</main>
 
 	<script type="text/ng-template" id="grouped-preview.html">

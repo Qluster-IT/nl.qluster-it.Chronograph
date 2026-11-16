@@ -10,7 +10,8 @@ describe('Widget template transfer', () => {
 		const design = {
 			id: 'local-design', name: 'My design', groups: {
 				normal: { elements: { name: { row: 1, group: 2, order: 1 } }, overrides: {} }
-			}, buttonTexts: { normal: { start: 'Start now' } }
+			}, buttonTexts: { normal: { start: 'Start now' } },
+			defaultIcons: { timer: 'far:clock', stopwatch: 'fab:github', transition: 'none' }
 		};
 		const theme = { id: 'local-theme', name: 'My theme', colors: { name: 'blue' } };
 		const text = await encodeTemplate({ design, theme });

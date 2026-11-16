@@ -11,6 +11,8 @@ FEATURES
 * All timers, stopwatches and transitions are persistent across Homey restarts.
 * Target multiple timers, stopwatches and transitions at once using wildcards in supported cards.
 * Use the Chronograph dashboard widget to choose a timer, stopwatch or transition in its settings and pause, resume or stop it.
+* Customize layouts, themes and default icons for single and multi-chronograph widgets, with elapsed, remaining and total time displays for timers and transitions.
+* Share designs and themes through Templates and the community Widget Exchange, with previews and full-screen images supporting pinch-to-zoom.
 * Use Math Expressions inside flowcards.
 * Use HomeyScript to monitor, pause, resume or stop active timers, stopwatches and transitions.
 

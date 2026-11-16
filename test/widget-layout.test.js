@@ -23,6 +23,10 @@ describe('Widget asset bundles', () => {
 			.replace(/^\/\/# sourceMappingURL=.*\r?\n?/m, '');
 		const script = bundles['assets/js/widget-bundle.js'];
 		assert.ok(script.startsWith(angular));
+		for (const file of ['fontawesome.min.css', 'solid.min.css', 'regular.min.css', 'brands.min.css']) {
+			const vendor = fs.readFileSync(path.join(root, 'assets', 'css', file), 'utf8').replace(/\r\n/g, '\n');
+			assert.ok(bundles['assets/css/widget-bundle.css'].includes(vendor), file + ' must retain its vendor CSS and licence');
+		}
 		const controllers = [];
 		const cache = {};
 		const module = {

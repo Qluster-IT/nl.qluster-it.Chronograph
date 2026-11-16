@@ -8,12 +8,13 @@ const root = path.join(__dirname, '..');
 const manifest = require('../widgets/multiple_chronographs/widget.compose.json');
 const api = require('../widgets/multiple_chronographs/api.js');
 
-async function loadWidget(settings, states) {
+async function loadWidget(settings, states, widgetStyles, hidden = false) {
 	const controllers = {};
 	const intervals = [];
 	const listeners = {};
 	const requests = [];
 	const scopes = [];
+	const documentListeners = {};
 	let ready = 0;
 	let failedRoute;
 	const interval = (fn, delay) => { const task = { fn, delay }; intervals.push(task); return task; };
@@ -35,10 +36,20 @@ async function loadWidget(settings, states) {
 	const module = { controller: (name, definition) => { controllers[name] = definition[definition.length - 1]; }, directive() {} };
 	const context = {
 		angular: { module: () => module, bootstrap() {} }, window: {}, Promise, Date, console,
-		document: { body: { getAttribute: () => null }, querySelector: () => null }
+		document: { hidden, body: { getAttribute: () => null }, querySelector: () => null,
+			addEventListener: (name, callback) => { documentListeners[name] = callback; },
+			removeEventListener: name => { delete documentListeners[name]; } }
 	};
 	for (const file of ['chronograph-widget-style.js', 'chronograph-errors.js', 'chronograph-widget.js', 'multiple-chronographs-widget.js']) {
 		vm.runInNewContext(fs.readFileSync(path.join(root, 'assets', 'js', file), 'utf8'), context);
+	}
+	const layoutCalls = { buildRows: 0, layoutSpanningRows: 0, inputFieldLayout: 0 };
+	for (const name of Object.keys(layoutCalls)) {
+		const original = context.window.ChronographWidgetStyle[name];
+		context.window.ChronographWidgetStyle[name] = (...args) => {
+			layoutCalls[name]++;
+			return original(...args);
+		};
 	}
 	const homey = {
 		getSettings: () => settings,
@@ -48,7 +59,8 @@ async function loadWidget(settings, states) {
 		api: (method, url, body) => {
 			requests.push({ method, url, body: body && JSON.parse(JSON.stringify(body)) });
 			if (url === failedRoute) return Promise.reject(new Error('Failed operation'));
-			if (url === '/widget-styles') return Promise.resolve({ version: 2, styles: [], colorSchemes: [] });
+			if (url === '/widget-styles') return widgetStyles instanceof Error ? Promise.reject(widgetStyles)
+				: Promise.resolve(widgetStyles || { version: 2, styles: [], colorSchemes: [] });
 			if (url === '/chronographs') return Promise.resolve(body.chronographs.map(selection => {
 				const state = states[selection.type + ':' + selection.name];
 				return state && failedRoute !== '/' + selection.type + '/' + encodeURIComponent(selection.name)
@@ -76,10 +88,245 @@ async function loadWidget(settings, states) {
 		return scope;
 	});
 	await new Promise(resolve => setImmediate(resolve));
-	return { parent, children, listeners, requests, intervals, homey, get ready() { return ready; }, failRoute: route => { failedRoute = route; } };
+	return { parent, children, listeners, requests, intervals, homey, layoutCalls, documentListeners,
+		setHidden(value) { context.document.hidden = value; if (documentListeners.visibilitychange) documentListeners.visibilitychange(); },
+		destroy: () => scopes.forEach(child => { if (child.events.$destroy) child.events.$destroy(); }),
+		get ready() { return ready; }, failRoute: route => { failedRoute = route; } };
 }
 
 describe('Multiple Chronographs widget', () => {
+	it('uses per-tile design icon defaults while preserving explicit icon overrides', async () => {
+		const design = require('../assets/js/chronograph-widget-style.js').currentDesign();
+		design.id = 'custom-icons';
+		design.defaultIcons = { timer: 'far:clock', stopwatch: 'fab:github', transition: 'none' };
+		const settings = { columns: '3' };
+		const states = {};
+		for (let slot = 1; slot <= 6; slot++) {
+			const type = ['timer', 'stopwatch', 'transition'][(slot - 1) % 3];
+			settings['chronograph' + slot] = { type, name: String(slot) };
+			settings['chronograph' + slot + 'DesignStyle'] = design.id;
+			states[type + ':' + slot] = { name: String(slot), type, active: false };
+		}
+		settings.chronograph4Icon = { id: 'none' };
+		settings.chronograph5Icon = 'bell';
+		settings.chronograph6Icon = { id: 'chronograph:transition' };
+		const widget = await loadWidget(settings, states, { version: 3, styles: [design], themes: [] });
+		assert.deepStrictEqual(Array.from(widget.children, child => child.iconClass),
+			['fa-regular fa-clock', 'fa-brands fa-github', '', '', 'fa-solid fa-bell', 'fa-solid fa-chronograph-transition']);
+		assert.ok(widget.children.every(child => child.iconImage === ''));
+		assert.strictEqual(widget.requests.filter(request => request.url === '/widget-styles').length, 1);
+		assert.strictEqual(widget.requests.filter(request => request.url === '/chronographs').length, 1);
+	});
+
+	it('loads ten mixed built-in and custom tiles with one initial batch before appearance finishes', async () => {
+		let resolveStyles;
+		const styles = new Promise(resolve => { resolveStyles = resolve; });
+		const settings = {};
+		const states = {};
+		for (let slot = 1; slot <= 10; slot++) {
+			const type = ['timer', 'stopwatch', 'transition'][(slot - 1) % 3];
+			settings['chronograph' + slot] = { type, name: String(slot) };
+			if (slot % 2) settings['chronograph' + slot + 'DesignStyle'] = 'pending';
+			states[type + ':' + slot] = { name: String(slot), type };
+		}
+		const widget = await loadWidget(settings, states, styles, true);
+		assert.strictEqual(widget.ready, 0);
+		assert.deepStrictEqual(widget.requests.map(request => request.url), ['/widget-styles', '/chronographs']);
+		assert.strictEqual(widget.children[0].selectedChronograph, null);
+		assert.ok(widget.children[1].selectedChronograph);
+		const design = require('../assets/js/chronograph-widget-style.js').currentDesign();
+		design.id = 'pending';
+		resolveStyles({ version: 3, styles: [design], themes: [] });
+		await new Promise(resolve => setImmediate(resolve));
+		assert.strictEqual(widget.ready, 1);
+		assert.strictEqual(widget.requests.length, 2);
+		assert.strictEqual(widget.requests[1].url, '/chronographs');
+		assert.ok(widget.children.every(child => child.designEnabled && !child.loading));
+	});
+
+	it('does not announce readiness until a newer state request waiting on appearance has completed', async () => {
+		let resolveStyles;
+		const widget = await loadWidget({
+			chronograph1: { type: 'timer', name: 'A' }, chronograph1DesignStyle: 'pending',
+			chronograph2: { type: 'timer', name: 'B' }, chronograph2DesignStyle: 'pending'
+		}, { 'timer:A': { name: 'A', type: 'Timer' }, 'timer:B': { name: 'B', type: 'Timer' } },
+		new Promise(resolve => { resolveStyles = resolve; }));
+		let resolveNewer;
+		widget.homey.api = () => new Promise(resolve => { resolveNewer = resolve; });
+		widget.listeners.chronograph_event({ name: 'A', data: { type: 'Timer' } });
+		const design = require('../assets/js/chronograph-widget-style.js').currentDesign();
+		design.id = 'pending';
+		resolveStyles({ version: 3, styles: [design], themes: [] });
+		await new Promise(resolve => setImmediate(resolve));
+		assert.strictEqual(widget.ready, 0);
+		assert.strictEqual(widget.children[0].selectedChronograph, null);
+		resolveNewer({ name: 'A', type: 'Timer', active: true, running: false, duration: 5000 });
+		await new Promise(resolve => setImmediate(resolve));
+		assert.strictEqual(widget.ready, 1);
+		assert.strictEqual(widget.children[0].selectedChronograph.duration, 5000);
+	});
+
+	it('does not refetch unchanged periodic snapshots while custom appearances are loading', async () => {
+		let resolveStyles;
+		const settings = {};
+		const states = {};
+		const events = [];
+		for (let slot = 1; slot <= 10; slot++) {
+			settings['chronograph' + slot] = { type: 'timer', name: String(slot) };
+			settings['chronograph' + slot + 'DesignStyle'] = 'pending';
+			states['timer:' + slot] = { name: String(slot), type: 'Timer', active: true, running: true,
+				duration: 1000, targetDuration: 120000 };
+			events.push({ name: String(slot), data: { type: 'Timer' }, removed: false, running: true,
+				duration: 1000, targetDuration: 120000 });
+		}
+		const widget = await loadWidget(settings, states, new Promise(resolve => { resolveStyles = resolve; }));
+		widget.listeners.chronograph_event_multi(events);
+		await new Promise(resolve => setImmediate(resolve));
+		assert.strictEqual(widget.requests.length, 2);
+		assert.strictEqual(widget.ready, 0);
+		const design = require('../assets/js/chronograph-widget-style.js').currentDesign();
+		design.id = 'pending';
+		resolveStyles({ version: 3, styles: [design], themes: [] });
+		await new Promise(resolve => setImmediate(resolve));
+		assert.strictEqual(widget.ready, 1);
+		assert.strictEqual(widget.requests.length, 2);
+	});
+
+	it('suspends hidden multi widgets and resumes ten tiles with one fresh batch and shared clocks', async () => {
+		for (const hidden of [false, true]) {
+			const settings = {};
+			const states = {};
+			for (let slot = 1; slot <= 10; slot++) {
+				settings['chronograph' + slot] = { type: 'timer', name: String(slot) };
+				states['timer:' + slot] = { name: String(slot), type: 'Timer', active: true, running: true, duration: 1000 };
+			}
+			const widget = await loadWidget(settings, states, undefined, hidden);
+			const activeIntervals = delay => widget.intervals.filter(task => !task.cancelled && (!delay || task.delay === delay));
+			assert.strictEqual(widget.ready, 1);
+			assert.strictEqual(activeIntervals(250).length, hidden ? 0 : 1);
+			assert.strictEqual(activeIntervals(5000).length, hidden ? 0 : 1);
+			widget.setHidden(true);
+			assert.strictEqual(activeIntervals().length, 0);
+			const requests = widget.requests.length;
+			states['timer:1'].running = false;
+			states['timer:2'].duration = 5000;
+			widget.listeners.chronograph_event({ name: '1', data: { type: 'Timer' } });
+			widget.listeners.chronograph_event_multi();
+			widget.listeners.chronograph_flow_values_changed({ name: '2', type: 'timer' });
+			await new Promise(resolve => setImmediate(resolve));
+			assert.strictEqual(widget.requests.length, requests);
+			widget.children[1].clock = 0;
+			widget.setHidden(false);
+			await new Promise(resolve => setImmediate(resolve));
+			assert.strictEqual(widget.requests.length, requests + 1);
+			assert.strictEqual(widget.requests[requests].url, '/chronographs');
+			assert.strictEqual(widget.children[0].selectedChronograph.running, false);
+			assert.strictEqual(widget.children[1].selectedChronograph.duration, 5000);
+			assert.ok(widget.children[1].clock > 0);
+			assert.strictEqual(activeIntervals(250).length, 1);
+			assert.strictEqual(activeIntervals(5000).length, 1);
+			widget.setHidden(true);
+			for (const state of Object.values(states)) state.running = false;
+			widget.failRoute('/timer/3');
+			widget.setHidden(false);
+			await new Promise(resolve => setImmediate(resolve));
+			assert.strictEqual(widget.children[2].error, 'Not found');
+			assert.strictEqual(widget.children[1].error, null);
+			widget.destroy();
+			assert.deepStrictEqual(widget.documentListeners, {});
+			assert.strictEqual(activeIntervals().length, 0);
+			const afterDestroy = widget.requests.length;
+			widget.setHidden(true);
+			widget.setHidden(false);
+			widget.listeners.chronograph_event_multi();
+			await new Promise(resolve => setImmediate(resolve));
+			assert.strictEqual(widget.requests.length, afterDestroy);
+		}
+	});
+
+	it('does not reuse or apply a pre-hide batch when the dashboard becomes visible', async () => {
+		const widget = await loadWidget({ chronograph1: { type: 'timer', name: 'A' } }, {
+			'timer:A': { name: 'A', type: 'Timer', active: true, running: true }
+		});
+		let resolveOld;
+		let batches = 0;
+		widget.homey.api = () => {
+			batches++;
+			return batches === 1 ? new Promise(resolve => { resolveOld = resolve; })
+				: Promise.resolve([{ chronograph: { name: 'A', type: 'Timer', active: true, running: false } }]);
+		};
+		widget.intervals.find(task => task.delay === 5000).fn();
+		widget.setHidden(true);
+		widget.setHidden(false);
+		await new Promise(resolve => setImmediate(resolve));
+		assert.strictEqual(batches, 2);
+		assert.strictEqual(widget.children[0].selectedChronograph.running, false);
+		resolveOld([{ chronograph: { name: 'A', type: 'Timer', active: true, running: true } }]);
+		await new Promise(resolve => setImmediate(resolve));
+		assert.strictEqual(widget.children[0].selectedChronograph.running, false);
+		assert.strictEqual(widget.intervals.filter(task => task.delay === 250 && !task.cancelled).length, 0);
+	});
+
+	it('shares custom appearance loading across ten tiles and reports shared failures per tile', async () => {
+		const design = require('../assets/js/chronograph-widget-style.js').currentDesign();
+		design.id = 'custom';
+		const settings = {};
+		const states = {};
+		const originalDesign = JSON.stringify(design);
+		for (let slot = 1; slot <= 10; slot++) {
+			const type = ['timer', 'stopwatch', 'transition'][(slot - 1) % 3];
+			settings['chronograph' + slot] = { type, name: String(slot) };
+			settings['chronograph' + slot + 'Layout'] = ['compact', 'normal', 'large'][(slot - 1) % 3];
+			settings['chronograph' + slot + 'DesignStyle'] = 'custom';
+			states[type + ':' + slot] = { name: String(slot), type: type[0].toUpperCase() + type.slice(1), active: false };
+		}
+		for (const collection of [{ version: 3, styles: [design], themes: [] }, new Error('Styles unavailable')]) {
+			const widget = await loadWidget(settings, states, collection);
+			assert.strictEqual(widget.requests.filter(request => request.url === '/widget-styles').length, 1);
+			assert.strictEqual(widget.ready, 1);
+			for (const child of widget.children) {
+				assert.strictEqual(child.error, collection instanceof Error ? 'Styles unavailable' : null);
+				assert.strictEqual(child.designEnabled, !(collection instanceof Error));
+			}
+			assert.strictEqual(JSON.stringify(design), originalDesign);
+		}
+	});
+
+	it('reuses unchanged layouts and field geometry on repeated ten-tile refreshes', async () => {
+		const settings = {};
+		const states = {};
+		for (let slot = 1; slot <= 10; slot++) {
+			settings['chronograph' + slot] = { type: 'transition', name: String(slot) };
+			states['transition:' + slot] = { name: String(slot), type: 'Transition', active: true, running: true };
+		}
+		const widget = await loadWidget(settings, states);
+		const layers = widget.children.map(child => child.designLayers);
+		const builds = widget.layoutCalls.buildRows;
+		const spanningLayouts = widget.layoutCalls.layoutSpanningRows;
+		const poll = widget.intervals.find(interval => interval.delay === 5000);
+		for (let index = 0; index < 3; index++) {
+			poll.fn();
+			await new Promise(resolve => setImmediate(resolve));
+		}
+		assert.strictEqual(widget.layoutCalls.buildRows, builds);
+		assert.strictEqual(widget.layoutCalls.layoutSpanningRows, spanningLayouts);
+		widget.children.forEach((child, index) => {
+			assert.strictEqual(child.designLayers, layers[index]);
+			const fields = child.designFieldLayout();
+			for (let repeat = 0; repeat < 20; repeat++) assert.strictEqual(child.designFieldLayout(), fields);
+		});
+		assert.strictEqual(widget.layoutCalls.inputFieldLayout, 10);
+		states['transition:1'].running = false;
+		poll.fn();
+		await new Promise(resolve => setImmediate(resolve));
+		assert.strictEqual(widget.children[0].designState, 'paused');
+		assert.notStrictEqual(widget.children[0].designLayers, layers[0]);
+		states['transition:1'].running = true;
+		poll.fn();
+		await new Promise(resolve => setImmediate(resolve));
+		assert.strictEqual(widget.children[0].designLayers, layers[0]);
+	});
+
 	it('defaults to transition remaining duration with live updates and clamping', async () => {
 		const widget = await loadWidget({ chronograph1: { type: 'transition', name: 'A' } }, {
 			'transition:A': { name: 'A', type: 'Transition', active: true, running: false, duration: 1234, targetDuration: 10000 }
@@ -296,11 +543,13 @@ describe('Multiple Chronographs widget', () => {
 		assert.strictEqual(widget.parent.rowSeparatorColor, 'currentColor');
 	});
 
-	it('uses the full transparent frame and Homey background only for card separation', () => {
+	it('keeps a rounded outer card while preserving transparent gaps for card separation', () => {
 		const html = fs.readFileSync(path.join(root, 'widgets', 'multiple_chronographs', 'public', 'index.html'), 'utf8');
 		const css = fs.readFileSync(path.join(root, 'assets', 'css', 'multiple-chronographs-widget.css'), 'utf8');
 		assert.match(html, /<body[^>]*ng-attr-data-separator="\{\{ rowSeparator \}\}"/);
-		assert.match(css, /body\[data-separator="cards"\]\s*\{[^}]*padding:\s*0;[^}]*background-color:\s*transparent/s);
+		assert.match(css, /body\[data-separator\]\s*\{[^}]*padding:\s*0;[^}]*background-color:\s*transparent/s);
+		assert.match(css, /\.multiple-chronographs\s*\{[^}]*padding:\s*var\(--homey-su-4,\s*16px\);[^}]*border-radius:\s*16px;[^}]*background:\s*var\(--homey-background-color,\s*#fff\)/s);
+		assert.match(css, /body\[data-separator="cards"\] \.multiple-chronographs\s*\{[^}]*padding:\s*0;[^}]*background:\s*transparent/s);
 		assert.match(css, /\[data-separator="cards"\] \.multiple-chronographs-grid[^}]*padding:\s*var\(--homey-su-4,\s*16px\)[^}]*background:\s*var\(--homey-background-color,\s*#fff\)/s);
 	});
 

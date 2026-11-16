@@ -11,6 +11,8 @@ CARATTERISTICHE
 * Tutti i timer, cronometri e transizioni sono persistenti attraverso i riavvii di Homey.
 * Target multipli per timer, cronometri e transizioni contemporaneamente usando wildcard nelle carte supportate.
 * Il widget Chronograph per la dashboard consente di scegliere nelle impostazioni un timer, cronometro o transizione e di metterlo in pausa, riprenderlo o interromperlo.
+* Personalizza layout, temi e icone predefinite per widget singoli e multipli, con tempo trascorso, rimanente e totale per timer e transizioni.
+* Condividi design e temi tramite Templates e il Widget Exchange della community, con anteprime e immagini a schermo intero con zoom a due dita.
 * Usa Espressioni Matematiche all'interno delle carte di flusso.
 * Usa HomeyScript per monitorare, mettere in pausa, riprendere o fermare timer, cronometri e transizioni attivi.
 

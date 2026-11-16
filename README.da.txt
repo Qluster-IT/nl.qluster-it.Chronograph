@@ -11,6 +11,8 @@ FUNKTIONER
 * Alle timere, stopure og overgange er vedholdende over Homey genstart.
 * Ret flere timere, stopure og overgange på én gang ved at bruge wildcards i understøttede kort.
 * Med Chronograph-dashboardwidgetten kan du vælge en timer, et stopur eller en overgang i widgetindstillingerne og sætte den på pause, genoptage eller stoppe den.
+* Tilpas layout, temaer og standardikoner til enkelte og flere kronografer med visning af forløbet, resterende og samlet tid for timere og overgange.
+* Del design og temaer via Templates og fællesskabets Widget Exchange med forhåndsvisninger og fuldskærmsbilleder med tofingerzoom.
 * Brug matematiske udtryk inde i flowcards.
 * Brug HomeyScript til at overvåge, sætte på pause, genoptage eller stoppe aktive timere, stopure og overgange.
 

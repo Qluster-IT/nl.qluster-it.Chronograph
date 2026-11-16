@@ -12,8 +12,10 @@
 		}
 	},
 	"devDependencies": {
+		"clean-css": "5.3.3",
 		"html-to-image": "1.11.13",
 		"husky": "^3.1.0",
-		"mocha": "^6.2.2"
+		"mocha": "^6.2.2",
+		"terser": "5.51.2"
 	}
 }

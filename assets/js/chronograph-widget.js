@@ -1,6 +1,17 @@
 'use strict';
 
 function onHomeyReady(Homey) {
+	var widgetStylesRequest;
+	function loadWidgetStyles() {
+		if (!widgetStylesRequest) {
+			widgetStylesRequest = Homey.api('GET', '/widget-styles', {}).catch(function (error) {
+				widgetStylesRequest = null;
+				throw error;
+			});
+		}
+		return widgetStylesRequest;
+	}
+
 	angular.module('chronographWidget').controller('ChronographWidgetController', [
 		'$scope',
 		'$interval',
@@ -17,6 +28,7 @@ function onHomeyReady(Homey) {
 			var refreshVersion = 0;
 			var expectedRealtime = null;
 			var deferredRealtime = false;
+			var startupChronograph = null;
 			var multipleEntry = $scope.widgetEntry;
 			var settings = multipleEntry ? multipleEntry.settings : Homey.getSettings() || {};
 		var widgetStyleRuntime = window.ChronographWidgetStyle;
@@ -28,31 +40,53 @@ function onHomeyReady(Homey) {
 		var activeColorScheme;
 		var activeDesignScheme = widgetStyleRuntime.currentScheme();
 		var styleError = null;
+		var appearanceRequest;
+		var layoutDesign;
+		var layoutSize;
+		var layoutHasIcon;
+		var designLayouts = {};
+		var designLayers = {};
+		var fieldLayout;
+		var fieldLayoutDesign;
+		var fieldLayoutSize;
+		var presentationDesign;
+		var presentationScheme;
+		var presentationSize;
+		var presentationStartLabel;
+		var presentations = {};
+		var markerSteps = 0;
+		var progressMarkers = [];
 		var widgetType = multipleEntry ? multipleEntry.type : document.body.getAttribute('data-chronograph-type');
 			$scope.widgetInputPrefix = multipleEntry ? 'chronograph-' + multipleEntry.slot + '-' : '';
-			var selectedIcon = settings.icon;
-			$scope.iconClass = '';
-			$scope.iconImage = '';
-			if (selectedIcon && typeof selectedIcon === 'object') {
-				var iconId = typeof selectedIcon.id === 'string'
-					? /^(fas|far|fab):([a-z0-9-]+)$/.exec(selectedIcon.id)
-					: null;
-				if (selectedIcon.id === 'chronograph:transition') {
-					$scope.iconClass = 'fa-solid fa-chronograph-transition';
-				} else if (selectedIcon.id !== 'none' && typeof selectedIcon.image === 'string'
-					&& (selectedIcon.image.indexOf('data:image/svg+xml;base64,') === 0
-						|| selectedIcon.image.indexOf('data:image/png;base64,') === 0)) {
-					$scope.iconImage = selectedIcon.image;
-				} else if (iconId) {
-					var iconStyles = { fas: 'fa-solid', far: 'fa-regular', fab: 'fa-brands' };
-					$scope.iconClass = iconStyles[iconId[1]] + ' fa-' + iconId[2];
+			function applyIcon() {
+				var selectedIcon = settings.icon;
+				if (selectedIcon == null && activeDesign && activeDesign.defaultIcons && activeDesign.defaultIcons[widgetType]) {
+					selectedIcon = { id: activeDesign.defaultIcons[widgetType] };
 				}
-			} else {
-				var legacyIcon = typeof selectedIcon === 'string' ? selectedIcon : widgetStyleRuntime.defaultIcon(widgetType);
-				if (legacyIcon && legacyIcon !== 'none' && /^[a-z0-9-]+$/.test(legacyIcon)) {
-					$scope.iconClass = 'fa-solid fa-' + legacyIcon;
+				$scope.iconClass = '';
+				$scope.iconImage = '';
+				if (selectedIcon && typeof selectedIcon === 'object') {
+					var iconId = typeof selectedIcon.id === 'string'
+						? /^(fas|far|fab):([a-z0-9-]+)$/.exec(selectedIcon.id)
+						: null;
+					if (selectedIcon.id === 'chronograph:transition') {
+						$scope.iconClass = 'fa-solid fa-chronograph-transition';
+					} else if (selectedIcon.id !== 'none' && typeof selectedIcon.image === 'string'
+						&& (selectedIcon.image.indexOf('data:image/svg+xml;base64,') === 0
+							|| selectedIcon.image.indexOf('data:image/png;base64,') === 0)) {
+						$scope.iconImage = selectedIcon.image;
+					} else if (iconId) {
+						var iconStyles = { fas: 'fa-solid', far: 'fa-regular', fab: 'fa-brands' };
+						$scope.iconClass = iconStyles[iconId[1]] + ' fa-' + iconId[2];
+					}
+				} else {
+					var legacyIcon = typeof selectedIcon === 'string' ? selectedIcon : widgetStyleRuntime.defaultIcon(widgetType);
+					if (legacyIcon && legacyIcon !== 'none' && /^[a-z0-9-]+$/.test(legacyIcon)) {
+						$scope.iconClass = 'fa-solid fa-' + legacyIcon;
+					}
 				}
 			}
+			applyIcon();
 			var isTimer = widgetType === 'timer';
 			var isTransition = widgetType === 'transition';
 			var isStopwatch = widgetType === 'stopwatch';
@@ -94,11 +128,6 @@ function onHomeyReady(Homey) {
 				: 'none';
 			$scope.getWidgetColor = function () {
 				var chronograph = $scope.selectedChronograph;
-				if (activeColorScheme) {
-					var state = !chronograph || !chronograph.active ? 'inactive' : chronograph.running ? 'running' : 'paused';
-					var color = widgetStyleRuntime.resolveColor(activeColorScheme, state, 'background');
-					return color === 'default' ? 'none' : color;
-				}
 				if (!chronograph || !chronograph.active) return $scope.inactiveColor;
 				return chronograph.running ? $scope.runningColor : $scope.pausedColor;
 			};
@@ -214,16 +243,45 @@ function onHomeyReady(Homey) {
 					$scope.designEnabled = false;
 					return;
 				}
+				var hasIcon = !!($scope.iconClass || $scope.iconImage);
+				if (layoutDesign !== activeDesign || layoutSize !== $scope.layout || layoutHasIcon !== hasIcon) {
+					layoutDesign = activeDesign;
+					layoutSize = $scope.layout;
+					layoutHasIcon = hasIcon;
+					designLayouts = {};
+					designLayers = {};
+				}
+				function getLayout(state, showForm, omitInputs) {
+					var key = state + ':' + showForm + ':' + omitInputs;
+					if (!designLayouts[key]) {
+						var rows = widgetStyleRuntime.buildRows(activeDesign, $scope.layout, state, widgetType, showForm, omitInputs, hasIcon);
+						var layout = widgetStyleRuntime.layoutSpanningRows(rows);
+						designLayouts[key] = {
+							rows: rows,
+							layer: { state: state, rows: layout.rows, spanning: layout.spanning, tracks: layout.tracks, rowTracks: layout.rowTracks },
+							signature: state + ':' + JSON.stringify(layout)
+						};
+					}
+					return designLayouts[key];
+				}
 				var chronograph = $scope.selectedChronograph;
+				var showStartForm = hasDesignStartForm();
 				var state = chronograph && chronograph.active
 					? chronograph.running ? 'running' : 'paused'
-					: hasDesignStartForm() ? 'starting' : 'inactive';
+					: showStartForm ? 'starting' : 'inactive';
 				$scope.designState = state;
-				var hasIcon = !!($scope.iconClass || $scope.iconImage);
-				$scope.designRows = widgetStyleRuntime.buildRows(activeDesign, $scope.layout, state, widgetType, hasDesignStartForm(), false, hasIcon);
+				$scope.designScheme = activeDesignScheme;
+				var current = getLayout(state, showStartForm, false);
+				$scope.designRows = current.rows;
 				$scope.designEnabled = $scope.designRows.length > 0;
-				var current = widgetStyleRuntime.layoutSpanningRows($scope.designRows);
-				$scope.designLayers = [{ id: 'current', state: state, rows: current.rows, spanning: current.spanning, tracks: current.tracks, rowTracks: current.rowTracks, measure: false }];
+				var key = state + ':' + showStartForm;
+				if (designLayers[key]) {
+					$scope.designLayers = designLayers[key];
+					return;
+				}
+				var layers = [Object.assign({ id: 'current', measure: false }, current.layer)];
+				var seen = {};
+				seen[current.signature] = true;
 				var mode = activeDesign.heightModes && activeDesign.heightModes[$scope.layout] || 'auto';
 				if (mode === 'minimum' || mode === 'minimum-without-inputs') {
 					var states = mode === 'minimum'
@@ -233,62 +291,97 @@ function onHomeyReady(Homey) {
 							|| (scenario === 'inactive' && !isStopwatch && $scope.layout !== 'compact'
 								&& (!activeDesign.startFieldsVisibility || activeDesign.startFieldsVisibility[$scope.layout] === 'inactive'));
 						var scenarioState = scenario === 'inactive' && showForm ? 'starting' : scenario;
-						var scenarioRows = widgetStyleRuntime.buildRows(activeDesign, $scope.layout, scenarioState, widgetType, showForm,
-							mode === 'minimum-without-inputs', hasIcon);
-						var scenarioLayout = widgetStyleRuntime.layoutSpanningRows(scenarioRows);
-						$scope.designLayers.push({
-							id: scenario,
-							state: scenarioState,
-							measure: true,
-							rows: scenarioLayout.rows,
-							spanning: scenarioLayout.spanning,
-							tracks: scenarioLayout.tracks,
-							rowTracks: scenarioLayout.rowTracks
-						});
+						var scenarioLayout = getLayout(scenarioState, showForm, mode === 'minimum-without-inputs');
+						if (seen[scenarioLayout.signature]) return;
+						seen[scenarioLayout.signature] = true;
+						layers.push(Object.assign({ id: scenario, measure: true }, scenarioLayout.layer));
 					});
 				}
-				$scope.designScheme = activeDesignScheme;
+				designLayers[key] = layers;
+				$scope.designLayers = layers;
+			}
+
+			function presentationFor(state) {
+				if (presentationDesign !== activeDesign || presentationScheme !== activeDesignScheme
+					|| presentationSize !== $scope.layout || presentationStartLabel !== $scope.labels.start) {
+					presentationDesign = activeDesign;
+					presentationScheme = activeDesignScheme;
+					presentationSize = $scope.layout;
+					presentationStartLabel = $scope.labels.start;
+					presentations = {};
+				}
+				if (!presentations[state]) {
+					var progress = activeDesign && activeDesign.progressSettings && activeDesign.progressSettings[$scope.layout];
+					var colors = activeDesignScheme.progressColors && activeDesignScheme.progressColors[$scope.layout];
+					presentations[state] = {
+						elements: {}, buttons: {}, sizes: {}, texts: {}, colors: {}, legacy: {}, markers: {},
+						background: widgetStyleRuntime.backgroundStyle(activeDesignScheme, state),
+						progressDirection: progress && progress.direction || 'left-right',
+						progressBackground: widgetStyleRuntime.valueColor(colors && colors.background || 'grey'),
+						progressForeground: widgetStyleRuntime.valueColor(colors && colors.foreground || 'blue')
+					};
+				}
+				return presentations[state];
 			}
 
 			$scope.designElementStyle = function (element) {
-				if (['play', 'pause', 'stop', 'cancel', 'start'].indexOf(element) !== -1) return {};
-				return widgetStyleRuntime.elementStyle(activeDesignScheme, $scope.designState, element);
+				var cache = presentationFor($scope.designState).elements;
+				if (!cache[element]) {
+					cache[element] = ['play', 'pause', 'stop', 'cancel', 'start'].indexOf(element) !== -1
+						? {} : widgetStyleRuntime.elementStyle(activeDesignScheme, $scope.designState, element);
+				}
+				return cache[element];
 			};
 			$scope.designElementSize = function (element) {
-				return widgetStyleRuntime.elementSize(activeDesign, $scope.layout, element);
+				var cache = presentationFor($scope.designState).sizes;
+				if (cache[element] === undefined) cache[element] = widgetStyleRuntime.elementSize(activeDesign, $scope.layout, element);
+				return cache[element];
 			};
 			$scope.designButtonText = function (element) {
-				return widgetStyleRuntime.buttonText(activeDesign, $scope.layout, element, $scope.labels.start);
+				var cache = presentationFor($scope.designState).texts;
+				if (cache[element] === undefined) cache[element] = widgetStyleRuntime.buttonText(activeDesign, $scope.layout, element, $scope.labels.start);
+				return cache[element];
 			};
 			$scope.designFieldLayout = function () {
-				return widgetStyleRuntime.inputFieldLayout(activeDesign, $scope.layout, widgetType);
+				if (!fieldLayout || fieldLayoutDesign !== activeDesign || fieldLayoutSize !== $scope.layout) {
+					fieldLayoutDesign = activeDesign;
+					fieldLayoutSize = $scope.layout;
+					fieldLayout = widgetStyleRuntime.inputFieldLayout(activeDesign, $scope.layout, widgetType);
+				}
+				return fieldLayout;
 			};
 			$scope.designAllowShrink = function () {
 				return !activeDesign || activeDesign.allowShrink !== false;
 			};
 			$scope.designButtonStyle = function (element) {
-				return Object.assign(widgetStyleRuntime.elementStyle(activeDesignScheme, $scope.designState, element),
+				var cache = presentationFor($scope.designState).buttons;
+				if (!cache[element]) cache[element] = Object.assign(widgetStyleRuntime.elementStyle(activeDesignScheme, $scope.designState, element),
 					widgetStyleRuntime.buttonShapeStyle(activeDesign, $scope.layout, element));
+				return cache[element];
 			};
 			$scope.designButtonColor = function (element) {
-				return widgetStyleRuntime.buttonColor(activeDesignScheme, $scope.designState, element);
+				var cache = presentationFor($scope.designState).colors;
+				if (cache[element] === undefined) cache[element] = widgetStyleRuntime.buttonColor(activeDesignScheme, $scope.designState, element);
+				return cache[element];
 			};
 			$scope.designBackgroundStyle = function () {
-				return widgetStyleRuntime.backgroundStyle(activeDesignScheme, $scope.designState);
+				return presentationFor($scope.designState).background;
 			};
 			$scope.schemeElementStyle = function (element) {
 				var state = $scope.selectedChronograph && $scope.selectedChronograph.active
 					? $scope.selectedChronograph.running ? 'running' : 'paused' : 'inactive';
-				var style = activeColorScheme ? widgetStyleRuntime.elementStyle(activeColorScheme, state, element) : {};
-				if (['play', 'pause', 'stop', 'start', 'cancel'].indexOf(element) !== -1) {
-					Object.assign(style, widgetStyleRuntime.buttonShapeStyle(activeDesign, $scope.layout, element));
+				var cache = presentationFor(state).legacy;
+				if (!cache[element]) {
+					var style = activeColorScheme ? widgetStyleRuntime.elementStyle(activeColorScheme, state, element) : {};
+					if (['play', 'pause', 'stop', 'start', 'cancel'].indexOf(element) !== -1) {
+						Object.assign(style, widgetStyleRuntime.buttonShapeStyle(activeDesign, $scope.layout, element));
+					}
+					cache[element] = style;
 				}
-				return style;
+				return cache[element];
 			};
 			$scope.designProgressDirection = function () {
-				var progress = activeDesign && activeDesign.progressSettings
-					&& activeDesign.progressSettings[$scope.layout];
-				return progress && progress.direction || 'left-right';
+				return presentationFor($scope.designState).progressDirection;
 			};
 			$scope.designProgressPercent = function () {
 				var chronograph = $scope.selectedChronograph;
@@ -300,12 +393,10 @@ function onHomeyReady(Homey) {
 				return progress && progress.timerMode === 'remaining' ? 100 - percent : percent;
 			};
 			$scope.designProgressBackground = function () {
-				var colors = activeDesignScheme.progressColors && activeDesignScheme.progressColors[$scope.layout];
-				return widgetStyleRuntime.valueColor(colors && colors.background || 'grey');
+				return presentationFor($scope.designState).progressBackground;
 			};
 			$scope.designProgressForeground = function () {
-				var colors = activeDesignScheme.progressColors && activeDesignScheme.progressColors[$scope.layout];
-				return widgetStyleRuntime.valueColor(colors && colors.foreground || 'blue');
+				return presentationFor($scope.designState).progressForeground;
 			};
 			$scope.designProgressFillStyle = function () {
 				var percent = $scope.designProgressPercent() + '%';
@@ -327,28 +418,38 @@ function onHomeyReady(Homey) {
 				return style;
 			};
 			$scope.designProgressMarkerStyle = function (marker) {
-				var position = marker + '%';
-				return $scope.designProgressDirection() === 'left-right' || $scope.designProgressDirection() === 'right-left'
-					? { left: position } : { top: position };
+				var presentation = presentationFor($scope.designState);
+				if (!presentation.markers[marker]) {
+					var position = marker + '%';
+					presentation.markers[marker] = presentation.progressDirection === 'left-right' || presentation.progressDirection === 'right-left'
+						? { left: position } : { top: position };
+				}
+				return presentation.markers[marker];
 			};
 			$scope.designProgressMarkers = function () {
 				var chronograph = $scope.selectedChronograph;
 				var steps = chronograph && chronograph.active && Number(chronograph.steps);
 				var progress = activeDesign && activeDesign.progressSettings
 					&& activeDesign.progressSettings[$scope.layout];
-				if (!isTransition || !progress || !progress.showSteps) return [];
-				if (!Number.isInteger(steps) || steps < 2 || steps > 100) return [];
-				return Array.from({ length: steps - 1 }, function (unused, index) {
-					return (index + 1) * 100 / steps;
-				});
+				if (!isTransition || !progress || !progress.showSteps || !Number.isInteger(steps) || steps < 2 || steps > 100) steps = 0;
+				if (markerSteps !== steps) {
+					markerSteps = steps;
+					Object.keys(presentations).forEach(function (state) { presentations[state].markers = {}; });
+					progressMarkers = steps ? Array.from({ length: steps - 1 }, function (unused, index) {
+						return (index + 1) * 100 / steps;
+					}) : [];
+				}
+				return progressMarkers;
 			};
 
 			function markReady() {
 				if (widgetReady) return;
 				widgetReady = true;
+				startupChronograph = null;
 				if (multipleEntry) {
 					$scope.multipleWidget.tileReady();
 				} else {
+					syncRefresh();
 					Homey.ready();
 					scheduleHeightUpdate();
 				}
@@ -378,11 +479,12 @@ function onHomeyReady(Homey) {
 				var needsCollection = !builtInDesign || !builtInScheme;
 				if (!needsCollection) {
 					activeDesign = builtInDesign;
+					applyIcon();
 					applyColorScheme(builtInScheme);
 					updateDesignRows();
 					return Promise.resolve();
 				}
-				return Homey.api('GET', '/widget-styles', {}).then(function (collection) {
+				return loadWidgetStyles().then(function (collection) {
 					var design = builtInDesign || widgetStyleRuntime.findStyle(collection, designStyleId);
 					var scheme = builtInScheme || widgetStyleRuntime.findScheme(collection, colorSchemeId);
 					if (designStyleId !== 'builtin:current' && !design) {
@@ -393,6 +495,7 @@ function onHomeyReady(Homey) {
 					}
 					$scope.$applyAsync(function () {
 						activeDesign = design || null;
+						applyIcon();
 						applyColorScheme(scheme);
 						updateDesignRows();
 					});
@@ -400,6 +503,7 @@ function onHomeyReady(Homey) {
 					styleError = window.chronographErrorMessage(Homey, error);
 					$scope.$applyAsync(function () {
 						activeDesign = null;
+						applyIcon();
 						applyColorScheme(null);
 						updateDesignRows();
 						$scope.error = styleError;
@@ -407,9 +511,10 @@ function onHomeyReady(Homey) {
 				});
 			}
 
-			function applyState(chronograph) {
+			function applyState(chronograph, receivedAt) {
 				var wasActive = $scope.selectedChronograph && $scope.selectedChronograph.active;
-				$scope.selectedChronograph = applyChronographUpdate(chronograph);
+				$scope.selectedChronograph = applyChronographUpdate(chronograph, receivedAt);
+				updateDurations();
 				syncClock();
 				if (chronograph.active) $scope.cancelStart();
 				if (chronograph.defaults) {
@@ -425,10 +530,16 @@ function onHomeyReady(Homey) {
 			}
 
 			function refresh(direct) {
+				if (destroyed || !appearanceRequest || (widgetReady && document.hidden === true)) return Promise.resolve();
 				if (!selectedName) {
-					$scope.loading = false;
-					markReady();
-					return Promise.resolve();
+					return appearanceRequest.then(function () {
+						if (destroyed) return;
+						$scope.$applyAsync(function () {
+							if (destroyed) return;
+							$scope.loading = false;
+							markReady();
+						});
+					});
 				}
 
 				var version = ++refreshVersion;
@@ -437,17 +548,28 @@ function onHomeyReady(Homey) {
 					: Homey.api('GET', '/' + widgetType + '/' + encodeURIComponent(selectedName), {});
 				return request
 					.then(function (chronograph) {
-						if (destroyed || version !== refreshVersion) return;
-						$scope.$applyAsync(function () {
-							if (!destroyed && version === refreshVersion) applyState(chronograph);
+						var receivedAt = Date.now();
+						if (!widgetReady && version === refreshVersion) {
+							startupChronograph = applyChronographUpdate(Object.assign({}, chronograph), receivedAt);
+						}
+						return appearanceRequest.then(function () {
+							if (destroyed || version !== refreshVersion) return;
+							$scope.$applyAsync(function () {
+								if (destroyed || version !== refreshVersion) return;
+								applyState(chronograph, receivedAt);
+								markReady();
+							});
 						});
 					})
 					.catch(function (error) {
-						if (destroyed || version !== refreshVersion) return;
-						$scope.$applyAsync(function () {
+						return appearanceRequest.then(function () {
 							if (destroyed || version !== refreshVersion) return;
-							$scope.loading = false;
-							$scope.error = window.chronographErrorMessage(Homey, error);
+							$scope.$applyAsync(function () {
+								if (destroyed || version !== refreshVersion) return;
+								$scope.loading = false;
+								$scope.error = window.chronographErrorMessage(Homey, error);
+								markReady();
+							});
 						});
 					});
 			}
@@ -495,13 +617,38 @@ function onHomeyReady(Homey) {
 					&& $scope.selectedChronograph.active && $scope.selectedChronograph.running);
 				if (multipleEntry) {
 					$scope.multipleWidget.setRunning($scope.widgetEntry, running);
-				} else if (running && !durationInterval) {
+				} else if (running && document.hidden !== true && !destroyed && !durationInterval) {
 					updateDurations();
 					durationInterval = $interval(updateDurations, 250);
-				} else if (!running && durationInterval) {
+				} else if ((!running || document.hidden === true || destroyed) && durationInterval) {
 					$interval.cancel(durationInterval);
 					durationInterval = null;
 				}
+			}
+
+			function syncRefresh() {
+				var enabled = widgetReady && selectedName && document.hidden !== true && !destroyed;
+				if (enabled && !refreshInterval) refreshInterval = $interval(refresh, 5000);
+				else if (!enabled && refreshInterval) {
+					$interval.cancel(refreshInterval);
+					refreshInterval = null;
+				}
+			}
+
+			function visibilityChanged() {
+				if (destroyed) return;
+				if (document.hidden === true) {
+					syncClock();
+					syncRefresh();
+					return;
+				}
+				$scope.$applyAsync(function () {
+					if (destroyed || document.hidden === true) return;
+					updateDurations();
+					syncClock();
+					syncRefresh();
+					refresh();
+				});
 			}
 
 			function scheduleHeightUpdate() {
@@ -524,8 +671,8 @@ function onHomeyReady(Homey) {
 				});
 			}
 
-			function applyChronographUpdate(chronograph) {
-				if (chronograph.running) chronograph.updatedAt = Date.now();
+			function applyChronographUpdate(chronograph, receivedAt) {
+				if (chronograph.running) chronograph.updatedAt = receivedAt === undefined ? Date.now() : receivedAt;
 				return chronograph;
 			}
 
@@ -662,6 +809,7 @@ function onHomeyReady(Homey) {
 				$interval.cancel(refreshInterval);
 				$interval.cancel(durationInterval);
 				$timeout.cancel(startFormTimeout);
+				if (!multipleEntry) document.removeEventListener('visibilitychange', visibilityChanged);
 				if (resizeObserver) resizeObserver.disconnect();
 			});
 
@@ -671,6 +819,7 @@ function onHomeyReady(Homey) {
 			}
 
 			function refreshSavedValues(event) {
+				if (destroyed || document.hidden === true) return;
 				if (event && event.name === selectedName && typeof event.type === 'string'
 					&& event.type.toLowerCase() === widgetType) return refresh(true);
 			}
@@ -682,6 +831,7 @@ function onHomeyReady(Homey) {
 				if (shouldRefresh) refresh(true);
 			}
 			function refreshRealtime(events, periodic) {
+				if (destroyed || document.hidden === true) return;
 				if (!Array.isArray(events)) return refresh(true);
 				if (events.some(function (event) {
 					if (!event || event.name !== selectedName || !event.data
@@ -692,7 +842,7 @@ function onHomeyReady(Homey) {
 							|| (!event.removed && event.running !== expectedRealtime.running)) deferredRealtime = true;
 						return false;
 					}
-					var current = $scope.selectedChronograph;
+					var current = $scope.selectedChronograph || startupChronograph;
 					// The local clock already advances running durations; allow for event delivery delay.
 					if (periodic && current && current.active && current.running
 						&& event.running === true && event.removed === false && Number.isFinite(event.duration)
@@ -708,17 +858,13 @@ function onHomeyReady(Homey) {
 				$scope.$on('multipleChronographsFlowValues', function (event, values) { refreshSavedValues(values); });
 				$scope.$on('multipleChronographsClock', updateDurations);
 			} else {
+				document.addEventListener('visibilitychange', visibilityChanged);
 				Homey.on('chronograph_event_multi', function (events) { return refreshRealtime(events, true); });
-				Homey.on('chronograph_event', function (event) { refreshRealtime([event]); });
+				Homey.on('chronograph_event', function (event) { return refreshRealtime([event]); });
 				Homey.on('chronograph_flow_values_changed', refreshSavedValues);
 			}
-			loadWidgetAppearance().then(refresh).then(function () {
-				if (!selectedName) return;
-				if (!multipleEntry) {
-					refreshInterval = $interval(refresh, 5000);
-				}
-				markReady();
-			});
+			appearanceRequest = loadWidgetAppearance();
+			refresh();
 		}
 	]);
 

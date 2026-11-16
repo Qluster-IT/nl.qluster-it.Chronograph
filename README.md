@@ -15,8 +15,10 @@ Adds precise timer, stopwatch and transition functionality to Homey.
 * Support for random or computed durations or adjustments using simple math expressions,
 * All timers, stopwatches and transitions are persistent across Homey restarts,
 * Target multiple timers, stopwatches and transitions at once using wildcards in supported cards.
-* Use the Chronograph dashboard widget to choose a timer, stopwatch or transition in its settings and pause, resume or stop it.
-* Choose a searchable Font Awesome Free icon for each dashboard widget, or select None.
+* Control timers, stopwatches and transitions from single or multi-chronograph dashboard widgets.
+* Customize widget layouts, themes and per-type default icons, with optional widget-specific Font Awesome Free icons or None.
+* Import, export and share designs and themes through Templates and the community Widget Exchange, with timer previews and zoomable images.
+* Display elapsed and total time for timers and transitions, with optional reversed time displays.
 * Set a timer or transition widget's default duration to 0 to use the last duration saved by a Flow or API start, if available.
 * Transition widget default start, end and step values use the last saved Flow or API values when set to 0 or left empty.
 * A Flow resume card also saves these values when it starts a chronograph that is not already active; resuming an existing one leaves them unchanged.
@@ -48,9 +50,9 @@ registry for the selected type, rather than raw Flow arguments or runtime names.
 Display-name formatting and device IDs derived from the exact type and name
 remain unchanged; existing devices are not removed or re-paired.
 
-`GET /ready` returns `{ "ready": true }` only after initial Flow registration,
+`GET /api-ready` returns `{ "ready": true }` only after initial Flow registration,
 configured-name collection and snapshot restoration succeed. The app then emits
-`chronograph_ready` with the same payload. Clients should subscribe before
+`api-ready` with the same payload. Clients should subscribe before
 probing, check Homey's app availability before each probe, and confirm the
 endpoint response rather than relying on an event they may have missed.
 Initialization failures remain not ready; failure to deliver the realtime
@@ -80,6 +82,10 @@ in a one-, two-, or three-column multi-widget; tile width depends on the
 available preview space. All tiles share the selected design, size, state and
 theme. For one or two columns, preview the widget's row separation
 and line color as well.
+The real multi-widget paints its background on the rounded outer container,
+not the iframe body; card separation keeps its transparent gaps and rounded rows.
+Preview Start and Play actions both open hidden timer/transition input rows before
+starting; stopwatches start immediately and paused chronographs resume without input.
 Button text can be customized per design size. Default text is translated;
 the default appears as a placeholder in the designer. Custom text is shared
 across languages, and empty custom text shows only the icon.
@@ -96,8 +102,17 @@ transitions, independent of time reversal. It starts in Unused when loading
 older designs. The built-in Transitions design extends Default with every
 element placed in Normal and Large, including an extra elapsed/total time row;
 Compact remains identical to Default. Elements retain their usual state visibility.
-Designs can store separate default icons for timers, stopwatches and transitions;
-for now these affect only the designer preview and are excluded from exports.
+Designs store separate default icon references for timers, stopwatches and transitions.
+Single and multi-widget tiles use these defaults unless an explicit widget icon
+(including None) overrides them. Templates preserve references only, never icon files.
+Template previews and exported preview images use the same icons; image capture embeds
+only the bundled font styles needed by the selected design.
+The community catalogue renders one normal-size running timer from each decoded
+template when list previews are enabled, caching that preview for the loaded entry.
+Expanded entries retain the forum images; clicking an image opens a scrollable
+zoom viewer filling the settings viewport, with touch-sized controls and the
+full-resolution forum upload when available. Two-finger pinching zooms around
+the fingers' midpoint; one-finger scrolling and the zoom buttons remain available.
 Custom names must be unique within designs and within themes, ignoring case and
 surrounding spaces; built-in names may be reused.
 Layouts can be copied between sizes without replacing other size-specific
@@ -122,6 +137,25 @@ On Windows, regenerate the widget picker previews with
 After changing widget scripts, styles, or the shared design template, run
 `npm run build:widget-assets` and commit the generated bundles. Tests check
 that the bundles match their sources.
+The development build minifies app-owned JavaScript and CSS; already-minified
+Angular and Font Awesome assets, including their licences, remain unchanged.
+
+Startup loads appearance and chronograph state concurrently, displaying each
+tile only after both are available. Mixed built-in/custom tiles share one initial
+state batch. Running snapshots retain their receipt time so appearance loading
+does not delay the displayed clock.
+
+Widget tiles share custom appearance loading within each widget frame and cache
+design geometry until the design, size, or icon availability changes. Keep live
+time and progress bindings dynamic. Minimum-height sizing omits only duplicate
+state/layout measurement layers; all distinct sizing scenarios remain covered.
+Presentation styles are cached per design, theme, size and state, and transition
+markers are reused until their step count changes.
+
+The Page Visibility API suspends display clocks, polling and realtime-triggered
+fetches while the widget document is hidden. Initial loading still completes;
+returning to the foreground immediately refreshes state (one batch for a multi
+widget). Visible update rates and the chronographs running on Homey are unchanged.
 
 ## Contributing
 
@@ -164,6 +198,7 @@ Application image by [Agê Barros](https://unsplash.com/@agebarros?utm_source=un
 * Add an optional Elapsed duration element for timers and transitions to widget designs.
 * Show remaining duration by default for transitions, like timers, with a reverse-time option per widget or multiple-widget tile that swaps remaining and elapsed displays.
 * Share saved custom widget designs and themes as compact templates, with a visual import review.
+* Use Templates for design and theme import/export; remove the separate JSON-file controls.
 * Copy a template forum post with three size-and-state preview grids for timers, stopwatches and transitions.
 * Renamed widget color scheme settings to themes; existing dashboard settings require migration.
 

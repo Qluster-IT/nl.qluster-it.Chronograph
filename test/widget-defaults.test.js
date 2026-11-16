@@ -9,19 +9,26 @@ const script = fs.readFileSync(path.join(__dirname, '..', 'assets', 'js', 'chron
 const styleScript = fs.readFileSync(path.join(__dirname, '..', 'assets', 'js', 'chronograph-widget-style.js'), 'utf8');
 const errorScript = fs.readFileSync(path.join(__dirname, '..', 'assets', 'js', 'chronograph-errors.js'), 'utf8');
 
-async function loadWidget(type, settings, defaults, widgetStyles) {
+async function loadWidget(type, settings, defaults, widgetStyles, hidden = false) {
 	let controller;
 	const listeners = {};
+	const documentListeners = {};
+	const scopeListeners = {};
 	const requests = [];
 	const intervals = [];
+	let ready = 0;
+	let now;
+	class Clock extends Date {
+		static now() { return now === undefined ? Date.now() : now; }
+	}
 	let invalidInput = null;
 	const state = { active: false, running: false, defaults };
 	const module = { controller: (name, definition) => { controller = definition[definition.length - 1]; }, directive() {} };
-	const scope = { $on() {}, $applyAsync(callback) { callback(); } };
+	const scope = { $on(name, callback) { scopeListeners[name] = callback; }, $applyAsync(callback) { callback(); } };
 	const homey = {
 		getSettings: () => Object.assign({ chronograph: { id: 'test', name: 'test' } }, settings),
 		__: key => key,
-		ready() {},
+		ready() { ready++; },
 		on: (name, callback) => { listeners[name] = callback; },
 		api: (method, url) => {
 			requests.push({ method, url });
@@ -31,16 +38,25 @@ async function loadWidget(type, settings, defaults, widgetStyles) {
 	const context = {
 		angular: { module: () => module, bootstrap() {} },
 		document: {
+			hidden,
+			addEventListener: (name, callback) => { documentListeners[name] = callback; },
+			removeEventListener: name => { delete documentListeners[name]; },
 			body: { getAttribute: () => type },
 			querySelector: () => invalidInput
 		},
 		window: {},
 		Promise,
-		Date
+		Date: Clock
 	};
 	vm.runInNewContext(styleScript, context);
 	vm.runInNewContext(errorScript, context);
 	vm.runInNewContext(script, context);
+	const styleCalls = {};
+	for (const name of ['elementStyle', 'elementSize', 'buttonText', 'buttonShapeStyle', 'buttonColor', 'backgroundStyle', 'valueColor', 'resolveColor']) {
+		styleCalls[name] = 0;
+		const original = context.window.ChronographWidgetStyle[name];
+		context.window.ChronographWidgetStyle[name] = (...args) => { styleCalls[name]++; return original(...args); };
+	}
 	context.onHomeyReady(homey);
 	const timeout = () => {};
 	timeout.cancel = () => {};
@@ -52,10 +68,151 @@ async function loadWidget(type, settings, defaults, widgetStyles) {
 	interval.cancel = task => { if (task) task.cancelled = true; };
 	controller(scope, interval, timeout);
 	await new Promise(resolve => setImmediate(resolve));
-	return { scope, listeners, state, requests, intervals, homey, setInvalidInput: input => { invalidInput = input; } };
+	return { scope, listeners, state, requests, intervals, homey, styleCalls, documentListeners,
+		get ready() { return ready; }, setNow: value => { now = value; },
+		destroy: () => scopeListeners.$destroy(),
+		setHidden(value) { context.document.hidden = value; if (documentListeners.visibilitychange) documentListeners.visibilitychange(); },
+		setInvalidInput: input => { invalidInput = input; } };
 }
 
 describe('Widget duration defaults', () => {
+	it('loads appearance and state in parallel without rendering early or losing elapsed loading time', async () => {
+		let resolveStyles;
+		const styles = new Promise(resolve => { resolveStyles = resolve; });
+		const widget = await loadWidget('timer', { designStyle: 'pending' }, {}, styles, true);
+		assert.deepStrictEqual(widget.requests.map(request => request.url), ['/widget-styles', '/timer/test']);
+		assert.strictEqual(widget.scope.selectedChronograph, null);
+		assert.strictEqual(widget.ready, 0);
+		widget.setNow(1000);
+		Object.assign(widget.state, { type: 'Timer', active: true, running: true, duration: 1000, targetDuration: 10000 });
+		widget.setHidden(false);
+		await new Promise(resolve => setImmediate(resolve));
+		assert.strictEqual(widget.scope.loading, true);
+		assert.strictEqual(widget.scope.selectedChronograph, null);
+		assert.strictEqual(widget.ready, 0);
+		const design = require('../assets/js/chronograph-widget-style.js').currentDesign();
+		design.id = 'pending';
+		widget.setNow(6000);
+		resolveStyles({ version: 3, styles: [design], themes: [] });
+		await new Promise(resolve => setImmediate(resolve));
+		assert.strictEqual(widget.scope.loading, false);
+		assert.strictEqual(widget.scope.designEnabled, true);
+		assert.strictEqual(widget.requests.length, 3);
+		assert.strictEqual(widget.ready, 1);
+		assert.strictEqual(widget.scope.formatDuration(widget.scope.selectedChronograph), '00:00:04');
+		assert.strictEqual(widget.scope.formatDuration(widget.scope.selectedChronograph, true), '00:00:06');
+	});
+
+	it('waits for appearance before reporting an overlapping state request failure', async () => {
+		let resolveStyles;
+		const widget = await loadWidget('timer', { designStyle: 'pending' }, {},
+			new Promise(resolve => { resolveStyles = resolve; }));
+		widget.homey.api = () => Promise.reject(new Error('State unavailable'));
+		const refresh = widget.listeners.chronograph_event_multi();
+		await new Promise(resolve => setImmediate(resolve));
+		assert.strictEqual(widget.scope.error, null);
+		assert.strictEqual(widget.ready, 0);
+		const design = require('../assets/js/chronograph-widget-style.js').currentDesign();
+		design.id = 'pending';
+		resolveStyles({ version: 3, styles: [design], themes: [] });
+		await refresh;
+		assert.strictEqual(widget.scope.error, 'State unavailable');
+		assert.strictEqual(widget.ready, 1);
+		assert.strictEqual(widget.scope.loading, false);
+	});
+
+	it('caches stable presentation and markers without freezing live progress or state changes', async () => {
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		const design = runtime.builtInDesign('builtin:vertical');
+		design.id = 'cached-design';
+		design.progressSettings.normal = { showSteps: true, direction: 'left-right' };
+		design.progressSettings.large = { showSteps: true, direction: 'top-bottom' };
+		const theme = runtime.currentScheme();
+		theme.id = 'cached-theme';
+		theme.foregroundOverrides = { running: { duration: 'green' }, paused: { duration: 'red' } };
+		const widget = await loadWidget('transition', { designStyle: design.id, colorTheme: theme.id }, {}, {
+			version: 3, styles: [design], themes: [theme]
+		});
+		Object.assign(widget.state, { type: 'Transition', active: true, running: true, duration: 1000, targetDuration: 10000, steps: 5 });
+		await widget.listeners.chronograph_event_multi();
+		const scope = widget.scope;
+		const methods = [
+			['designElementStyle', 'duration'], ['designButtonStyle', 'pause'], ['designButtonColor', 'pause'],
+			['designElementSize', 'duration'], ['designButtonText', 'pause'], ['designBackgroundStyle'],
+			['schemeElementStyle', 'pause'], ['designProgressBackground'], ['designProgressForeground'],
+			['designProgressMarkers'], ['designProgressMarkerStyle', 50], ['getWidgetColor']
+		];
+		const results = methods.map(([method, argument]) => scope[method](argument));
+		const calls = Object.assign({}, widget.styleCalls);
+		for (let repeat = 0; repeat < 20; repeat++) {
+			methods.forEach(([method, argument], index) => assert.strictEqual(scope[method](argument), results[index], method));
+		}
+		assert.deepStrictEqual(widget.styleCalls, calls);
+		assert.strictEqual(scope.designElementStyle('duration').color, runtime.valueColor('green'));
+		assert.deepStrictEqual(Array.from(scope.designProgressMarkers()), [20, 40, 60, 80]);
+		const progress = scope.designProgressFillStyle().width;
+		scope.clock += 1000;
+		assert.notStrictEqual(scope.designProgressFillStyle().width, progress);
+		widget.state.running = false;
+		widget.state.steps = 3;
+		await widget.listeners.chronograph_event_multi();
+		assert.strictEqual(scope.designElementStyle('duration').color, runtime.valueColor('red'));
+		assert.deepStrictEqual(Array.from(scope.designProgressMarkers()), [100 / 3, 200 / 3]);
+		scope.layout = 'large';
+		assert.deepStrictEqual(JSON.parse(JSON.stringify(scope.designProgressMarkerStyle(50))), { top: '50%' });
+		for (const steps of [0, 101, 'invalid']) {
+			widget.state.steps = steps;
+			await widget.listeners.chronograph_event_multi();
+			const markers = scope.designProgressMarkers();
+			assert.deepStrictEqual(Array.from(markers), []);
+			assert.strictEqual(scope.designProgressMarkers(), markers);
+		}
+	});
+
+	it('suspends hidden single widgets, resynchronizes on return, and cleans up visibility listeners', async () => {
+		for (const type of ['timer', 'stopwatch', 'transition']) {
+			for (const hidden of [false, true]) {
+				const widget = await loadWidget(type, {}, {}, undefined, hidden);
+				const activeIntervals = delay => widget.intervals.filter(task => !task.cancelled && (!delay || task.delay === delay));
+				assert.strictEqual(widget.scope.loading, false);
+				assert.strictEqual(activeIntervals(5000).length, hidden ? 0 : 1);
+				Object.assign(widget.state, { active: true, running: true, duration: 1000 });
+				await widget.listeners.chronograph_event_multi();
+				assert.strictEqual(activeIntervals(250).length, hidden ? 0 : 1);
+				widget.setHidden(true);
+				assert.strictEqual(activeIntervals().length, 0);
+				const requests = widget.requests.length;
+				widget.state.running = false;
+				widget.state.duration = 2000;
+				await widget.listeners.chronograph_event_multi();
+				await widget.listeners.chronograph_flow_values_changed({ name: 'test', type });
+				assert.strictEqual(widget.requests.length, requests);
+				widget.scope.clock = 0;
+				widget.setHidden(false);
+				await new Promise(resolve => setImmediate(resolve));
+				assert.strictEqual(widget.requests.length, requests + 1);
+				assert.strictEqual(widget.scope.selectedChronograph.duration, 2000);
+				assert.ok(widget.scope.clock > 0);
+				assert.strictEqual(activeIntervals(5000).length, 1);
+				assert.strictEqual(activeIntervals(250).length, 0);
+				widget.setHidden(true);
+				widget.state.running = true;
+				widget.setHidden(false);
+				await new Promise(resolve => setImmediate(resolve));
+				assert.strictEqual(activeIntervals(5000).length, 1);
+				assert.strictEqual(activeIntervals(250).length, 1);
+				widget.destroy();
+				assert.deepStrictEqual(widget.documentListeners, {});
+				assert.strictEqual(activeIntervals().length, 0);
+				const afterDestroy = widget.requests.length;
+				widget.setHidden(true);
+				widget.setHidden(false);
+				await widget.listeners.chronograph_event_multi();
+				assert.strictEqual(widget.requests.length, afterDestroy);
+			}
+		}
+	});
+
 	it('counts down timers and transitions by default and swaps both displays when reversed', async () => {
 		for (const type of ['timer', 'transition', 'stopwatch']) {
 			for (const reverseTime of [undefined, false, true]) {
@@ -91,6 +248,46 @@ describe('Widget duration defaults', () => {
 		assert.strictEqual(scope.formatTotalDuration(chronograph), '1settings.days_abbreviation 01:01:01');
 		scope.showMilliseconds = true;
 		assert.strictEqual(scope.formatTotalDuration(chronograph), '1settings.days_abbreviation 01:01:01.234');
+	});
+
+	it('uses per-type design icon references in single widgets, including None', async () => {
+		const design = require('../assets/js/chronograph-widget-style.js').currentDesign();
+		design.id = 'custom-icons';
+		design.defaultIcons = { timer: 'far:clock', stopwatch: 'fab:github', transition: 'chronograph:transition' };
+		const collection = { version: 3, styles: [design], themes: [] };
+		for (const [type, expected] of [['timer', 'fa-regular fa-clock'], ['stopwatch', 'fa-brands fa-github'],
+			['transition', 'fa-solid fa-chronograph-transition']]) {
+			const widget = await loadWidget(type, { designStyle: design.id }, {}, collection);
+			assert.strictEqual(widget.scope.iconClass, expected);
+			assert.strictEqual(widget.scope.iconImage, '');
+		}
+		design.defaultIcons.timer = 'none';
+		const widget = await loadWidget('timer', { designStyle: design.id }, {}, collection);
+		assert.strictEqual(widget.scope.iconClass, '');
+		assert.strictEqual(widget.scope.iconImage, '');
+		for (const layer of widget.scope.designLayers) {
+			assert.ok(layer.rows.some(row => row.groups.some(group => group.placeholders.includes('icon'))));
+		}
+	});
+
+	it('preserves explicit widget icon overrides instead of replacing them with design defaults', async () => {
+		const design = require('../assets/js/chronograph-widget-style.js').currentDesign();
+		design.id = 'custom-icons';
+		design.defaultIcons = { timer: 'far:clock' };
+		const collection = { version: 3, styles: [design], themes: [] };
+		const image = 'data:image/png;base64,cG5n';
+		for (const [icon, expectedClass, expectedImage] of [
+			[{ id: 'fas:bell' }, 'fa-solid fa-bell', ''],
+			[{ id: 'none' }, '', ''],
+			[{ id: 'fab:github', image }, '', image],
+			['stopwatch', 'fa-solid fa-stopwatch', ''],
+			['none', '', ''],
+			['', '', '']
+		]) {
+			const widget = await loadWidget('timer', { designStyle: design.id, icon }, {}, collection);
+			assert.strictEqual(widget.scope.iconClass, expectedClass);
+			assert.strictEqual(widget.scope.iconImage, expectedImage);
+		}
 	});
 
 	it('reserves icon space when None is selected, including measurement layers', async () => {
@@ -429,24 +626,37 @@ describe('Widget duration defaults', () => {
 				designStyle: { id: design.id }, layout: 'normal'
 			}, {}, { version: 2, styles: [design] });
 			assert.strictEqual(scope.designLayers[0].rows, scope.designRows);
-			const layers = scope.designLayers.slice(1);
-			assert.deepStrictEqual(Array.from(layers, layer => layer.id), mode === 'auto' ? []
-				: mode === 'minimum' ? ['inactive', 'paused', 'running', 'starting'] : ['inactive', 'paused', 'running']);
-			const containsFields = layer => layer.rows.some(row => row.groups.some(group => group.elements.includes('fields')));
-			assert.strictEqual(layers.some(containsFields), mode === 'minimum');
-			assert.ok(layers.every(layer => layer.measure));
+			function assertMeasurementCoverage() {
+				const signature = (state, layout) => state + ':' + JSON.stringify(layout);
+				const actual = Array.from(scope.designLayers, layer => signature(layer.state, {
+					rows: layer.rows, spanning: layer.spanning, tracks: layer.tracks, rowTracks: layer.rowTracks
+				}));
+				const expected = [signature(scope.designState, runtime.layoutSpanningRows(scope.designRows))];
+				const states = mode === 'auto' ? [] : mode === 'minimum'
+					? ['inactive', 'paused', 'running', 'starting'] : ['inactive', 'paused', 'running'];
+				for (const scenario of states) {
+					const showForm = scenario === 'inactive' || scenario === 'starting';
+					const scenarioState = scenario === 'inactive' ? 'starting' : scenario;
+					expected.push(signature(scenarioState, runtime.layoutSpanningRows(runtime.buildRows(
+						design, 'normal', scenarioState, 'transition', showForm, mode === 'minimum-without-inputs', true))));
+				}
+				assert.deepStrictEqual([...new Set(actual)].sort(), [...new Set(expected)].sort());
+				assert.strictEqual(actual.length, new Set(actual).size, 'Duplicate measurement layout');
+				assert.ok(scope.designLayers.slice(1).every(layer => layer.measure));
+			}
+			assertMeasurementCoverage();
 			state.active = true;
 			state.running = true;
 			await listeners.chronograph_event_multi();
 			assert.strictEqual(scope.designLayers[0].state, 'running');
-			assert.strictEqual(scope.designLayers.length, layers.length + 1);
+			assertMeasurementCoverage();
 		}
 	});
 
 	it('uses built-in height modes for each size', async () => {
-		for (const [layout, count] of [['compact', 3], ['normal', 4], ['large', 4]]) {
+		for (const layout of ['compact', 'normal', 'large']) {
 			const { scope } = await loadWidget('timer', { layout }, {});
-			assert.strictEqual(scope.designLayers.length, count + 1, layout);
+			assert.strictEqual(scope.designLayers.length, 3, layout);
 		}
 	});
 
@@ -461,7 +671,7 @@ describe('Widget duration defaults', () => {
 							state.running = true;
 							await listeners.chronograph_event_multi();
 						}
-						const layers = scope.designLayers.filter(layer => layer.measure);
+						const layers = scope.designLayers;
 						const hasFields = layers.some(layer => layer.rows.some(row =>
 							row.groups.some(group => group.elements.includes('fields'))));
 						assert.strictEqual(hasFields, layout !== 'compact', `${id} ${type} ${layout} active=${active}`);

@@ -161,7 +161,7 @@ describe('Widget icon autocomplete', () => {
 			const homey = { getSettings: () => ({ icon, iconColor }), __: key => key, ready() {}, on() {} };
 			const context = {
 				angular: { module: () => module, bootstrap() {} },
-				document: { body: { getAttribute: () => type } },
+				document: { body: { getAttribute: () => type }, addEventListener() {}, removeEventListener() {} },
 				window: {},
 				Promise,
 				Date

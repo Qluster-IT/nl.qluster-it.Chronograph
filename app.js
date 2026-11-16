@@ -179,7 +179,7 @@ class Application extends Homey.App {
 					return;
 				}
 				try {
-					await this.homey.api.realtime('chronograph_ready', { ready: true });
+					await this.homey.api.realtime('api-ready', { ready: true });
 				} catch (error) {
 					this.homey.error('Unable to notify clients that Chronograph is ready', error);
 				}

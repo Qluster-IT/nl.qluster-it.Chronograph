@@ -47,6 +47,22 @@ describe('Widget template community catalog', () => {
 		assert.strictEqual((await decodeTemplate(entries[0].text)).theme.name, 'Blue');
 	});
 
+	it('uses full-resolution forum uploads for zoom without accepting external image links', async () => {
+		const text = await encodeTemplate({ theme: { name: 'Blue', colors: { name: 'blue' } } });
+		const original = 'https://us1.discourse-cdn.com/flex025/uploads/athom/original/3X/a/preview.png';
+		const post = { id: 2, post_number: 2, raw: text,
+			cooked: `<a class="lightbox" href="${original}"><img src="/uploads/thumbnail.png"></a>`
+				+ `<a href="${original}"><img src="/uploads/another-thumbnail.png"></a>`
+				+ '<a href="https://example.com/image.png"><img src="/uploads/safe.png"></a>'
+				+ '<a href="https://example.com/image.png"><img src="https://example.com/tracker.png"></a>'
+		};
+		const entries = await getCatalog(async () => ({
+			ok: true,
+			text: async () => JSON.stringify({ post_stream: { stream: [2], posts: [post] } })
+		}));
+		assert.deepStrictEqual(entries[0].images, [original, 'https://community.homey.app/uploads/safe.png']);
+	});
+
 	it('reports network errors and incomplete topic pages instead of returning a partial catalog', async () => {
 		await assert.rejects(getCatalog(async () => ({ ok: false, status: 503 })), /503/);
 		let calls = 0;

@@ -13,6 +13,7 @@ window.registerMultipleChronographsWidget = function (Homey) {
 			var destroyed = false;
 			var pendingRefresh = null;
 			var clockInterval = null;
+			var refreshInterval = null;
 			var runningSlots = {};
 			$scope.entries = [];
 			$scope.rows = [];
@@ -118,6 +119,34 @@ window.registerMultipleChronographsWidget = function (Homey) {
 				resize();
 			}
 
+			function syncIntervals() {
+				var visible = !destroyed && document.hidden !== true;
+				var running = visible && Object.keys(runningSlots).length > 0;
+				if (running && !clockInterval) {
+					clockInterval = $interval(function () { $scope.$broadcast('multipleChronographsClock'); }, 250);
+				} else if (!running && clockInterval) {
+					$interval.cancel(clockInterval);
+					clockInterval = null;
+				}
+				if (visible && !refreshInterval) {
+					refreshInterval = $interval(function () { $scope.$broadcast('multipleChronographsRefresh'); }, 5000);
+				} else if (!visible && refreshInterval) {
+					$interval.cancel(refreshInterval);
+					refreshInterval = null;
+				}
+			}
+
+			function visibilityChanged() {
+				syncIntervals();
+				if (destroyed || document.hidden === true) return;
+				pendingRefresh = null;
+				$scope.$applyAsync(function () {
+					if (destroyed || document.hidden === true) return;
+					$scope.$broadcast('multipleChronographsClock');
+					$scope.$broadcast('multipleChronographsRefresh');
+				});
+			}
+
 			$scope.multipleWidget = {
 				tileReady: function () {
 					pending--;
@@ -151,12 +180,7 @@ window.registerMultipleChronographsWidget = function (Homey) {
 				setRunning: function (entry, running) {
 					if (running) runningSlots[entry.slot] = true;
 					else delete runningSlots[entry.slot];
-					if (!destroyed && Object.keys(runningSlots).length && !clockInterval) {
-						clockInterval = $interval(function () { $scope.$broadcast('multipleChronographsClock'); }, 250);
-					} else if (!Object.keys(runningSlots).length && clockInterval) {
-						$interval.cancel(clockInterval);
-						clockInterval = null;
-					}
+					syncIntervals();
 				}
 			};
 			if (!pending) $scope.$evalAsync(markReady);
@@ -164,14 +188,22 @@ window.registerMultipleChronographsWidget = function (Homey) {
 				observer = new window.ResizeObserver(resize);
 				observer.observe(document.querySelector('main'));
 			}
-			Homey.on('chronograph_event_multi', function (events) { $scope.$broadcast('multipleChronographsRealtime', events, true); });
-			Homey.on('chronograph_event', function (event) { $scope.$broadcast('multipleChronographsRealtime', [event]); });
-			Homey.on('chronograph_flow_values_changed', function (event) { $scope.$broadcast('multipleChronographsFlowValues', event); });
-			var refreshInterval = $interval(function () { $scope.$broadcast('multipleChronographsRefresh'); }, 5000);
+			Homey.on('chronograph_event_multi', function (events) {
+				if (!destroyed && document.hidden !== true) $scope.$broadcast('multipleChronographsRealtime', events, true);
+			});
+			Homey.on('chronograph_event', function (event) {
+				if (!destroyed && document.hidden !== true) $scope.$broadcast('multipleChronographsRealtime', [event]);
+			});
+			Homey.on('chronograph_flow_values_changed', function (event) {
+				if (!destroyed && document.hidden !== true) $scope.$broadcast('multipleChronographsFlowValues', event);
+			});
+			document.addEventListener('visibilitychange', visibilityChanged);
+			syncIntervals();
 			$scope.$on('$destroy', function () {
 				destroyed = true;
 				$interval.cancel(refreshInterval);
 				$interval.cancel(clockInterval);
+				document.removeEventListener('visibilitychange', visibilityChanged);
 				if (observer) observer.disconnect();
 			});
 		}

@@ -1,6 +1,17 @@
-body[data-separator="cards"] {
+body[data-separator] {
 	padding: 0;
 	background-color: transparent;
+}
+
+.multiple-chronographs {
+	padding: var(--homey-su-4, 16px);
+	border-radius: 16px;
+	background: var(--homey-background-color, #fff);
+}
+
+body[data-separator="cards"] .multiple-chronographs {
+	padding: 0;
+	background: transparent;
 }
 
 .multiple-chronographs-rows {

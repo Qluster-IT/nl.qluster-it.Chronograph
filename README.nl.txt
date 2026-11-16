@@ -11,6 +11,8 @@ FUNCTIES
 * Alle timers, stopwatches en transities blijven behouden bij Homey-herstarts.
 * Richt op meerdere timers, stopwatches en transities tegelijk met gebruik van wildcards in ondersteunde kaarten.
 * Met de Chronograph-dashboardwidget kun je in de widgetinstellingen een timer, stopwatch of transitie selecteren en deze pauzeren, hervatten of stoppen.
+* Pas indelingen, thema's en standaardiconen aan voor afzonderlijke en meervoudige widgets, met verstreken, resterende en totale tijd voor timers en transities.
+* Deel ontwerpen en thema's via Templates en de Widget Exchange van de community, met voorbeelden en schermvullende afbeeldingen waarop je met twee vingers kunt zoomen.
 * Gebruik wiskundige uitdrukkingen binnen flowkaarten.
 * Gebruik HomeyScript om actieve timers, stopwatches en transities te bekijken, pauzeren, hervatten of stoppen.
 

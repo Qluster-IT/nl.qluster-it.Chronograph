@@ -50,16 +50,16 @@ describe('Chronograph API readiness', () => {
 		const restore = new Promise(resolve => { finishRestore = resolve; });
 		app._restoreChronographs = () => restore;
 		await app.onInitLoader();
-		assert.strictEqual((await api.getReady({ homey: app.homey })).ready, false);
+		assert.strictEqual((await api.getApiReady({ homey: app.homey })).ready, false);
 		assert.strictEqual(events.length, 0);
 		const initialization = timers[0]();
 		await Promise.resolve();
-		assert.strictEqual((await api.getReady({ homey: app.homey })).ready, false);
+		assert.strictEqual((await api.getApiReady({ homey: app.homey })).ready, false);
 		finishRestore(true);
 		await initialization;
-		assert.strictEqual((await api.getReady({ homey: app.homey })).ready, true);
+		assert.strictEqual((await api.getApiReady({ homey: app.homey })).ready, true);
 		assert.strictEqual(events.length, 1);
-		assert.strictEqual(events[0].event, 'chronograph_ready');
+		assert.strictEqual(events[0].event, 'api-ready');
 		assert.strictEqual(events[0].data.ready, true);
 		assert.strictEqual(errors.length, 0);
 	});
@@ -71,7 +71,7 @@ describe('Chronograph API readiness', () => {
 			if (stage === 'restoration') app._restoreChronographs = async () => false;
 			await app.onInitLoader();
 			if (timers.length) await timers[0]();
-			assert.strictEqual((await api.getReady({ homey: app.homey })).ready, false);
+			assert.strictEqual((await api.getApiReady({ homey: app.homey })).ready, false);
 			assert.strictEqual(events.length, 0);
 			assert.strictEqual(errors.length, 1);
 		});
@@ -81,7 +81,7 @@ describe('Chronograph API readiness', () => {
 		app.homey.api.realtime = async () => { throw new Error('realtime unavailable'); };
 		await app.onInitLoader();
 		await timers[0]();
-		assert.strictEqual((await api.getReady({ homey: app.homey })).ready, true);
+		assert.strictEqual((await api.getApiReady({ homey: app.homey })).ready, true);
 		assert.strictEqual(errors.length, 1);
 	});
 

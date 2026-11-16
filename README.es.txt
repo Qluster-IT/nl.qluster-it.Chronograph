@@ -11,6 +11,8 @@ FUNCIONALIDADES
 * Todos los temporizadores, cronómetros y transiciones son persistentes a través de reinicios de Homey.
 * Dirige múltiples temporizadores, cronómetros y transiciones a la vez usando comodines en tarjetas compatibles.
 * El widget de Chronograph para el panel permite elegir en sus ajustes un temporizador, cronómetro o transición y pausarlo, reanudarlo o detenerlo.
+* Personaliza diseños, temas e iconos predeterminados para widgets individuales y múltiples, con tiempo transcurrido, restante y total para temporizadores y transiciones.
+* Comparte diseños y temas mediante Templates y el Widget Exchange de la comunidad, con vistas previas e imágenes a pantalla completa con zoom con dos dedos.
 * Usa Expresiones Matemáticas dentro de las tarjetas de flujo.
 * Usa HomeyScript para supervisar, pausar, reanudar o detener temporizadores, cronómetros y transiciones activos.
 

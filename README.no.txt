@@ -11,6 +11,8 @@ FUNKSJONER
 * Alle tidtakere, stoppeklokker og overganger er vedvarende på tvers av Homey omstarter.
 * Rett flere tidtakere, stoppeklokker og overganger samtidig ved å bruke jokertegn i støttede kort.
 * Med Chronograph-dashbordwidgeten kan du velge en tidtaker, stoppeklokke eller overgang i widgetinnstillingene og pause, gjenoppta eller stoppe den.
+* Tilpass oppsett, temaer og standardikoner for enkelt- og multi-widgeter med forløpt, gjenstående og samlet tid for tidtakere og overganger.
+* Del design og temaer via Templates og fellesskapets Widget Exchange med forhåndsvisninger og fullskjermbilder med tofingerzoom.
 * Bruk matematiske uttrykk inne i flytkort.
 * Bruk HomeyScript til å overvåke, pause, fortsette eller stoppe aktive tidtakere, stoppeklokker og overganger.
 

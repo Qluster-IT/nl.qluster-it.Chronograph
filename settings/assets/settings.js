@@ -884,18 +884,6 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			});
 		};
 
-		function validStyleTransfer(value) {
-			if (!value || value.format !== 'chronograph-widget-style' || value.version !== 1
-				|| (value.type !== 'design' && value.type !== 'color')) return false;
-			var collection = { version: 3, styles: [], themes: [] };
-			collection[value.type === 'color' ? 'themes' : 'styles'].push(value.item);
-			try {
-				return widgetStyleEditor.isValidCollection(collection);
-			} catch (error) {
-				return false;
-			}
-		}
-
 		function normalizedStyleName(name) {
 			return typeof name === 'string' ? name.trim().toLocaleLowerCase() : '';
 		}
@@ -929,12 +917,6 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				candidate = name.slice(0, 80 - suffix.length) + suffix;
 			}
 			return candidate;
-		}
-
-		function transferableDesign(style) {
-			var design = widgetStyleEditor.designFromStyle(style);
-			delete design.defaultIcons;
-			return design;
 		}
 
 		var exportPreviewState;
@@ -1029,8 +1011,14 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 						if (apiError) { showError(apiError); return; }
 						if (!Array.isArray(result)) { showError(new Error('Invalid community catalog')); return; }
 						template.favorites = favorites && typeof favorites === 'object' && !Array.isArray(favorites) ? favorites : {};
+						var previous = new Map((template.catalog || []).map(function (item) { return [item.id, item]; }));
 						template.catalog = result;
-						template.catalog.forEach(function (item) { item.favorite = !!template.favorites[item.postId]; });
+						template.catalog.forEach(function (item) {
+							item.favorite = !!template.favorites[item.postId];
+							var cached = previous.get(item.id);
+							if (cached && cached.text === item.text && cached.preview) item.preview = cached.preview;
+							if (template.showPreviews) $scope.loadCatalogPreview(item);
+						});
 					});
 				});
 			});
@@ -1067,6 +1055,48 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			$scope.readWidgetTemplate();
 		};
 
+		$scope.loadCatalogPreview = function (item) {
+			if (item.preview || item.previewLoading || item.previewError) return;
+			item.previewLoading = true;
+			Homey.api('POST', '/widget-templates/decode', { text: item.text }, function (error, value) {
+				$scope.$applyAsync(function () {
+					item.previewLoading = false;
+					if (!error && (!value || (!value.design && !value.theme)
+						|| value.design && !validTemplateItem(value.design, 'design')
+						|| value.theme && !validTemplateItem(value.theme, 'color'))) {
+						error = new Error(Homey.__('settings.style_transfer_invalid'));
+					}
+					if (error) {
+						item.previewError = window.chronographErrorMessage(Homey, error);
+						return;
+					}
+					var design = angular.copy(value.design || builtInStyle);
+					addOptionalDurationPositions(design);
+					if (!design.groups) design.groups = widgetStyleEditor.fromCells(design);
+					var icon = design.defaultIcons && design.defaultIcons.timer;
+					item.preview = {
+						design: design,
+						theme: angular.copy(value.theme || builtInScheme),
+						icon: icon ? $scope.iconClass(icon) : 'fa-' + sizeRuntime.defaultIcon('timer'),
+						iconStyle: $scope.iconStyle(icon)
+					};
+				});
+			});
+		};
+
+		$scope.openTemplateImage = function (image, title) {
+			$scope.templates.imageViewer = { image: image, title: title };
+			$scope.templates.imageZoom = 1;
+			document.getElementById('template-image-dialog').showModal();
+		};
+		$scope.zoomTemplateImage = function (change) {
+			$scope.templates.imageZoom = Math.max(1, Math.min(5, $scope.templates.imageZoom + change));
+		};
+		$scope.closeTemplateImage = function () {
+			document.getElementById('template-image-dialog').close();
+			$scope.templates.imageViewer = null;
+		};
+
 		$scope.generateWidgetTemplate = function () {
 			var template = $scope.templates;
 			if (template.busy || $scope.isWidgetDirty()) return;
@@ -1078,7 +1108,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			}
 			template.busy = true;
 			Homey.api('POST', '/widget-templates/encode', {
-				design: design ? transferableDesign(design) : undefined,
+				design: design ? widgetStyleEditor.designFromStyle(design) : undefined,
 				theme: theme ? angular.copy(theme) : undefined
 			}, function (error, text) {
 				$scope.$applyAsync(function () {
@@ -1124,15 +1154,27 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			var template = $scope.templates;
 			var preview = document.getElementById('template-export-preview');
 			if (!preview || !window.htmlToImage) throw new Error('Template preview is unavailable');
-			var response = await fetch('../assets/webfonts/fa-solid-900.woff2');
-			if (!response.ok) throw new Error('Could not load preview font');
-			var bytes = new Uint8Array(await response.arrayBuffer());
-			var binary = '';
-			for (var index = 0; index < bytes.length; index += 8192) {
-				binary += String.fromCharCode.apply(null, bytes.subarray(index, index + 8192));
-			}
-			var fontCSS = '@font-face{font-family:"Font Awesome 7 Free";font-style:normal;font-weight:900;src:url(data:font/woff2;base64,'
-				+ btoa(binary) + ')}';
+			var iconStyles = ['timer', 'stopwatch', 'transition'].filter(function (type) {
+				return !!$scope.previewIcon(type);
+			}).map($scope.previewIconStyle);
+			var fonts = [
+				{ style: 'fa-solid', family: 'Font Awesome 7 Free', weight: 900, file: 'fa-solid-900.woff2' },
+				{ style: 'fa-regular', family: 'Font Awesome 7 Free', weight: 400, file: 'fa-regular-400.woff2' },
+				{ style: 'fa-brands', family: 'Font Awesome 7 Brands', weight: 400, file: 'fa-brands-400.woff2' }
+			];
+			var fontCSS = (await Promise.all(fonts.filter(function (font) {
+				return iconStyles.indexOf(font.style) !== -1;
+			}).map(async function (font) {
+				var response = await fetch('../assets/webfonts/' + font.file);
+				if (!response.ok) throw new Error('Could not load preview font: ' + font.file);
+				var bytes = new Uint8Array(await response.arrayBuffer());
+				var binary = '';
+				for (var index = 0; index < bytes.length; index += 8192) {
+					binary += String.fromCharCode.apply(null, bytes.subarray(index, index + 8192));
+				}
+				return '@font-face{font-family:"' + font.family + '";font-style:normal;font-weight:' + font.weight
+					+ ';src:url(data:font/woff2;base64,' + btoa(binary) + ')}';
+			}))).join('\n');
 			var original = {
 				size: $scope.editor.previewSize,
 				type: $scope.editor.previewType,
@@ -1168,7 +1210,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 								numberFields.forEach(function (field) { field.type = 'text'; });
 								row.push(await new Promise(function (resolve, reject) {
 									var timer = window.setTimeout(function () { reject(new Error('Preview image timed out')); }, 15000);
-									window.htmlToImage.toCanvas(preview, { fontEmbedCSS: fontCSS, pixelRatio: 1 }).then(function (image) {
+									window.htmlToImage.toCanvas(preview, { fontEmbedCSS: fontCSS, skipFonts: !fontCSS, pixelRatio: 1 }).then(function (image) {
 										window.clearTimeout(timer);
 										resolve(image);
 									}, function (error) {
@@ -1352,7 +1394,13 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			if (!item || typeof item !== 'object' || Array.isArray(item)) return false;
 			var copy = angular.copy(item);
 			copy.id = 'template-preview';
-			return validStyleTransfer({ format: 'chronograph-widget-style', version: 1, type: type, item: copy });
+			var collection = { version: 3, styles: [], themes: [] };
+			collection[type === 'color' ? 'themes' : 'styles'].push(copy);
+			try {
+				return widgetStyleEditor.isValidCollection(collection);
+			} catch (error) {
+				return false;
+			}
 		}
 
 		$scope.readWidgetTemplate = function () {
@@ -1439,101 +1487,6 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 					Homey.alert(Homey.__('settings.saved'));
 				});
 			});
-		};
-
-		$scope.exportStyle = function () {
-			var item = $scope.getEditingItem();
-			if (!item || $scope.isBuiltInStyle() || $scope.savingSettings || !canChangeSelection()) return;
-			var type = $scope.editor.mode;
-			var value = {
-				format: 'chronograph-widget-style',
-				version: 1,
-				type: type,
-				item: type === 'design' ? transferableDesign(item) : angular.copy(item)
-			};
-			if (!validStyleTransfer(value)) {
-				showError(Homey.__('settings.style_transfer_invalid'));
-				return;
-			}
-			var url;
-			try {
-				url = window.URL.createObjectURL(new Blob([JSON.stringify(value, null, 2)], { type: 'application/json' }));
-				var link = document.createElement('a');
-				link.href = url;
-				var filename = item.name.trim().slice(0, 80).replace(/[\\/:*?"<>|\x00-\x1f]/g, '-').replace(/[. ]+$/g, '');
-				link.download = 'chronograph-' + type + '-' + (filename || 'item') + '.json';
-				link.click();
-			} catch (error) {
-				showError(error);
-			} finally {
-				if (url) window.setTimeout(function () { window.URL.revokeObjectURL(url); }, 1000);
-			}
-		};
-
-		$scope.chooseStyleImport = function () {
-			if (!$scope.stylesAvailable || $scope.savingSettings || $scope.importingStyle || !canChangeSelection()) return;
-			document.getElementById('style-import-file').click();
-		};
-
-		$scope.importStyleFile = function (file) {
-			if (!file || !$scope.stylesAvailable || $scope.savingSettings || $scope.importingStyle) return;
-			var key = editingKey();
-			var selected = $scope.getEditingItem();
-			$scope.importingStyle = true;
-			var reader;
-			try {
-				reader = new FileReader();
-			} catch (error) {
-				$scope.importingStyle = false;
-				showError(error);
-				return;
-			}
-			reader.onerror = function () {
-				$scope.$applyAsync(function () {
-					$scope.importingStyle = false;
-					showError(Homey.__('settings.style_import_read_error'));
-				});
-			};
-			reader.onload = function () {
-				$scope.$applyAsync(function () {
-					$scope.importingStyle = false;
-					if (key !== editingKey() || selected !== $scope.getEditingItem() || $scope.savingSettings) {
-						showError(Homey.__('settings.style_import_changed'));
-						return;
-					}
-					var value;
-					try {
-						value = JSON.parse(reader.result);
-					} catch (error) {
-						showError(Homey.__('settings.style_transfer_invalid'));
-						return;
-					}
-					if (!validStyleTransfer(value)) {
-						showError(Homey.__('settings.style_transfer_invalid'));
-						return;
-					}
-					leaveEditingItem(function () {
-						var colorMode = value.type === 'color';
-						var items = colorMode ? $scope.widgetStyles.themes : $scope.widgetStyles.styles;
-						var imported = angular.copy(value.item);
-						imported.id = widgetStyleEditor.newId(items);
-						imported.name = uniqueStyleName(imported.name, items);
-						if (!colorMode) normalizeDesignSpans(imported);
-						items.push(imported);
-						$scope.editor.mode = value.type;
-						if (colorMode && !$scope.getSelectedStyle()) $scope.editor.selectedStyleId = 'builtin:current';
-						if (colorMode) $scope.editor.selectedSchemeId = 'custom:' + imported.id;
-						else $scope.editor.selectedStyleId = 'custom:' + imported.id;
-						refreshEditedItem();
-					});
-				});
-			};
-			try {
-				reader.readAsText(file);
-			} catch (error) {
-				$scope.importingStyle = false;
-				showError(error);
-			}
 		};
 
 		$scope.deleteStyle = function () {
@@ -2272,9 +2225,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		$scope.previewAction = function (action, previewType) {
 			if ($scope.templates.busy || ($scope.templates.open && $scope.templates.section === 'export')) return;
 			var state = $scope.previewTileState(null, previewType);
-			if (action === 'start') {
-				state = 'running';
-			} else if (action === 'play') {
+			if (action === 'start' || action === 'play') {
 				if (state === 'inactive' && (!$scope.showStartFieldsWhenInactive() || ($scope.hasFieldsRowRule()
 					&& !$scope.isRowVisible(($scope.editor.editStatus
 						? widgetStyleEditor.resolvedGroups($scope.getSelectedStyle(), $scope.editor.previewSize, state)
@@ -2309,7 +2260,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 
 		function defaultIconId(type) {
 			var style = $scope.getSelectedStyle();
-			return !$scope.templates.open && style && style.defaultIcons && style.defaultIcons[type];
+			return style && style.defaultIcons && style.defaultIcons[type];
 		}
 		$scope.iconClass = function (id) {
 			if (id === 'chronograph:transition') return 'fa-chronograph-transition';
@@ -2861,7 +2812,116 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 
 		if (pendingHomey) $scope.initialize(pendingHomey);
 	}
-]).directive('stickyBorder', function () {
+]).directive('templateCatalogPreview', function () {
+	return {
+		restrict: 'A',
+		scope: { preview: '=templateCatalogPreview', t: '=', labels: '=' },
+		template: '<div class="style-preview style-preview-normal" ng-attr-data-background="{{ previewColor(\'background\') }}"'
+			+ ' ng-attr-data-allow-shrink="{{ preview.design.allowShrink !== false }}">'
+			+ '<div class="style-preview-layer" ng-include="\'grouped-preview.html\'"></div></div>',
+		link: function (scope) {
+			var runtime = window.ChronographWidgetStyle;
+			var layout;
+			scope.editor = { previewSize: 'normal', previewType: 'timer', previewState: 'running' };
+			scope.previewTile = { type: 'timer' };
+			scope.previewScenario = { state: 'running' };
+			scope.$watch('preview', function (preview) {
+				layout = runtime.layoutSpanningRows(runtime.buildRows(preview.design, 'normal', 'running', 'timer', false, false, !!preview.icon));
+			});
+			scope.previewRowLayout = function () { return layout; };
+			scope.previewTileState = function () { return 'running'; };
+			scope.elementSize = function (element) { return runtime.elementSize(scope.preview.design, 'normal', element); };
+			scope.previewIcon = function () { return scope.preview.icon; };
+			scope.previewIconStyle = function () { return scope.preview.iconStyle; };
+			scope.isButtonElement = function (element) { return ['start', 'play', 'pause', 'stop', 'cancel'].indexOf(element) !== -1; };
+			scope.previewColor = function (element) { return runtime.resolveColor(scope.preview.theme, 'running', element); };
+			scope.previewForeground = function (element) { return runtime.resolveForeground(scope.preview.theme, 'running', element); };
+			scope.previewButtonStyle = function (element) {
+				var style = runtime.buttonShapeStyle(scope.preview.design, 'normal', element);
+				var colors = runtime.elementStyle(scope.preview.theme, 'running', element);
+				if (colors.border) style.border = colors.border;
+				if (scope.previewColor(element) === 'none') style.backgroundColor = 'transparent';
+				return style;
+			};
+			scope.buttonText = function (element) { return runtime.buttonText(scope.preview.design, 'normal', element, scope.t('settings.widget_start')); };
+			scope.previewActionLabel = function (element) { return scope.labels[element]; };
+			scope.progressDirection = function () {
+				var settings = scope.preview.design.progressSettings;
+				return settings && settings.normal && settings.normal.direction || 'left-right';
+			};
+			scope.progressPercent = function () {
+				var settings = scope.preview.design.progressSettings;
+				return settings && settings.normal && settings.normal.timerMode === 'remaining' ? 75 : 25;
+			};
+			['background', 'foreground'].forEach(function (key) {
+				scope['progress' + key.charAt(0).toUpperCase() + key.slice(1)] = function () {
+					var colors = scope.preview.theme.progressColors;
+					return colors && colors.normal && colors.normal[key] || (key === 'background' ? 'grey' : 'blue');
+				};
+			});
+		}
+	};
+}).directive('templateImagePinch', function () {
+	return {
+		restrict: 'A',
+		link: function (scope, element) {
+			var viewport = element[0];
+			var gesture;
+			function distance(touches) {
+				return Math.hypot(touches[1].clientX - touches[0].clientX, touches[1].clientY - touches[0].clientY);
+			}
+			function midpoint(touches) {
+				var bounds = viewport.getBoundingClientRect();
+				return {
+					x: (touches[0].clientX + touches[1].clientX) / 2 - bounds.left,
+					y: (touches[0].clientY + touches[1].clientY) / 2 - bounds.top
+				};
+			}
+			function end() { gesture = null; }
+			function start(event) {
+				end();
+				if (event.touches.length !== 2) return;
+				var image = viewport.querySelector('img');
+				var separation = distance(event.touches);
+				var width = image && image.getBoundingClientRect().width;
+				if (!width || !separation) return;
+				var point = midpoint(event.touches);
+				gesture = {
+					ids: Array.from(event.touches, function (touch) { return touch.identifier; }),
+					distance: separation, zoom: scope.templates.imageZoom,
+					image: image, width: width,
+					x: viewport.scrollLeft + point.x, y: viewport.scrollTop + point.y
+				};
+				if (event.cancelable) event.preventDefault();
+			}
+			function move(event) {
+				if (!gesture) return;
+				var touches = gesture.ids.map(function (id) {
+					return Array.from(event.touches).find(function (touch) { return touch.identifier === id; });
+				});
+				if (event.touches.length !== 2 || touches.some(function (touch) { return !touch; })) { end(); return; }
+				if (event.cancelable) event.preventDefault();
+				var zoom = gesture.zoom * distance(touches) / gesture.distance;
+				var point = midpoint(touches);
+				scope.$apply(function () { scope.zoomTemplateImage(zoom - scope.templates.imageZoom); });
+				var scale = gesture.image.getBoundingClientRect().width / gesture.width;
+				viewport.scrollLeft = gesture.x * scale - point.x;
+				viewport.scrollTop = gesture.y * scale - point.y;
+			}
+			viewport.addEventListener('touchstart', start, { passive: false });
+			viewport.addEventListener('touchmove', move, { passive: false });
+			viewport.addEventListener('touchend', end);
+			viewport.addEventListener('touchcancel', end);
+			scope.$watch('templates.imageViewer', end);
+			scope.$on('$destroy', function () {
+				viewport.removeEventListener('touchstart', start);
+				viewport.removeEventListener('touchmove', move);
+				viewport.removeEventListener('touchend', end);
+				viewport.removeEventListener('touchcancel', end);
+			});
+		}
+	};
+}).directive('stickyBorder', function () {
 	return {
 		restrict: 'A',
 		link: function (scope, element) {
@@ -2899,19 +2959,6 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			scope.$watch(function () { return scope.iconPickers[scope.type].results; }, function () { element[0].scrollTop = 0; });
 			element.on('scroll', scroll);
 			scope.$on('$destroy', function () { element.off('scroll', scroll); });
-		}
-	};
-}).directive('styleImportFile', function () {
-	return {
-		restrict: 'A',
-		link: function (scope, element) {
-			function changed() {
-				var file = element[0].files[0];
-				element[0].value = '';
-				if (file) scope.$applyAsync(function () { scope.importStyleFile(file); });
-			}
-			element.on('change', changed);
-			scope.$on('$destroy', function () { element.off('change', changed); });
 		}
 	};
 });

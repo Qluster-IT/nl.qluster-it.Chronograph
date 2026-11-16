@@ -28,7 +28,7 @@ function stop(type, params) {
 }
 
 module.exports = {
-	async getReady({ homey }) { return { ready: homey.app.apiReady === true }; },
+	async getApiReady({ homey }) { return { ready: homey.app.apiReady === true }; },
 
 	async searchWidgetIcons({ homey, body }) {
 		if (!body || typeof body.query !== 'string' || body.query.length > 100) throw new Error('Invalid icon search');
