@@ -1149,7 +1149,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			if (!document.execCommand('copy')) Homey.alert(Homey.__('settings.template_copy_error'));
 		};
 
-		async function templatePreviewImage() {
+		async function templatePreviewImages() {
 			var template = $scope.templates;
 			var preview = document.getElementById('template-export-preview');
 			if (!preview || !window.htmlToImage) throw new Error('Template preview is unavailable');
@@ -1235,7 +1235,6 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 					$scope.editor.previewState = original.state;
 				});
 			}
-			var canvas = document.createElement('canvas');
 			var padding = 16, gap = 12, rowLabelWidth = 110, headingHeight = 32, columnHeight = 28;
 			var cellWidth = Math.max.apply(null, images.flatMap(function (panel) {
 				return panel.rows.flatMap(function (row) { return row.map(function (image) { return image.width; }); });
@@ -1245,11 +1244,6 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 					return Math.max.apply(null, row.map(function (image) { return image.height; }));
 				});
 			});
-			canvas.width = padding * 2 + rowLabelWidth + cellWidth * 3 + gap * 2;
-			canvas.height = padding + images.reduce(function (height, panel) {
-				return height + headingHeight + columnHeight + panel.rowHeights.reduce(function (sum, value) { return sum + value + gap; }, 0) + padding;
-			}, 0);
-			var context = canvas.getContext('2d');
 			var bodyStyle = window.getComputedStyle(document.body);
 			var background = bodyStyle.backgroundColor;
 			if (!background || background === 'rgba(0, 0, 0, 0)' || background === 'transparent') {
@@ -1260,12 +1254,17 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				background = rgb.length >= 3 && (Number(rgb[0]) * 299 + Number(rgb[1]) * 587 + Number(rgb[2]) * 114) / 1000 > 160
 					? '#1a1a1a' : '#ffffff';
 			}
-			context.fillStyle = background;
-			context.fillRect(0, 0, canvas.width, canvas.height);
-			context.fillStyle = bodyStyle.color;
-			context.textBaseline = 'middle';
-			var y = padding;
-			images.forEach(function (panel) {
+			return images.map(function (panel) {
+				var canvas = document.createElement('canvas');
+				canvas.width = padding * 2 + rowLabelWidth + cellWidth * 3 + gap * 2;
+				canvas.height = padding * 2 + headingHeight + columnHeight
+					+ panel.rowHeights.reduce(function (sum, value) { return sum + value + gap; }, 0);
+				var context = canvas.getContext('2d');
+				context.fillStyle = background;
+				context.fillRect(0, 0, canvas.width, canvas.height);
+				context.fillStyle = bodyStyle.color;
+				context.textBaseline = 'middle';
+				var y = padding;
 				context.font = '600 20px sans-serif';
 				context.fillText(Homey.__('settings.' + typeLabels[panel.type]), padding, y + headingHeight / 2);
 				y += headingHeight;
@@ -1281,9 +1280,8 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 					});
 					y += panel.rowHeights[rowIndex] + gap;
 				});
-				y += padding;
+				return canvas.toDataURL('image/png');
 			});
-			return canvas.toDataURL('image/png');
 		}
 
 		$scope.prepareTemplateImage = function () {
@@ -1292,9 +1290,9 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			clearTemplateImage();
 			template.busy = true;
 			template.imageProgress = 0;
-			return templatePreviewImage().then(function (image) {
+			return templatePreviewImages().then(function (images) {
 				$scope.$applyAsync(function () {
-					template.imageData = image;
+					template.imageData = images;
 					template.busy = false;
 					template.imageProgress = null;
 					$scope.copyTemplateForumPost(true);
@@ -1310,7 +1308,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 
 		$scope.copyTemplateForumPost = function (automatic) {
 			var template = $scope.templates;
-			if (template.busy || !template.exportText || !template.imageData) return;
+			if (template.busy || !template.exportText || !template.imageData || !template.imageData.length) return;
 			template.copyStatus = null;
 			function escapeHtml(value) {
 				return value.replace(/[&<>"']/g, function (character) {
@@ -1320,7 +1318,9 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			var text = $scope.templateForumPost();
 			var heading = text.slice(2, text.indexOf('\n\n'));
 			var html = '<h1>' + escapeHtml(heading) + '</h1><p><br></p>'
-				+ '<p><img alt="Widget preview" src="' + template.imageData + '"></p>'
+				+ template.imageData.map(function (image) {
+					return '<p><img alt="Widget preview" src="' + image + '"></p>';
+				}).join('')
 				+ '<p>TWF:</p><pre data-params="javascript"><code class="language-javascript">' + escapeHtml(template.exportText) + '</code></pre>';
 			var copied = false;
 			function onCopy(event) {

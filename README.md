@@ -111,6 +111,8 @@ Shared previews match the widgets' size-specific text line heights, including cu
 text sizes and duration spacing when shrinking on narrow widgets.
 Settings preview widgets are capped at 450px wide and fit smaller screens. Template
 images use a fixed 350px capture width per widget, independent of the screen width.
+Each copied forum post includes three separate PNGs, one per chronograph type,
+with a 3-by-3 grid of sizes and states in each, rather than one tall collage.
 Copied forum posts leave an empty, normal paragraph below the title for an optional
 description; the export instructions point users to it without adding placeholder text.
 The community catalogue renders one normal-size running timer from each decoded

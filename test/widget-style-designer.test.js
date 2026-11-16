@@ -810,16 +810,13 @@ describe('Widget style designer preview', () => {
 		assert.match(html, /<div class="template-header">[\s\S]*?ng-click="openWidgetExchange\(\)"[\s\S]*?<\/div>/);
 	});
 
-	it('prepares three 3-by-3 preview grids and copies the post as rich text', async () => {
+	it('copies three separate 3-by-3 preview images in one rich-text post', async () => {
 		const previews = [];
 		const fontRequests = [];
 		const labels = [];
 		let copyHandler;
 		const copied = {};
-		const context = {
-			fillRect() {}, drawImage() {},
-			fillText(text) { labels.push(text); }
-		};
+		const canvases = [];
 		const field = { focus() {}, select() {} };
 		const numberFields = [{ type: 'number', value: '1' }, { type: 'number', value: '' }];
 		const preview = {
@@ -829,7 +826,19 @@ describe('Widget style designer preview', () => {
 		const document = {
 			body: {},
 			getElementById: id => id === 'template-forum-post' ? field : preview,
-			createElement: () => ({ getContext: () => context, toDataURL: () => 'data:image/png;base64,cG5n' }),
+			createElement: () => {
+				const canvas = {
+					draws: [],
+					getContext: () => ({
+						fillRect() {},
+						drawImage(image, x, y) { canvas.draws.push({ image, x, y }); },
+						fillText(text) { labels.push(text); }
+					}),
+					toDataURL: () => 'data:image/png;base64,' + Buffer.from('panel-' + canvases.indexOf(canvas)).toString('base64')
+				};
+				canvases.push(canvas);
+				return canvas;
+			},
 			addEventListener(name, handler) { assert.strictEqual(name, 'copy'); copyHandler = handler; },
 			removeEventListener(name, handler) { assert.strictEqual(handler, copyHandler); copyHandler = null; },
 			execCommand() {
@@ -859,7 +868,13 @@ describe('Widget style designer preview', () => {
 			assert.deepStrictEqual(numberFields.map(field => field.type), ['text', 'text']);
 			assert.deepStrictEqual(numberFields.map(field => field.value), ['1', '']);
 			previews.push([scope.editor.previewType, scope.editor.previewState, scope.editor.previewSize]);
-			return { width: 350, height: 100 };
+			return {
+				width: 350,
+				height: 80 + ['stopwatch', 'timer', 'transition'].indexOf(scope.editor.previewType) * 30
+					+ ['running', 'paused', 'inactive'].indexOf(scope.editor.previewState) * 10
+					+ ['compact', 'normal', 'large'].indexOf(scope.editor.previewSize) * 20,
+				type: scope.editor.previewType
+			};
 		} };
 		scope.createStyle(true);
 		scope.getSelectedStyle().name = 'Design <example>';
@@ -894,12 +909,23 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(labels.filter(label => label === 'settings.widget_running').length, 3);
 		assert.strictEqual(labels.filter(label => label === 'settings.widget_paused').length, 3);
 		assert.strictEqual(labels.filter(label => label === 'settings.widget_not_running').length, 3);
+		assert.strictEqual(canvases.length, 3);
+		assert.deepStrictEqual(canvases.map(canvas => [canvas.width, canvas.height]), [[1216, 518], [1216, 608], [1216, 698]]);
+		canvases.forEach((canvas, index) => {
+			assert.strictEqual(canvas.draws.length, 9);
+			assert.ok(canvas.draws.every(draw => draw.image.type === ['stopwatch', 'timer', 'transition'][index]));
+			assert.ok(canvas.draws.every(draw => draw.x >= 0 && draw.y >= 0
+				&& draw.x + draw.image.width <= canvas.width && draw.y + draw.image.height <= canvas.height));
+		});
+		const imageData = canvases.map(canvas => canvas.toDataURL());
+		assert.deepStrictEqual(Array.from(scope.templates.imageData), imageData);
 		assert.ok(copied['text/plain'].includes('```javascript\nencoded-template\n```'));
 		assert.ok(copied['text/plain'].startsWith('# Design: Design <example>\n\n\n\nTWF:'));
 		assert.ok(copied['text/html'].includes('<h1>Design: Design &lt;example&gt;</h1>'));
 		assert.ok(copied['text/html'].includes('</h1><p><br></p><p><img'));
 		assert.ok(!copied['text/html'].includes('Describe your template here.'));
-		assert.ok(copied['text/html'].includes('<img alt="Widget preview" src="data:image/png;base64,cG5n">'));
+		assert.strictEqual((copied['text/html'].match(/<img /g) || []).length, 3);
+		imageData.forEach(image => assert.ok(copied['text/html'].includes('<img alt="Widget preview" src="' + image + '">')));
 		assert.ok(copied['text/html'].includes('<pre data-params="javascript"><code class="language-javascript">encoded-template</code></pre>'));
 		assert.strictEqual(scope.editor.previewSize, 'normal');
 		assert.strictEqual(preview.style.width, '80%');
@@ -930,7 +956,7 @@ describe('Widget style designer preview', () => {
 		let message;
 		homey.alert = value => { message = value; };
 		scope.templates.exportText = 'encoded-template';
-		scope.templates.imageData = 'data:image/png;base64,cG5n';
+		scope.templates.imageData = ['data:image/png;base64,cG5n'];
 		scope.copyTemplateForumPost();
 		assert.match(message, /Clipboard copy was blocked/);
 		document.execCommand = () => true;
@@ -954,11 +980,13 @@ describe('Widget style designer preview', () => {
 		window.ClipboardItem = function (data) { item = data; };
 		window.navigator = { clipboard: { write: () => new Promise(resolve => { resolveWrite = resolve; }) } };
 		scope.templates.exportText = 'encoded-template';
-		scope.templates.imageData = 'data:image/png;base64,cG5n';
+		scope.templates.imageData = ['data:image/png;base64,cG5n', 'data:image/png;base64,dHdv', 'data:image/png;base64,dGhyZWU='];
 		scope.copyTemplateForumPost(true);
 		assert.strictEqual(scope.templates.busy, true);
 		assert.strictEqual(scope.templates.copyStatus, null);
-		assert.match(await item['text/html'].text(), /<img[^>]+data:image\/png;base64,cG5n/);
+		const copiedHtml = await item['text/html'].text();
+		assert.strictEqual((copiedHtml.match(/<img /g) || []).length, 3);
+		scope.templates.imageData.forEach(image => assert.ok(copiedHtml.includes('src="' + image + '"')));
 		assert.match(await item['text/plain'].text(), /encoded-template/);
 		resolveWrite();
 		await new Promise(resolve => setImmediate(resolve));
