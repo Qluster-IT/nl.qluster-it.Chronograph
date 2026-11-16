@@ -48,6 +48,14 @@ registry for the selected type, rather than raw Flow arguments or runtime names.
 Display-name formatting and device IDs derived from the exact type and name
 remain unchanged; existing devices are not removed or re-paired.
 
+`GET /ready` returns `{ "ready": true }` only after initial Flow registration,
+configured-name collection and snapshot restoration succeed. The app then emits
+`chronograph_ready` with the same payload. Clients should subscribe before
+probing, check Homey's app availability before each probe, and confirm the
+endpoint response rather than relying on an event they may have missed.
+Initialization failures remain not ready; failure to deliver the realtime
+notification is logged without invalidating the usable readiness endpoint.
+
 ### Local settings preview
 
 The root `locales/` directory contains an empty JSON object for each language.
