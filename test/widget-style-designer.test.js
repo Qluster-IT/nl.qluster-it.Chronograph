@@ -2889,6 +2889,37 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(scope.isDirty(), true);
 	});
 
+	it('offers and saves black and white widget and button backgrounds in every theme state', () => {
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		for (const [color, expected] of [['black', '#000'], ['white', '#fff']]) {
+			const { scope, writes, editor } = loadSettings();
+			scope.selectEditorMode('color');
+			scope.createStyle(true);
+			const keys = ['background', ...scope.styleElements.filter(element => scope.isButtonElement(element))];
+			for (const state of ['inactive', 'running', 'paused', 'starting']) {
+				scope.editor.previewState = state;
+				for (const key of keys) {
+					const options = state !== 'inactive' ? scope.stateColorOptions(key)
+						: key === 'background' ? scope.backgroundOptions : scope.buttonBackgroundOptions;
+					assert.ok(options.some(option => option.id === color), `${state} ${key} ${color}`);
+					scope.editor.colorValues[key] = color;
+					scope.updateColorOverride(key);
+				}
+			}
+			assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
+			scope.saveSettings();
+			const saved = JSON.parse(JSON.stringify(writes[0].value));
+			assert.strictEqual(editor.isValidCollection(saved), true);
+			const theme = saved.themes[0];
+			for (const state of ['inactive', 'running', 'paused', 'starting']) {
+				assert.deepStrictEqual(runtime.backgroundStyle(theme, state), { backgroundColor: expected });
+				for (const button of keys.filter(key => key !== 'background')) {
+					assert.strictEqual(runtime.elementStyle(theme, state, button).backgroundColor, expected);
+				}
+			}
+		}
+	});
+
 	it('keeps Cancel background rules off its non-button layout wrapper', () => {
 		const rules = Array.from(css.matchAll(/([^{}]+)\{([^{}]*)\}/g))
 			.filter(match => match[1].includes('.style-widget-cancel') && /\bbackground\s*:/.test(match[2]));

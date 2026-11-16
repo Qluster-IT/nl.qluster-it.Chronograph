@@ -341,7 +341,8 @@
     "widget_remaining": "الوقت المتبقي",
     "widget_elapsed": "المدة المنقضية",
     "style_design_style": "نمط التصميم",
-    "style_theme": "السمة"
+    "style_theme": "السمة",
+    "widget_total": "الوقت الإجمالي"
   },
   "timer_not_running": "المؤقت __name__ غير قيد التشغيل.",
   "stopwatch_not_running": "ساعة الإيقاف __name__ غير قيد التشغيل.",

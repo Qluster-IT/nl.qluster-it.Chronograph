@@ -2,6 +2,7 @@
 /tools/
 /node_modules/
 AGENTS.md
+.github/
 CODE_OF_CONDUCT.md
 CONTRIBUTING.md
 LICENSE

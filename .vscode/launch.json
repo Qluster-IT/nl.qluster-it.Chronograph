@@ -111,7 +111,7 @@
       "restart": true
     },
     {
-      "name": "Select Homey",
+      "name": "Select HP2026",
       "type": "node",
       "request": "launch",
       "cwd": "${workspaceFolder}",

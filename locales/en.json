@@ -341,7 +341,8 @@
     "widget_remaining": "Remaining time",
     "widget_elapsed": "Elapsed duration",
     "style_design_style": "Design style",
-    "style_theme": "Theme"
+    "style_theme": "Theme",
+    "widget_total": "Total time"
   },
   "timer_not_running": "Timer __name__ is not running.",
   "stopwatch_not_running": "Stopwatch __name__ is not running.",

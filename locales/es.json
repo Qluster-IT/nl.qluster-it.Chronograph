@@ -341,7 +341,8 @@
     "widget_remaining": "Tiempo restante",
     "widget_elapsed": "Duración transcurrida",
     "style_design_style": "Estilo de diseño",
-    "style_theme": "Tema"
+    "style_theme": "Tema",
+    "widget_total": "Tiempo total"
   },
   "timer_not_running": "El temporizador __name__ no está en marcha.",
   "stopwatch_not_running": "El cronómetro __name__ no está en marcha.",

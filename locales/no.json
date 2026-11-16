@@ -341,7 +341,8 @@
     "widget_remaining": "Gjenværende tid",
     "widget_elapsed": "Medgått tid",
     "style_design_style": "Designstil",
-    "style_theme": "Tema"
+    "style_theme": "Tema",
+    "widget_total": "Total tid"
   },
   "timer_not_running": "Timeren __name__ kjører ikke.",
   "stopwatch_not_running": "Stoppeklokken __name__ kjører ikke.",

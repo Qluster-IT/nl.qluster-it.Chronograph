@@ -341,7 +341,8 @@
     "widget_remaining": "Resterende tid",
     "widget_elapsed": "Forløbet tid",
     "style_design_style": "Designstil",
-    "style_theme": "Tema"
+    "style_theme": "Tema",
+    "widget_total": "Samlet tid"
   },
   "timer_not_running": "Timeren __name__ kører ikke.",
   "stopwatch_not_running": "Stopuret __name__ kører ikke.",

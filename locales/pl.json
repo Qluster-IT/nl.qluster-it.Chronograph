@@ -341,7 +341,8 @@
     "widget_remaining": "Pozostały czas",
     "widget_elapsed": "Czas, który upłynął",
     "style_design_style": "Styl projektu",
-    "style_theme": "Motyw"
+    "style_theme": "Motyw",
+    "widget_total": "Całkowity czas"
   },
   "timer_not_running": "Timer __name__ nie działa.",
   "stopwatch_not_running": "Stoper __name__ nie działa.",

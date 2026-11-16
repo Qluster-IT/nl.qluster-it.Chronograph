@@ -341,7 +341,8 @@
     "widget_remaining": "Оставшееся время",
     "widget_elapsed": "Прошедшее время",
     "style_design_style": "Стиль дизайна",
-    "style_theme": "Тема"
+    "style_theme": "Тема",
+    "widget_total": "Общее время"
   },
   "timer_not_running": "Таймер __name__ не запущен.",
   "stopwatch_not_running": "Секундомер __name__ не запущен.",

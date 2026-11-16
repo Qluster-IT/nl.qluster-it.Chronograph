@@ -132,6 +132,7 @@ Application image by [Agê Barros](https://unsplash.com/@agebarros?utm_source=un
 
 ### Unreleased
 
+* Allow black and white for widget and button backgrounds, as well as text and borders, in themes.
 * Apply matching time typography, custom sizing, and narrow-widget behavior to Total time in widgets and Designer previews.
 * Fix Cancel button background colors bleeding onto the surrounding layout in Designer previews.
 * Add a built-in Transitions design with all elements placed in Normal and Large, based on Default.

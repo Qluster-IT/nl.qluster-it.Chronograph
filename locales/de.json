@@ -341,7 +341,8 @@
     "widget_remaining": "Verbleibende Zeit",
     "widget_elapsed": "Verstrichene Dauer",
     "style_design_style": "Designstil",
-    "style_theme": "Thema"
+    "style_theme": "Thema",
+    "widget_total": "Gesamtzeit"
   },
   "timer_not_running": "Timer __name__ läuft nicht.",
   "stopwatch_not_running": "Stopuhr __name__ läuft nicht.",

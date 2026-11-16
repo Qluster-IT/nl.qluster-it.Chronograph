@@ -341,7 +341,8 @@
     "widget_remaining": "남은 시간",
     "widget_elapsed": "경과 시간",
     "style_design_style": "디자인 스타일",
-    "style_theme": "테마"
+    "style_theme": "테마",
+    "widget_total": "총 시간"
   },
   "timer_not_running": "타이머 __name__이(가) 실행 중이 아닙니다.",
   "stopwatch_not_running": "스톱워치 __name__이(가) 실행 중이 아닙니다.",
