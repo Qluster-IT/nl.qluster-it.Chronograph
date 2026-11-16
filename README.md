@@ -34,6 +34,20 @@ argument-storage helpers in `lib/flow-cards.js`. The individual modules retain
 their published card IDs, tokens and settings keys. Trigger and argument-storage
 failures are logged through Homey.
 
+Configured names are rebuilt from literal saved Flow names and explicit picker
+selections, preserving last start values for those identities. BLL coding and
+Homey tags/tokens in typed names are evaluated only during Flow execution, never
+to populate configuration. Wildcards are matching rules, not configured names.
+Runtime-only instances remain visible while running or paused, with the exact
+name resolved at creation; later expression or token changes do not rename them.
+They disappear after stopping or finishing and never create configured entries
+unless a saved Flow also references that exact name literally.
+Startup removes previously cached dynamic names without discarding active
+snapshots awaiting restoration. Device pairing reads only the configured-name
+registry for the selected type, rather than raw Flow arguments or runtime names.
+Display-name formatting and device IDs derived from the exact type and name
+remain unchanged; existing devices are not removed or re-paired.
+
 ### Local settings preview
 
 The root `locales/` directory contains an empty JSON object for each language.

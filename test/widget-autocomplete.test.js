@@ -4,6 +4,7 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
+const Chronograph = require('../lib/chronograph.js');
 const { Utils, ChronographType } = require('../lib/utils.js');
 
 describe('Widget chronograph autocomplete', () => {
@@ -226,39 +227,151 @@ describe('Widget chronograph autocomplete', () => {
 		const script = fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8');
 		vm.runInNewContext(script, {
 			module,
-			require: id => id === 'homey' ? { App: class {} } : {}
+			require: id => id === 'homey' ? { App: class {} }
+				: id === './lib/chronograph.js' ? require('../lib/chronograph.js')
+					: id === './lib/utils.js' ? require('../lib/utils.js')
+						: id === './lib/flow-arguments.js' ? require('../lib/flow-arguments.js') : {}
 		});
 		const prototype = module.exports.prototype;
-		for (const type of ['timer', 'transition']) {
+		for (const type of ['timer', 'stopwatch', 'transition']) {
 			const values = { time: 12, unit: 'minutes', from: 0, to: 80, steps: 4 };
 			const card = { getArgumentValues: async () => [{ name: 'Example' }] };
 			const app = {
-				chronographs: { [type]: [{ name: 'Example', flowValues: values }] },
+				chronographs: { [type]: [{ name: 'Example', flowValues: values }, { name: 'Orphan', flowValues: {} }] },
 				chronographsCards: { [type]: [{ card }] },
-				homey: { settings: { set() {} }, error(...args) { throw new Error(args.join(' ')); } },
-				setArgumentNamesCard: prototype.setArgumentNamesCard
+				homey: { settings: { get() {}, set() {} }, error(...args) { throw new Error(args.join(' ')); } },
+				setArgumentNamesCard: prototype.setArgumentNamesCard,
+				saveChronographs: prototype.saveChronographs
 			};
 			await prototype.setArgumentNames.call(app, card, { id: type + '_start' }, false);
 			assert.strictEqual(app.chronographs[type][0].flowValues, values);
+			assert.deepStrictEqual(Array.from(app.chronographs[type], item => item.name), ['Example']);
 		}
 	});
 
-	it('retains saved Flow or API chronographs even without a matching Flow card on startup', async () => {
+	it('removes runtime-only configured names on startup without deleting pending restoration snapshots', async () => {
 		const module = { exports: {} };
 		vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8'), {
 			module,
-			require: id => id === 'homey' ? { App: class {} } : {}
+			require: id => id === 'homey' ? { App: class {} }
+				: id === './lib/chronograph.js' ? require('../lib/chronograph.js')
+					: id === './lib/utils.js' ? require('../lib/utils.js')
+						: id === './lib/flow-arguments.js' ? require('../lib/flow-arguments.js') : {}
 		});
+		const prototype = module.exports.prototype;
 		const values = { time: 12, unit: 'minutes' };
-		const app = {
-			homey: {
-				settings: { get: () => ({ timer: [{ name: 'API timer', flowValues: values }, { name: 'old name' }] }) },
-				manifest: { flow: {} }
+		const settings = {
+			chronographs: {
+				timer: [{ name: 'API timer', flowValues: values }, { name: 'old name' }],
+				stopwatch: [{ name: 'Smoke stopwatch', flowValues: {} }],
+				transition: [{ name: 'Paused transition', flowValues: values }]
+			},
+			chronographs_active: {
+				paused: { name: 'Paused transition', data: { type: ChronographType.TRANSITION }, running: false }
 			}
 		};
-		await module.exports.prototype._initializeChronographsFromFlowArguments.call(app);
-		assert.strictEqual(app.chronographs.timer.length, 1);
-		assert.strictEqual(app.chronographs.timer[0].name, 'API timer');
-		assert.strictEqual(app.chronographs.timer[0].flowValues, values);
+		const app = {
+			homey: {
+				settings: { get: key => settings[key], set: (key, value) => { settings[key] = value; } },
+				manifest: { flow: {} },
+				error(...args) { throw new Error(args.join(' ')); }
+			},
+			setArgumentNames: prototype.setArgumentNames,
+			saveChronographs: prototype.saveChronographs
+		};
+		await prototype._initializeChronographsFromFlowArguments.call(app);
+		assert.strictEqual(app.chronographs.timer.length, 0);
+		assert.strictEqual(app.chronographs.stopwatch.length, 0);
+		assert.strictEqual(app.chronographs.transition.length, 0);
+		assert.strictEqual(settings.chronographs_active.paused.name, 'Paused transition');
+		assert.strictEqual(settings.chronographs_active.paused.running, false);
+		assert.strictEqual(settings.chronographs.timer.length, 0);
+		assert.strictEqual(settings.chronographs.stopwatch.length, 0);
+	});
+
+	it('keeps only literal references and does not configure wildcards or retain their previous matches', async () => {
+		const module = { exports: {} };
+		vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8'), {
+			module,
+			require: id => id === 'homey' ? { App: class {} }
+				: id === './lib/chronograph.js' ? require('../lib/chronograph.js')
+					: id === './lib/utils.js' ? require('../lib/utils.js')
+						: id === './lib/flow-arguments.js' ? require('../lib/flow-arguments.js') : {}
+		});
+		const prototype = module.exports.prototype;
+		let args = [{ name: 'Kitchen *' }, { name: 'Stable timer' }];
+		const card = { getArgumentValues: async () => args };
+		const settings = {};
+		const app = {
+			chronographs: { timer: [
+				{ name: 'Kitchen timer', flowValues: { time: 10 } },
+				{ name: 'Stable timer', flowValues: { time: 20 } }
+			] },
+			chronographsCards: { timer: [{ card }] },
+			homey: {
+				settings: { get: key => settings[key], set: (key, value) => { settings[key] = value; } },
+				error(...args) { throw new Error(args.join(' ')); }
+			},
+			setArgumentNamesCard: prototype.setArgumentNamesCard,
+			saveChronographs: prototype.saveChronographs
+		};
+		await prototype.setArgumentNames.call(app, card, { id: 'timer_start' });
+		assert.deepStrictEqual(Array.from(app.chronographs.timer, item => item.name), ['Stable timer']);
+		assert.strictEqual(app.chronographs.timer[0].flowValues.time, 20);
+		args = [];
+		await prototype.setArgumentNames.call(app, card, { id: 'timer_start' });
+		assert.strictEqual(settings.chronographs.timer.length, 0);
+	});
+
+	it('keeps new start defaults and ignores stale name refreshes while reading Flow arguments', async () => {
+		const module = { exports: {} };
+		vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8'), {
+			module,
+			require: id => id === 'homey' ? { App: class {} }
+				: id === './lib/chronograph.js' ? require('../lib/chronograph.js')
+					: id === './lib/utils.js' ? require('../lib/utils.js')
+						: id === './lib/flow-arguments.js' ? require('../lib/flow-arguments.js') : {}
+		});
+		const prototype = module.exports.prototype;
+		let resolveArguments;
+		const pending = new Promise(resolve => { resolveArguments = resolve; });
+		const card = { getArgumentValues: () => pending };
+		const settings = {};
+		const app = {
+			chronographs: { timer: [] },
+			chronographsCards: { timer: [
+				{ card: { getArgumentValues: async () => [{ name: 'New timer' }] } }, { card }
+			] },
+			homey: {
+				settings: { get: key => settings[key], set: (key, value) => { settings[key] = value; } },
+				error(...args) { throw new Error(args.join(' ')); }
+			},
+			setArgumentNamesCard: prototype.setArgumentNamesCard,
+			saveChronographs: prototype.saveChronographs
+		};
+		const refresh = prototype.setArgumentNames.call(app, card, { id: 'timer_start' });
+		await new Promise(resolve => setImmediate(resolve));
+		const values = { time: 12, unit: 'seconds' };
+		const active = new Chronograph(Utils.generateId(ChronographType.TIMER, 'New timer'), 'New timer', 12, 'seconds');
+		active.setData('type', ChronographType.TIMER);
+		active.setData('flowValues', values);
+		try {
+			resolveArguments([]);
+			await refresh;
+			assert.strictEqual(app.chronographs.timer[0].flowValues, values);
+		} finally {
+			active.stop(true);
+		}
+
+		let resolveStale;
+		card.getArgumentValues = () => new Promise(resolve => { resolveStale = resolve; });
+		app.chronographsCards.timer = [{ card }];
+		const stale = prototype.setArgumentNames.call(app, card, { id: 'timer_start' });
+		card.getArgumentValues = async () => [];
+		await prototype.setArgumentNames.call(app, card, { id: 'timer_start' });
+		resolveStale([{ name: 'New timer' }]);
+		await stale;
+		assert.strictEqual(app.chronographs.timer.length, 0);
+		assert.strictEqual(settings.chronographs.timer.length, 0);
 	});
 });

@@ -28,6 +28,8 @@ function stop(type, params) {
 }
 
 module.exports = {
+	async getReady({ homey }) { return { ready: homey.app.apiReady === true }; },
+
 	async searchWidgetIcons({ homey, body }) {
 		if (!body || typeof body.query !== 'string' || body.query.length > 100) throw new Error('Invalid icon search');
 		return require('./lib/widget-icons.js').searchIcons(body.query, homey.__('settings.widget_icon_none'), { includeImages: false });

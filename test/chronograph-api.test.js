@@ -151,6 +151,10 @@ describe('Chronograph realtime updates', () => {
 			}
 		});
 		Application = module.exports;
+		app.setArgumentNames = Application.prototype.setArgumentNames;
+		app.setArgumentNamesCard = Application.prototype.setArgumentNamesCard;
+		app.chronographsCards = Object.fromEntries(['timer', 'stopwatch', 'transition']
+			.map(type => [type, [{ card: { getArgumentValues: async () => [{ name }] } }]]));
 		Application.prototype._installEventHandlers.call(app);
 	});
 
@@ -246,8 +250,46 @@ describe('Chronograph realtime updates', () => {
 			{ time: 31, unit: 'seconds' });
 	});
 
-	it('restores running and paused timers from lifecycle snapshots without periodic writes', async () => {
+	it('keeps runtime-only names out of configuration while active or paused and retains referenced same-named types', async () => {
+		homey.app.chronographsCards.stopwatch = [];
+		homey.app.chronographs.stopwatch = [];
 		await api.postTimer({ homey, body: { name, time: 30, unit: 'seconds' } });
+		await Chronograph.stopwatch_startRunListener(homey, { name });
+		const stopwatch = Chronograph.get(Utils.generateId(ChronographType.STOPWATCH, name));
+		stopwatch.pause();
+		await homey.app.setArgumentNames(null, { id: 'stopwatch_start' });
+		assert.strictEqual(homey.app.chronographs.stopwatch.length, 0);
+		assert.strictEqual((await api.getStopwatches())[0].running, false);
+		assert.strictEqual(homey.settings.get('chronographs_active')[stopwatch.getId()].name, name);
+
+		stopwatch.stop();
+		await new Promise(resolve => setImmediate(resolve));
+		assert.strictEqual(homey.app.chronographs.stopwatch.length, 0);
+		assert.strictEqual(homey.settings.get('chronographs').stopwatch.length, 0);
+		assert.strictEqual(homey.settings.get('chronographs_active')[stopwatch.getId()], undefined);
+		assert.strictEqual(homey.app.chronographs.timer[0].name, name);
+		assert.strictEqual((await api.getTimer({ params: { name } })).running, true);
+	});
+
+	it('removes runtime-only timer and transition instances on completion without ever configuring their names', async () => {
+		for (const type of ['timer', 'transition']) {
+			homey.app.chronographsCards[type] = [];
+			homey.app.chronographs[type] = [];
+			await Chronograph[type + '_startRunListener'](homey, { name, time: 30, unit: 'seconds', from: 0, to: 10, steps: 4 });
+			const chronograph = Chronograph.get(Utils.generateId(ChronographType[type.toUpperCase()], name));
+			assert.strictEqual(homey.app.chronographs[type].length, 0);
+			chronograph._onTimeout({ type: 'main' });
+			await new Promise(resolve => setImmediate(resolve));
+			assert.strictEqual(homey.app.chronographs[type].length, 0);
+			assert.strictEqual(homey.settings.get('chronographs'), undefined);
+			assert.strictEqual(homey.settings.get('chronographs_active')[chronograph.getId()], undefined);
+			assert.strictEqual(Chronograph.get(chronograph.getId()), false);
+		}
+	});
+
+	it('restores running and paused runtime-only timers without promoting their names to configuration', async () => {
+		homey.app.chronographs.timer = [];
+		await Chronograph.timer_startRunListener(homey, { name, time: 30, unit: 'seconds' });
 		const id = Utils.generateId(ChronographType.TIMER, name);
 		const original = Chronograph.get(id);
 		Chronograph._resetUpdateTimeout();
@@ -261,6 +303,7 @@ describe('Chronograph realtime updates', () => {
 		assert.ok(restored.isRunning());
 		assert.ok(restored.getDuration() >= 5000 && restored.getDuration() < 6000);
 		assert.strictEqual(restored.getTargetDuration(), 30000);
+		assert.strictEqual(homey.app.chronographs.timer.length, 0);
 
 		restored.pause();
 		const paused = JSON.parse(JSON.stringify(homey.settings.get('chronographs_active')[id]));
@@ -271,6 +314,7 @@ describe('Chronograph realtime updates', () => {
 		const restoredPaused = Chronograph.get(id);
 		assert.strictEqual(restoredPaused.isRunning(), false);
 		assert.strictEqual(restoredPaused.getDuration(), paused.duration);
+		assert.strictEqual(homey.app.chronographs.timer.length, 0);
 	});
 });
 

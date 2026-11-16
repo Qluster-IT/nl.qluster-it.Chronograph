@@ -86,7 +86,7 @@ const IntervalElapsed = require('./lib/generic/triggers/interval_elapsed.js');
  * A chronograph state snapshot persisted for restoring active chronographs.
  * @typedef {Object} ChronographActiveSnapshot
  * @property {string} id Generated chronograph identifier.
- * @property {string} name Configured chronograph name.
+ * @property {string} name Resolved chronograph name captured when the instance started.
  * @property {number} duration Elapsed duration in milliseconds when captured.
  * @property {number} targetDuration Target duration in milliseconds, or a falsy value when unset.
  * @property {Object.<string, *>} data Chronograph metadata required to restore its type and settings.
@@ -126,8 +126,10 @@ class Application extends Homey.App {
 
 	/** @type {{[key: string]: ChronographConfiguration[], timer?: ChronographConfiguration[], stopwatch?: ChronographConfiguration[], transition?: ChronographConfiguration[]}} Configured chronographs grouped by kind. */
 	chronographs = {};
+	apiReady = false;
 
 	onInit() {
+		this.apiReady = false;
 		this.log('OnInit (sync)');
 
 		this.onInitLoader().catch(x => this.error('OnInit loaded catch', x));
@@ -167,18 +169,20 @@ class Application extends Homey.App {
 
 			// Restore chronographs from settings after the application has started.
 			this.homey.setTimeout(async () => {
-
 				try {
-					/** @type {Object.<string, ChronographFlowCardBinding[]>} */
-					this.chronographsCards = {};
 					await this._initializeChronographsFromFlowArguments();
+					this.log('Restoring chronographs.');
+					if (await this._restoreChronographs() === false) throw new Error('Unable to restore all chronographs');
+					this.apiReady = true;
 				} catch (error) {
-					this.homey.error('_initializeChronographsFromFlowArguments', error)
+					this.homey.error('Unable to initialize Chronograph API', error);
+					return;
 				}
-
-				this.log('Restoring chronographs.');
-				await this._restoreChronographs();
-
+				try {
+					await this.homey.api.realtime('chronograph_ready', { ready: true });
+				} catch (error) {
+					this.homey.error('Unable to notify clients that Chronograph is ready', error);
+				}
 			}, 1000);
 
 			this.log('Chronograph.all', Chronograph.all());
@@ -313,15 +317,9 @@ class Application extends Homey.App {
 
 
 	async _initializeChronographsFromFlowArguments() {
-		this.chronographs = {};
-		/** @type {ChronographConfigurationMap | undefined} Previously saved chronograph settings. */
-		this.oldChronographs = this.homey.settings.get('chronographs');
-		if (this.oldChronographs) {
-			for (const type of ['timer', 'stopwatch', 'transition']) {
-				this.chronographs[type] = (this.oldChronographs[type] || [])
-					.filter(chronograph => chronograph && chronograph.flowValues);
-			}
-		}
+		this.chronographs = this.homey.settings.get('chronographs') || {};
+		/** @type {Object.<string, ChronographFlowCardBinding[]>} */
+		this.chronographsCards = {};
 		for (const flowTypeId in this.homey.manifest.flow) {
 			if (Object.hasOwnProperty.call(this.homey.manifest.flow, flowTypeId)) {
 				const flowType = this.homey.manifest.flow[flowTypeId];
@@ -360,7 +358,6 @@ class Application extends Homey.App {
 							/** @type {ChronographFlowCardBinding} */
 							const binding = { card, flowcard };
 							this.chronographsCards[chronograph_type].push(binding);
-							await this.setArgumentNames(card, flowcard, true);
 							card.on('update', async () => {
 								await this.setArgumentNames(card, flowcard);
 							});;
@@ -372,58 +369,51 @@ class Application extends Homey.App {
 				}
 			}
 		}
-		delete this.oldChronographs;
-	}
-
-	async setArgumentNamesCard(card, type) {
-		let args = await card.getArgumentValues();
-		let names = [];
-		let nameArgs = args.filter(x => x.name && !x.namedd && !x.name.includes('{['));
-		if (nameArgs.length) names = names.concat(nameArgs.map(x => x.name));
-
-		let nameDdArgs = args.filter(x => x.namedd);
-		if (nameDdArgs.length) names = names.concat(nameDdArgs.map(x => x.namedd.name));
-		names = names.filter(x => !(x.startsWith('[[') && x.endsWith(']]')));
-		//names.concat() = ;
-
-		let changed = false;
-		for (let i = 0; i < names.length; i++)
-			if (names[i] && !this.chronographs[type].find(x => x.name == names[i])) {
-				let oldChronograph = this.oldChronographs && this.oldChronographs[type] ? this.oldChronographs[type].find(x => x.name == names[i]) : undefined;
-				/** @type {ChronographConfiguration} */
-				let chrono = { name: names[i] };
-				if (oldChronograph) {
-					chrono.action = oldChronograph.action;
-					chrono.flowValues = oldChronograph.flowValues;
-				}
-				this.chronographs[type].push(chrono) & (changed = true);
+		for (const type of ['timer', 'stopwatch', 'transition']) {
+			if (await this.setArgumentNames(null, { id: type + '_start' }) === false) {
+				throw new Error('Unable to initialize configured ' + type + ' names');
 			}
-		return changed;
+		}
 	}
-	async setArgumentNames(card, flowcard, firstRun) {
+
+	async setArgumentNamesCard(card, configured) {
+		const args = await card.getArgumentValues();
+		// Classify saved identities without evaluating expressions or runtime tokens.
+		const names = args.filter(arg => !arg.namedd)
+			.map(arg => arg.name)
+			.filter(name => typeof name === 'string' && !name.includes('{[') && !name.includes('[['));
+		names.push(...args.filter(arg => arg.namedd).map(arg => arg.namedd.name));
+		for (const name of names) {
+			if (typeof name !== 'string' || !name.trim() || name.includes('*')) continue;
+			if (!configured.some(chronograph => chronograph.name === name)) configured.push({ name });
+		}
+	}
+	async setArgumentNames(card, flowcard) {
 		try {
-
-			//this.log('setArgumentNames');
 			if (!this.chronographs) this.chronographs = {};
-			let type = flowcard.id.split('_')[0];
-			if (firstRun) {
-				if (!this.chronographs[type]) this.chronographs[type] = [];
-			} else {
-				this.oldChronographs = Object.assign({}, this.chronographs);
-				this.chronographs[type] = (this.oldChronographs[type] || [])
-					.filter(chronograph => chronograph && chronograph.flowValues);
+			const type = flowcard.id.split('_')[0];
+			const revisions = this._chronographNameRevisions || (this._chronographNameRevisions = {});
+			const revision = revisions[type] = (revisions[type] || 0) + 1;
+			const configured = [];
+			for (const binding of this.chronographsCards[type] || []) {
+				await this.setArgumentNamesCard(binding.card, configured);
 			}
-
-			let changed = false;
-			if (firstRun) changed = await this.setArgumentNamesCard(card, type);
-			else for (const obj of this.chronographsCards[type]) {
-				let card = obj.card;
-				if (await this.setArgumentNamesCard(card, type)) changed = true;
+			if (revisions[type] !== revision) return;
+			const previous = this.chronographs[type] || [];
+			const chronographType = ChronographType[type.toUpperCase()];
+			for (let i = 0; i < configured.length; i++) {
+				const saved = previous.find(item => typeof item === 'object' && item.name === configured[i].name);
+				if (saved) configured[i] = saved;
+				const active = Chronograph.get(Utils.generateId(chronographType, configured[i].name));
+				if (active && active.getData('flowValues')) {
+					configured[i].flowValues = active.getData('flowValues');
+				}
 			}
-			if (changed) this.homey.settings.set('chronographs', this.chronographs);
-			if (!firstRun) delete this.oldChronographs;
+			this.chronographs[type] = configured;
+			if (JSON.stringify(previous) !== JSON.stringify(configured)) this.saveChronographs();
 		} catch (error) {
 			this.homey.error('setArgumentNames error', error);
+			return false;
 		}
 
 	}
@@ -627,6 +617,7 @@ class Application extends Homey.App {
 	}
 
 	async _restoreChronographs() {
+		let complete = true;
 		try {
 			/** @type {Object.<string, ChronographActiveSnapshot>} Active snapshots to restore after startup. */
 			let active = this.homey.settings.get('chronographs_active') || {};
@@ -645,6 +636,7 @@ class Application extends Homey.App {
 					pending[snapshotId] = raw;
 					this.homey.settings.set('chronographs_active', pending);
 					this.homey.error('_restoreChronographs split decoding', raw.name, error);
+					complete = false;
 					continue;
 				}
 				let id = Utils.generateId(raw.data.type, raw.name);
@@ -687,10 +679,11 @@ class Application extends Homey.App {
 			this.homey.setTimeout(() => {
 				Chronograph._resetUpdateTimeout();
 			}, 5000);
-
+			return complete;
 
 		} catch (error) {
 			this.homey.error('_restoreChronographs', 'error', error);
+			return false;
 		}
 	}
 }

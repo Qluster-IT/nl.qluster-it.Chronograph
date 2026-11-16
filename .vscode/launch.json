@@ -78,7 +78,7 @@
       "name": "Attach to HP2019",
       "type": "node",
       "request": "attach",
-      "address": "192.168.1.17",
+      "address": "192.168.1.239",
       "port": 9210,
       "localRoot": "${workspaceFolder}",
       "remoteRoot": "/"

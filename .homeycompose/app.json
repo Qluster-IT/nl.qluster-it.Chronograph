@@ -107,6 +107,10 @@
 		]
 	},
 	"api": {
+		"getReady": {
+			"method": "GET",
+			"path": "/ready"
+		},
 		"searchWidgetIcons": {
 			"method": "POST",
 			"path": "/widget-icons/search"

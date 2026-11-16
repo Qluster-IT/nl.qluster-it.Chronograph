@@ -81,7 +81,8 @@ describe('Better Logic Flow arguments', () => {
 		assert.strictEqual(await cards.timer_start_v2.run(args), true);
 		const id = Utils.generateId(ChronographType.TIMER, 'Kitchen timer');
 		assert.strictEqual(Chronograph.get(id).getTargetDuration(), 6000);
-		assert.deepStrictEqual(homey.app.chronographs.timer[0].flowValues, { time: 6, unit: 'seconds' });
+		assert.deepStrictEqual(Chronograph.get(id).getData('flowValues'), { time: 6, unit: 'seconds' });
+		assert.deepStrictEqual(homey.app.chronographs.timer, []);
 		assert.strictEqual(args.name, '{[room]} timer');
 		assert.strictEqual(await cards.timer_running.run({ name: '{[wildcard]}' }), true);
 		assert.strictEqual(await cards.timer_split.run({ name: '{[room]} timer', time: 2, unit: 'seconds' },
@@ -113,7 +114,8 @@ describe('Better Logic Flow arguments', () => {
 		await cards.stopwatch_resume.run({ name: '{[room]} watch' });
 		const stopwatch = Chronograph.get(Utils.generateId(ChronographType.STOPWATCH, 'Kitchen watch'));
 		assert.deepStrictEqual(stopwatch._splits.map(split => split.time), [4, 5]);
-		assert.deepStrictEqual(homey.app.chronographs.stopwatch[0], { name: 'Kitchen watch', flowValues: {} });
+		assert.deepStrictEqual(homey.app.chronographs.stopwatch, []);
+		assert.deepStrictEqual(stopwatch.getData('flowValues'), {});
 		assert.strictEqual(settings.stopwatch_splits[0].name, '{[room]} watch');
 	});
 
@@ -239,23 +241,62 @@ describe('Better Logic Flow arguments', () => {
 		}
 	});
 
-	it('keeps evaluated names after a Flow refresh without suggesting raw BLL expressions', async () => {
+	it('collects only stable names without evaluating BLL or tokens and preserves picker precedence', async () => {
+		BL._L.Current.decode = async () => { throw new Error('Configured names must not execute BLL'); };
 		const module = { exports: {} };
 		vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8'), {
-			module, require: id => id === 'homey' ? { App: class {} } : {}
+			module, require: id => id === 'homey' ? { App: class {} }
+				: id === './lib/chronograph.js' ? Chronograph
+					: id === './lib/utils.js' ? require('../lib/utils.js')
+						: id === './lib/flow-arguments.js' ? { BL } : {}
 		});
 		const prototype = module.exports.prototype;
 		const card = { getArgumentValues: async () => [
+			{ name: 'Plain timer' },
+			{ name: 'Kitchen timer' },
 			{ name: '{[room]} timer' },
-			{ name: '{[error]}', namedd: { name: 'Literal {[room]}' } }
+			{ name: '{[now]}' },
+			{ name: '[[homey:manager:logic|room]]' },
+			{ name: 'Kitchen [[homey:manager:logic|room]] timer' },
+			{ name: 'Kitchen *' },
+			{ name: '{[error]}', namedd: { name: 'Literal {[room]}' } },
+			{ name: '{[error]}', namedd: { name: 'Picked timer' } },
+			{ name: 'Ignored', namedd: { name: 'Picked *' } }
 		] };
 		const app = {
 			chronographs: { timer: [{ name: 'Kitchen timer', flowValues: { time: 6 } }] },
 			chronographsCards: { timer: [{ card }] },
-			homey: { settings: { set() {} }, error(...args) { throw new Error(args.join(' ')); } },
-			setArgumentNamesCard: prototype.setArgumentNamesCard
+			homey: { settings: { get() {}, set() {} }, error(...args) { throw new Error(args.join(' ')); } },
+			setArgumentNamesCard: prototype.setArgumentNamesCard,
+			saveChronographs: prototype.saveChronographs
 		};
 		await prototype.setArgumentNames.call(app, card, { id: 'timer_start_v2' }, false);
-		assert.deepStrictEqual(Array.from(app.chronographs.timer, item => item.name), ['Kitchen timer', 'Literal {[room]}']);
+		assert.deepStrictEqual(Array.from(app.chronographs.timer, item => item.name),
+			['Plain timer', 'Kitchen timer', 'Literal {[room]}', 'Picked timer']);
+		assert.deepStrictEqual(app.chronographs.timer[1].flowValues, { time: 6 });
+	});
+
+	it('keeps changing BLL names bound to their runtime instances without configuring either name', async () => {
+		let now = 'first';
+		BL._L.Current.decode = async text => text.replace('{[now]}', now);
+		new TimerStart('timer_start_v2', homey);
+		const args = { name: 'Run {[now]}', time: '30', unit: 'seconds' };
+		await cards.timer_start_v2.run(args);
+		const first = Chronograph.get(Utils.generateId(ChronographType.TIMER, 'Run first'));
+		first.pause();
+		now = 'second';
+		await cards.timer_start_v2.run(args);
+		const second = Chronograph.get(Utils.generateId(ChronographType.TIMER, 'Run second'));
+		assert.strictEqual(first.getName(), 'Run first');
+		assert.strictEqual(first.isRunning(), false);
+		assert.strictEqual(second.isRunning(), true);
+		assert.deepStrictEqual((await api.getTimers()).map(item => item.name).sort(), ['Run first', 'Run second']);
+		assert.deepStrictEqual(homey.app.chronographs.timer, []);
+		assert.strictEqual(settings.chronographs, undefined);
+		first.stop();
+		assert.deepStrictEqual((await api.getTimers()).map(item => item.name), ['Run second']);
+		second.stop();
+		assert.deepStrictEqual(await api.getTimers(), []);
+		assert.deepStrictEqual(homey.app.chronographs.timer, []);
 	});
 });
