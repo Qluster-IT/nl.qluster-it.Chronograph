@@ -268,14 +268,16 @@ body {
 }
 
 .chronograph-design-element-duration.chronograph-design-placeholder,
-.chronograph-design-element-remaining.chronograph-design-placeholder {
+.chronograph-design-element-remaining.chronograph-design-placeholder,
+.chronograph-design-element-total.chronograph-design-placeholder {
 	width: 0;
 	max-width: 0;
 	overflow: hidden;
 }
 
 .chronograph-design-group[data-direction="horizontal"] > .chronograph-design-element-duration.chronograph-design-placeholder,
-.chronograph-design-group[data-direction="horizontal"] > .chronograph-design-element-remaining.chronograph-design-placeholder {
+.chronograph-design-group[data-direction="horizontal"] > .chronograph-design-element-remaining.chronograph-design-placeholder,
+.chronograph-design-group[data-direction="horizontal"] > .chronograph-design-element-total.chronograph-design-placeholder {
 	flex: 0 0 0;
 	margin-inline-end: -8px;
 }
@@ -311,7 +313,8 @@ body {
 .chronograph-design-element-name,
 .chronograph-design-element-status,
 .chronograph-design-element-duration,
-.chronograph-design-element-remaining {
+.chronograph-design-element-remaining,
+.chronograph-design-element-total {
 	flex: 0 1 auto;
 }
 
@@ -322,7 +325,8 @@ body {
 .chronograph-design .chronograph-design-element-name .chronograph-name,
 .chronograph-design .chronograph-design-element-status .chronograph-status,
 .chronograph-design .chronograph-design-element-duration .chronograph-duration,
-.chronograph-design .chronograph-design-element-remaining .chronograph-duration {
+.chronograph-design .chronograph-design-element-remaining .chronograph-duration,
+.chronograph-design .chronograph-design-element-total .chronograph-duration {
 	font-size: var(--element-size);
 }
 
@@ -335,12 +339,14 @@ body {
 }
 
 .chronograph-design .chronograph-design-element-duration .chronograph-duration,
-.chronograph-design .chronograph-design-element-remaining .chronograph-duration {
+.chronograph-design .chronograph-design-element-remaining .chronograph-duration,
+.chronograph-design .chronograph-design-element-total .chronograph-duration {
 	line-height: max(1.25em, var(--homey-line-height-large, 28px));
 }
 
 .chronograph-layout-compact .chronograph-design .chronograph-design-element-duration .chronograph-duration,
-.chronograph-layout-compact .chronograph-design .chronograph-design-element-remaining .chronograph-duration {
+.chronograph-layout-compact .chronograph-design .chronograph-design-element-remaining .chronograph-duration,
+.chronograph-layout-compact .chronograph-design .chronograph-design-element-total .chronograph-duration {
 	line-height: max(1.25em, var(--homey-line-height-small, 20px));
 }
 
@@ -353,7 +359,8 @@ body {
 }
 
 .chronograph-layout-large .chronograph-design .chronograph-design-element-duration .chronograph-duration,
-.chronograph-layout-large .chronograph-design .chronograph-design-element-remaining .chronograph-duration {
+.chronograph-layout-large .chronograph-design .chronograph-design-element-remaining .chronograph-duration,
+.chronograph-layout-large .chronograph-design .chronograph-design-element-total .chronograph-duration {
 	line-height: max(1.25em, var(--homey-line-height-xxlarge, 40px));
 }
 
@@ -950,13 +957,15 @@ img.chronograph-icon {
 	}
 
 	.chronograph-layout-normal .chronograph-design[data-allow-shrink="true"] .chronograph-design-element-duration .chronograph-duration,
-	.chronograph-layout-normal .chronograph-design[data-allow-shrink="true"] .chronograph-design-element-remaining .chronograph-duration {
+	.chronograph-layout-normal .chronograph-design[data-allow-shrink="true"] .chronograph-design-element-remaining .chronograph-duration,
+	.chronograph-layout-normal .chronograph-design[data-allow-shrink="true"] .chronograph-design-element-total .chronograph-duration {
 		font-size: min(var(--element-size), 14px);
 		line-height: max(1.25em, var(--homey-line-height-small, 20px));
 	}
 
 	.chronograph-layout-large .chronograph-design[data-allow-shrink="true"] .chronograph-design-element-duration .chronograph-duration,
-	.chronograph-layout-large .chronograph-design[data-allow-shrink="true"] .chronograph-design-element-remaining .chronograph-duration {
+	.chronograph-layout-large .chronograph-design[data-allow-shrink="true"] .chronograph-design-element-remaining .chronograph-duration,
+	.chronograph-layout-large .chronograph-design[data-allow-shrink="true"] .chronograph-design-element-total .chronograph-duration {
 		font-size: min(var(--element-size), 20px);
 		line-height: max(1.25em, var(--homey-line-height-large, 28px));
 	}

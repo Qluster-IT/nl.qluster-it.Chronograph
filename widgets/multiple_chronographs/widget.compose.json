@@ -784,6 +784,41 @@
 			}
 		},
 		{
+			"id": "chronograph1ReverseTime",
+			"type": "checkbox",
+			"title": {
+				"en": "   Reverse time display",
+				"nl": "   Tijdweergave omkeren",
+				"da": "   Vend tidsvisning",
+				"de": "   Zeitanzeige umkehren",
+				"es": "   Invertir visualización del tiempo",
+				"fr": "   Inverser l’affichage du temps",
+				"it": "   Inverti visualizzazione del tempo",
+				"no": "   Snu tidsvisningen",
+				"sv": "   Vänd tidsvisningen",
+				"pl": "   Odwróć wyświetlanie czasu",
+				"ru": "   Обратить отображение времени",
+				"ko": "   시간 표시 반전",
+				"ar": "   عكس عرض الوقت"
+			},
+			"hint": {
+				"en": "For timers and transitions, swap remaining and elapsed time. Stopwatches are unchanged.",
+				"nl": "Wissel resterende en verstreken tijd om voor timers en transities. Stopwatches blijven ongewijzigd.",
+				"da": "Byt resterende og forløbet tid for timere og overgange. Stopure er uændrede.",
+				"de": "Verbleibende und verstrichene Zeit für Timer und Übergänge vertauschen. Stoppuhren bleiben unverändert.",
+				"es": "Intercambia el tiempo restante y transcurrido de temporizadores y transiciones. Los cronómetros no cambian.",
+				"fr": "Échange le temps restant et écoulé des minuteurs et transitions. Les chronomètres restent inchangés.",
+				"it": "Scambia il tempo rimanente e trascorso di timer e transizioni. I cronometri non cambiano.",
+				"no": "Bytt gjenværende og medgått tid for tidtakere og overganger. Stoppeklokker er uendret.",
+				"sv": "Växla återstående och förfluten tid för timers och övergångar. Stoppur påverkas inte.",
+				"pl": "Zamień pozostały i upływający czas minutników i przejść. Stopery pozostają bez zmian.",
+				"ru": "Меняет местами оставшееся и прошедшее время таймеров и переходов. Секундомеры не изменяются.",
+				"ko": "타이머와 전환의 남은 시간과 경과 시간을 바꿉니다. 스톱워치는 변경되지 않습니다.",
+				"ar": "تبديل الوقت المتبقي والمنقضي للمؤقتات والانتقالات. لا تتغير ساعات الإيقاف."
+			},
+			"value": false
+		},
+		{
 			"id": "chronograph1ShowMilliseconds",
 			"type": "checkbox",
 			"title": {
@@ -1124,6 +1159,41 @@
 				"ko": "   아이콘",
 				"ar": "   أيقونة"
 			}
+		},
+		{
+			"id": "chronograph2ReverseTime",
+			"type": "checkbox",
+			"title": {
+				"en": "   Reverse time display",
+				"nl": "   Tijdweergave omkeren",
+				"da": "   Vend tidsvisning",
+				"de": "   Zeitanzeige umkehren",
+				"es": "   Invertir visualización del tiempo",
+				"fr": "   Inverser l’affichage du temps",
+				"it": "   Inverti visualizzazione del tempo",
+				"no": "   Snu tidsvisningen",
+				"sv": "   Vänd tidsvisningen",
+				"pl": "   Odwróć wyświetlanie czasu",
+				"ru": "   Обратить отображение времени",
+				"ko": "   시간 표시 반전",
+				"ar": "   عكس عرض الوقت"
+			},
+			"hint": {
+				"en": "For timers and transitions, swap remaining and elapsed time. Stopwatches are unchanged.",
+				"nl": "Wissel resterende en verstreken tijd om voor timers en transities. Stopwatches blijven ongewijzigd.",
+				"da": "Byt resterende og forløbet tid for timere og overgange. Stopure er uændrede.",
+				"de": "Verbleibende und verstrichene Zeit für Timer und Übergänge vertauschen. Stoppuhren bleiben unverändert.",
+				"es": "Intercambia el tiempo restante y transcurrido de temporizadores y transiciones. Los cronómetros no cambian.",
+				"fr": "Échange le temps restant et écoulé des minuteurs et transitions. Les chronomètres restent inchangés.",
+				"it": "Scambia il tempo rimanente e trascorso di timer e transizioni. I cronometri non cambiano.",
+				"no": "Bytt gjenværende og medgått tid for tidtakere og overganger. Stoppeklokker er uendret.",
+				"sv": "Växla återstående och förfluten tid för timers och övergångar. Stoppur påverkas inte.",
+				"pl": "Zamień pozostały i upływający czas minutników i przejść. Stopery pozostają bez zmian.",
+				"ru": "Меняет местами оставшееся и прошедшее время таймеров и переходов. Секундомеры не изменяются.",
+				"ko": "타이머와 전환의 남은 시간과 경과 시간을 바꿉니다. 스톱워치는 변경되지 않습니다.",
+				"ar": "تبديل الوقت المتبقي والمنقضي للمؤقتات والانتقالات. لا تتغير ساعات الإيقاف."
+			},
+			"value": false
 		},
 		{
 			"id": "chronograph2ShowMilliseconds",
@@ -1468,6 +1538,41 @@
 			}
 		},
 		{
+			"id": "chronograph3ReverseTime",
+			"type": "checkbox",
+			"title": {
+				"en": "   Reverse time display",
+				"nl": "   Tijdweergave omkeren",
+				"da": "   Vend tidsvisning",
+				"de": "   Zeitanzeige umkehren",
+				"es": "   Invertir visualización del tiempo",
+				"fr": "   Inverser l’affichage du temps",
+				"it": "   Inverti visualizzazione del tempo",
+				"no": "   Snu tidsvisningen",
+				"sv": "   Vänd tidsvisningen",
+				"pl": "   Odwróć wyświetlanie czasu",
+				"ru": "   Обратить отображение времени",
+				"ko": "   시간 표시 반전",
+				"ar": "   عكس عرض الوقت"
+			},
+			"hint": {
+				"en": "For timers and transitions, swap remaining and elapsed time. Stopwatches are unchanged.",
+				"nl": "Wissel resterende en verstreken tijd om voor timers en transities. Stopwatches blijven ongewijzigd.",
+				"da": "Byt resterende og forløbet tid for timere og overgange. Stopure er uændrede.",
+				"de": "Verbleibende und verstrichene Zeit für Timer und Übergänge vertauschen. Stoppuhren bleiben unverändert.",
+				"es": "Intercambia el tiempo restante y transcurrido de temporizadores y transiciones. Los cronómetros no cambian.",
+				"fr": "Échange le temps restant et écoulé des minuteurs et transitions. Les chronomètres restent inchangés.",
+				"it": "Scambia il tempo rimanente e trascorso di timer e transizioni. I cronometri non cambiano.",
+				"no": "Bytt gjenværende og medgått tid for tidtakere og overganger. Stoppeklokker er uendret.",
+				"sv": "Växla återstående och förfluten tid för timers och övergångar. Stoppur påverkas inte.",
+				"pl": "Zamień pozostały i upływający czas minutników i przejść. Stopery pozostają bez zmian.",
+				"ru": "Меняет местами оставшееся и прошедшее время таймеров и переходов. Секундомеры не изменяются.",
+				"ko": "타이머와 전환의 남은 시간과 경과 시간을 바꿉니다. 스톱워치는 변경되지 않습니다.",
+				"ar": "تبديل الوقت المتبقي والمنقضي للمؤقتات والانتقالات. لا تتغير ساعات الإيقاف."
+			},
+			"value": false
+		},
+		{
 			"id": "chronograph3ShowMilliseconds",
 			"type": "checkbox",
 			"title": {
@@ -1808,6 +1913,41 @@
 				"ko": "   아이콘",
 				"ar": "   أيقونة"
 			}
+		},
+		{
+			"id": "chronograph4ReverseTime",
+			"type": "checkbox",
+			"title": {
+				"en": "   Reverse time display",
+				"nl": "   Tijdweergave omkeren",
+				"da": "   Vend tidsvisning",
+				"de": "   Zeitanzeige umkehren",
+				"es": "   Invertir visualización del tiempo",
+				"fr": "   Inverser l’affichage du temps",
+				"it": "   Inverti visualizzazione del tempo",
+				"no": "   Snu tidsvisningen",
+				"sv": "   Vänd tidsvisningen",
+				"pl": "   Odwróć wyświetlanie czasu",
+				"ru": "   Обратить отображение времени",
+				"ko": "   시간 표시 반전",
+				"ar": "   عكس عرض الوقت"
+			},
+			"hint": {
+				"en": "For timers and transitions, swap remaining and elapsed time. Stopwatches are unchanged.",
+				"nl": "Wissel resterende en verstreken tijd om voor timers en transities. Stopwatches blijven ongewijzigd.",
+				"da": "Byt resterende og forløbet tid for timere og overgange. Stopure er uændrede.",
+				"de": "Verbleibende und verstrichene Zeit für Timer und Übergänge vertauschen. Stoppuhren bleiben unverändert.",
+				"es": "Intercambia el tiempo restante y transcurrido de temporizadores y transiciones. Los cronómetros no cambian.",
+				"fr": "Échange le temps restant et écoulé des minuteurs et transitions. Les chronomètres restent inchangés.",
+				"it": "Scambia il tempo rimanente e trascorso di timer e transizioni. I cronometri non cambiano.",
+				"no": "Bytt gjenværende og medgått tid for tidtakere og overganger. Stoppeklokker er uendret.",
+				"sv": "Växla återstående och förfluten tid för timers och övergångar. Stoppur påverkas inte.",
+				"pl": "Zamień pozostały i upływający czas minutników i przejść. Stopery pozostają bez zmian.",
+				"ru": "Меняет местами оставшееся и прошедшее время таймеров и переходов. Секундомеры не изменяются.",
+				"ko": "타이머와 전환의 남은 시간과 경과 시간을 바꿉니다. 스톱워치는 변경되지 않습니다.",
+				"ar": "تبديل الوقت المتبقي والمنقضي للمؤقتات والانتقالات. لا تتغير ساعات الإيقاف."
+			},
+			"value": false
 		},
 		{
 			"id": "chronograph4ShowMilliseconds",
@@ -2152,6 +2292,41 @@
 			}
 		},
 		{
+			"id": "chronograph5ReverseTime",
+			"type": "checkbox",
+			"title": {
+				"en": "   Reverse time display",
+				"nl": "   Tijdweergave omkeren",
+				"da": "   Vend tidsvisning",
+				"de": "   Zeitanzeige umkehren",
+				"es": "   Invertir visualización del tiempo",
+				"fr": "   Inverser l’affichage du temps",
+				"it": "   Inverti visualizzazione del tempo",
+				"no": "   Snu tidsvisningen",
+				"sv": "   Vänd tidsvisningen",
+				"pl": "   Odwróć wyświetlanie czasu",
+				"ru": "   Обратить отображение времени",
+				"ko": "   시간 표시 반전",
+				"ar": "   عكس عرض الوقت"
+			},
+			"hint": {
+				"en": "For timers and transitions, swap remaining and elapsed time. Stopwatches are unchanged.",
+				"nl": "Wissel resterende en verstreken tijd om voor timers en transities. Stopwatches blijven ongewijzigd.",
+				"da": "Byt resterende og forløbet tid for timere og overgange. Stopure er uændrede.",
+				"de": "Verbleibende und verstrichene Zeit für Timer und Übergänge vertauschen. Stoppuhren bleiben unverändert.",
+				"es": "Intercambia el tiempo restante y transcurrido de temporizadores y transiciones. Los cronómetros no cambian.",
+				"fr": "Échange le temps restant et écoulé des minuteurs et transitions. Les chronomètres restent inchangés.",
+				"it": "Scambia il tempo rimanente e trascorso di timer e transizioni. I cronometri non cambiano.",
+				"no": "Bytt gjenværende og medgått tid for tidtakere og overganger. Stoppeklokker er uendret.",
+				"sv": "Växla återstående och förfluten tid för timers och övergångar. Stoppur påverkas inte.",
+				"pl": "Zamień pozostały i upływający czas minutników i przejść. Stopery pozostają bez zmian.",
+				"ru": "Меняет местами оставшееся и прошедшее время таймеров и переходов. Секундомеры не изменяются.",
+				"ko": "타이머와 전환의 남은 시간과 경과 시간을 바꿉니다. 스톱워치는 변경되지 않습니다.",
+				"ar": "تبديل الوقت المتبقي والمنقضي للمؤقتات والانتقالات. لا تتغير ساعات الإيقاف."
+			},
+			"value": false
+		},
+		{
 			"id": "chronograph5ShowMilliseconds",
 			"type": "checkbox",
 			"title": {
@@ -2492,6 +2667,41 @@
 				"ko": "   아이콘",
 				"ar": "   أيقونة"
 			}
+		},
+		{
+			"id": "chronograph6ReverseTime",
+			"type": "checkbox",
+			"title": {
+				"en": "   Reverse time display",
+				"nl": "   Tijdweergave omkeren",
+				"da": "   Vend tidsvisning",
+				"de": "   Zeitanzeige umkehren",
+				"es": "   Invertir visualización del tiempo",
+				"fr": "   Inverser l’affichage du temps",
+				"it": "   Inverti visualizzazione del tempo",
+				"no": "   Snu tidsvisningen",
+				"sv": "   Vänd tidsvisningen",
+				"pl": "   Odwróć wyświetlanie czasu",
+				"ru": "   Обратить отображение времени",
+				"ko": "   시간 표시 반전",
+				"ar": "   عكس عرض الوقت"
+			},
+			"hint": {
+				"en": "For timers and transitions, swap remaining and elapsed time. Stopwatches are unchanged.",
+				"nl": "Wissel resterende en verstreken tijd om voor timers en transities. Stopwatches blijven ongewijzigd.",
+				"da": "Byt resterende og forløbet tid for timere og overgange. Stopure er uændrede.",
+				"de": "Verbleibende und verstrichene Zeit für Timer und Übergänge vertauschen. Stoppuhren bleiben unverändert.",
+				"es": "Intercambia el tiempo restante y transcurrido de temporizadores y transiciones. Los cronómetros no cambian.",
+				"fr": "Échange le temps restant et écoulé des minuteurs et transitions. Les chronomètres restent inchangés.",
+				"it": "Scambia il tempo rimanente e trascorso di timer e transizioni. I cronometri non cambiano.",
+				"no": "Bytt gjenværende og medgått tid for tidtakere og overganger. Stoppeklokker er uendret.",
+				"sv": "Växla återstående och förfluten tid för timers och övergångar. Stoppur påverkas inte.",
+				"pl": "Zamień pozostały i upływający czas minutników i przejść. Stopery pozostają bez zmian.",
+				"ru": "Меняет местами оставшееся и прошедшее время таймеров и переходов. Секундомеры не изменяются.",
+				"ko": "타이머와 전환의 남은 시간과 경과 시간을 바꿉니다. 스톱워치는 변경되지 않습니다.",
+				"ar": "تبديل الوقت المتبقي والمنقضي للمؤقتات والانتقالات. لا تتغير ساعات الإيقاف."
+			},
+			"value": false
 		},
 		{
 			"id": "chronograph6ShowMilliseconds",
@@ -2836,6 +3046,41 @@
 			}
 		},
 		{
+			"id": "chronograph7ReverseTime",
+			"type": "checkbox",
+			"title": {
+				"en": "   Reverse time display",
+				"nl": "   Tijdweergave omkeren",
+				"da": "   Vend tidsvisning",
+				"de": "   Zeitanzeige umkehren",
+				"es": "   Invertir visualización del tiempo",
+				"fr": "   Inverser l’affichage du temps",
+				"it": "   Inverti visualizzazione del tempo",
+				"no": "   Snu tidsvisningen",
+				"sv": "   Vänd tidsvisningen",
+				"pl": "   Odwróć wyświetlanie czasu",
+				"ru": "   Обратить отображение времени",
+				"ko": "   시간 표시 반전",
+				"ar": "   عكس عرض الوقت"
+			},
+			"hint": {
+				"en": "For timers and transitions, swap remaining and elapsed time. Stopwatches are unchanged.",
+				"nl": "Wissel resterende en verstreken tijd om voor timers en transities. Stopwatches blijven ongewijzigd.",
+				"da": "Byt resterende og forløbet tid for timere og overgange. Stopure er uændrede.",
+				"de": "Verbleibende und verstrichene Zeit für Timer und Übergänge vertauschen. Stoppuhren bleiben unverändert.",
+				"es": "Intercambia el tiempo restante y transcurrido de temporizadores y transiciones. Los cronómetros no cambian.",
+				"fr": "Échange le temps restant et écoulé des minuteurs et transitions. Les chronomètres restent inchangés.",
+				"it": "Scambia il tempo rimanente e trascorso di timer e transizioni. I cronometri non cambiano.",
+				"no": "Bytt gjenværende og medgått tid for tidtakere og overganger. Stoppeklokker er uendret.",
+				"sv": "Växla återstående och förfluten tid för timers och övergångar. Stoppur påverkas inte.",
+				"pl": "Zamień pozostały i upływający czas minutników i przejść. Stopery pozostają bez zmian.",
+				"ru": "Меняет местами оставшееся и прошедшее время таймеров и переходов. Секундомеры не изменяются.",
+				"ko": "타이머와 전환의 남은 시간과 경과 시간을 바꿉니다. 스톱워치는 변경되지 않습니다.",
+				"ar": "تبديل الوقت المتبقي والمنقضي للمؤقتات والانتقالات. لا تتغير ساعات الإيقاف."
+			},
+			"value": false
+		},
+		{
 			"id": "chronograph7ShowMilliseconds",
 			"type": "checkbox",
 			"title": {
@@ -3176,6 +3421,41 @@
 				"ko": "   아이콘",
 				"ar": "   أيقونة"
 			}
+		},
+		{
+			"id": "chronograph8ReverseTime",
+			"type": "checkbox",
+			"title": {
+				"en": "   Reverse time display",
+				"nl": "   Tijdweergave omkeren",
+				"da": "   Vend tidsvisning",
+				"de": "   Zeitanzeige umkehren",
+				"es": "   Invertir visualización del tiempo",
+				"fr": "   Inverser l’affichage du temps",
+				"it": "   Inverti visualizzazione del tempo",
+				"no": "   Snu tidsvisningen",
+				"sv": "   Vänd tidsvisningen",
+				"pl": "   Odwróć wyświetlanie czasu",
+				"ru": "   Обратить отображение времени",
+				"ko": "   시간 표시 반전",
+				"ar": "   عكس عرض الوقت"
+			},
+			"hint": {
+				"en": "For timers and transitions, swap remaining and elapsed time. Stopwatches are unchanged.",
+				"nl": "Wissel resterende en verstreken tijd om voor timers en transities. Stopwatches blijven ongewijzigd.",
+				"da": "Byt resterende og forløbet tid for timere og overgange. Stopure er uændrede.",
+				"de": "Verbleibende und verstrichene Zeit für Timer und Übergänge vertauschen. Stoppuhren bleiben unverändert.",
+				"es": "Intercambia el tiempo restante y transcurrido de temporizadores y transiciones. Los cronómetros no cambian.",
+				"fr": "Échange le temps restant et écoulé des minuteurs et transitions. Les chronomètres restent inchangés.",
+				"it": "Scambia il tempo rimanente e trascorso di timer e transizioni. I cronometri non cambiano.",
+				"no": "Bytt gjenværende og medgått tid for tidtakere og overganger. Stoppeklokker er uendret.",
+				"sv": "Växla återstående och förfluten tid för timers och övergångar. Stoppur påverkas inte.",
+				"pl": "Zamień pozostały i upływający czas minutników i przejść. Stopery pozostają bez zmian.",
+				"ru": "Меняет местами оставшееся и прошедшее время таймеров и переходов. Секундомеры не изменяются.",
+				"ko": "타이머와 전환의 남은 시간과 경과 시간을 바꿉니다. 스톱워치는 변경되지 않습니다.",
+				"ar": "تبديل الوقت المتبقي والمنقضي للمؤقتات والانتقالات. لا تتغير ساعات الإيقاف."
+			},
+			"value": false
 		},
 		{
 			"id": "chronograph8ShowMilliseconds",
@@ -3520,6 +3800,41 @@
 			}
 		},
 		{
+			"id": "chronograph9ReverseTime",
+			"type": "checkbox",
+			"title": {
+				"en": "   Reverse time display",
+				"nl": "   Tijdweergave omkeren",
+				"da": "   Vend tidsvisning",
+				"de": "   Zeitanzeige umkehren",
+				"es": "   Invertir visualización del tiempo",
+				"fr": "   Inverser l’affichage du temps",
+				"it": "   Inverti visualizzazione del tempo",
+				"no": "   Snu tidsvisningen",
+				"sv": "   Vänd tidsvisningen",
+				"pl": "   Odwróć wyświetlanie czasu",
+				"ru": "   Обратить отображение времени",
+				"ko": "   시간 표시 반전",
+				"ar": "   عكس عرض الوقت"
+			},
+			"hint": {
+				"en": "For timers and transitions, swap remaining and elapsed time. Stopwatches are unchanged.",
+				"nl": "Wissel resterende en verstreken tijd om voor timers en transities. Stopwatches blijven ongewijzigd.",
+				"da": "Byt resterende og forløbet tid for timere og overgange. Stopure er uændrede.",
+				"de": "Verbleibende und verstrichene Zeit für Timer und Übergänge vertauschen. Stoppuhren bleiben unverändert.",
+				"es": "Intercambia el tiempo restante y transcurrido de temporizadores y transiciones. Los cronómetros no cambian.",
+				"fr": "Échange le temps restant et écoulé des minuteurs et transitions. Les chronomètres restent inchangés.",
+				"it": "Scambia il tempo rimanente e trascorso di timer e transizioni. I cronometri non cambiano.",
+				"no": "Bytt gjenværende og medgått tid for tidtakere og overganger. Stoppeklokker er uendret.",
+				"sv": "Växla återstående och förfluten tid för timers och övergångar. Stoppur påverkas inte.",
+				"pl": "Zamień pozostały i upływający czas minutników i przejść. Stopery pozostają bez zmian.",
+				"ru": "Меняет местами оставшееся и прошедшее время таймеров и переходов. Секундомеры не изменяются.",
+				"ko": "타이머와 전환의 남은 시간과 경과 시간을 바꿉니다. 스톱워치는 변경되지 않습니다.",
+				"ar": "تبديل الوقت المتبقي والمنقضي للمؤقتات والانتقالات. لا تتغير ساعات الإيقاف."
+			},
+			"value": false
+		},
+		{
 			"id": "chronograph9ShowMilliseconds",
 			"type": "checkbox",
 			"title": {
@@ -3860,6 +4175,41 @@
 				"ko": "   아이콘",
 				"ar": "   أيقونة"
 			}
+		},
+		{
+			"id": "chronograph10ReverseTime",
+			"type": "checkbox",
+			"title": {
+				"en": "   Reverse time display",
+				"nl": "   Tijdweergave omkeren",
+				"da": "   Vend tidsvisning",
+				"de": "   Zeitanzeige umkehren",
+				"es": "   Invertir visualización del tiempo",
+				"fr": "   Inverser l’affichage du temps",
+				"it": "   Inverti visualizzazione del tempo",
+				"no": "   Snu tidsvisningen",
+				"sv": "   Vänd tidsvisningen",
+				"pl": "   Odwróć wyświetlanie czasu",
+				"ru": "   Обратить отображение времени",
+				"ko": "   시간 표시 반전",
+				"ar": "   عكس عرض الوقت"
+			},
+			"hint": {
+				"en": "For timers and transitions, swap remaining and elapsed time. Stopwatches are unchanged.",
+				"nl": "Wissel resterende en verstreken tijd om voor timers en transities. Stopwatches blijven ongewijzigd.",
+				"da": "Byt resterende og forløbet tid for timere og overgange. Stopure er uændrede.",
+				"de": "Verbleibende und verstrichene Zeit für Timer und Übergänge vertauschen. Stoppuhren bleiben unverändert.",
+				"es": "Intercambia el tiempo restante y transcurrido de temporizadores y transiciones. Los cronómetros no cambian.",
+				"fr": "Échange le temps restant et écoulé des minuteurs et transitions. Les chronomètres restent inchangés.",
+				"it": "Scambia il tempo rimanente e trascorso di timer e transizioni. I cronometri non cambiano.",
+				"no": "Bytt gjenværende og medgått tid for tidtakere og overganger. Stoppeklokker er uendret.",
+				"sv": "Växla återstående och förfluten tid för timers och övergångar. Stoppur påverkas inte.",
+				"pl": "Zamień pozostały i upływający czas minutników i przejść. Stopery pozostają bez zmian.",
+				"ru": "Меняет местами оставшееся и прошедшее время таймеров и переходов. Секундомеры не изменяются.",
+				"ko": "타이머와 전환의 남은 시간과 경과 시간을 바꿉니다. 스톱워치는 변경되지 않습니다.",
+				"ar": "تبديل الوقت المتبقي والمنقضي للمؤقتات والانتقالات. لا تتغير ساعات الإيقاف."
+			},
+			"value": false
 		},
 		{
 			"id": "chronograph10ShowMilliseconds",

@@ -337,7 +337,11 @@
     "style_default_icons_hint": "Ikonerna påverkar än så länge bara designerns förhandsvisning, inte widgetar eller mallar.",
     "style_icon_loading": "Laddar ikoner...",
     "style_icon_empty": "Inga matchande ikoner hittades.",
-    "style_duplicate_name": "Anpassade designer och teman måste ha unika namn inom respektive kategori. Skiftläge och omgivande blanksteg ignoreras."
+    "style_duplicate_name": "Anpassade designer och teman måste ha unika namn inom respektive kategori. Skiftläge och omgivande blanksteg ignoreras.",
+    "widget_remaining": "Återstående tid",
+    "widget_elapsed": "Förfluten tid",
+    "style_design_style": "Designstil",
+    "style_theme": "Tema"
   },
   "timer_not_running": "Timern __name__ körs inte.",
   "stopwatch_not_running": "Stoppuret __name__ körs inte.",

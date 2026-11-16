@@ -30,7 +30,10 @@
 					{{ group.placeholders.indexOf(element) !== -1 ? '00:00' : formatDuration(selectedChronograph) }}
 				</p>
 				<p ng-switch-when="remaining" class="chronograph-duration" aria-live="polite">
-					<span class="visually-hidden">{{ labels.remaining }}: </span>{{ group.placeholders.indexOf(element) !== -1 ? '00:00' : formatDuration(selectedChronograph, true) }}
+					<span class="visually-hidden">{{ reverseTime ? labels.remaining : labels.elapsed }}: </span>{{ group.placeholders.indexOf(element) !== -1 ? '00:00' : formatDuration(selectedChronograph, true) }}
+				</p>
+				<p ng-switch-when="total" class="chronograph-duration">
+					<span class="visually-hidden">{{ labels.total }}: </span>{{ group.placeholders.indexOf(element) !== -1 ? '00:00' : formatTotalDuration(selectedChronograph) }}
 				</p>
 				<div ng-switch-when="fields" class="chronograph-fields chronograph-design-fields"
 					ng-style="{ 'grid-template-columns': 'repeat(' + designFieldLayout().columns + ', minmax(0, 1fr))' }">

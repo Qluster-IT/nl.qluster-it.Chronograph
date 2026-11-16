@@ -56,6 +56,43 @@ async function loadWidget(type, settings, defaults, widgetStyles) {
 }
 
 describe('Widget duration defaults', () => {
+	it('counts down timers and transitions by default and swaps both displays when reversed', async () => {
+		for (const type of ['timer', 'transition', 'stopwatch']) {
+			for (const reverseTime of [undefined, false, true]) {
+				const { scope } = await loadWidget(type, { reverseTime, showMilliseconds: true }, {});
+				const chronograph = {
+					type: type[0].toUpperCase() + type.slice(1),
+					duration: 1234, targetDuration: 10000, running: true, updatedAt: 1000
+				};
+				const countdown = type !== 'stopwatch' && !reverseTime;
+				scope.clock = 3000;
+				assert.strictEqual(scope.formatDuration(chronograph), countdown ? '00:00:06.766' : '00:00:03.234');
+				assert.strictEqual(scope.formatDuration(chronograph, true),
+					type !== 'stopwatch' && reverseTime ? '00:00:06.766' : '00:00:03.234');
+				if (type !== 'stopwatch') assert.strictEqual(scope.formatTotalDuration(chronograph), '00:00:10.000');
+				chronograph.running = false;
+				assert.strictEqual(scope.formatDuration(chronograph), countdown ? '00:00:08.766' : '00:00:01.234');
+				assert.strictEqual(scope.formatDuration(chronograph, true),
+					type !== 'stopwatch' && reverseTime ? '00:00:08.766' : '00:00:01.234');
+				if (type !== 'stopwatch') assert.strictEqual(scope.formatTotalDuration(chronograph), '00:00:10.000');
+				chronograph.running = true;
+				scope.clock = 20000;
+				assert.strictEqual(scope.formatDuration(chronograph), countdown ? '00:00:00.000' : '00:00:20.234');
+				assert.strictEqual(scope.formatDuration(chronograph, true),
+					type !== 'stopwatch' && reverseTime ? '00:00:00.000' : '00:00:20.234');
+				if (type !== 'stopwatch') assert.strictEqual(scope.formatTotalDuration(chronograph), '00:00:10.000');
+			}
+		}
+	});
+
+	it('formats total time with the same day and millisecond preferences as duration', async () => {
+		const { scope } = await loadWidget('transition', {}, {});
+		const chronograph = { targetDuration: 90061234 };
+		assert.strictEqual(scope.formatTotalDuration(chronograph), '1settings.days_abbreviation 01:01:01');
+		scope.showMilliseconds = true;
+		assert.strictEqual(scope.formatTotalDuration(chronograph), '1settings.days_abbreviation 01:01:01.234');
+	});
+
 	it('reserves icon space when None is selected, including measurement layers', async () => {
 		const widget = await loadWidget('timer', { icon: { id: 'none' } }, {});
 		assert.strictEqual(widget.scope.iconClass, '');

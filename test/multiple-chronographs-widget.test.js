@@ -80,24 +80,48 @@ async function loadWidget(settings, states) {
 }
 
 describe('Multiple Chronographs widget', () => {
-	it('formats transition elapsed and remaining durations with live updates and clamping', async () => {
+	it('defaults to transition remaining duration with live updates and clamping', async () => {
 		const widget = await loadWidget({ chronograph1: { type: 'transition', name: 'A' } }, {
 			'transition:A': { name: 'A', type: 'Transition', active: true, running: false, duration: 1234, targetDuration: 10000 }
 		});
 		const scope = widget.children[0];
 		const transition = { type: 'Transition', duration: 1234, targetDuration: 10000, running: true, updatedAt: 1000 };
 		scope.clock = 3000;
-		assert.strictEqual(scope.formatDuration(transition), '00:00:03');
-		assert.strictEqual(scope.formatDuration(transition, true), '00:00:06');
+		assert.strictEqual(scope.formatDuration(transition), '00:00:06');
+		assert.strictEqual(scope.formatDuration(transition, true), '00:00:03');
 		scope.showMilliseconds = true;
-		assert.strictEqual(scope.formatDuration(transition, true), '00:00:06.766');
+		assert.strictEqual(scope.formatDuration(transition), '00:00:06.766');
+		assert.strictEqual(scope.formatDuration(transition, true), '00:00:03.234');
 		transition.running = false;
-		assert.strictEqual(scope.formatDuration(transition, true), '00:00:08.766');
+		assert.strictEqual(scope.formatDuration(transition), '00:00:08.766');
 		transition.running = true;
 		scope.clock = 20000;
-		assert.strictEqual(scope.formatDuration(transition, true), '00:00:00.000');
+		assert.strictEqual(scope.formatDuration(transition), '00:00:00.000');
 		assert.strictEqual(scope.formatDuration({ type: 'Timer', duration: 1000, targetDuration: 5000 }), '00:00:04.000');
 		assert.strictEqual(scope.formatDuration({ type: 'Stopwatch', duration: 1000 }), '00:00:01.000');
+	});
+
+	it('reverses time independently per tile without affecting stopwatches', async () => {
+		const settings = {};
+		const states = {};
+		const cases = [['timer', false], ['timer', true], ['transition', false], ['transition', true], ['stopwatch', true]];
+		cases.forEach(([type, reverseTime], index) => {
+			const name = String(index);
+			settings['chronograph' + (index + 1)] = { type, name };
+			settings['chronograph' + (index + 1) + 'ReverseTime'] = reverseTime;
+			states[type + ':' + name] = {
+				name, type: type[0].toUpperCase() + type.slice(1),
+				active: true, running: false, duration: 3000, targetDuration: 10000
+			};
+		});
+		const widget = await loadWidget(settings, states);
+		cases.forEach(([type, reverseTime], index) => {
+			const scope = widget.children[index];
+			assert.strictEqual(scope.formatDuration(scope.selectedChronograph),
+				type !== 'stopwatch' && !reverseTime ? '00:00:07' : '00:00:03');
+			assert.strictEqual(scope.formatDuration(scope.selectedChronograph, true),
+				type !== 'stopwatch' && reverseTime ? '00:00:07' : '00:00:03');
+		});
 	});
 
 	it('uses each renamed theme setting and supports existing legacy selections', async () => {
@@ -215,16 +239,21 @@ describe('Multiple Chronographs widget', () => {
 		if (id !== undefined) assert.strictEqual(id, 'multiple_chronographs');
 		assert.deepStrictEqual(generated, manifest);
 		assert.strictEqual(manifest.transparent, true);
-		assert.strictEqual(manifest.settings.length, 83);
+		assert.strictEqual(manifest.settings.length, 93);
 		assert.deepStrictEqual(manifest.settings[0].values.map(value => value.id), ['1', '2', '3']);
 		assert.deepStrictEqual(manifest.settings.find(setting => setting.id === 'rowSeparator').values.map(value => value.id),
 			['none', 'cards', 'line']);
 		assert.strictEqual(manifest.settings.find(setting => setting.id === 'rowSeparator').value, 'none');
 		for (let slot = 1; slot <= 10; slot++) {
-			for (const suffix of ['', 'ColumnSpan', 'AlternativeName', 'DesignStyle', 'ColorTheme', 'Layout', 'Icon', 'ShowMilliseconds']) {
+			for (const suffix of ['', 'ColumnSpan', 'AlternativeName', 'DesignStyle', 'ColorTheme', 'Layout', 'Icon', 'ShowMilliseconds', 'ReverseTime']) {
 				const setting = manifest.settings.find(item => item.id === 'chronograph' + slot + suffix);
 				assert.ok(setting);
-				assert.ok(!Object.prototype.hasOwnProperty.call(setting, 'value'));
+				if (suffix === 'ReverseTime') {
+					assert.strictEqual(setting.type, 'checkbox');
+					assert.strictEqual(setting.value, false);
+				} else {
+					assert.ok(!Object.prototype.hasOwnProperty.call(setting, 'value'));
+				}
 				if (suffix) {
 					for (const title of Object.values(setting.title)) {
 						assert.match(title, /^\u00a0{3}(?!\d+ · ).+/);

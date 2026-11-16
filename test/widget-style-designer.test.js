@@ -84,8 +84,9 @@ function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns, extr
 }
 
 describe('Widget style designer preview', () => {
-	it('edits and saves transition remaining time independently of duration', () => {
+	it('edits and saves timer and transition elapsed duration independently of duration', () => {
 		const { scope, writes, editor } = loadSettings();
+		assert.strictEqual(scope.styleLabels.remaining, 'settings.widget_elapsed');
 		scope.createStyle(true);
 		assert.ok(scope.unusedElements().includes('remaining'));
 		scope.moveGroupedElement('remaining', 2, 1);
@@ -93,6 +94,8 @@ describe('Widget style designer preview', () => {
 		scope.editor.previewState = 'running';
 		assert.ok(scope.groupedRows(true).some(row => row.groups.some(group => group.elements.includes('remaining'))));
 		scope.editor.previewType = 'timer';
+		assert.ok(scope.groupedRows(true).some(row => row.groups.some(group => group.elements.includes('remaining'))));
+		scope.editor.previewType = 'stopwatch';
 		assert.ok(!scope.groupedRows(true).some(row => row.groups.some(group => group.elements.includes('remaining'))));
 		scope.editor.previewType = 'transition';
 		scope.editor.previewState = 'paused';
@@ -127,12 +130,53 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(editor.isValidCollection(reloaded.widgetStyles), true);
 	});
 
+	it('edits, previews and saves total time independently per size and theme', () => {
+		const { scope, writes, editor } = loadSettings();
+		scope.createStyle(true);
+		assert.strictEqual(scope.styleLabels.total, 'settings.widget_total');
+		assert.ok(scope.unusedElements().includes('total'));
+		scope.moveGroupedElement('total', 2, 1);
+		scope.editor.previewState = 'running';
+		for (const type of ['timer', 'transition', 'stopwatch']) {
+			scope.editor.previewType = type;
+			assert.strictEqual(scope.groupedRows(true).some(row => row.groups.some(group => group.elements.includes('total'))),
+				type !== 'stopwatch');
+		}
+		scope.editor.previewType = 'timer';
+		scope.selectLayoutElement('total');
+		scope.overrideElementSize(25);
+		scope.reserveElementSpace(true);
+		scope.editor.previewState = 'inactive';
+		assert.ok(scope.groupedRows(true).some(row => row.groups.some(group => group.placeholders.includes('total'))));
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
+		scope.saveSettings();
+		const saved = writes[0].value;
+		assert.strictEqual(saved.styles[0].groups.compact.elements.total.row, 0);
+		assert.strictEqual(saved.styles[0].groups.large.elements.total.row, 0);
+		const reloaded = loadSettings(saved).scope;
+		reloaded.editor.selectedStyleId = 'custom:' + saved.styles[0].id;
+		assert.strictEqual(reloaded.getSelectedStyle().groups.normal.elements.total.row, 2);
+		assert.strictEqual(reloaded.elementSize('total'), 25);
+		assert.strictEqual(reloaded.getSelectedStyle().reservedElements.normal.total, true);
+		reloaded.selectEditorMode('color');
+		reloaded.createStyle(true);
+		reloaded.selectLayoutElement('total');
+		reloaded.editor.previewState = 'inactive';
+		reloaded.editor.foregroundValues.total = 'red';
+		reloaded.updateForeground('total');
+		assert.strictEqual(reloaded.getSelectedScheme().foregroundColors.total, 'red');
+		assert.strictEqual(editor.isValidCollection(reloaded.widgetStyles), true);
+	});
+
 	it('opens older designs and local preview snapshots without making them dirty', () => {
 		const initial = loadSettings();
 		initial.scope.createStyle(true);
 		initial.scope.saveSettings();
 		const old = JSON.parse(JSON.stringify(initial.writes[0].value));
-		for (const size of ['compact', 'normal', 'large']) delete old.styles[0].groups[size].elements.remaining;
+		for (const size of ['compact', 'normal', 'large']) {
+			delete old.styles[0].groups[size].elements.remaining;
+			delete old.styles[0].groups[size].elements.total;
+		}
 		old.styles[0].elementSizes = {
 			base: { icon: 16, name: 14, status: 12, duration: 14, play: 28, pause: 28, stop: 28, fields: 32, cancel: 28, start: 32, progress: 6 },
 			overrides: { compact: {}, normal: {}, large: {} }
@@ -142,17 +186,22 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(reopened.scope.isDirty(), false);
 		reopened.scope.editor.selectedStyleId = 'custom:' + old.styles[0].id;
 		assert.ok(reopened.scope.unusedElements().includes('remaining'));
+		assert.ok(reopened.scope.unusedElements().includes('total'));
 
 		const preview = loadSettings(null, null, null, true);
 		preview.scope.getSelectedStyle().name = 'Edited';
 		preview.scope.saveSettings();
 		const snapshot = JSON.parse(JSON.stringify(preview.writes[0].value));
 		for (const style of snapshot.styles) {
-			for (const size of ['compact', 'normal', 'large']) delete style.groups[size].elements.remaining;
+			for (const size of ['compact', 'normal', 'large']) {
+				delete style.groups[size].elements.remaining;
+				delete style.groups[size].elements.total;
+			}
 		}
 		const restored = loadSettings(null, null, null, true, snapshot).scope;
 		assert.strictEqual(restored.isDirty(), false);
 		assert.ok(restored.unusedElements().includes('remaining'));
+		assert.ok(restored.unusedElements().includes('total'));
 	});
 
 	it('uses the widget default icons in previews and chronograph lists', () => {
@@ -971,6 +1020,7 @@ describe('Widget style designer preview', () => {
 		const runtime = require('../assets/js/chronograph-widget-style.js');
 		const initial = loadSettings(null, null, null, true);
 		const designs = ['builtin:current', ...runtime.builtInDesignDefinitions.map(item => item.id)]
+			.filter(id => id !== 'builtin:transitions')
 			.map(id => JSON.parse(JSON.stringify(initial.editor.designFromStyle(id === 'builtin:current'
 				? initial.scope.getSelectedStyle() : initial.scope.builtInDesigns.find(item => item.id === id)))));
 		designs.forEach(design => { delete design.rowCounts; });
@@ -1140,16 +1190,47 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), false);
 	});
 
-	it('places the sticky size selector after the other preview options', () => {
+	it('keeps Size and its preview together in a bounded sticky panel after the preview options', () => {
 		const options = html.indexOf('id="preview-columns"');
 		const tiles = html.indexOf('class="style-preview-tile-controls');
-		const size = html.indexOf('class="style-size-sticky"');
+		const size = html.indexOf('class="style-preview-sticky"');
 		const preview = html.indexOf('class="style-preview-columns"');
 		assert.ok(options !== -1 && options < tiles && tiles < size && size < preview);
 		assert.match(html.slice(size, preview), /id="preview-size"[^>]*ng-model="editor\.previewSize"/);
-		assert.match(css, /\.style-size-sticky\s*\{[^}]*position:\s*sticky;[^}]*top:\s*-18px;/);
+		assert.match(css, /\.style-preview-sticky\s*\{[^}]*position:\s*sticky;[^}]*top:\s*-18px;/);
 		assert.match(html.slice(size, preview), /sticky-border/);
-		assert.match(css, /\.style-size-sticky\.is-stuck::after\s*\{[^}]*border-bottom:/);
+		assert.match(css, /\.style-preview-sticky\.is-stuck::after\s*\{[^}]*border-bottom:/);
+		assert.match(css, /\.style-preview-sticky \.style-preview-rows\s*\{[^}]*max-height:\s*50vh;[^}]*overflow-y:\s*auto;/);
+	});
+
+	it('selects theme elements from the designer without allowing layout changes', () => {
+		const { scope } = loadSettings();
+		scope.selectEditorMode('color');
+		scope.createStyle(true);
+		const design = scope.getSelectedStyle();
+		const before = JSON.stringify(design);
+		const elements = scope.designerRowLayout().rows.flatMap(row => row.groups.flatMap(group => group.elements));
+		assert.ok(elements.includes('name') && elements.includes('duration'));
+		assert.ok(scope.unusedElements().includes('remaining'));
+		scope.toggleLayoutElement('duration');
+		assert.strictEqual(scope.selectedColorKey(), 'duration');
+		scope.editor.foregroundValues.duration = 'red';
+		scope.updateForeground('duration');
+		assert.strictEqual(scope.getSelectedScheme().foregroundOverrides.running.duration, 'red');
+		scope.moveGroupedElement('duration', 1, 1);
+		scope.moveDesignerRow(1, 2);
+		scope.moveDesignerColumn(3, 1, 2);
+		scope.editor.position = { row: 1, group: 1, order: 1 };
+		scope.updateLayoutPosition();
+		assert.strictEqual(JSON.stringify(design), before);
+		scope.toggleLayoutElement('duration');
+		assert.strictEqual(scope.selectedColorKey(), null);
+		scope.toggleLayoutElement('remaining');
+		assert.strictEqual(scope.selectedColorKey(), 'remaining');
+		scope.toggleWidgetBackground();
+		assert.strictEqual(scope.selectedColorKey(), 'background');
+		assert.ok(html.includes('<div ng-if="getSelectedStyle().groups">'));
+		assert.ok(html.includes('ng-if="editor.mode === \'color\' && !getSelectedStyle().groups" class="style-color-elements"'));
 	});
 
 	it('exports and imports individual designs and schemes as new, unsaved copies', () => {
@@ -1371,6 +1452,105 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(scope.widgetStyles.themes.length, 0);
 		assert.strictEqual(scope.editor.selectedSchemeId, 'builtin:current');
 		assert.ok(scope.getSelectedScheme());
+	});
+
+	it('keeps widget and General saves independent, including validation and failures', () => {
+		const { scope, writes, homey } = loadSettings();
+		scope.createStyle(true);
+		scope.roundOfDurationsFlowcards = 3;
+		scope.saveSettings();
+		assert.deepStrictEqual(writes.map(write => write.key), ['widgetStyles']);
+		assert.strictEqual(scope.savedDecimals, 2);
+		assert.strictEqual(scope.isWidgetDirty(), false);
+		assert.strictEqual(scope.isGeneralDirty(), true);
+		scope.getSelectedStyle().name = 'Unsaved design';
+		scope.editor.elementSizeForm = { $invalid: true };
+		scope.saveGeneralSettings();
+		assert.deepStrictEqual(writes.map(write => write.key), ['widgetStyles', 'roundOfDurationsFlowcards']);
+		assert.strictEqual(scope.savedDecimals, 3);
+		assert.strictEqual(scope.isWidgetDirty(), true);
+		assert.strictEqual(scope.isGeneralDirty(), false);
+		const alerts = [];
+		homey.alert = message => alerts.push(message);
+		scope.roundOfDurationsFlowcards = 11;
+		scope.saveGeneralSettings();
+		assert.deepStrictEqual(alerts, ['settings.invalid_decimals']);
+		assert.strictEqual(writes.length, 2);
+		scope.roundOfDurationsFlowcards = 4;
+		homey.set = (key, value, callback) => callback(new Error('Save failed'));
+		scope.saveGeneralSettings();
+		assert.strictEqual(scope.savedDecimals, 3);
+		assert.strictEqual(scope.isGeneralDirty(), true);
+		assert.strictEqual(scope.savingSettings, false);
+		assert.match(alerts[1], /Save failed/);
+	});
+
+	it('confirms tab exits for designs and themes, cancelling or discarding only editor edits', () => {
+		for (const mode of ['design', 'color']) {
+			let confirmed = false;
+			let prompts = 0;
+			const { scope } = loadSettings(null, (message, type, callback) => {
+				prompts++;
+				callback(null, confirmed);
+			}, null, true);
+			scope.selectEditorMode(mode);
+			scope.createStyle(true);
+			scope.saveSettings();
+			const item = scope.getEditingItem();
+			const name = item.name;
+			item.name = 'Edited';
+			scope.roundOfDurationsFlowcards = 5;
+			scope.selectTab('widgets');
+			assert.strictEqual(prompts, 0);
+			scope.selectTab('general');
+			assert.strictEqual(prompts, 1);
+			assert.strictEqual(scope.activeTab, 'widgets');
+			assert.strictEqual(item.name, 'Edited');
+			confirmed = true;
+			scope.selectTab('chronographs');
+			assert.strictEqual(prompts, 2);
+			assert.strictEqual(scope.activeTab, 'chronographs');
+			assert.strictEqual(item.name, name);
+			assert.strictEqual(scope.isWidgetDirty(), false);
+			assert.strictEqual(scope.isGeneralDirty(), true);
+			scope.selectTab('general');
+			assert.strictEqual(prompts, 2);
+		}
+	});
+
+	it('guards template entry but opens external links without discarding editor changes', () => {
+		let confirmed = false;
+		let prompts = 0;
+		const { scope, homey } = loadSettings(null, (message, type, callback) => {
+			prompts++;
+			callback(null, confirmed);
+		}, null, true);
+		const urls = [];
+		homey.openURL = url => urls.push(url);
+		scope.createStyle(true);
+		scope.openWidgetExchange();
+		assert.strictEqual(prompts, 0);
+		assert.strictEqual(urls.length, 1);
+		assert.strictEqual(scope.isWidgetDirty(), true);
+		scope.openTemplates();
+		assert.strictEqual(prompts, 1);
+		assert.strictEqual(scope.templates.open, false);
+		confirmed = true;
+		scope.openTemplates();
+		assert.strictEqual(scope.templates.open, true);
+		assert.strictEqual(scope.widgetStyles.styles.length, 0);
+		scope.selectTab('general');
+		assert.strictEqual(scope.activeTab, 'general');
+		assert.strictEqual(prompts, 2);
+	});
+
+	it('scopes save controls to Widgets and General without history controls on General', () => {
+		const widgetFooter = html.match(/<footer class="settings-savebar"[^>]*>[\s\S]*?<\/footer>/)[0];
+		assert.ok(widgetFooter.includes('ng-show="activeTab === \'widgets\' && !templates.open"'));
+		const generalFooter = html.match(/<footer class="settings-general-savebar"[^>]*>[\s\S]*?<\/footer>/)[0];
+		assert.ok(generalFooter.includes('ng-show="activeTab === \'general\'"'));
+		assert.ok(generalFooter.includes('ng-click="saveGeneralSettings()"'));
+		assert.ok(!generalFooter.includes('undoEdit') && !generalFooter.includes('redoEdit'));
 	});
 
 	it('keeps color-scheme history separate and restores unsaved scheme edits on switching', () => {
@@ -2078,7 +2258,7 @@ describe('Widget style designer preview', () => {
 		}
 		assert.match(html, /style-group-drop=/);
 		assert.match(html, /style-group-element=/);
-		assert.match(html, /<fieldset class="hy-nostyle style-progress-controls" ng-if="editor\.selectedElement === 'progress'">/);
+		assert.match(html, /<fieldset class="hy-nostyle style-progress-controls" ng-if="editor\.mode === 'design' && editor\.selectedElement === 'progress'">/);
 	});
 
 	it('shares the built-in design and scheme with widget rendering', () => {
@@ -2707,6 +2887,17 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(scope.previewColor('cancel'), 'red');
 		assert.strictEqual(scope.previewForeground('cancel'), 'white');
 		assert.strictEqual(scope.isDirty(), true);
+	});
+
+	it('keeps Cancel background rules off its non-button layout wrapper', () => {
+		const rules = Array.from(css.matchAll(/([^{}]+)\{([^{}]*)\}/g))
+			.filter(match => match[1].includes('.style-widget-cancel') && /\bbackground\s*:/.test(match[2]));
+		assert.ok(rules.length > 0);
+		for (const rule of rules) {
+			for (const selector of rule[1].split(',')) {
+				assert.match(selector.trim(), /\.style-widget-action\.style-widget-cancel(?:\[|$)/);
+			}
+		}
 	});
 
 	it('preserves legacy state colors when changing a non-button base color', () => {

@@ -77,7 +77,8 @@ window.registerMultipleChronographsWidget = function (Homey) {
 							? settings[prefix + 'ColorTheme'] : settings[prefix + 'ColorScheme'],
 						layout: layout,
 						icon: settings[prefix + 'Icon'],
-						showMilliseconds: settings[prefix + 'ShowMilliseconds']
+						showMilliseconds: settings[prefix + 'ShowMilliseconds'],
+						reverseTime: settings[prefix + 'ReverseTime']
 					}
 				});
 			}

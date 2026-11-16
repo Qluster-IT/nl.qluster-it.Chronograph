@@ -21,14 +21,18 @@ describe('Widget template transfer', () => {
 		})));
 	});
 
-	it('round trips remaining-time positions, sizes, reservations and theme colors', async () => {
+	it('round trips elapsed and total time positions, sizes, reservations and theme colors', async () => {
 		const design = widgetStyles.currentDesign();
-		design.groups.normal.elements.remaining = { row: 2, group: 1, order: 2 };
-		design.groups.normal.overrides.paused = { remaining: { row: 3, group: 1, order: 1 } };
-		design.elementSizes.overrides.normal.remaining = 24;
-		design.reservedElements.normal.remaining = true;
 		const theme = widgetStyles.currentScheme();
-		theme.foregroundColors = { remaining: 'red' };
+		theme.foregroundColors = {};
+		for (const [index, element] of ['remaining', 'total'].entries()) {
+			design.groups.normal.elements[element] = { row: 2, group: index + 1, order: 2 };
+			design.groups.normal.overrides.paused = Object.assign({}, design.groups.normal.overrides.paused,
+				{ [element]: { row: 3, group: index + 1, order: 1 } });
+			design.elementSizes.overrides.normal[element] = 24 + index;
+			design.reservedElements.normal[element] = true;
+			theme.foregroundColors[element] = index ? 'blue' : 'red';
+		}
 		const decoded = await decodeTemplate(await encodeTemplate({ design, theme }));
 		const expected = JSON.parse(JSON.stringify({ design, theme }));
 		delete expected.design.id;

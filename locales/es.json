@@ -337,7 +337,11 @@
     "style_default_icons_hint": "Estos iconos solo afectan por ahora a la vista previa del diseñador, no a los widgets ni a las plantillas.",
     "style_icon_loading": "Cargando iconos...",
     "style_icon_empty": "No se encontraron iconos coincidentes.",
-    "style_duplicate_name": "Los diseños personalizados y los temas personalizados deben tener nombres únicos dentro de cada grupo. Se ignoran las mayúsculas y los espacios exteriores."
+    "style_duplicate_name": "Los diseños personalizados y los temas personalizados deben tener nombres únicos dentro de cada grupo. Se ignoran las mayúsculas y los espacios exteriores.",
+    "widget_remaining": "Tiempo restante",
+    "widget_elapsed": "Duración transcurrida",
+    "style_design_style": "Estilo de diseño",
+    "style_theme": "Tema"
   },
   "timer_not_running": "El temporizador __name__ no está en marcha.",
   "stopwatch_not_running": "El cronómetro __name__ no está en marcha.",

@@ -5,6 +5,26 @@ const fs = require('fs');
 const path = require('path');
 
 describe('Homey Compose locales', () => {
+	it('keeps French timer and stopwatch terminology distinct in plain and formatted action titles', () => {
+		const actions = require('../app.json').flow.actions;
+		for (const [file, word, otherWord] of [
+			['5_timer_stop.json', 'minuteur', 'chronomètre'],
+			['2_timer_resume.json', 'minuteur', 'chronomètre'],
+			['5_stopwatch_stop.json', 'chronomètre', 'minuteur'],
+			['2_stopwatch_resume.json', 'chronomètre', 'minuteur']
+		]) {
+			const source = require(path.join('..', '.homeycompose', 'flow', 'actions', file));
+			const generated = actions.find(action => action.id === source.id);
+			for (const key of ['title', 'titleFormatted']) {
+				assert.ok(source[key].fr.includes(word), `${file}: ${key}: ${word}`);
+				assert.ok(!source[key].fr.includes(otherWord), `${file}: ${key}: not ${otherWord}`);
+				assert.strictEqual(generated[key].fr, source[key].fr, `${file}: generated ${key}`);
+				const placeholders = text => (text.match(/\[\[[^\]]+\]\]/g) || []).sort();
+				assert.deepStrictEqual(placeholders(source[key].fr), placeholders(source[key].en), `${file}: ${key}: placeholders`);
+			}
+		}
+	});
+
 	it('provides all base and settings translations in the Compose sources', () => {
 		const root = path.join(__dirname, '..');
 		const sourceDir = path.join(root, '.homeycompose', 'locales');

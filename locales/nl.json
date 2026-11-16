@@ -334,7 +334,11 @@
     "style_default_icons_hint": "Deze pictogrammen gelden momenteel alleen voor de Designer-preview; widgets en sjablonen gebruiken ze nog niet.",
     "style_icon_loading": "Pictogrammen laden...",
     "style_icon_empty": "Geen passende pictogrammen gevonden.",
-    "style_duplicate_name": "Aangepaste ontwerpen moeten unieke namen hebben, net als aangepaste thema's. Hoofdletters en spaties aan het begin of einde tellen niet mee."
+    "style_duplicate_name": "Aangepaste ontwerpen moeten unieke namen hebben, net als aangepaste thema's. Hoofdletters en spaties aan het begin of einde tellen niet mee.",
+    "widget_remaining": "Resterende tijd",
+    "widget_elapsed": "Verstreken duur",
+    "style_design_style": "Ontwerpstijl",
+    "style_theme": "Thema"
   },
   "timer_not_running": "Timer __name__ loopt niet.",
   "stopwatch_not_running": "Stopwatch __name__ loopt niet.",

@@ -4,27 +4,58 @@ const assert = require('assert');
 const widgetStyle = require('../assets/js/chronograph-widget-style.js');
 
 describe('Widget style runtime', () => {
-	it('shows optional remaining time only for active transitions and reserves it when requested', () => {
+	it('shows optional elapsed and total time for active timers and transitions and reserves them when requested', () => {
 		for (const preset of ['builtin:current', ...widgetStyle.builtInDesignDefinitions.map(item => item.id)]) {
 			const design = widgetStyle.builtInDesign(preset);
 			for (const size of ['compact', 'normal', 'large']) {
+				if (preset === 'builtin:transitions' && size !== 'compact') continue;
 				assert.strictEqual(design.groups[size].elements.remaining.row, 0);
+				assert.strictEqual(design.groups[size].elements.total.row, 0);
 			}
 		}
-		const design = widgetStyle.currentDesign();
-		design.groups.normal.elements.remaining = { row: 1, group: 1, order: 2 };
-		const group = (state, type) => widgetStyle.buildRows(design, 'normal', state, type, false)
-			.find(row => row.id === 1).groups[0];
-		for (const state of ['running', 'paused']) {
-			assert.ok(group(state, 'transition').elements.includes('remaining'));
-			for (const type of ['timer', 'stopwatch']) assert.ok(!group(state, type).elements.includes('remaining'));
+		for (const element of ['remaining', 'total']) {
+			const design = widgetStyle.currentDesign();
+			design.groups.normal.elements[element] = { row: 1, group: 1, order: 2 };
+			const group = (state, type) => widgetStyle.buildRows(design, 'normal', state, type, false)
+				.find(row => row.id === 1).groups[0];
+			for (const state of ['running', 'paused']) {
+				for (const type of ['timer', 'transition']) assert.ok(group(state, type).elements.includes(element));
+				assert.ok(!group(state, 'stopwatch').elements.includes(element));
+			}
+			for (const state of ['inactive', 'starting']) {
+				for (const type of ['timer', 'transition']) assert.ok(!group(state, type).elements.includes(element));
+			}
+			design.reservedElements.normal[element] = true;
+			assert.ok(group('inactive', 'transition').placeholders.includes(element));
+			assert.ok(group('running', 'stopwatch').placeholders.includes(element));
+			delete design.groups.normal.elements[element];
+			assert.doesNotThrow(() => widgetStyle.buildRows(design, 'normal', 'running', 'transition', false));
 		}
-		for (const state of ['inactive', 'starting']) assert.ok(!group(state, 'transition').elements.includes('remaining'));
-		design.reservedElements.normal.remaining = true;
-		assert.ok(group('inactive', 'transition').placeholders.includes('remaining'));
-		assert.ok(group('running', 'timer').placeholders.includes('remaining'));
-		delete design.groups.normal.elements.remaining;
-		assert.doesNotThrow(() => widgetStyle.buildRows(design, 'normal', 'running', 'transition', false));
+	});
+
+	it('bases Transitions on Default with every element placed in Normal and Large', () => {
+		const design = widgetStyle.builtInDesign('builtin:transitions');
+		const current = widgetStyle.currentDesign();
+		for (const key of Object.keys(current)) {
+			if (current[key].compact) assert.deepStrictEqual(design[key].compact, current[key].compact, key);
+		}
+		for (const size of ['normal', 'large']) {
+			const seen = new Set();
+			for (const state of ['inactive', 'starting', 'running', 'paused']) {
+				const elements = widgetStyle.buildRows(design, size, state, 'transition', state === 'starting')
+					.flatMap(row => row.groups.flatMap(group => group.elements));
+				elements.forEach(element => seen.add(element));
+				if (state === 'running' || state === 'paused') {
+					for (const element of ['duration', 'remaining', 'total', 'progress', 'stop']) {
+						assert.ok(elements.includes(element), `${size} ${state} ${element}`);
+					}
+					assert.ok(!elements.includes('fields') && !elements.includes('cancel') && !elements.includes('start'));
+				}
+			}
+			assert.deepStrictEqual([...seen].sort(), Object.keys(design.groups[size].elements).sort(), size);
+			for (const position of Object.values(design.groups[size].elements)) assert.ok(position.row > 0);
+		}
+		assert.strictEqual(current.groups.normal.elements.total.row, 0);
 	});
 
 	it('renders Settings buttons as outlined squares and preserves inherited defaults', () => {
@@ -62,7 +93,8 @@ describe('Widget style runtime', () => {
 		for (const id of ['builtin:current', ...widgetStyle.builtInDesignDefinitions.map(item => item.id)]) {
 			const design = widgetStyle.builtInDesign(id);
 			const expected = id === 'builtin:settings' ? [3, 4, 4] : id === 'builtin:vertical' ? [4, 4, 4]
-				: id === 'builtin:small' || id === 'builtin:tiny' ? [5, 5, 5] : [3, 5, 5];
+				: id === 'builtin:small' || id === 'builtin:tiny' ? [5, 5, 5]
+					: id === 'builtin:transitions' ? [3, 6, 6] : [3, 5, 5];
 			assert.deepStrictEqual(['compact', 'normal', 'large'].map(size => widgetStyle.rowCount(design, size)), expected);
 		}
 	});

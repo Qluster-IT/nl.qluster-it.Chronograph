@@ -210,11 +210,13 @@ body {
 }
 
 .settings-savebar,
+.settings-general-savebar,
 .settings-template-footer {
 	min-height: 60px;
 }
 
 .settings-savebar .btn,
+.settings-general-savebar .btn,
 .settings-template-footer .btn {
 	font-size: 1.25rem;
 	font-weight: 700;
@@ -229,11 +231,13 @@ body {
 	background: transparent;
 }
 
+.settings-general-savebar,
 .settings-template-footer {
 	flex: 0 0 auto;
 	display: flex;
 }
 
+.settings-general-savebar button,
 .settings-template-footer button {
 	width: 100%;
 }
@@ -490,29 +494,38 @@ body {
 	margin: 0;
 }
 
-.style-size-sticky {
+.style-preview-sticky {
 	position: sticky;
 	top: -18px;
 	z-index: 10;
+	padding-bottom: 12px;
+	background: var(--homey-background-color, var(--homey-color-background, Canvas));
+}
+
+.style-size-selector {
 	display: grid;
 	grid-template-columns: minmax(0, 40%) minmax(0, 1fr);
 	align-items: center;
 	gap: 12px;
 	margin-bottom: 12px;
-	background: var(--homey-background-color, var(--homey-color-background, Canvas));
 }
 
-.style-size-sticky label {
+.style-size-selector label {
 	margin: 0;
 }
 
-.style-size-sticky.is-stuck::after {
+.style-preview-sticky.is-stuck::after {
 	content: '';
 	position: absolute;
 	right: 0;
 	bottom: -1px;
 	left: 0;
 	border-bottom: 1px solid var(--homey-color-mono-400, rgba(128, 128, 128, 0.35));
+}
+
+.style-preview-sticky .style-preview-rows {
+	max-height: 50vh;
+	overflow-y: auto;
 }
 
 .style-preview-rows {
@@ -708,14 +721,16 @@ body {
 }
 
 .style-widget-duration.style-widget-placeholder,
-.style-widget-remaining.style-widget-placeholder {
+.style-widget-remaining.style-widget-placeholder,
+.style-widget-total.style-widget-placeholder {
 	width: 0;
 	max-width: 0;
 	overflow: hidden;
 }
 
 .style-preview-group[data-direction="horizontal"] > .style-widget-duration.style-widget-placeholder,
-.style-preview-group[data-direction="horizontal"] > .style-widget-remaining.style-widget-placeholder {
+.style-preview-group[data-direction="horizontal"] > .style-widget-remaining.style-widget-placeholder,
+.style-preview-group[data-direction="horizontal"] > .style-widget-total.style-widget-placeholder {
 	flex: 0 0 0;
 	margin-inline-end: -8px;
 }
@@ -767,12 +782,12 @@ body {
 .style-widget-fields { flex: 1 1 0; min-width: 0; }
 .style-widget-status { overflow: hidden; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
 .style-widget-status[data-palette="default"] { --style-color: var(--homey-text-color-light, #777982); }
-.style-widget-duration, .style-widget-remaining { font-size: 20px; font-weight: 500; white-space: nowrap; }
-.style-preview-compact .style-widget-duration, .style-preview-compact .style-widget-remaining { font-size: 14px; }
+.style-widget-duration, .style-widget-remaining, .style-widget-total { font-size: 20px; font-weight: 500; white-space: nowrap; }
+.style-preview-compact .style-widget-duration, .style-preview-compact .style-widget-remaining, .style-preview-compact .style-widget-total { font-size: 14px; }
 .style-preview-large .style-preview-chronograph-icon { font-size: 20px; }
 .style-preview-large .style-widget-name { font-size: 20px; }
 .style-preview-large .style-widget-status { font-size: 14px; }
-.style-preview-large .style-widget-duration, .style-preview-large .style-widget-remaining { font-size: 32px; font-weight: 700; }
+.style-preview-large .style-widget-duration, .style-preview-large .style-widget-remaining, .style-preview-large .style-widget-total { font-size: 32px; font-weight: 700; }
 
 .style-widget-action {
 	display: inline-flex;
@@ -793,9 +808,9 @@ body {
 .style-preview-compact .style-widget-action { width: 28px; height: 28px; }
 .style-preview-large .style-widget-action { width: 40px; height: 40px; }
 .style-widget-action.style-widget-start { width: auto; padding: 0 10px; border-radius: 20px; }
-.style-widget-cancel { background: rgba(128, 128, 128, 0.18); color: var(--foreground-color, inherit); }
-.style-widget-element[data-palette]:not([data-palette="default"]) > .style-widget-cancel,
-.style-widget-cancel[data-palette]:not([data-palette="default"]) { background: var(--style-color); }
+.style-widget-action.style-widget-cancel { background: rgba(128, 128, 128, 0.18); color: var(--foreground-color, inherit); }
+.style-widget-element[data-palette]:not([data-palette="default"]) > .style-widget-action.style-widget-cancel,
+.style-widget-action.style-widget-cancel[data-palette]:not([data-palette="default"]) { background: var(--style-color); }
 .style-widget-action:focus-visible,
 .style-showcase-action:focus-visible,
 .style-widget-field:focus-visible {
@@ -833,7 +848,8 @@ body {
 .style-grouped-preview .style-widget-name,
 .style-grouped-preview .style-widget-status,
 .style-grouped-preview .style-widget-duration,
-.style-grouped-preview .style-widget-remaining {
+.style-grouped-preview .style-widget-remaining,
+.style-grouped-preview .style-widget-total {
 	font-size: var(--element-size);
 }
 
@@ -841,7 +857,8 @@ body {
 .style-showcase .style-cell-content.style-widget-name,
 .style-showcase .style-cell-content.style-widget-status,
 .style-showcase .style-cell-content.style-widget-duration,
-.style-showcase .style-cell-content.style-widget-remaining {
+.style-showcase .style-cell-content.style-widget-remaining,
+.style-showcase .style-cell-content.style-widget-total {
 	font-size: var(--element-size);
 }
 
@@ -916,11 +933,13 @@ body {
 
 @container (max-width: 299px) {
 	.style-preview-normal[data-allow-shrink="true"] .style-widget-duration,
-	.style-preview-normal[data-allow-shrink="true"] .style-widget-remaining {
+	.style-preview-normal[data-allow-shrink="true"] .style-widget-remaining,
+	.style-preview-normal[data-allow-shrink="true"] .style-widget-total {
 		font-size: min(var(--element-size), 14px);
 	}
 	.style-preview-large[data-allow-shrink="true"] .style-widget-duration,
-	.style-preview-large[data-allow-shrink="true"] .style-widget-remaining {
+	.style-preview-large[data-allow-shrink="true"] .style-widget-remaining,
+	.style-preview-large[data-allow-shrink="true"] .style-widget-total {
 		font-size: min(var(--element-size), 20px);
 	}
 	.style-preview-large[data-allow-shrink="true"] .style-widget-element .style-widget-action:not(.style-widget-start):not(.style-widget-cancel):not(.style-widget-button-text) {
@@ -959,7 +978,8 @@ body {
 
 @container (max-width: 299px) {
 	.style-preview-large .style-widget-duration,
-	.style-preview-large .style-widget-remaining {
+	.style-preview-large .style-widget-remaining,
+	.style-preview-large .style-widget-total {
 		font-size: 20px;
 	}
 }

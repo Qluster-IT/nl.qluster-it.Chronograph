@@ -337,7 +337,11 @@
     "style_default_icons_hint": "Diese Symbole gelten derzeit nur für die Designer-Vorschau, noch nicht für Widgets oder Vorlagen.",
     "style_icon_loading": "Symbole werden geladen...",
     "style_icon_empty": "Keine passenden Symbole gefunden.",
-    "style_duplicate_name": "Eigene Designs und Themen benötigen jeweils eindeutige Namen. Großschreibung und Leerzeichen am Rand werden ignoriert."
+    "style_duplicate_name": "Eigene Designs und Themen benötigen jeweils eindeutige Namen. Großschreibung und Leerzeichen am Rand werden ignoriert.",
+    "widget_remaining": "Verbleibende Zeit",
+    "widget_elapsed": "Verstrichene Dauer",
+    "style_design_style": "Designstil",
+    "style_theme": "Thema"
   },
   "timer_not_running": "Timer __name__ läuft nicht.",
   "stopwatch_not_running": "Stopuhr __name__ läuft nicht.",

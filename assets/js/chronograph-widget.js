@@ -106,6 +106,7 @@ function onHomeyReady(Homey) {
 			$scope.pauseColor = legacyPauseColor;
 			$scope.stopColor = legacyStopColor;
 			$scope.showMilliseconds = settings.showMilliseconds === true;
+			$scope.reverseTime = !isStopwatch && settings.reverseTime === true;
 
 			function applyColorScheme(scheme) {
 				activeColorScheme = scheme || null;
@@ -142,6 +143,8 @@ function onHomeyReady(Homey) {
 				notRunning: Homey.__('settings.widget_not_running'),
 				duration: Homey.__('settings.widget_duration'),
 				remaining: Homey.__('settings.widget_remaining'),
+				elapsed: Homey.__('settings.widget_elapsed'),
+				total: Homey.__('settings.widget_total'),
 				unit: Homey.__('settings.widget_unit'),
 				from: Homey.__('settings.widget_from'),
 				to: Homey.__('settings.widget_to'),
@@ -449,16 +452,25 @@ function onHomeyReady(Homey) {
 					});
 			}
 
-			$scope.formatDuration = function (chronograph, remaining) {
+			$scope.formatDuration = function (chronograph, elapsedElement) {
 				var elapsed = chronograph.duration;
 
 				if (chronograph.running) {
 					elapsed += Math.max(0, $scope.clock - chronograph.updatedAt);
 				}
-				var duration = chronograph.type === 'Timer' || remaining
+				var showRemaining = (chronograph.type === 'Timer' || chronograph.type === 'Transition')
+					&& (elapsedElement ? $scope.reverseTime : !$scope.reverseTime);
+				var duration = showRemaining
 					? Math.max(0, chronograph.targetDuration - elapsed)
 					: elapsed;
+				return formatDurationValue(duration);
+			};
 
+			$scope.formatTotalDuration = function (chronograph) {
+				return formatDurationValue(chronograph.targetDuration);
+			};
+
+			function formatDurationValue(duration) {
 				var totalSeconds = Math.floor(duration / 1000);
 				var days = Math.floor(totalSeconds / 86400);
 				var hours = Math.floor((totalSeconds % 86400) / 3600);
@@ -472,7 +484,7 @@ function onHomeyReady(Homey) {
 					+ ':' + fractionalSeconds;
 
 				return days ? days + Homey.__('settings.days_abbreviation') + ' ' + result : result;
-			};
+			}
 
 			function updateDurations() {
 				$scope.clock = Date.now();

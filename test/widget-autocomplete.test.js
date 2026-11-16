@@ -88,6 +88,7 @@ describe('Widget chronograph autocomplete', () => {
 			'settings.style_design_vertical': 'Vertical',
 			'settings.style_design_small': 'Small',
 			'settings.style_design_tiny': 'Tiny',
+			'settings.transitions': 'Transitions',
 			'settings.style_builtin_label': 'Built-in',
 			'settings.style_custom_label': 'Custom'
 		};
@@ -120,11 +121,11 @@ describe('Widget chronograph autocomplete', () => {
 			assert.deepStrictEqual(Array.from(await listeners[type + ':colorTheme']('OCE'), item => item.id), ['builtin:ocean', 'ocean-copy']);
 			assert.deepStrictEqual(Array.from(await listeners[type + ':colorTheme']('ocean (built-in)'), item => item.id), ['builtin:ocean']);
 			const designs = await listeners[type + ':designStyle']('');
-			assert.deepStrictEqual(Array.from(designs, item => item.id), ['builtin:current', 'builtin:centered', 'builtin:dashboard', 'builtin:focus', 'builtin:settings', 'builtin:small', 'builtin:tiny', 'builtin:vertical', 'design']);
+			assert.deepStrictEqual(Array.from(designs, item => item.id), ['builtin:current', 'builtin:centered', 'builtin:dashboard', 'builtin:focus', 'builtin:settings', 'builtin:small', 'builtin:tiny', 'builtin:transitions', 'builtin:vertical', 'design']);
 			assert.strictEqual(designs[0].name, 'Default');
 			assert.strictEqual(designs[0].description, 'Built-in');
-			assert.strictEqual(designs[8].name, 'A design');
-			assert.strictEqual(designs[8].description, 'Custom');
+			assert.strictEqual(designs[9].name, 'A design');
+			assert.strictEqual(designs[9].description, 'Custom');
 			assert.deepStrictEqual(Array.from(await listeners[type + ':designStyle']('dash'), item => item.id), ['builtin:dashboard']);
 			names['settings.style_current'] = 'Zzz';
 			assert.strictEqual((await listeners[type + ':designStyle'](''))[0].id, 'builtin:current');
@@ -144,6 +145,7 @@ describe('Widget chronograph autocomplete', () => {
 				'settings.style_design_dashboard': 'Dashboard', 'settings.style_design_focus': 'Focus',
 				'settings.style_design_vertical': 'Vertical',
 				'settings.style_design_small': 'Small', 'settings.style_design_tiny': 'Tiny',
+				'settings.transitions': 'Transitions',
 				'settings.style_builtin_label': 'Built-in', 'settings.style_custom_label': 'Custom'
 			});
 			names['settings.style_current'] = 'Default';

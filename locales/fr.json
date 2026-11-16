@@ -337,7 +337,11 @@
     "style_default_icons_hint": "Ces icônes ne s'appliquent pour l'instant qu'à l'aperçu du concepteur, pas aux widgets ni aux modèles.",
     "style_icon_loading": "Chargement des icônes...",
     "style_icon_empty": "Aucune icône correspondante.",
-    "style_duplicate_name": "Les designs personnalisés et les thèmes personnalisés doivent avoir des noms uniques dans chaque catégorie, sans tenir compte de la casse ni des espaces autour."
+    "style_duplicate_name": "Les designs personnalisés et les thèmes personnalisés doivent avoir des noms uniques dans chaque catégorie, sans tenir compte de la casse ni des espaces autour.",
+    "widget_remaining": "Temps restant",
+    "widget_elapsed": "Durée écoulée",
+    "style_design_style": "Style de design",
+    "style_theme": "Thème"
   },
   "timer_not_running": "Le minuteur __name__ n’est pas en cours d’exécution.",
   "stopwatch_not_running": "Le chronomètre __name__ n’est pas en cours d’exécution.",

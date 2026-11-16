@@ -48,6 +48,28 @@ describe('Widget asset bundles', () => {
 	});
 });
 
+describe('Widget time layout', () => {
+	it('applies the same typography, sizing and responsive rules to all time elements', () => {
+		for (const [name, stylesheet, element] of [
+			['widget', css, 'chronograph-design-element'],
+			['preview', previewCss, 'style-widget']
+		]) {
+			const rules = Array.from(stylesheet.matchAll(/([^{}]+)\{[^{}]*\}/g))
+				.map(match => match[1].split(',').map(selector => selector.trim()))
+				.filter(selectors => selectors.some(selector => selector.includes('.' + element + '-remaining')));
+			assert.ok(rules.length > 0, name);
+			for (const selectors of rules) {
+				for (const selector of selectors.filter(value => value.includes('.' + element + '-remaining'))) {
+					for (const time of ['duration', 'total']) {
+						const expected = selector.replace(element + '-remaining', element + '-' + time);
+						assert.ok(selectors.includes(expected), `${name}: missing ${expected}`);
+					}
+				}
+			}
+		}
+	});
+});
+
 describe('Widget input layout', () => {
 	it('shows a localized focus tooltip above the field and keeps it within the widget', () => {
 		const script = fs.readFileSync(path.join(root, 'assets', 'js', 'chronograph-widget.js'), 'utf8');
@@ -118,7 +140,7 @@ describe('Widget input layout', () => {
 	});
 
 	it('keeps text elements together unless the column is stretched', () => {
-		assert.match(css, /\.chronograph-design-element-name,\s*\.chronograph-design-element-status,\s*\.chronograph-design-element-duration,\s*\.chronograph-design-element-remaining\s*\{[^}]*flex:\s*0 1 auto/s);
+		assert.match(css, /\.chronograph-design-element-name,\s*\.chronograph-design-element-status,\s*\.chronograph-design-element-duration,\s*\.chronograph-design-element-remaining,\s*\.chronograph-design-element-total\s*\{[^}]*flex:\s*0 1 auto/s);
 		assert.match(css, /\.chronograph-design-element-icon\s*\{[^}]*flex:\s*0 0 auto;[^}]*overflow:\s*hidden/s);
 		assert.match(previewCss, /\.style-widget-icon\s*\{[^}]*flex:\s*0 0 auto;[^}]*overflow:\s*hidden/s);
 		assert.match(css, /\.chronograph-design \.chronograph-icon\s*\{[^}]*margin-right:\s*0/s);

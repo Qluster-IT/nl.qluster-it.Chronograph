@@ -61,18 +61,35 @@ and line color as well.
 Button text can be customized per design size. Default text is translated;
 the default appears as a placeholder in the designer. Custom text is shared
 across languages, and empty custom text shows only the icon.
-Icon, duration, remaining time and status bar elements can reserve space when hidden, separately
+Icon, duration, elapsed duration, total time and status bar elements can reserve space when hidden, separately
 for each design size. Built-in designs reserve icon space by default. Icons are
 centered in a square using the configured icon size.
+Duration counts down for timers and transitions. The optional Elapsed duration
+element counts up and retains the internal `remaining` ID for saved designs and
+template compatibility. Reverse time display swaps both values, independently
+for each timer/transition widget or tile in a multiple-chronographs widget.
+Stopwatches always show elapsed time.
+The optional Total time element shows the configured duration for timers and
+transitions, independent of time reversal. It starts in Unused when loading
+older designs. The built-in Transitions design extends Default with every
+element placed in Normal and Large, including an extra elapsed/total time row;
+Compact remains identical to Default. Elements retain their usual state visibility.
 Designs can store separate default icons for timers, stopwatches and transitions;
 for now these affect only the designer preview and are excluded from exports.
 Custom names must be unique within designs and within themes, ignoring case and
 surrounding spaces; built-in names may be reused.
 Layouts can be copied between sizes without replacing other size-specific
 settings. Undo and redo apply to the currently selected design or theme.
-Switching away from an unsaved design or theme prompts to discard its changes;
-the browser may also warn before leaving with unsaved settings.
+Switching away from an unsaved design or theme, including to another tab or
+Templates, prompts to discard its changes. External links open without
+discarding editor changes; the browser may warn before closing or reloading
+with unsaved settings. Widgets and General have separate save controls;
+General saves only general settings and has no undo/redo controls.
 The preview highlights the selected widget, row, column or visible element.
+The Theme editor shares the grouped designer for selecting elements, including
+unused elements, without changing the design layout. Size and the preview stay
+visible together while scrolling in either editor; tall previews scroll within
+the sticky panel.
 Nothing is selected initially; tap or click the selected item again to deselect it.
 Press Ctrl+C in the terminal to stop the server. Set
 `CHRONOGRAPH_PREVIEW_PORT` before starting it to use another port.
@@ -115,7 +132,14 @@ Application image by [Agê Barros](https://unsplash.com/@agebarros?utm_source=un
 
 ### Unreleased
 
-* Add an optional remaining-time element for transitions to widget designs.
+* Apply matching time typography, custom sizing, and narrow-widget behavior to Total time in widgets and Designer previews.
+* Fix Cancel button background colors bleeding onto the surrounding layout in Designer previews.
+* Add a built-in Transitions design with all elements placed in Normal and Large, based on Default.
+* Correct French timer action labels to distinguish timers from stopwatches consistently.
+* Add an optional Total time element for timer and transition widget designs, unused by default.
+
+* Add an optional Elapsed duration element for timers and transitions to widget designs.
+* Show remaining duration by default for transitions, like timers, with a reverse-time option per widget or multiple-widget tile that swaps remaining and elapsed displays.
 * Share saved custom widget designs and themes as compact templates, with a visual import review.
 * Copy a template forum post with three size-and-state preview grids for timers, stopwatches and transitions.
 * Renamed widget color scheme settings to themes; existing dashboard settings require migration.

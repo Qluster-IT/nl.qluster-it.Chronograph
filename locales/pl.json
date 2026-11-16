@@ -337,7 +337,11 @@
     "style_default_icons_hint": "Te ikony dotyczą na razie tylko podglądu projektanta, nie widżetów ani szablonów.",
     "style_icon_loading": "Ładowanie ikon...",
     "style_icon_empty": "Nie znaleziono pasujących ikon.",
-    "style_duplicate_name": "Własne projekty i motywy muszą mieć unikalne nazwy w swoich kategoriach. Wielkość liter i zewnętrzne spacje są ignorowane."
+    "style_duplicate_name": "Własne projekty i motywy muszą mieć unikalne nazwy w swoich kategoriach. Wielkość liter i zewnętrzne spacje są ignorowane.",
+    "widget_remaining": "Pozostały czas",
+    "widget_elapsed": "Czas, który upłynął",
+    "style_design_style": "Styl projektu",
+    "style_theme": "Motyw"
   },
   "timer_not_running": "Timer __name__ nie działa.",
   "stopwatch_not_running": "Stoper __name__ nie działa.",

@@ -337,7 +337,11 @@
     "style_default_icons_hint": "Per ora queste icone riguardano solo l'anteprima del designer, non i widget o i modelli.",
     "style_icon_loading": "Caricamento icone...",
     "style_icon_empty": "Nessuna icona corrispondente.",
-    "style_duplicate_name": "I design e i temi personalizzati devono avere nomi univoci nelle rispettive categorie, ignorando maiuscole e spazi esterni."
+    "style_duplicate_name": "I design e i temi personalizzati devono avere nomi univoci nelle rispettive categorie, ignorando maiuscole e spazi esterni.",
+    "widget_remaining": "Tempo rimanente",
+    "widget_elapsed": "Durata trascorsa",
+    "style_design_style": "Stile di design",
+    "style_theme": "Tema"
   },
   "timer_not_running": "Il timer __name__ non è in esecuzione.",
   "stopwatch_not_running": "Il cronometro __name__ non è in esecuzione.",
