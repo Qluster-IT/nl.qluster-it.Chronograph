@@ -653,7 +653,8 @@ body {
 	--style-background: var(--chronograph-surface);
 	padding: var(--homey-su-4, 16px);
 	border: 0;
-	border-radius: var(--homey-border-radius-default, 16px);
+	/* Emulate dashboard-card corners, not the settings page's radius token. */
+	border-radius: 10px;
 	background: var(--style-background);
 	box-shadow: var(--chronograph-frame-shadow);
 }

@@ -164,7 +164,7 @@
     "style_widget_background": "Fondo del widget",
     "style_widget": "Widget",
     "style_color_inherit": "Heredar",
-    "style_color_status_hint": "Configura los colores predeterminados en el estado inactivo. Los demás estados los heredan salvo que se anulen.",
+    "style_color_status_hint": "El estado \"Detenido\" define los colores base de cada elemento. \"Heredar\" usa el color de ese elemento en \"Detenido\" para los demás estados. \"Predeterminado de la app\" deja el color del elemento en modo automático.",
     "style_background_running": "Fondo activo",
     "style_background_paused": "Fondo en pausa",
     "style_background_inactive": "Fondo inactivo",

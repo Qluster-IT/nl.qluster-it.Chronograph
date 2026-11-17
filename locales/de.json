@@ -164,7 +164,7 @@
     "style_widget_background": "Widget-Hintergrund",
     "style_widget": "Widget",
     "style_color_inherit": "Übernehmen",
-    "style_color_status_hint": "Lege Standardfarben im inaktiven Zustand fest. Andere Zustände übernehmen sie, sofern sie nicht überschrieben werden.",
+    "style_color_status_hint": "Der Zustand \"Läuft nicht\" legt die Grundfarben jedes Elements fest. \"Übernehmen\" verwendet in anderen Zuständen die Farbe dieses Elements aus \"Läuft nicht\". \"App-Standard\" bestimmt die Elementfarbe automatisch.",
     "style_background_running": "Hintergrund bei Aktivität",
     "style_background_paused": "Hintergrund bei Pause",
     "style_background_inactive": "Hintergrund bei Inaktivität",

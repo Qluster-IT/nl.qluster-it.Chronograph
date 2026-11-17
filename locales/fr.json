@@ -164,7 +164,7 @@
     "style_widget_background": "Arrière-plan du widget",
     "style_widget": "Widget",
     "style_color_inherit": "Hériter",
-    "style_color_status_hint": "Définissez les couleurs par défaut dans l'état inactif. Les autres états en héritent sauf si elles sont remplacées.",
+    "style_color_status_hint": "L’état \"À l’arrêt\" définit les couleurs de base de chaque élément. \"Hériter\" reprend la couleur de cet élément dans \"À l’arrêt\" pour les autres états. \"Valeur par défaut de l’application\" laisse la couleur de l’élément automatique.",
     "style_background_running": "Arrière-plan actif",
     "style_background_paused": "Arrière-plan en pause",
     "style_background_inactive": "Arrière-plan inactif",

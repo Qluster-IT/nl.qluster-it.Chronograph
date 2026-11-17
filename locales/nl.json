@@ -187,7 +187,7 @@
     "style_widget_background": "Widgetachtergrond",
     "style_widget": "Widget",
     "style_color_inherit": "Overnemen",
-    "style_color_status_hint": "Stel de standaardkleuren in bij Niet actief. Andere statussen nemen deze over tenzij je ze aanpast.",
+    "style_color_status_hint": "De status \"Niet actief\" bepaalt de basiskleuren van elk element. \"Overnemen\" gebruikt de kleur van dat element bij \"Niet actief\" in andere statussen. \"App-standaard\" laat de kleur van het element automatisch bepalen.",
     "style_background_running": "Achtergrond actief",
     "style_background_paused": "Achtergrond gepauzeerd",
     "style_background_inactive": "Achtergrond inactief",

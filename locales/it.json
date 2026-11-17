@@ -164,7 +164,7 @@
     "style_widget_background": "Sfondo del widget",
     "style_widget": "Widget",
     "style_color_inherit": "Eredita",
-    "style_color_status_hint": "Imposta i colori predefiniti nello stato inattivo. Gli altri stati li ereditano se non vengono sostituiti.",
+    "style_color_status_hint": "Lo stato \"Non in esecuzione\" imposta i colori di base di ogni elemento. \"Eredita\" usa il colore di quell’elemento in \"Non in esecuzione\" negli altri stati. \"Predefinito dell’app\" lascia automatico il colore dell’elemento.",
     "style_background_running": "Sfondo attivo",
     "style_background_paused": "Sfondo in pausa",
     "style_background_inactive": "Sfondo inattivo",

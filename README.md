@@ -112,7 +112,9 @@ requests it, independently per row in separate-card mode. In Themes, selecting
 Widget exposes its border color, including per-state overrides; Default uses
 `--homey-line-color`. The optional outline is drawn inside Homey's native frame,
 whose shadow cannot be restyled through the widget API. Widths and colors survive
-template export/import. Rounded cards use `--homey-border-radius-default`.
+template export/import. App-drawn rounded cards use `--homey-border-radius-default`.
+Single-widget previews emulate the dashboard card's 10px outer corners instead
+of inheriting the settings page's radius; native widget frames are unchanged.
 Designer and template previews draw the optional outline inside the Homey frame,
 preserving its outer padding just like live widgets.
 Widget options also provide independent top/right/bottom/left padding overrides
@@ -130,6 +132,8 @@ theme applies a blue gradient only while running. These settings survive saving
 and TWF export/import; choosing a design does not replace the selected theme.
 App default means the element's normal appearance, not a global theme accent.
 Color overrides consistently show Inherit with the underlying base color.
+The Theme state selector explains that Not running sets each element's base
+color, Inherit reuses it in other states, and App default leaves it automatic.
 Grouped preview buttons use the same block flex layout as live controls, avoiding
 extra text-baseline space around small buttons and their selection outlines.
 Preview Start and Play actions both open hidden timer/transition input rows before

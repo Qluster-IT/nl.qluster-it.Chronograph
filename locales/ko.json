@@ -164,7 +164,7 @@
     "style_widget_background": "위젯 배경",
     "style_widget": "위젯",
     "style_color_inherit": "상속",
-    "style_color_status_hint": "비활성 상태에서 기본 색상을 설정하세요. 다른 상태는 별도로 재정의하지 않으면 이 색상을 상속합니다.",
+    "style_color_status_hint": "\"실행 중이 아님\" 상태에서 각 요소의 기본 색상을 설정합니다. \"상속\"는 다른 상태에서 해당 요소의 \"실행 중이 아님\" 색상을 사용합니다. \"앱 기본값\"는 요소의 색상을 자동으로 지정합니다.",
     "style_background_running": "실행 중 배경",
     "style_background_paused": "일시 정지 배경",
     "style_background_inactive": "비활성 배경",

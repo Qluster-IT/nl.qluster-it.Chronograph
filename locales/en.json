@@ -164,7 +164,7 @@
     "style_widget_background": "Widget background",
     "style_widget": "Widget",
     "style_color_inherit": "Inherit",
-    "style_color_status_hint": "Set default colors in the inactive state. Other states inherit them unless overridden.",
+    "style_color_status_hint": "The \"Not running\" state sets the base colors for each element. \"Inherit\" uses that element's \"Not running\" color in other states. \"App default\" leaves the element's color automatic.",
     "style_background_running": "Running background",
     "style_background_paused": "Paused background",
     "style_background_inactive": "Inactive background",

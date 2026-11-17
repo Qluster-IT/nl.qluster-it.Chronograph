@@ -164,7 +164,7 @@
     "style_widget_background": "Tło widżetu",
     "style_widget": "Widżet",
     "style_color_inherit": "Dziedzicz",
-    "style_color_status_hint": "Ustaw kolory domyślne w stanie nieaktywnym. Inne stany dziedziczą je, o ile nie zostaną nadpisane.",
+    "style_color_status_hint": "Stan \"Nie działa\" określa kolory bazowe każdego elementu. \"Dziedzicz\" używa koloru tego elementu ze stanu \"Nie działa\" w pozostałych stanach. \"Domyślne aplikacji\" pozostawia automatyczny dobór koloru elementu.",
     "style_background_running": "Tło aktywnego stanu",
     "style_background_paused": "Tło wstrzymanego stanu",
     "style_background_inactive": "Tło nieaktywnego stanu",

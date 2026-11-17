@@ -164,7 +164,7 @@
     "style_widget_background": "Widgetbakgrunn",
     "style_widget": "Widget",
     "style_color_inherit": "Arv",
-    "style_color_status_hint": "Angi standardfarger i inaktiv tilstand. Andre tilstander arver dem med mindre de overstyres.",
+    "style_color_status_hint": "Tilstanden \"Kjører ikke\" angir grunnfargene for hvert element. \"Arv\" bruker elementets farge fra \"Kjører ikke\" i andre tilstander. \"Appstandard\" lar elementets farge velges automatisk.",
     "style_background_running": "Bakgrunn når aktiv",
     "style_background_paused": "Bakgrunn ved pause",
     "style_background_inactive": "Bakgrunn når inaktiv",
