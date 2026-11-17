@@ -13,6 +13,7 @@ FUNCIONALIDADES
 * El widget de Chronograph para el panel permite elegir en sus ajustes un temporizador, cronómetro o transición y pausarlo, reanudarlo o detenerlo.
 * Personaliza diseños, temas e iconos predeterminados para widgets individuales y múltiples, con tiempo transcurrido, restante y total para temporizadores y transiciones.
 * Comparte diseños y temas mediante Templates y el Widget Exchange de la comunidad, con vistas previas e imágenes a pantalla completa con zoom con dos dedos.
+* Elige el diseño WidgetKeeper y personaliza los contornos de los widgets, con vistas previas e imágenes de plantillas en modo claro y oscuro.
 * Usa Expresiones Matemáticas dentro de las tarjetas de flujo.
 * Usa HomeyScript para supervisar, pausar, reanudar o detener temporizadores, cronómetros y transiciones activos.
 

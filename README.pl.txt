@@ -13,6 +13,7 @@ FUNKCJE
 * Widżet Chronograph na pulpicie pozwala wybrać w ustawieniach timer, stoper albo przejście, a następnie je wstrzymać, wznowić lub zatrzymać.
 * Dostosuj układy, motywy i domyślne ikony widżetów pojedynczych i wieloelementowych, z czasem, który upłynął, pozostałym i całkowitym dla timerów i przejść.
 * Udostępniaj projekty i motywy przez Templates i społecznościowy Widget Exchange, z podglądem i obrazami pełnoekranowymi z powiększaniem dwoma palcami.
+* Wybierz projekt WidgetKeeper i dostosuj obramowania widżetów, korzystając z podglądów i obrazów szablonów w trybie jasnym i ciemnym.
 * Używaj wyrażeń matematycznych w kartach przepływów.
 * Używaj HomeyScript do monitorowania, wstrzymywania, wznawiania lub zatrzymywania aktywnych timerów, stoperów i przejść.
 

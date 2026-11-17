@@ -6,20 +6,38 @@ const { encodeTemplate, decodeTemplate } = require('../lib/widget-template.js');
 const widgetStyles = require('../assets/js/chronograph-widget-style.js');
 
 describe('Widget template transfer', () => {
+	it('round trips padding, header geometry, gradients and custom colors', async () => {
+		const design = widgetStyles.builtInDesign('builtin:widgetkeeper');
+		design.name = 'Padded header';
+		design.widgetPadding = { large: { top: 0, right: 12, bottom: 4, left: 10 } };
+		design.borderlessFrames = { large: true };
+		const theme = widgetStyles.builtInScheme('builtin:widgetkeeper');
+		theme.name = 'Custom gradient';
+		theme.foregroundColors.name = '#ABCDEF';
+		theme.borderColors = { background: 'black-light' };
+		theme.colorOverrides.running.background = '#123456';
+		assert.deepStrictEqual(JSON.parse(JSON.stringify(await decodeTemplate(await encodeTemplate({ design, theme })))),
+			JSON.parse(JSON.stringify({ design, theme })));
+	});
+
 	it('round trips a design and theme without their local IDs', async () => {
 		const design = {
 			id: 'local-design', name: 'My design', groups: {
 				normal: { elements: { name: { row: 1, group: 2, order: 1 } }, overrides: {} }
-			}, buttonTexts: { normal: { start: 'Start now' } },
+			}, buttonTexts: { normal: { start: 'Start now' } }, borderWidths: { normal: 3 },
 			defaultIcons: { timer: 'far:clock', stopwatch: 'fab:github', transition: 'none' }
 		};
-		const theme = { id: 'local-theme', name: 'My theme', colors: { name: 'blue' } };
+		const theme = { id: 'local-theme', name: 'My theme', colors: { name: 'blue' },
+			borderColors: { background: 'green' }, borderOverrides: { paused: { background: 'red' } } };
 		const text = await encodeTemplate({ design, theme });
 		assert.match(text, /^\[twf:Chronograph:DESIGN,THEME:"[A-Za-z0-9+/]+={0,2}":\/twf\]$/);
 		assert.deepStrictEqual(JSON.parse(JSON.stringify(await decodeTemplate(text))), JSON.parse(JSON.stringify({
 			design: { ...design, id: undefined },
 			theme: { ...theme, id: undefined }
 		})));
+		const decoded = await decodeTemplate(text);
+		assert.strictEqual(widgetStyles.borderStyle(decoded.design, decoded.theme, 'normal', 'paused').border,
+			'3px solid ' + widgetStyles.valueColor('red'));
 	});
 
 	it('round trips elapsed and total time positions, sizes, reservations and theme colors', async () => {

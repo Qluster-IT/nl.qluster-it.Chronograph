@@ -12,6 +12,7 @@
 	<link rel="stylesheet" href="../assets/css/regular.min.css">
 	<link rel="stylesheet" href="../assets/css/brands.min.css">
 	<link rel="stylesheet" href="../assets/css/chronograph-icons.css">
+	<link rel="stylesheet" href="../assets/css/chronograph-surfaces.css">
 	<link rel="stylesheet" href="assets/styles.css">
 </head>
 
@@ -118,7 +119,7 @@
 							<option ng-repeat="style in sortedStyleOptions(widgetStyles.styles) track by style.id" value="custom:{{ style.id }}">{{ style.name }}</option>
 						</optgroup>
 					</select>
-					<select ng-if="editor.mode === 'color'" id="widget-style" class="form-select" ng-model="selectEditingScheme" ng-model-options="{ getterSetter: true }">
+					<select ng-if="editor.mode === 'color'" id="widget-style" class="form-select" ng-model="selectEditingScheme" ng-model-options="{ getterSetter: true }" ng-disabled="editor.colorForm.$invalid">
 						<optgroup label="{{ t('settings.style_builtin_label') }}">
 							<option value="builtin:current">{{ defaultSchemeName() }}</option>
 							<option ng-repeat="scheme in sortedStyleOptions(builtInSchemes) track by scheme.id" value="{{ scheme.id }}">{{ scheme.name }}</option>
@@ -203,11 +204,18 @@
 							<option value="transition">{{ t('settings.transitions') }}</option>
 						</select>
 						<label class="hy-nostyle" for="preview-state">{{ t('settings.style_state') }}</label>
-						<select id="preview-state" class="form-select" ng-model="editor.previewState" ng-change="resetRowPreview(); editor.selectedCell = null; refreshLayoutElement()">
+						<select id="preview-state" class="form-select" ng-model="editor.previewState" ng-disabled="editor.colorForm.$invalid" ng-change="resetRowPreview(); editor.selectedCell = null; refreshLayoutElement()"
+							ng-attr-aria-describedby="{{ editor.mode === 'color' ? 'style-theme-colors-hint' : undefined }}">
 							<option value="inactive">{{ t('settings.widget_not_running') }}</option>
 							<option value="paused">{{ labels.paused }}</option>
 							<option value="running">{{ labels.running }}</option>
 							<option value="starting" ng-if="editor.previewColumns !== 'single' || editor.previewType !== 'stopwatch' || editor.previewState === 'starting'">{{ t('settings.style_starting') }}</option>
+						</select>
+						<p id="style-theme-colors-hint" class="help-text style-progress-full-row" ng-if="editor.mode === 'color'">{{ t('settings.style_color_status_hint') }}</p>
+						<label class="hy-nostyle" for="preview-mode">{{ t('settings.style_preview_mode') }}</label>
+						<select id="preview-mode" class="form-select" ng-model="editor.previewMode">
+							<option value="light">{{ t('settings.style_mode_light') }}</option>
+							<option value="dark">{{ t('settings.style_mode_dark') }}</option>
 						</select>
 						<label class="hy-nostyle" for="preview-columns">{{ t('settings.style_preview_columns') }}</label>
 						<select id="preview-columns" class="form-select" ng-model="editor.previewColumns" aria-describedby="preview-columns-hint">
@@ -241,27 +249,30 @@
 					<div class="style-size-selector">
 						<label class="hy-nostyle" for="preview-size">{{ t('settings.style_size') }}</label>
 						<select id="preview-size" class="form-select" ng-model="editor.previewSize"
-							ng-disabled="editor.rowPaddingForm.$invalid || editor.elementSizeForm.$invalid"
+							ng-disabled="editor.rowPaddingForm.$invalid || editor.elementSizeForm.$invalid || editor.colorForm.$invalid"
 							ng-change="editor.selectedCell = null; editor.previewState = editor.previewState === 'starting' ? 'inactive' : editor.previewState; refreshLayoutElement()">
 							<option value="compact">{{ t('settings.style_compact') }}</option>
 							<option value="normal">{{ t('settings.style_normal') }}</option>
 							<option value="large">{{ t('settings.style_large') }}</option>
 						</select>
 					</div>
-					<div class="style-preview-rows" ng-class="{ 'style-preview-frame-multiple': editor.previewColumns !== 'single' }"
+					<div class="style-preview-rows style-preview-light" ng-class="{ 'style-preview-frame-multiple': editor.previewColumns !== 'single', 'style-preview-dark': editor.previewMode === 'dark', 'style-preview-counter-invert': previewCounterInvert }"
 						ng-attr-data-separator="{{ editor.previewColumns === '1' || editor.previewColumns === '2' ? editor.previewSeparator : 'none' }}"
-						ng-attr-style="--style-preview-separator-color: {{ previewSeparatorColor() }}">
+						ng-attr-style="{{ previewFrameStyle() }}">
 						<div class="style-preview-columns" ng-repeat="previewRow in previewRows() track by $index"
-							ng-style="editor.previewColumns === 'single' ? {} : { 'grid-template-columns': 'repeat(' + editor.previewColumns + ', minmax(0, 1fr))' }">
+							ng-style="previewCardRowStyle()">
 							<div class="style-preview style-preview-height" ng-repeat="previewTile in previewRow track by $index"
 								ng-class="['style-preview-' + editor.previewSize, { 'style-preview-multiple': editor.previewColumns !== 'single', 'style-preview-widget-selected': editor.selectedBackground && (editor.mode === 'design' ? !isDesignReadOnly() : !isSchemeReadOnly()) }]"
 								ng-attr-data-allow-shrink="{{ allowDesignShrink() }}"
+								ng-style="previewTileStyle(previewTileState(null, previewTile.type))"
 								ng-attr-data-background="{{ previewColor('background', false, previewTileState(null, previewTile.type)) }}">
-								<div class="style-preview-layer" ng-class="{ 'style-preview-show-selection': editor.mode === 'design' ? !isDesignReadOnly() : !isSchemeReadOnly() }"
-									ng-include="getSelectedStyle().groups ? 'grouped-preview.html' : 'cell-preview.html'"></div>
-								<div class="style-preview-measure" ng-if="heightMode() !== 'auto'" aria-hidden="true" inert>
-									<div class="style-preview-layer" ng-repeat="previewScenario in measureHeightScenarios() track by previewScenario.id">
-										<div ng-include="getSelectedStyle().groups ? 'grouped-preview.html' : 'cell-preview.html'"></div>
+								<div class="style-preview-outline style-preview-height" ng-style="previewBorderStyle(previewTileState(null, previewTile.type))">
+									<div class="style-preview-layer" ng-class="{ 'style-preview-show-selection': editor.mode === 'design' ? !isDesignReadOnly() : !isSchemeReadOnly() }"
+										ng-include="getSelectedStyle().groups ? 'grouped-preview.html' : 'cell-preview.html'"></div>
+									<div class="style-preview-measure" ng-if="heightMode() !== 'auto'" aria-hidden="true" inert>
+										<div class="style-preview-layer" ng-repeat="previewScenario in measureHeightScenarios() track by previewScenario.id">
+											<div ng-include="getSelectedStyle().groups ? 'grouped-preview.html' : 'cell-preview.html'"></div>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -329,6 +340,21 @@
 									ng-model-options="{ getterSetter: true }" ng-options="value for value in rowCountOptions"
 									ng-disabled="savingSettings || isDesignReadOnly()"></select>
 								<p class="help-text style-progress-full-row">{{ t('settings.style_row_count_hint') }}</p>
+								<label class="hy-nostyle" for="style-widget-border-width">{{ t('settings.style_widget_border_width') }}</label>
+								<select id="style-widget-border-width" class="form-select" ng-model="widgetBorderWidth"
+									ng-model-options="{ getterSetter: true }" ng-options="width for width in widgetBorderWidths"
+									ng-disabled="savingSettings || isDesignReadOnly()">
+									<option value="">{{ t('settings.style_padding_default') }}</option>
+								</select>
+								<p class="help-text style-progress-full-row">{{ t('settings.style_widget_padding_hint') }}</p>
+								<div class="style-padding-control" ng-repeat="padding in widgetPaddingControls track by padding.side">
+									<label class="hy-nostyle" ng-attr-for="style-widget-padding-{{ padding.side }}">{{ t('settings.style_padding_' + padding.side) }}</label>
+									<select class="form-select" ng-attr-id="style-widget-padding-{{ padding.side }}" ng-model="padding.value"
+										ng-model-options="{ getterSetter: true }" ng-options="value for value in pixelOptions"
+										ng-disabled="savingSettings || isDesignReadOnly()">
+										<option value="">{{ t('settings.style_padding_default') }}</option>
+									</select>
+								</div>
 							</div>
 						</fieldset>
 						<fieldset class="hy-nostyle style-column-controls" ng-if="editor.mode === 'design' && editor.selectedColumn">
@@ -364,6 +390,8 @@
 								<option value="span">{{ t('settings.style_width_span') }}</option>
 								<option value="content">{{ t('settings.style_width_content') }}</option>
 							</select>
+							<label class="hy-nostyle" for="style-column-element-gap">{{ t('settings.style_element_gap') }}</label>
+							<select id="style-column-element-gap" class="form-select" ng-model="columnElementGap" ng-model-options="{ getterSetter: true }" ng-options="value for value in pixelOptions"></select>
 							<p ng-if="editor.columnRowSpan > 1" class="help-text">{{ t('settings.style_row_span_fit_hint') }}</p>
 						</fieldset>
 								<fieldset class="hy-nostyle style-row-rules" ng-if="editor.mode === 'design' && editor.rowRule">
@@ -379,6 +407,8 @@
 										<option value="bottom">{{ t('settings.style_align_bottom') }}</option>
 									</select>
 									<p class="help-text">{{ t('settings.style_row_alignment_hint') }}</p>
+									<label class="hy-nostyle" for="style-row-column-gap">{{ t('settings.style_column_gap') }}</label>
+									<select id="style-row-column-gap" class="form-select" ng-model="rowColumnGap" ng-model-options="{ getterSetter: true }" ng-options="value for value in pixelOptions"></select>
 									<div ng-form="editor.rowPaddingForm">
 										<label class="hy-nostyle" for="style-row-top-padding">{{ t('settings.style_row_top_padding') }}</label>
 										<input id="style-row-top-padding" class="hy-nostyle form-control" type="number" min="0" max="100" step="1" required
@@ -429,6 +459,13 @@
 								ng-model="overrideElementSize" ng-model-options="{ getterSetter: true, allowInvalid: true }" ng-disabled="savingSettings">
 							<p class="help-text style-progress-full-row">{{ t('settings.style_size_default').replace('__size__', defaultElementSize()) }}</p>
 							<p class="help-text style-progress-full-row">{{ t('settings.style_size_hint') }}</p>
+							<div class="style-progress-full-row" ng-if="['name', 'status', 'duration', 'remaining', 'total'].indexOf(editor.selectedElement) !== -1">
+								<label class="hy-nostyle" for="style-element-line-height">{{ t('settings.style_line_height') }}</label>
+								<select id="style-element-line-height" class="form-select" ng-model="elementLineHeight"
+									ng-model-options="{ getterSetter: true }" ng-options="value for value in pixelOptions.slice(4)">
+									<option value="">{{ t('settings.style_color_default') }}</option>
+								</select>
+							</div>
 							<label class="hy-nostyle style-progress-full-row" ng-if="editor.selectedElement === 'icon' || editor.selectedElement === 'duration' || editor.selectedElement === 'remaining' || editor.selectedElement === 'total' || editor.selectedElement === 'progress'">
 								<input class="hy-nostyle" type="checkbox" ng-model="reserveElementSpace" ng-model-options="{ getterSetter: true }"
 									ng-disabled="savingSettings || isDesignReadOnly()"> {{ t('settings.style_reserve_hidden_space') }}
@@ -517,6 +554,7 @@
 								<span ng-if="element" class="style-cell-label">{{ styleLabels[element] }}</span>
 								<span ng-if="previewVisible(element)" class="style-cell-content"
 									ng-attr-data-palette="{{ isButtonElement(element) ? previewColor(element, false, previewTileState(previewScenario, previewTile.type)) : 'default' }}"
+									ng-attr-style="{{ previewHexStyle(element, previewTileState(previewScenario, previewTile.type)) }}"
 									ng-attr-data-foreground="{{ previewForeground(element, false, previewTileState(previewScenario, previewTile.type)) }}">
 									<i ng-if="element === 'icon'" class="style-preview-chronograph-icon" ng-class="[previewIconStyle(), previewIcon()]" aria-hidden="true"></i>
 									<strong ng-if="element === 'name'">{{ t('settings.widget_chronograph') }}</strong>
@@ -539,49 +577,55 @@
 							ng-click="toggleLayoutElement(element)" ng-class="{ 'style-cell-selected': !editor.selectedBackground && editor.selectedElement === element }"
 							ng-attr-aria-pressed="{{ !editor.selectedBackground && editor.selectedElement === element }}">{{ styleLabels[element] }}</button>
 					</div>
-					<fieldset ng-if="editor.mode === 'color' && editor.selectedElement === 'progress'" class="hy-nostyle style-progress-controls" ng-disabled="isSchemeReadOnly()">
+					<div ng-if="editor.mode === 'color'" ng-form="editor.colorForm">
+					<fieldset ng-if="editor.selectedElement === 'progress'" class="hy-nostyle style-progress-controls" ng-disabled="isSchemeReadOnly()">
 						<legend>{{ t('settings.style_progress') }}</legend>
 						<div class="style-position-controls">
 						<label class="hy-nostyle" for="progress-background">{{ t('settings.style_background') }}</label>
-						<select id="progress-background" class="form-select" ng-model="progressBackground" ng-model-options="{ getterSetter: true }" ng-options="color.id as color.label for color in elementColorOptions"></select>
+						<style-color-select input-id="progress-background" ng-model="progressBackground" ng-model-options="{ getterSetter: true }" color-options="elementColorOptions"></style-color-select>
 						<label class="hy-nostyle" for="progress-foreground">{{ t('settings.style_progress_foreground') }}</label>
-						<select id="progress-foreground" class="form-select" ng-model="progressForeground" ng-model-options="{ getterSetter: true }" ng-options="color.id as color.label for color in elementColorOptions"></select>
+						<style-color-select input-id="progress-foreground" ng-model="progressForeground" ng-model-options="{ getterSetter: true }" color-options="elementColorOptions"></style-color-select>
 						</div>
 					</fieldset>
 					<div ng-if="editor.mode === 'color' && selectedColorKey()">
 					<div ng-repeat="key in [selectedColorKey()] track by key">
 						<h3>{{ t('settings.style_colors') }}</h3>
-						<p class="help-text">{{ t('settings.style_color_status_hint') }}</p>
 						<fieldset class="hy-nostyle style-colors" ng-disabled="isSchemeReadOnly()">
 						<div class="style-color-row" ng-if="isButtonElement(key)">
 							<label class="hy-nostyle" ng-attr-for="style-color-{{ key }}">{{ t('settings.style_background') }}</label>
-							<select ng-if="editor.previewState === 'inactive'" class="form-select" ng-attr-id="style-color-{{ key }}"
-								ng-model="editor.colorValues[key]" ng-change="updateColorOverride(key)" ng-options="color.id as color.label for color in buttonBackgroundOptions"></select>
-							<select class="form-select" ng-attr-id="style-color-{{ key }}"
+							<style-color-select ng-if="editor.previewState === 'inactive'" input-id="style-color-{{ key }}"
+								ng-model="editor.colorValues[key]" ng-change="updateColorOverride(key)" color-options="buttonBackgroundOptions"></style-color-select>
+							<style-color-select input-id="style-color-{{ key }}"
 								ng-if="editor.previewState !== 'inactive'"
-								ng-model="editor.colorValues[key]" ng-change="updateColorOverride(key)" ng-options="color.id as color.label for color in stateColorOptions(key)"></select>
+								ng-model="editor.colorValues[key]" ng-change="updateColorOverride(key)" color-options="stateColorOptions(key)"></style-color-select>
 						</div>
-						<div class="style-color-row" ng-if="isButtonElement(key)">
+						<div class="style-color-row" ng-if="isButtonElement(key) || key === 'background'">
 							<label class="hy-nostyle" for="style-button-border">{{ t('settings.style_button_border') }}</label>
-							<select id="style-button-border" class="form-select" ng-model="buttonBorder" ng-model-options="{ getterSetter: true }"
-								ng-options="color.id as color.label for color in (editor.previewState === 'inactive' ? baseBorderOptions : stateBorderOptions)"></select>
+							<style-color-select input-id="style-button-border" ng-model="buttonBorder" ng-model-options="{ getterSetter: true }"
+								color-options="editor.previewState === 'inactive' ? baseBorderOptions : stateBorderOptions()"></style-color-select>
 						</div>
 						<div class="style-color-row" ng-if="key !== 'background'">
 							<label class="hy-nostyle" ng-attr-for="style-foreground-{{ key }}">{{ t(isButtonElement(key) ? 'settings.style_foreground' : 'settings.style_color') }}</label>
-							<select ng-if="editor.previewState === 'inactive'" class="form-select" ng-attr-id="style-foreground-{{ key }}"
-								ng-model="editor.foregroundValues[key]" ng-change="updateForeground(key)" ng-options="color.id as color.label for color in (isButtonElement(key) ? foregroundOptions : elementColorOptions)"></select>
-							<select ng-if="editor.previewState !== 'inactive'" class="form-select" ng-attr-id="style-foreground-{{ key }}"
-								ng-model="editor.foregroundValues[key]" ng-change="updateForeground(key)" ng-options="color.id as color.label for color in stateForegroundOptions(key)"></select>
+							<style-color-select ng-if="editor.previewState === 'inactive'" input-id="style-foreground-{{ key }}"
+								ng-model="editor.foregroundValues[key]" ng-change="updateForeground(key)" color-options="isButtonElement(key) ? foregroundOptions : elementColorOptions"></style-color-select>
+							<style-color-select ng-if="editor.previewState !== 'inactive'" input-id="style-foreground-{{ key }}"
+								ng-model="editor.foregroundValues[key]" ng-change="updateForeground(key)" color-options="stateForegroundOptions(key)"></style-color-select>
 						</div>
 						<div class="style-color-row" ng-if="key === 'background'">
 							<label class="hy-nostyle" for="style-background">{{ t('settings.style_background') }}</label>
-							<select ng-if="editor.previewState === 'inactive'" class="form-select" id="style-background"
-								ng-model="editor.colorValues.background" ng-change="updateColorOverride('background')" ng-options="color.id as color.label for color in backgroundOptions"></select>
-							<select class="form-select" id="style-background"
+							<style-color-select ng-if="editor.previewState === 'inactive'" input-id="style-background"
+								ng-model="editor.colorValues.background" ng-change="updateColorOverride('background')" color-options="backgroundOptions"></style-color-select>
+							<style-color-select input-id="style-background"
 								ng-if="editor.previewState !== 'inactive'"
-								ng-model="editor.colorValues.background" ng-change="updateColorOverride('background')" ng-options="color.id as color.label for color in stateColorOptions('background')"></select>
+								ng-model="editor.colorValues.background" ng-change="updateColorOverride('background')" color-options="stateColorOptions('background')"></style-color-select>
+						</div>
+						<div class="style-color-row" ng-if="key === 'background'">
+							<label class="hy-nostyle" for="style-background-gradient">{{ t('settings.style_background_fill') }}</label>
+							<select id="style-background-gradient" class="form-select" ng-model="backgroundGradient" ng-model-options="{ getterSetter: true }"
+								ng-options="option.value as t(option.key) for option in (editor.previewState === 'inactive' ? gradientOptions.slice(1) : gradientOptions)"></select>
 						</div>
 						</fieldset>
+					</div>
 					</div>
 					</div>
 					</div>
@@ -615,9 +659,14 @@
 					<div ng-if="templates.designId || templates.themeId">
 						<h3>{{ t('settings.style_preview') }}</h3>
 						<p class="help-text">{{ t('settings.template_image_hint') }}</p>
-						<div id="template-export-preview" class="style-preview style-preview-height" ng-class="'style-preview-' + editor.previewSize"
-							ng-attr-data-allow-shrink="{{ allowDesignShrink() }}" ng-attr-data-background="{{ previewColor('background', false) }}">
-							<div class="style-preview-layer" ng-include="getSelectedStyle().groups ? 'grouped-preview.html' : 'cell-preview.html'"></div>
+						<div ng-class="{ 'style-preview-counter-invert': previewCounterInvert }">
+							<div id="template-export-preview" class="style-preview style-preview-height style-preview-light" ng-class="'style-preview-' + editor.previewSize + (templates.imageMode === 'dark' ? ' style-preview-dark' : '')"
+								ng-style="templatePaddingStyle()"
+								ng-attr-data-allow-shrink="{{ allowDesignShrink() }}" ng-attr-data-background="{{ previewColor('background', false) }}">
+								<div class="style-preview-outline style-preview-height" ng-style="previewBorderStyle()">
+									<div class="style-preview-layer" ng-include="getSelectedStyle().groups ? 'grouped-preview.html' : 'cell-preview.html'"></div>
+								</div>
+							</div>
 						</div>
 					</div>
 					<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="generateWidgetTemplate()"
@@ -637,7 +686,7 @@
 						<p class="help-text template-export-instruction"><strong>{{ t('settings.template_paste_image_hint') }}</strong> {{ t('settings.template_paste_image_reason') }} <strong>{{ t('settings.template_paste_edit_description') }}</strong>{{ t('settings.template_paste_wait_image') }}</p>
 						<p class="help-text">{{ t('settings.template_editor_switch') }}</p>
 						<img class="template-editor-switch" src="assets/forum-editor-switch.png" ng-attr-alt="{{ t('settings.template_editor_switch') }}">
-						<p class="help-text" role="status" ng-if="templates.busy && templates.imageProgress !== null && templates.imageProgress !== undefined">{{ t('settings.template_rendering') }} {{ templates.imageProgress }}/27</p>
+						<p class="help-text" role="status" ng-if="templates.busy && templates.imageProgress !== null && templates.imageProgress !== undefined">{{ t('settings.template_rendering') }} {{ templates.imageProgress }}/54</p>
 					</div>
 				</section>
 				<section ng-if="templates.section === 'import'">
@@ -685,8 +734,11 @@
 							</select>
 						</div>
 						<div class="style-preview style-preview-height" ng-class="'style-preview-' + editor.previewSize"
+							ng-style="templatePaddingStyle()"
 							ng-attr-data-allow-shrink="{{ allowDesignShrink() }}" ng-attr-data-background="{{ previewColor('background', false) }}">
-							<div class="style-preview-layer" ng-include="getSelectedStyle().groups ? 'grouped-preview.html' : 'cell-preview.html'"></div>
+							<div class="style-preview-outline style-preview-height" ng-style="previewBorderStyle()">
+								<div class="style-preview-layer" ng-include="getSelectedStyle().groups ? 'grouped-preview.html' : 'cell-preview.html'"></div>
+							</div>
 						</div>
 						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="saveWidgetTemplate()"
 							ng-disabled="templates.busy || (!templates.includeDesign && !templates.includeTheme)"><i class="fa-solid fa-floppy-disk" aria-hidden="true"></i> {{ labels.save }}</button>
@@ -801,10 +853,10 @@
 			<div class="style-preview-row" ng-repeat="row in previewRowLayout(previewScenario, previewTile.type).rows track by row.id"
 				ng-class="{ 'style-preview-selected': !previewScenario && !previewRowLayout(previewScenario, previewTile.type).spanning && editor.selectedRow === row.id }"
 				ng-attr-data-row-alignment="{{ row.alignment }}" ng-attr-data-preview-row="{{ row.id }}"
-				ng-style="{ 'grid-template-columns': row.tracks, 'padding-top': row.topPadding + 'px' }">
+				ng-style="{ 'grid-template-columns': row.tracks, 'padding-top': row.topPadding + 'px', 'column-gap': row.columnGap + 'px' }">
 				<div class="style-preview-group" ng-repeat="group in row.groups track by group.id"
 					ng-class="{ 'style-preview-group-wrap': group.wrap, 'style-preview-selected': !previewScenario && editor.selectedColumn && editor.selectedColumn.row === row.id && editor.selectedColumn.group === group.id }"
-					ng-style="previewRowLayout(previewScenario, previewTile.type).spanning ? { 'grid-column': group.gridColumn, 'grid-row': group.gridRow, 'padding-top': group.rowTopPadding + 'px' } : {}"
+					ng-style="previewRowLayout(previewScenario, previewTile.type).spanning ? { 'grid-column': group.gridColumn, 'grid-row': group.gridRow, 'padding-top': group.rowTopPadding + 'px', 'padding-right': group.gridEnd >= 0.999999999 ? '0px' : row.columnGap + 'px', 'gap': group.gap + 'px' } : { 'gap': group.gap + 'px' }"
 					ng-attr-data-row-span="{{ group.rowSpan }}"
 					ng-attr-data-grid-last="{{ group.gridEnd >= 0.999999999 ? 'true' : undefined }}"
 					ng-attr-data-alignment="{{ group.alignment }}"
@@ -814,7 +866,7 @@
 					<span ng-repeat="element in group.renderElements track by element" class="style-widget-element"
 						ng-class="['style-widget-' + element, { 'style-widget-placeholder': group.placeholders.indexOf(element) !== -1, 'style-preview-selected': !previewScenario && editor.selectedElement === element && group.placeholders.indexOf(element) === -1 }]"
 						ng-attr-aria-hidden="{{ group.placeholders.indexOf(element) !== -1 ? 'true' : undefined }}"
-						ng-attr-style="--element-size: {{ elementSize(element) }}px"
+						ng-attr-style="--element-size: {{ elementSize(element) }}px; --element-line-height: {{ previewElementLineHeight(element) }}; {{ previewHexStyle(element, previewTileState(previewScenario, previewTile.type)) }}"
 						ng-attr-data-palette="{{ isButtonElement(element) ? previewColor(element) : 'default' }}"
 						ng-attr-data-foreground="{{ previewForeground(element) }}">
 						<i ng-if="element === 'icon'" class="style-preview-chronograph-icon" ng-class="[previewIconStyle(previewTile.type), previewIcon(previewTile.type)]" aria-hidden="true"></i>
@@ -824,13 +876,13 @@
 						<span ng-if="element === 'remaining'">07:25.44</span>
 						<span ng-if="element === 'total'">20:00.00</span>
 						<span ng-if="element === 'progress'" class="style-progress" ng-attr-data-direction="{{ progressDirection() }}"
-							ng-attr-data-foreground="{{ progressBackground() }}" role="progressbar"
+							ng-attr-data-foreground="{{ progressBackground() }}" ng-style="{ 'background-color': progressCustomColor('background') }" role="progressbar"
 							ng-attr-aria-label="{{ t('settings.style_progress') }}" aria-valuemin="0" aria-valuemax="100"
 							ng-attr-aria-valuenow="{{ progressPercent(previewScenario ? previewScenario.state : editor.previewState, previewTile.type) }}">
 							<span class="style-progress-fill" ng-attr-data-foreground="{{ progressForeground() }}"
 								ng-style="(progressDirection() === 'left-right' || progressDirection() === 'right-left')
-									? { width: progressPercent(previewScenario ? previewScenario.state : editor.previewState, previewTile.type) + '%' }
-									: { height: progressPercent(previewScenario ? previewScenario.state : editor.previewState, previewTile.type) + '%' }"></span>
+									? { width: progressPercent(previewScenario ? previewScenario.state : editor.previewState, previewTile.type) + '%', 'background-color': progressCustomColor('foreground') }
+									: { height: progressPercent(previewScenario ? previewScenario.state : editor.previewState, previewTile.type) + '%', 'background-color': progressCustomColor('foreground') }"></span>
 							<span class="style-progress-marker" ng-if="(previewTile ? previewTile.type : editor.previewType) === 'transition' && progressShowSteps()"
 								ng-repeat="marker in progressMarkers() track by $index"
 								ng-style="(progressDirection() === 'left-right' || progressDirection() === 'right-left') ? { left: marker + '%' } : { top: marker + '%' }"></span>
@@ -861,6 +913,7 @@
 				<span ng-if="!(previewScenario && previewScenario.excludeFields && element === 'fields') && previewVisible(element, previewScenario && previewScenario.state, previewTile.type)" class="style-cell-content"
 					ng-class="['style-widget-' + element, { 'style-preview-selected': !previewScenario && editor.selectedElement === element }]" ng-attr-style="--element-size: {{ elementSize(element) }}px"
 					ng-attr-data-palette="{{ isButtonElement(element) ? previewColor(element, false, previewTileState(previewScenario, previewTile.type)) : 'default' }}"
+					ng-attr-style="{{ previewHexStyle(element, previewTileState(previewScenario, previewTile.type)) }}"
 					ng-attr-data-foreground="{{ previewForeground(element, false, previewTileState(previewScenario, previewTile.type)) }}">
 					<i ng-if="element === 'icon'" ng-class="[previewIconStyle(previewTile.type), previewIcon(previewTile.type)]" aria-hidden="true"></i>
 					<strong ng-if="element === 'name'">{{ (previewTile ? previewTile.type : editor.previewType) === 'stopwatch' ? t('settings.stopwatches') : ((previewTile ? previewTile.type : editor.previewType) === 'timer' ? t('settings.timers') : t('settings.transitions')) }}</strong>

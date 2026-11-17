@@ -40,7 +40,7 @@ describe('Homey Compose locales', () => {
 			it: 'style_design style_widget',
 			no: 'style_status style_element style_design style_normal style_widget style_color_cyan style_color_indigo',
 			sv: 'style_status style_element style_design style_normal style_widget style_color_orange style_color_cyan style_color_indigo',
-			pl: 'style_scheme_ocean style_element',
+			pl: 'style_scheme_ocean style_element style_background_gradient',
 			ru: '',
 			ko: '',
 			ar: ''
@@ -79,7 +79,7 @@ describe('Homey Compose locales', () => {
 				}
 				if (language !== 'en') {
 					for (const [key, text] of Object.entries(referenceSettings)) {
-						if (key.startsWith('style_') && !sharedWords[language].split(' ').includes(key)) {
+						if (key.startsWith('style_') && !['style_design_widgetkeeper', 'style_color_hex'].includes(key) && !sharedWords[language].split(' ').includes(key)) {
 							assert.notStrictEqual(settings[key], text, `${language}: ${key}`);
 						}
 					}

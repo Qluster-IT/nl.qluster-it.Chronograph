@@ -95,6 +95,38 @@ async function loadWidget(settings, states, widgetStyles, hidden = false) {
 }
 
 describe('Multiple Chronographs widget', () => {
+	it('aggregates requested frame padding while keeping separate-card rows independent', async () => {
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		const designs = [runtime.currentDesign(), runtime.currentDesign(), runtime.currentDesign()];
+		designs.forEach((design, index) => { design.id = 'padding-' + index; });
+		designs[0].widgetPadding = { normal: { top: 4, right: 10, bottom: 2, left: 0 } };
+		designs[1].widgetPadding = { normal: { top: 8, right: 0, bottom: 20, left: 9 } };
+		designs[0].borderlessFrames = designs[2].borderlessFrames = { normal: true };
+		designs[1].borderWidths = { normal: 0 };
+		for (const rowSeparator of ['none', 'line', 'cards']) {
+			const settings = { columns: '2', rowSeparator }, states = {};
+			for (let slot = 1; slot <= 3; slot++) {
+				settings['chronograph' + slot] = { type: 'timer', name: String(slot) };
+				settings['chronograph' + slot + 'DesignStyle'] = designs[slot - 1].id;
+				settings['chronograph' + slot + 'Layout'] = 'normal';
+				states['timer:' + slot] = { name: String(slot), type: 'timer', active: false };
+			}
+			const { parent } = await loadWidget(settings, states, { version: 3, styles: designs, themes: [] });
+			assert.strictEqual(parent.framePaddingStyle.paddingTop, 'max(var(--homey-su-4, 16px), 8px)');
+			const first = parent.rowStyle(parent.rows[0]), second = parent.rowStyle(parent.rows[1]);
+			assert.strictEqual(first.paddingTop, rowSeparator === 'cards' ? '8px' : undefined);
+			assert.strictEqual(first.paddingRight, rowSeparator === 'cards' ? '10px' : undefined);
+			assert.strictEqual(first.paddingBottom, rowSeparator === 'cards' ? '20px' : undefined);
+			assert.strictEqual(first.paddingLeft, rowSeparator === 'cards' ? '9px' : undefined);
+			assert.strictEqual(second.paddingTop, undefined);
+			assert.strictEqual(parent.framePaddingStyle.boxShadow, undefined);
+			assert.strictEqual(first.boxShadow, undefined);
+			assert.strictEqual(second.boxShadow, rowSeparator === 'cards' ? 'none' : undefined);
+			parent.entries.forEach(entry => parent.multipleWidget.setPadding(entry, entry.padding, true));
+			assert.strictEqual(parent.framePaddingStyle.boxShadow, 'none');
+		}
+	});
+
 	it('uses per-tile design icon defaults while preserving explicit icon overrides', async () => {
 		const design = require('../assets/js/chronograph-widget-style.js').currentDesign();
 		design.id = 'custom-icons';
@@ -543,14 +575,15 @@ describe('Multiple Chronographs widget', () => {
 		assert.strictEqual(widget.parent.rowSeparatorColor, 'currentColor');
 	});
 
-	it('keeps a rounded outer card while preserving transparent gaps for card separation', () => {
+	it('keeps a rounded, shadowed outer card while preserving transparent gaps for card separation', () => {
 		const html = fs.readFileSync(path.join(root, 'widgets', 'multiple_chronographs', 'public', 'index.html'), 'utf8');
 		const css = fs.readFileSync(path.join(root, 'assets', 'css', 'multiple-chronographs-widget.css'), 'utf8');
 		assert.match(html, /<body[^>]*ng-attr-data-separator="\{\{ rowSeparator \}\}"/);
 		assert.match(css, /body\[data-separator\]\s*\{[^}]*padding:\s*0;[^}]*background-color:\s*transparent/s);
-		assert.match(css, /\.multiple-chronographs\s*\{[^}]*padding:\s*var\(--homey-su-4,\s*16px\);[^}]*border-radius:\s*16px;[^}]*background:\s*var\(--homey-background-color,\s*#fff\)/s);
-		assert.match(css, /body\[data-separator="cards"\] \.multiple-chronographs\s*\{[^}]*padding:\s*0;[^}]*background:\s*transparent/s);
-		assert.match(css, /\[data-separator="cards"\] \.multiple-chronographs-grid[^}]*padding:\s*var\(--homey-su-4,\s*16px\)[^}]*background:\s*var\(--homey-background-color,\s*#fff\)/s);
+		assert.match(css, /body\[data-separator="none"\],\s*body\[data-separator="line"\]\s*\{[^}]*padding:\s*4px 6px 8px;/s);
+		assert.match(css, /\.multiple-chronographs\s*\{[^}]*padding:\s*var\(--homey-su-4,\s*16px\);[^}]*border-radius:\s*var\(--homey-border-radius-default,\s*16px\);[^}]*background:\s*var\(--chronograph-surface\);[^}]*box-shadow:\s*var\(--chronograph-frame-shadow\)/s);
+		assert.match(css, /body\[data-separator="cards"\] \.multiple-chronographs\s*\{[^}]*padding:\s*0;[^}]*background:\s*transparent;[^}]*box-shadow:\s*none/s);
+		assert.match(css, /\[data-separator="cards"\] \.multiple-chronographs-grid[^}]*padding:\s*var\(--homey-su-4,\s*16px\)[^}]*background:\s*var\(--chronograph-surface\)/s);
 	});
 
 	it('uses the selected separator and validates its color', async () => {

@@ -35,6 +35,8 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		var editHistory;
 		var editHistories = {};
 		var confirmingSwitch = false;
+		var darkSchemeQuery = window.chronographSettingsPreview !== true && window.matchMedia
+			? window.matchMedia('(prefers-color-scheme: dark)') : null;
 		var Homey;
 		chronographSettingsScope = $scope;
 
@@ -63,6 +65,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			previewType: 'timer',
 			previewSize: 'normal',
 			previewState: 'running',
+			previewMode: darkSchemeQuery && darkSchemeQuery.matches ? 'dark' : 'light',
 			previewColumns: 'single',
 			previewSeparator: 'none',
 			previewSeparatorColor: 'default',
@@ -79,6 +82,15 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			foregroundValues: {},
 			previewValues: { time: 1, unit: 'seconds', from: null, to: null, steps: null }
 		};
+		function updatePreviewMode() {
+			$scope.previewCounterInvert = window.parent !== window && !!(darkSchemeQuery && darkSchemeQuery.matches);
+			$scope.editor.previewMode = darkSchemeQuery && darkSchemeQuery.matches ? 'dark' : 'light';
+		}
+		updatePreviewMode();
+		function previewSchemeChanged() {
+			$scope.$applyAsync(updatePreviewMode);
+		}
+		if (darkSchemeQuery && darkSchemeQuery.addEventListener) darkSchemeQuery.addEventListener('change', previewSchemeChanged);
 		$scope.rowCountOptions = Array.from({ length: window.ChronographWidgetStyle.maxRows }, function (unused, index) { return index + 1; });
 		$scope.iconPickers = {
 			timer: { query: '', results: [], visibleCount: 60, open: false, busy: false, request: 0 },
@@ -407,6 +419,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			if (mode === $scope.editor.mode) return;
 			if ($scope.editor.rowPaddingForm && $scope.editor.rowPaddingForm.$invalid) { Homey.alert(Homey.__('settings.style_row_padding_invalid')); return; }
 			if ($scope.editor.elementSizeForm && $scope.editor.elementSizeForm.$invalid) { Homey.alert(Homey.__('settings.style_size_invalid')); return; }
+			if ($scope.editor.colorForm && $scope.editor.colorForm.$invalid) { Homey.alert(Homey.__('settings.style_hex_invalid')); return; }
 			if ($scope.editor.invalidRowRule) { Homey.alert(Homey.__('settings.style_row_invalid')); return; }
 			leaveEditingItem(function () {
 				if (!$scope.getSelectedStyle()) $scope.editor.selectedStyleId = 'builtin:current';
@@ -429,6 +442,108 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		};
 
 		var sizeRuntime = window.ChronographWidgetStyle;
+		$scope.pixelOptions = Array.from({ length: 101 }, function (unused, value) { return value; });
+		function editPixels(key, id, value, writing, minimum, fallback) {
+			var design = $scope.getSelectedStyle(), size = $scope.editor.previewSize;
+			if (writing && design && id !== null && id !== undefined && !$scope.savingSettings && !$scope.isDesignReadOnly()) {
+				if (value !== null && (!Number.isInteger(value) || value < minimum || value > 100)) throw new RangeError('Invalid pixel value');
+				if (value === null) {
+					if (design[key] && design[key][size]) {
+						delete design[key][size][id];
+						if (!Object.keys(design[key][size]).length) delete design[key][size];
+						if (!Object.keys(design[key]).length) delete design[key];
+					}
+				} else {
+					if (!design[key]) design[key] = {};
+					if (!design[key][size]) design[key][size] = {};
+					design[key][size][id] = value;
+				}
+			}
+			var values = design && design[key] && design[key][size];
+			return values && values[id] !== undefined ? values[id] : fallback;
+		}
+		$scope.widgetPaddingControls = ['top', 'right', 'bottom', 'left'].map(function (side) {
+			return { side: side, value: function (value) {
+				return editPixels('widgetPadding', side, value, arguments.length, 0, null);
+			} };
+		});
+		$scope.rowColumnGap = function (value) {
+			return editPixels('rowColumnGaps', $scope.editor.selectedRow, value, arguments.length, 0, 8);
+		};
+		$scope.columnElementGap = function (value) {
+			var design = $scope.getSelectedStyle(), column = $scope.editor.selectedColumn;
+			if (!design || !column) return 8;
+			if (arguments.length && !$scope.savingSettings && !$scope.isDesignReadOnly()) {
+				widgetStyleEditor.setColumnElementGap(design, $scope.editor.previewSize, column.row, column.group, value);
+			}
+			return widgetStyleEditor.columnElementGaps(design, $scope.editor.previewSize, column.row)[column.group - 1];
+		};
+		$scope.elementLineHeight = function (value) {
+			return editPixels('elementLineHeights', $scope.editor.selectedElement, value, arguments.length, 4, null);
+		};
+		$scope.previewElementLineHeight = function (element) {
+			return sizeRuntime.elementLineHeight($scope.getSelectedStyle(), $scope.editor.previewSize, element);
+		};
+		$scope.previewPaddingStyle = function (location) {
+			var owner = $scope.editor.previewColumns === 'single' ? 'tile'
+				: $scope.editor.previewSeparator === 'cards' ? 'row' : 'frame';
+			return owner === location ? Object.assign(sizeRuntime.paddingStyle([
+				sizeRuntime.widgetPadding($scope.getSelectedStyle(), $scope.editor.previewSize)
+			]), sizeRuntime.frameStyle(sizeRuntime.borderlessFrame($scope.getSelectedStyle(), $scope.editor.previewSize))) : {};
+		};
+		$scope.templatePaddingStyle = function () {
+			return Object.assign(sizeRuntime.paddingStyle([sizeRuntime.widgetPadding($scope.getSelectedStyle(), $scope.editor.previewSize)]),
+				sizeRuntime.frameStyle(sizeRuntime.borderlessFrame($scope.getSelectedStyle(), $scope.editor.previewSize)),
+				sizeRuntime.backgroundPaint($scope.getSelectedScheme(), $scope.editor.previewState));
+		};
+		$scope.previewTileStyle = function (state) {
+			return Object.assign($scope.previewPaddingStyle('tile'), sizeRuntime.backgroundPaint(
+				$scope.getSelectedScheme(), state || $scope.editor.previewState));
+		};
+		$scope.previewCardRowStyle = function () {
+			return $scope.editor.previewColumns === 'single' ? {} : Object.assign({
+				'grid-template-columns': 'repeat(' + $scope.editor.previewColumns + ', minmax(0, 1fr))'
+			}, $scope.previewPaddingStyle('row'));
+		};
+		$scope.previewHexStyle = function (element, state) {
+			return '--hex-palette: ' + sizeRuntime.valueColor($scope.previewColor(element, false, state))
+				+ '; --hex-foreground: ' + sizeRuntime.valueColor($scope.previewForeground(element, false, state));
+		};
+		$scope.progressCustomColor = function (key) {
+			var value = $scope.progressSetting(key);
+			return sizeRuntime.isHexColor(value) ? value : undefined;
+		};
+		$scope.previewFrameStyle = function () {
+			var padding = $scope.previewPaddingStyle('frame');
+			return '--style-preview-separator-color: ' + $scope.previewSeparatorColor() + '; ' + Object.keys(padding).map(function (key) {
+				return key.replace(/[A-Z]/g, function (letter) { return '-' + letter.toLowerCase(); }) + ': ' + padding[key];
+			}).join('; ');
+		};
+		$scope.widgetBorderWidths = Array.from({ length: 21 }, function (unused, width) { return width; });
+		$scope.widgetBorderWidth = function (width) {
+			var design = $scope.getSelectedStyle(), size = $scope.editor.previewSize;
+			if (arguments.length && design && !$scope.savingSettings && !$scope.isDesignReadOnly()) {
+				if (width !== null && $scope.widgetBorderWidths.indexOf(width) === -1) throw new RangeError('Invalid widget border width');
+				['borderWidths', 'borderlessFrames'].forEach(function (key) {
+					if (!design[key]) return;
+					delete design[key][size];
+					if (!Object.keys(design[key]).length) delete design[key];
+				});
+				if (width !== null) {
+					if (!design.borderWidths) design.borderWidths = {};
+					design.borderWidths[size] = width;
+					if (width === 0) {
+						if (!design.borderlessFrames) design.borderlessFrames = {};
+						design.borderlessFrames[size] = true;
+					}
+				}
+			}
+			return sizeRuntime.borderlessFrame(design, size) ? 0 : sizeRuntime.borderWidth(design, size) || null;
+		};
+		$scope.previewBorderStyle = function (state) {
+			return sizeRuntime.borderStyle($scope.getSelectedStyle(), $scope.getSelectedScheme(),
+				$scope.editor.previewSize, state || $scope.editor.previewState);
+		};
 		var sizeDraft;
 		function layoutRows() {
 			return $scope.rowCountOptions.slice(0, sizeRuntime.rowCount($scope.getSelectedStyle(), $scope.editor.previewSize));
@@ -504,7 +619,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 					var startVisibility = widgetStyleEditor.startFieldsVisibility(style, source);
 					['layouts', 'overrides', 'groups', 'rowCounts', 'rowVisibility', 'rowColumns', 'rowAlignments', 'rowTopPadding',
 						'columnSpans', 'columnRowSpans', 'columnWidths', 'columnAlignments',
-						'columnVerticalAlignments', 'columnDirections'].forEach(function (key) {
+						'columnVerticalAlignments', 'columnDirections', 'rowColumnGaps', 'columnElementGaps'].forEach(function (key) {
 						if (style[key] && style[key][source] !== undefined) {
 							style[key][destination] = angular.copy(style[key][source]);
 						} else if (style[key]) {
@@ -564,6 +679,8 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			var scheme = $scope.getSelectedScheme();
 			var colorStyle = sizeRuntime.elementStyle(scheme, state || $scope.editor.previewState, element);
 			if (colorStyle.border) style.border = colorStyle.border;
+			if (sizeRuntime.isHexColor(sizeRuntime.resolveColor(scheme, state || $scope.editor.previewState, element))) style.backgroundColor = colorStyle.backgroundColor;
+			if (sizeRuntime.isHexColor(sizeRuntime.resolveForeground(scheme, state || $scope.editor.previewState, element))) style.color = colorStyle.color;
 			if (sizeRuntime.resolveColor(scheme, state || $scope.editor.previewState, element) === 'none') style.backgroundColor = 'transparent';
 			return style;
 		};
@@ -736,6 +853,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			if (!style || $scope.savingSettings || $scope.isSchemeReadOnly()) return;
 			var state = $scope.editor.previewState;
 			var value = $scope.editor.colorValues[key];
+			if (key === 'background') style.colorModel = 2;
 			if (state === 'inactive') {
 				style.colors[key === 'background' ? 'inactive' : key] = value;
 				return;
@@ -750,6 +868,25 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				if (!Object.keys(style.colorOverrides).length) delete style.colorOverrides;
 			}
 		};
+		$scope.gradientOptions = [
+			{ value: null, key: 'settings.style_color_inherit' },
+			{ value: false, key: 'settings.style_background_solid' },
+			{ value: true, key: 'settings.style_background_gradient' }
+		];
+		$scope.backgroundGradient = function (value) {
+			var scheme = $scope.getSelectedScheme(), state = $scope.editor.previewState;
+			if (arguments.length && scheme && !$scope.savingSettings && !$scope.isSchemeReadOnly()) {
+				if (value !== null && typeof value !== 'boolean') throw new RangeError('Invalid background gradient');
+				if (value === null) {
+					if (scheme.backgroundGradients) delete scheme.backgroundGradients[state];
+				} else {
+					if (!scheme.backgroundGradients) scheme.backgroundGradients = {};
+					scheme.backgroundGradients[state] = value;
+				}
+			}
+			var values = scheme && scheme.backgroundGradients || {};
+			return values[state] === undefined ? state === 'inactive' ? false : null : values[state];
+		};
 
 		$scope.stateColorOptions = function (key) {
 			var inherited = $scope.previewColor(key, true);
@@ -758,7 +895,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			if (cached && cached.inherited === inherited && cached.options === options) return cached.values;
 			var values = [{
 				id: 'inherit',
-				label: Homey.__('settings.style_color_inherit') + ' (' + Homey.__('settings.style_color_' + inherited) + ')'
+				label: Homey.__('settings.style_color_inherit') + ' (' + (sizeRuntime.isHexColor(inherited) ? inherited : Homey.__('settings.style_color_' + inherited)) + ')'
 			}].concat(options);
 			colorOptionsCache[key] = { inherited: inherited, options: options, values: values };
 			return values;
@@ -769,13 +906,13 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			return style ? widgetStyleEditor.resolveForeground(style, state || $scope.editor.previewState, key, inheritedOnly) : 'default';
 		};
 		$scope.buttonBorder = function (value) {
-			var scheme = $scope.getSelectedScheme(), key = $scope.editor.selectedElement, state = $scope.editor.previewState;
-			if (!scheme || !$scope.isButtonElement(key)) return 'none';
-			var base = scheme.borderColors && scheme.borderColors[key] || (key === 'cancel' ? 'default' : 'none');
+			var scheme = $scope.getSelectedScheme(), key = $scope.selectedColorKey(), state = $scope.editor.previewState;
+			if (!scheme || !($scope.isButtonElement(key) || key === 'background')) return 'none';
+			var base = scheme.borderColors && scheme.borderColors[key] || (key === 'cancel' || key === 'background' ? 'default' : 'none');
 			var overrides = scheme.borderOverrides && scheme.borderOverrides[state];
 			if (arguments.length && !$scope.savingSettings && !$scope.isSchemeReadOnly()
 				&& (value === 'inherit' && state !== 'inactive' || value === 'default' && state === 'inactive'
-					|| $scope.borderOptions.some(function (item) { return item.id === value; }))) {
+					|| sizeRuntime.isHexColor(value) || $scope.borderOptions.some(function (item) { return item.id === value; }))) {
 				if (state === 'inactive') {
 					if (value === 'default') {
 						if (scheme.borderColors) delete scheme.borderColors[key];
@@ -791,9 +928,20 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 					scheme.borderOverrides[state][key] = value;
 				}
 				overrides = scheme.borderOverrides && scheme.borderOverrides[state];
-				base = scheme.borderColors && scheme.borderColors[key] || (key === 'cancel' ? 'default' : 'none');
+				base = scheme.borderColors && scheme.borderColors[key] || (key === 'cancel' || key === 'background' ? 'default' : 'none');
 			}
 			return state === 'inactive' ? base : overrides && overrides[key] || 'inherit';
+		};
+		$scope.stateBorderOptions = function () {
+			var scheme = $scope.getSelectedScheme(), key = $scope.selectedColorKey();
+			var inherited = scheme && scheme.borderColors && scheme.borderColors[key]
+				|| (key === 'cancel' || key === 'background' ? 'default' : 'none');
+			var cacheKey = 'border:' + key, cached = colorOptionsCache[cacheKey];
+			if (cached && cached.inherited === inherited && cached.options === $scope.borderOptions) return cached.values;
+			var label = sizeRuntime.isHexColor(inherited) ? inherited : Homey.__('settings.style_color_' + inherited);
+			var values = [{ id: 'inherit', label: Homey.__('settings.style_color_inherit') + ' (' + label + ')' }].concat($scope.borderOptions);
+			colorOptionsCache[cacheKey] = { inherited: inherited, options: $scope.borderOptions, values: values };
+			return values;
 		};
 
 		$scope.updateForeground = function (key) {
@@ -839,9 +987,9 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			if (cached && cached.inherited === inherited && cached.options === options) return cached.values;
 			var values = [{
 				id: 'inherit',
-				label: Homey.__('settings.style_color_inherit') + ' (' + Homey.__(inherited === 'default'
+				label: Homey.__('settings.style_color_inherit') + ' (' + (sizeRuntime.isHexColor(inherited) ? inherited : Homey.__(inherited === 'default'
 					? ($scope.isButtonElement(key) ? 'settings.style_foreground_automatic' : 'settings.style_color_default')
-					: 'settings.style_color_' + inherited) + ')'
+					: 'settings.style_color_' + inherited)) + ')'
 			}].concat(options);
 			colorOptionsCache[cacheKey] = { inherited: inherited, options: options, values: values };
 			return values;
@@ -1175,6 +1323,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 					+ ';src:url(data:font/woff2;base64,' + btoa(binary) + ')}';
 			}))).join('\n');
 			var original = {
+				mode: template.imageMode,
 				size: $scope.editor.previewSize,
 				type: $scope.editor.previewType,
 				state: $scope.editor.previewState,
@@ -1190,46 +1339,55 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			try {
 				preview.style.width = '350px';
 				preview.style.boxSizing = 'border-box';
-				for (var type of types) {
-					var rows = [];
-					for (var state of states) {
-						var row = [];
-						for (var size of sizes) {
-							await new Promise(function (resolve) {
-								$scope.$applyAsync(function () {
-									$scope.editor.previewSize = size;
-									$scope.editor.previewType = type;
-									$scope.editor.previewState = state;
-									window.setTimeout(resolve, 20);
-								});
-							});
-							var numberFields = Array.from(preview.querySelectorAll('input[type="number"]'));
-							try {
-								// Native number spinners can appear in the rendered image even when not visible in the preview.
-								numberFields.forEach(function (field) { field.type = 'text'; });
-								row.push(await new Promise(function (resolve, reject) {
-									var timer = window.setTimeout(function () { reject(new Error('Preview image timed out')); }, 15000);
-									window.htmlToImage.toCanvas(preview, { fontEmbedCSS: fontCSS, skipFonts: !fontCSS, pixelRatio: 1 }).then(function (image) {
-										window.clearTimeout(timer);
-										resolve(image);
-									}, function (error) {
-										window.clearTimeout(timer);
-										reject(error);
+				for (var mode of ['light', 'dark']) {
+					for (var type of types) {
+						var rows = [];
+						for (var state of states) {
+							var row = [];
+							for (var size of sizes) {
+								await new Promise(function (resolve) {
+									$scope.$applyAsync(function () {
+										template.imageMode = mode;
+										$scope.editor.previewSize = size;
+										$scope.editor.previewType = type;
+										$scope.editor.previewState = state;
+										window.setTimeout(resolve, 20);
 									});
-								}));
-							} finally {
-								numberFields.forEach(function (field) { field.type = 'number'; });
+								});
+								var numberFields = Array.from(preview.querySelectorAll('input[type="number"]'));
+								try {
+									// Native number spinners can appear in the rendered image even when not visible in the preview.
+									numberFields.forEach(function (field) { field.type = 'text'; });
+									row.push(await new Promise(function (resolve, reject) {
+										var timer = window.setTimeout(function () { reject(new Error('Preview image timed out')); }, 15000);
+										window.htmlToImage.toCanvas(preview, { fontEmbedCSS: fontCSS, skipFonts: !fontCSS, pixelRatio: 1 }).then(function (image) {
+											window.clearTimeout(timer);
+											resolve(image);
+										}, function (error) {
+											window.clearTimeout(timer);
+											reject(error);
+										});
+									}));
+								} finally {
+									numberFields.forEach(function (field) { field.type = 'number'; });
+								}
+								$scope.$applyAsync(function () { template.imageProgress++; });
 							}
-							$scope.$applyAsync(function () { template.imageProgress++; });
+							rows.push(row);
 						}
-						rows.push(row);
+						var imageStyle = window.getComputedStyle(preview);
+						images.push({
+							type: type, rows: rows,
+							background: imageStyle.getPropertyValue('--homey-background-color').trim(),
+							textColor: imageStyle.getPropertyValue('--homey-text-color').trim()
+						});
 					}
-					images.push({ type: type, rows: rows });
 				}
 			} finally {
 				preview.style.width = original.width;
 				preview.style.boxSizing = original.boxSizing;
 				$scope.$applyAsync(function () {
+					template.imageMode = original.mode;
 					$scope.editor.previewSize = original.size;
 					$scope.editor.previewType = original.type;
 					$scope.editor.previewState = original.state;
@@ -1244,25 +1402,15 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 					return Math.max.apply(null, row.map(function (image) { return image.height; }));
 				});
 			});
-			var bodyStyle = window.getComputedStyle(document.body);
-			var background = bodyStyle.backgroundColor;
-			if (!background || background === 'rgba(0, 0, 0, 0)' || background === 'transparent') {
-				background = window.getComputedStyle(document.documentElement).backgroundColor;
-			}
-			if (!background || background === 'rgba(0, 0, 0, 0)' || background === 'transparent') {
-				var rgb = bodyStyle.color.match(/\d+/g) || [];
-				background = rgb.length >= 3 && (Number(rgb[0]) * 299 + Number(rgb[1]) * 587 + Number(rgb[2]) * 114) / 1000 > 160
-					? '#1a1a1a' : '#ffffff';
-			}
 			return images.map(function (panel) {
 				var canvas = document.createElement('canvas');
 				canvas.width = padding * 2 + rowLabelWidth + cellWidth * 3 + gap * 2;
 				canvas.height = padding * 2 + headingHeight + columnHeight
 					+ panel.rowHeights.reduce(function (sum, value) { return sum + value + gap; }, 0);
 				var context = canvas.getContext('2d');
-				context.fillStyle = background;
+				context.fillStyle = panel.background;
 				context.fillRect(0, 0, canvas.width, canvas.height);
-				context.fillStyle = bodyStyle.color;
+				context.fillStyle = panel.textColor;
 				context.textBaseline = 'middle';
 				var y = padding;
 				context.font = '600 20px sans-serif';
@@ -1557,6 +1705,10 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		};
 
 		function canChangeSelection() {
+			if ($scope.editor.colorForm && $scope.editor.colorForm.$invalid) {
+				Homey.alert(Homey.__('settings.style_hex_invalid'));
+				return false;
+			}
 			if ($scope.editor.rowPaddingForm && $scope.editor.rowPaddingForm.$invalid) {
 				Homey.alert(Homey.__('settings.style_row_padding_invalid'));
 				return false;
@@ -1827,7 +1979,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				style.id, style.groups[$scope.editor.previewSize], $scope.editor.previewSize,
 				state, type, showStateOverrides,
 				style.rowCounts, style.rowVisibility, style.rowColumns, style.rowAlignments, style.rowTopPadding, style.columnSpans, style.columnRowSpans, style.columnAlignments, style.columnVerticalAlignments, style.columnDirections, style.columnWidths, style.reservedElements,
-				style.defaultIcons, $scope.previewIcon(type), $scope.getStartFieldsVisibility()
+				style.defaultIcons, style.rowColumnGaps, style.columnElementGaps, $scope.previewIcon(type), $scope.getStartFieldsVisibility()
 			]);
 			if (groupedRowsCache[cacheKey] && groupedRowsCache[cacheKey].fingerprint === fingerprint) {
 				return groupedRowsCache[cacheKey].rows;
@@ -1843,8 +1995,11 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				var directions = widgetStyleEditor.columnDirections(style, $scope.editor.previewSize, row);
 				var widths = widgetStyleEditor.columnWidths(style, $scope.editor.previewSize, row);
 				var rowSpans = widgetStyleEditor.columnRowSpans(style, $scope.editor.previewSize, row);
+				var gaps = widgetStyleEditor.columnElementGaps(style, $scope.editor.previewSize, row);
 				return {
 					id: row,
+					columnGap: style.rowColumnGaps && style.rowColumnGaps[$scope.editor.previewSize]
+						&& style.rowColumnGaps[$scope.editor.previewSize][row] !== undefined ? style.rowColumnGaps[$scope.editor.previewSize][row] : 8,
 					alignment: widgetStyleEditor.rowAlignment(style, $scope.editor.previewSize, row),
 					topPadding: widgetStyleEditor.rowTopPadding(style, $scope.editor.previewSize, row),
 					tracks: spans.map(function (span, index) {
@@ -1856,13 +2011,13 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 								&& (!preview || (!(scenario && scenario.excludeFields && id === 'fields') && $scope.previewVisible(id, state, type)));
 						}).sort(function (a, b) { return layout[a].order - layout[b].order || $scope.styleElements.indexOf(a) - $scope.styleElements.indexOf(b); });
 						var placeholders = preview ? ['icon', 'duration', 'remaining', 'total', 'progress'].filter(function (id) {
-							return layout[id].row === row && layout[id].group === group && elements.indexOf(id) === -1
+							return visible && layout[id].row === row && layout[id].group === group && elements.indexOf(id) === -1
 								&& sizeRuntime.reserveElement(style, $scope.editor.previewSize, id);
 						}) : [];
 						var renderElements = elements.concat(placeholders).sort(function (a, b) {
 							return layout[a].order - layout[b].order || $scope.styleElements.indexOf(a) - $scope.styleElements.indexOf(b);
 						});
-						return { id: group, span: spans[group - 1], rowSpan: rowSpans[group - 1], alignment: alignments[group - 1], verticalAlignment: verticalAlignments[group - 1], direction: directions[group - 1], width: widths[group - 1], elements: elements, placeholders: placeholders, renderElements: renderElements };
+						return { id: group, gap: gaps[group - 1], span: spans[group - 1], rowSpan: rowSpans[group - 1], alignment: alignments[group - 1], verticalAlignment: verticalAlignments[group - 1], direction: directions[group - 1], width: widths[group - 1], elements: elements, placeholders: placeholders, renderElements: renderElements };
 					})
 				};
 			}).filter(function (row) {
@@ -2223,6 +2378,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 
 		$scope.previewAction = function (action, previewType) {
 			if ($scope.templates.busy || ($scope.templates.open && $scope.templates.section === 'export')) return;
+			if ($scope.editor.colorForm && $scope.editor.colorForm.$invalid && !canChangeSelection()) return;
 			var state = $scope.previewTileState(null, previewType);
 			if (action === 'start' || action === 'play') {
 				if (state === 'inactive' && (!$scope.showStartFieldsWhenInactive() || ($scope.hasFieldsRowRule()
@@ -2439,6 +2595,10 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 
 		$scope.saveSettings = function () {
 			if ($scope.savingSettings || !$scope.isWidgetDirty()) return;
+			if ($scope.editor.colorForm && $scope.editor.colorForm.$invalid) {
+				Homey.alert(Homey.__('settings.style_hex_invalid'));
+				return;
+			}
 			if ($scope.editor.rowPaddingForm && $scope.editor.rowPaddingForm.$invalid) {
 				Homey.alert(Homey.__('settings.style_row_padding_invalid'));
 				return;
@@ -2513,6 +2673,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		}
 
 		$scope.$on('$destroy', function () {
+			if (darkSchemeQuery && darkSchemeQuery.removeEventListener) darkSchemeQuery.removeEventListener('change', previewSchemeChanged);
 			clearTemplateImage();
 			if (refreshInterval) $interval.cancel(refreshInterval);
 			if (durationInterval) $interval.cancel(durationInterval);
@@ -2602,7 +2763,6 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			$scope.buttonBackgroundOptions = [{ id: 'none', label: Homey.__('settings.style_color_none') }].concat($scope.colorOptions);
 			$scope.borderOptions = [{ id: 'none', label: Homey.__('settings.style_color_none') }].concat($scope.foregroundOptions.filter(function (color) { return color.id !== 'default'; }));
 			$scope.baseBorderOptions = [{ id: 'default', label: Homey.__('settings.style_color_default') }].concat($scope.borderOptions);
-			$scope.stateBorderOptions = [{ id: 'inherit', label: Homey.__('settings.style_color_inherit') }].concat($scope.borderOptions);
 			$scope.sections = [
 				{
 					key: 'stopwatch',
@@ -2811,13 +2971,60 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 
 		if (pendingHomey) $scope.initialize(pendingHomey);
 	}
-]).directive('templateCatalogPreview', function () {
+]).directive('styleColorSelect', function () {
+	return {
+		restrict: 'E',
+		require: 'ngModel',
+		scope: true,
+		template: '<select class="form-select" ng-attr-id="{{ colorControl.inputId }}" ng-model="colorControl.choice"'
+			+ ' ng-options="color.id as color.label for color in colorControl.options" ng-change="colorControl.choose()" ng-disabled="savingSettings"></select>'
+			+ '<div class="style-hex-controls" ng-if="colorControl.choice === \'hex\'">'
+			+ '<input class="hy-nostyle form-control" type="text" maxlength="7" spellcheck="false" ng-attr-aria-label="{{ t(\'settings.style_color_hex\') }}"'
+			+ ' ng-model="colorControl.hex" ng-change="colorControl.commit()" ng-disabled="savingSettings">'
+			+ '<input class="hy-nostyle form-control form-control-color" type="color" ng-attr-aria-label="{{ t(\'settings.style_color_picker\') }}"'
+			+ ' ng-model="colorControl.picker" ng-change="colorControl.pick()" ng-disabled="savingSettings"></div>'
+			+ '<p class="help-text" role="alert" ng-if="colorControl.invalid">{{ t(\'settings.style_hex_invalid\') }}</p>',
+		link: function (scope, element, attrs, model) {
+			var control = scope.colorControl = { hex: '#2F8DF6', picker: '#2F8DF6' };
+			attrs.$observe('inputId', function (id) { control.inputId = id; });
+			scope.$watchCollection(attrs.colorOptions, function (options) {
+				control.options = (options || []).concat([{ id: 'hex', label: scope.t('settings.style_color_hex') }]);
+			});
+			model.$render = function () {
+				var value = model.$viewValue;
+				control.choice = window.ChronographWidgetStyle.isHexColor(value) ? 'hex' : value;
+				if (control.choice === 'hex') control.hex = control.picker = value;
+				control.invalid = false;
+				model.$setValidity('hex', true);
+			};
+			control.commit = function () {
+				control.invalid = !window.ChronographWidgetStyle.isHexColor(control.hex);
+				model.$setValidity('hex', !control.invalid);
+				if (control.invalid) return;
+				control.picker = control.hex;
+				model.$setViewValue(control.hex);
+			};
+			control.pick = function () { control.hex = control.picker; control.commit(); };
+			control.choose = function () {
+				if (control.choice === 'hex') {
+					if (!window.ChronographWidgetStyle.isHexColor(control.hex)) control.hex = '#2F8DF6';
+					control.commit();
+				} else {
+					control.invalid = false;
+					model.$setValidity('hex', true);
+					model.$setViewValue(control.choice);
+				}
+			};
+		}
+	};
+}).directive('templateCatalogPreview', function () {
 	return {
 		restrict: 'A',
 		scope: { preview: '=templateCatalogPreview', t: '=', labels: '=' },
 		template: '<div class="style-preview style-preview-normal" ng-attr-data-background="{{ previewColor(\'background\') }}"'
-			+ ' ng-attr-data-allow-shrink="{{ preview.design.allowShrink !== false }}">'
-			+ '<div class="style-preview-layer" ng-include="\'grouped-preview.html\'"></div></div>',
+			+ ' ng-style="templatePaddingStyle()" ng-attr-data-allow-shrink="{{ preview.design.allowShrink !== false }}">'
+			+ '<div class="style-preview-outline style-preview-height" ng-style="previewBorderStyle()">'
+			+ '<div class="style-preview-layer" ng-include="\'grouped-preview.html\'"></div></div></div>',
 		link: function (scope) {
 			var runtime = window.ChronographWidgetStyle;
 			var layout;
@@ -2830,15 +3037,32 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			scope.previewRowLayout = function () { return layout; };
 			scope.previewTileState = function () { return 'running'; };
 			scope.elementSize = function (element) { return runtime.elementSize(scope.preview.design, 'normal', element); };
+			scope.previewElementLineHeight = function (element) { return runtime.elementLineHeight(scope.preview.design, 'normal', element); };
+			scope.templatePaddingStyle = function () {
+				return Object.assign(runtime.paddingStyle([runtime.widgetPadding(scope.preview.design, 'normal')]),
+					runtime.frameStyle(runtime.borderlessFrame(scope.preview.design, 'normal')),
+					runtime.backgroundPaint(scope.preview.theme, 'running'));
+			};
+			scope.previewHexStyle = function (element) {
+				return '--hex-palette: ' + runtime.valueColor(scope.previewColor(element))
+					+ '; --hex-foreground: ' + runtime.valueColor(scope.previewForeground(element));
+			};
+			scope.progressCustomColor = function (key) {
+				var value = key === 'background' ? scope.progressBackground() : scope.progressForeground();
+				return runtime.isHexColor(value) ? value : undefined;
+			};
 			scope.previewIcon = function () { return scope.preview.icon; };
 			scope.previewIconStyle = function () { return scope.preview.iconStyle; };
 			scope.isButtonElement = function (element) { return ['start', 'play', 'pause', 'stop', 'cancel'].indexOf(element) !== -1; };
 			scope.previewColor = function (element) { return runtime.resolveColor(scope.preview.theme, 'running', element); };
 			scope.previewForeground = function (element) { return runtime.resolveForeground(scope.preview.theme, 'running', element); };
+			scope.previewBorderStyle = function () { return runtime.borderStyle(scope.preview.design, scope.preview.theme, 'normal', 'running'); };
 			scope.previewButtonStyle = function (element) {
 				var style = runtime.buttonShapeStyle(scope.preview.design, 'normal', element);
 				var colors = runtime.elementStyle(scope.preview.theme, 'running', element);
 				if (colors.border) style.border = colors.border;
+				if (runtime.isHexColor(scope.previewColor(element))) style.backgroundColor = colors.backgroundColor;
+				if (runtime.isHexColor(scope.previewForeground(element))) style.color = colors.color;
 				if (scope.previewColor(element) === 'none') style.backgroundColor = 'transparent';
 				return style;
 			};

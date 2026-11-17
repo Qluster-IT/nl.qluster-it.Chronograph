@@ -20,6 +20,7 @@ const vendorStylesheets = [
 	'assets/css/brands.min.css'
 ];
 const stylesheets = [
+	'assets/css/chronograph-surfaces.css',
 	'assets/css/chronograph-icons.css',
 	'assets/css/chronograph-widget.css',
 	'assets/css/multiple-chronographs-widget.css'

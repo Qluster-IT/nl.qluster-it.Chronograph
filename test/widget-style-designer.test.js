@@ -84,6 +84,186 @@ function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns, extr
 }
 
 describe('Widget style designer preview', () => {
+	it('distinguishes explicit borderless frames from native defaults and legacy zero widths', () => {
+		const { scope, editor, writes } = loadSettings();
+		for (const design of scope.builtInDesigns) {
+			scope.editor.selectedStyleId = design.id;
+			assert.strictEqual(scope.widgetBorderWidth(), null, design.id);
+			assert.strictEqual(scope.previewTileStyle().boxShadow, undefined, design.id);
+		}
+		scope.createStyle(true);
+		const design = scope.getSelectedStyle();
+		design.borderWidths = { normal: 0 };
+		assert.strictEqual(scope.widgetBorderWidth(), null);
+		assert.strictEqual(scope.previewTileStyle().boxShadow, undefined);
+		scope.widgetBorderWidth(0);
+		assert.strictEqual(scope.widgetBorderWidth(), 0);
+		assert.strictEqual(scope.previewTileStyle().boxShadow, 'none');
+		scope.editor.previewColumns = '2';
+		scope.editor.previewSeparator = 'cards';
+		assert.strictEqual(scope.previewCardRowStyle().boxShadow, 'none');
+		scope.editor.previewColumns = 'single';
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
+		scope.saveSettings();
+		assert.strictEqual(writes.find(write => write.key === 'widgetStyles').value.styles[0].borderlessFrames.normal, true);
+		scope.widgetBorderWidth(null);
+		assert.strictEqual(scope.widgetBorderWidth(), null);
+		assert.strictEqual(design.borderlessFrames, undefined);
+		assert.strictEqual(scope.previewTileStyle().boxShadow, undefined);
+		scope.widgetBorderWidth(3);
+		assert.strictEqual(scope.widgetBorderWidth(), 3);
+		assert.strictEqual(scope.previewTileStyle().boxShadow, undefined);
+	});
+
+	it('saves independent frame padding and keeps generic geometry valid through column changes', () => {
+		const { scope, editor, writes } = loadSettings();
+		scope.createStyle(true);
+		const design = scope.getSelectedStyle();
+		const padding = side => scope.widgetPaddingControls.find(control => control.side === side);
+		padding('top').value(0);
+		padding('right').value(12);
+		assert.strictEqual(padding('bottom').value(), null);
+		scope.editor.previewSize = 'compact';
+		assert.strictEqual(padding('top').value(), null);
+		padding('left').value(4);
+		scope.editor.previewSize = 'normal';
+		scope.editor.selectedRow = 1;
+		scope.rowColumnGap(16);
+		scope.editor.selectedColumn = { row: 1, group: 1 };
+		scope.columnElementGap(0);
+		editor.setRowColumns(design, 'normal', 1, 2);
+		editor.moveColumn(design, 'normal', 1, 1, 2);
+		assert.deepStrictEqual(Array.from(editor.columnElementGaps(design, 'normal', 1)), [8, 0]);
+		editor.setColumnSpan(design, 'normal', 1, 2, 4);
+		assert.deepStrictEqual(Array.from(editor.columnElementGaps(design, 'normal', 1)), [0]);
+		scope.editor.selectedElement = 'name';
+		scope.elementLineHeight(24);
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
+		scope.saveSettings();
+		const saved = writes.find(write => write.key === 'widgetStyles').value;
+		assert.deepStrictEqual(JSON.parse(JSON.stringify(saved.styles[0].widgetPadding)), { normal: { top: 0, right: 12 }, compact: { left: 4 } });
+		for (const value of [-1, 101, 2.5, '4']) {
+			design.widgetPadding.normal.top = value;
+			assert.strictEqual(editor.isValidCollection(scope.widgetStyles), false);
+		}
+		padding('top').value(null);
+		padding('right').value(null);
+		scope.editor.previewSize = 'compact';
+		padding('left').value(null);
+		assert.strictEqual(design.widgetPadding, undefined);
+	});
+
+	it('validates HEX values in every theme channel and keeps gradients out of designs', () => {
+		const { scope, editor } = loadSettings();
+		scope.selectEditorMode('color');
+		scope.createStyle(true);
+		const theme = scope.getSelectedScheme();
+		theme.colors.pause = '#123456';
+		theme.foregroundColors = { name: '#ABCDEF' };
+		theme.foregroundOverrides = { running: { status: '#098765' } };
+		theme.borderColors = { background: 'black-light', pause: '#111111' };
+		theme.borderOverrides = { paused: { background: '#222222' } };
+		theme.progressColors = { normal: { background: '#333333', foreground: '#444444' } };
+		scope.editor.colorValues.background = '#2B2C36';
+		scope.editor.previewState = 'inactive';
+		scope.updateColorOverride('background');
+		scope.backgroundGradient(true);
+		scope.editor.previewState = 'paused';
+		scope.backgroundGradient(false);
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
+		assert.strictEqual(require('../assets/js/chronograph-widget-style.js').resolveColor(theme, 'paused', 'background'), '#2B2C36');
+		assert.strictEqual(scope.previewTileStyle('paused').backgroundColor, '#2B2C36');
+		for (const invalid of ['#abc', '#12345678', '#GGGGGG', 'hex']) {
+			theme.borderColors.pause = invalid;
+			assert.strictEqual(editor.isValidCollection(scope.widgetStyles), false);
+		}
+		theme.borderColors.pause = '#111111';
+		theme.backgroundGradients.running = 'true';
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), false);
+	});
+
+	it('keeps invalid HEX drafts out of the model and synchronizes valid picker changes', () => {
+		const { directives, scope, window } = loadSettings();
+		const controlScope = Object.create(scope);
+		controlScope.$watchCollection = (expression, callback) => callback(scope.colorOptions);
+		const changes = [], validity = [];
+		const model = { $viewValue: '#123456', $setValidity: (key, valid) => validity.push(valid),
+			$setViewValue: value => changes.push(value) };
+		directives.styleColorSelect().link(controlScope, null,
+			{ $observe: (key, callback) => callback('test-color'), colorOptions: 'colorOptions' }, model);
+		model.$render();
+		const control = controlScope.colorControl;
+		assert.strictEqual(control.choice, 'hex');
+		control.hex = '#123';
+		control.commit();
+		assert.strictEqual(control.invalid, true);
+		assert.deepStrictEqual(changes, []);
+		control.picker = '#ABCDEF';
+		control.pick();
+		assert.strictEqual(control.hex, '#ABCDEF');
+		assert.strictEqual(control.invalid, false);
+		assert.strictEqual(changes.at(-1), '#ABCDEF');
+		assert.strictEqual(validity.at(-1), true);
+		control.choice = 'black-light';
+		control.choose();
+		assert.strictEqual(changes.at(-1), 'black-light');
+		assert.strictEqual(window.ChronographWidgetStyle.valueColor(changes.at(-1)), '#2B2C36');
+	});
+
+	it('keeps outline spacing inside the Homey frame in designer and template previews', () => {
+		const { directives } = loadSettings();
+		for (const markup of [html, directives.templateCatalogPreview().template]) {
+			const outlines = markup.match(/<div\b[^>]*ng-style="previewBorderStyle\([^"]*\)"[^>]*>/g);
+			assert.ok(outlines && outlines.length);
+			for (const outline of outlines) {
+				assert.match(outline, /class="style-preview-outline style-preview-height"/);
+			}
+		}
+	});
+
+	it('saves per-size widget outlines and themed state colors without changing built-ins', () => {
+		const { scope, writes, editor } = loadSettings();
+		scope.widgetBorderWidth(3);
+		assert.strictEqual(scope.widgetBorderWidth(), null);
+		scope.createStyle(true);
+		scope.widgetBorderWidth(3);
+		scope.editor.previewSize = 'compact';
+		assert.strictEqual(scope.widgetBorderWidth(), null);
+		scope.widgetBorderWidth(1);
+		scope.editor.previewSize = 'normal';
+		scope.saveSettings();
+		scope.selectEditorMode('color');
+		scope.createStyle(true);
+		scope.toggleWidgetBackground();
+		scope.editor.previewState = 'inactive';
+		scope.buttonBorder('blue');
+		assert.match(scope.previewBorderStyle().border, /^3px solid var\(--homey-color-blue,/);
+		scope.editor.previewState = 'paused';
+		scope.buttonBorder('red');
+		assert.match(scope.previewBorderStyle().border, /^3px solid var\(--homey-color-red,/);
+		scope.editor.previewState = 'running';
+		assert.match(scope.previewBorderStyle().border, /^3px solid var\(--homey-color-blue,/);
+		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
+		scope.saveSettings();
+		const saved = writes.filter(write => write.key === 'widgetStyles').at(-1).value;
+		const restored = loadSettings(saved).scope;
+		restored.editor.selectedStyleId = 'custom:' + saved.styles[0].id;
+		restored.editor.selectedSchemeId = 'custom:' + saved.themes[0].id;
+		restored.editor.previewState = 'paused';
+		assert.strictEqual(restored.widgetBorderWidth(), 3);
+		assert.match(restored.previewBorderStyle().border, /^3px solid var\(--homey-color-red,/);
+		for (const invalid of [-1, 21, 1.5, '3']) {
+			saved.styles[0].borderWidths.normal = invalid;
+			assert.strictEqual(editor.isValidCollection(saved), false, String(invalid));
+		}
+	});
+
+	it('uses the live widget flex layout for preview buttons without baseline spacing', () => {
+		const widgetCss = fs.readFileSync(path.join(root, 'assets', 'css', 'chronograph-widget.css'), 'utf8');
+		assert.match(widgetCss, /\.chronograph-action\s*\{[^}]*display:\s*flex;/);
+		assert.match(css, /\.style-grouped-preview \.style-widget-element \.style-widget-action\s*\{[^}]*display:\s*flex;/);
+	});
+
 	it('matches widget text line heights across sizes and narrow layouts', () => {
 		const widgetCss = fs.readFileSync(path.join(root, 'assets', 'css', 'chronograph-widget.css'), 'utf8');
 		function lineHeights(source, selector) {
@@ -810,7 +990,51 @@ describe('Widget style designer preview', () => {
 		assert.match(html, /<div class="template-header">[\s\S]*?ng-click="openWidgetExchange\(\)"[\s\S]*?<\/div>/);
 	});
 
-	it('copies three separate 3-by-3 preview images in one rich-text post', async () => {
+	it('defaults the local preview to its light page even when the browser reports a dark preference', () => {
+		const browser = {
+			chronographSettingsPreview: true,
+			matchMedia: () => ({ matches: true })
+		};
+		browser.parent = browser;
+		const { scope, writes } = loadSettings(null, null, null, true, null, { window: browser });
+		assert.strictEqual(scope.localPreview, true);
+		assert.strictEqual(scope.editor.previewMode, 'light');
+		assert.strictEqual(scope.previewCounterInvert, false);
+		scope.editor.previewMode = 'dark';
+		assert.strictEqual(scope.isDirty(), false);
+		assert.strictEqual(writes.length, 0);
+	});
+
+	it('defaults preview mode to the browser and permits changes without editing saved styles', () => {
+		for (const matches of [false, true]) {
+			let changed;
+			const query = {
+				matches,
+				addEventListener(name, callback) { assert.strictEqual(name, 'change'); changed = callback; }
+			};
+			const browser = { matchMedia: value => {
+				assert.strictEqual(value, '(prefers-color-scheme: dark)');
+				return query;
+			} };
+			browser.parent = browser;
+			const { scope, writes } = loadSettings(null, null, null, false, null, { window: browser });
+			assert.strictEqual(scope.editor.previewMode, matches ? 'dark' : 'light');
+			assert.strictEqual(scope.previewCounterInvert, false);
+			scope.editor.previewMode = matches ? 'light' : 'dark';
+			assert.strictEqual(scope.isDirty(), false);
+			assert.strictEqual(writes.length, 0);
+			query.matches = !matches;
+			changed();
+			assert.strictEqual(scope.editor.previewMode, query.matches ? 'dark' : 'light');
+			browser.parent = {};
+			query.matches = true;
+			changed();
+			assert.strictEqual(scope.previewCounterInvert, true);
+		}
+		assert.match(html, /id="preview-mode"[^>]*ng-model="editor\.previewMode"/);
+	});
+
+	it('copies six 3-by-3 images in light-then-dark order regardless of the settings theme', async () => {
 		const previews = [];
 		const fontRequests = [];
 		const labels = [];
@@ -830,9 +1054,9 @@ describe('Widget style designer preview', () => {
 				const canvas = {
 					draws: [],
 					getContext: () => ({
-						fillRect() {},
+						fillRect() { canvas.background = this.fillStyle; },
 						drawImage(image, x, y) { canvas.draws.push({ image, x, y }); },
-						fillText(text) { labels.push(text); }
+						fillText(text) { labels.push(text); canvas.textColor = this.fillStyle; }
 					}),
 					toDataURL: () => 'data:image/png;base64,' + Buffer.from('panel-' + canvases.indexOf(canvas)).toString('base64')
 				};
@@ -857,7 +1081,11 @@ describe('Widget style designer preview', () => {
 		const { scope, homey, window } = loadSettings(null, null, null, false, null, extras, false, null, true);
 		window.setTimeout = (fn, delay) => setTimeout(fn, delay === 20 ? 0 : delay);
 		window.clearTimeout = clearTimeout;
-		window.getComputedStyle = () => ({ backgroundColor: 'rgb(255, 255, 255)', color: 'rgb(0, 0, 0)' });
+		window.getComputedStyle = element => element === preview ? {
+			getPropertyValue: property => (scope.templates.imageMode === 'dark'
+				? { '--homey-background-color': '#181920', '--homey-text-color': '#fff' }
+				: { '--homey-background-color': '#fff', '--homey-text-color': '#222' })[property]
+		} : { backgroundColor: 'rgb(24, 25, 32)', color: 'rgb(255, 255, 255)' };
 		window.htmlToImage = { toCanvas: async (element, options) => {
 			assert.match(options.fontEmbedCSS, /font-family:"Font Awesome 7 Free";font-style:normal;font-weight:400/);
 			assert.match(options.fontEmbedCSS, /font-family:"Font Awesome 7 Free";font-style:normal;font-weight:900/);
@@ -867,13 +1095,14 @@ describe('Widget style designer preview', () => {
 			assert.strictEqual(preview.style.boxSizing, 'border-box');
 			assert.deepStrictEqual(numberFields.map(field => field.type), ['text', 'text']);
 			assert.deepStrictEqual(numberFields.map(field => field.value), ['1', '']);
-			previews.push([scope.editor.previewType, scope.editor.previewState, scope.editor.previewSize]);
+			previews.push([scope.templates.imageMode, scope.editor.previewType, scope.editor.previewState, scope.editor.previewSize]);
 			return {
 				width: 350,
 				height: 80 + ['stopwatch', 'timer', 'transition'].indexOf(scope.editor.previewType) * 30
 					+ ['running', 'paused', 'inactive'].indexOf(scope.editor.previewState) * 10
 					+ ['compact', 'normal', 'large'].indexOf(scope.editor.previewSize) * 20,
-				type: scope.editor.previewType
+				type: scope.editor.previewType,
+				mode: scope.templates.imageMode
 			};
 		} };
 		scope.createStyle(true);
@@ -899,21 +1128,26 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(scope.templates.copyStatus, 'copied');
 		assert.deepStrictEqual(fontRequests.sort(), ['fa-brands-400.woff2', 'fa-regular-400.woff2', 'fa-solid-900.woff2']
 			.map(file => '../assets/webfonts/' + file));
-		assert.deepStrictEqual(previews, ['stopwatch', 'timer', 'transition'].flatMap(type =>
-			['running', 'paused', 'inactive'].flatMap(state =>
-				['compact', 'normal', 'large'].map(size => [type, state, size]))));
-		assert.strictEqual(labels.filter(label => label === 'settings.stopwatches').length, 1);
-		assert.strictEqual(labels.filter(label => label === 'settings.timers').length, 1);
-		assert.strictEqual(labels.filter(label => label === 'settings.transitions').length, 1);
-		assert.strictEqual(labels.filter(label => label === 'settings.style_compact').length, 3);
-		assert.strictEqual(labels.filter(label => label === 'settings.widget_running').length, 3);
-		assert.strictEqual(labels.filter(label => label === 'settings.widget_paused').length, 3);
-		assert.strictEqual(labels.filter(label => label === 'settings.widget_not_running').length, 3);
-		assert.strictEqual(canvases.length, 3);
-		assert.deepStrictEqual(canvases.map(canvas => [canvas.width, canvas.height]), [[1216, 518], [1216, 608], [1216, 698]]);
+		assert.deepStrictEqual(previews, ['light', 'dark'].flatMap(mode =>
+			['stopwatch', 'timer', 'transition'].flatMap(type =>
+				['running', 'paused', 'inactive'].flatMap(state =>
+					['compact', 'normal', 'large'].map(size => [mode, type, state, size])))));
+		assert.strictEqual(labels.filter(label => label === 'settings.stopwatches').length, 2);
+		assert.strictEqual(labels.filter(label => label === 'settings.timers').length, 2);
+		assert.strictEqual(labels.filter(label => label === 'settings.transitions').length, 2);
+		assert.strictEqual(labels.filter(label => label === 'settings.style_compact').length, 6);
+		assert.strictEqual(labels.filter(label => label === 'settings.widget_running').length, 6);
+		assert.strictEqual(labels.filter(label => label === 'settings.widget_paused').length, 6);
+		assert.strictEqual(labels.filter(label => label === 'settings.widget_not_running').length, 6);
+		assert.strictEqual(canvases.length, 6);
+		assert.deepStrictEqual(canvases.map(canvas => [canvas.width, canvas.height]),
+			[[1216, 518], [1216, 608], [1216, 698], [1216, 518], [1216, 608], [1216, 698]]);
 		canvases.forEach((canvas, index) => {
+			assert.strictEqual(canvas.background, index < 3 ? '#fff' : '#181920');
+			assert.strictEqual(canvas.textColor, index < 3 ? '#222' : '#fff');
 			assert.strictEqual(canvas.draws.length, 9);
-			assert.ok(canvas.draws.every(draw => draw.image.type === ['stopwatch', 'timer', 'transition'][index]));
+			assert.ok(canvas.draws.every(draw => draw.image.type === ['stopwatch', 'timer', 'transition'][index % 3]));
+			assert.ok(canvas.draws.every(draw => draw.image.mode === (index < 3 ? 'light' : 'dark')));
 			assert.ok(canvas.draws.every(draw => draw.x >= 0 && draw.y >= 0
 				&& draw.x + draw.image.width <= canvas.width && draw.y + draw.image.height <= canvas.height));
 		});
@@ -924,14 +1158,18 @@ describe('Widget style designer preview', () => {
 		assert.ok(copied['text/html'].includes('<h1>Design: Design &lt;example&gt;</h1>'));
 		assert.ok(copied['text/html'].includes('</h1><p><br></p><p><img'));
 		assert.ok(!copied['text/html'].includes('Describe your template here.'));
-		assert.strictEqual((copied['text/html'].match(/<img /g) || []).length, 3);
+		assert.strictEqual((copied['text/html'].match(/<img /g) || []).length, 6);
+		assert.ok(imageData.every((image, index) => !index
+			|| copied['text/html'].indexOf(imageData[index - 1]) < copied['text/html'].indexOf(image)));
 		imageData.forEach(image => assert.ok(copied['text/html'].includes('<img alt="Widget preview" src="' + image + '">')));
 		assert.ok(copied['text/html'].includes('<pre data-params="javascript"><code class="language-javascript">encoded-template</code></pre>'));
 		assert.strictEqual(scope.editor.previewSize, 'normal');
+		assert.strictEqual(scope.templates.imageMode, undefined);
 		assert.strictEqual(preview.style.width, '80%');
 		assert.strictEqual(preview.style.boxSizing, 'content-box');
 		assert.deepStrictEqual(numberFields.map(field => field.type), ['number', 'number']);
 		assert.strictEqual(scope.templates.busy, false);
+		assert.match(html, /id="template-export-preview" class="[^"]*\bstyle-preview-light\b/);
 		scope.clearTemplateExport();
 		assert.strictEqual(scope.templates.imageData, null);
 		assert.strictEqual(scope.templates.exportText, '');
@@ -1016,31 +1254,39 @@ describe('Widget style designer preview', () => {
 		}
 	});
 
-	it('reports image-rendering failures and restores the preview size', async () => {
-		const numberField = { type: 'number', value: '1' };
-		const { scope, homey, window } = loadSettings(null, null, null, false, null, {
-			document: { body: {}, getElementById: () => ({ style: { width: '' }, querySelectorAll: () => [numberField] }) },
-			fetch: async () => ({ ok: true, arrayBuffer: async () => new Uint8Array([1]).buffer }),
-			btoa: value => Buffer.from(value, 'binary').toString('base64')
-		}, false, null, true);
-		window.setTimeout = (fn, delay) => setTimeout(fn, delay === 20 ? 0 : delay);
-		window.clearTimeout = clearTimeout;
-		window.htmlToImage = { toCanvas: async () => {
-			assert.strictEqual(numberField.type, 'text');
-			throw new Error('Render failed');
-		} };
-		let resolveAlert;
-		const alert = new Promise(resolve => { resolveAlert = resolve; });
-		homey.alert = resolveAlert;
-		scope.templates.exportText = 'encoded-template';
-		scope.prepareTemplateImage();
-		assert.match(await alert, /Render failed/);
-		assert.strictEqual(scope.editor.previewSize, 'normal');
-		assert.strictEqual(scope.templates.busy, false);
-		assert.strictEqual(scope.templates.imageData, null);
-		assert.strictEqual(numberField.type, 'number');
-		assert.strictEqual(numberField.value, '1');
-	});
+	for (const failedCapture of [1, 28]) {
+		it('restores the preview mode and size when capture ' + failedCapture + ' fails', async () => {
+			const numberField = { type: 'number', value: '1' };
+			let captures = 0;
+			const { scope, homey, window } = loadSettings(null, null, null, false, null, {
+				document: { body: {}, getElementById: () => ({ style: { width: '' }, querySelectorAll: () => [numberField] }) },
+				fetch: async () => ({ ok: true, arrayBuffer: async () => new Uint8Array([1]).buffer }),
+				btoa: value => Buffer.from(value, 'binary').toString('base64')
+			}, false, null, true);
+			window.setTimeout = (fn, delay) => setTimeout(fn, delay === 20 ? 0 : delay);
+			window.clearTimeout = clearTimeout;
+			window.getComputedStyle = () => ({ getPropertyValue: () => '#fff' });
+			window.htmlToImage = { toCanvas: async () => {
+				assert.strictEqual(numberField.type, 'text');
+				if (++captures !== failedCapture) return { width: 350, height: 80 };
+				assert.strictEqual(scope.templates.imageMode, failedCapture === 1 ? 'light' : 'dark');
+				throw new Error('Render failed');
+			} };
+			let resolveAlert;
+			const alert = new Promise(resolve => { resolveAlert = resolve; });
+			homey.alert = resolveAlert;
+			scope.templates.exportText = 'encoded-template';
+			scope.prepareTemplateImage();
+			assert.match(await alert, /Render failed/);
+			assert.strictEqual(scope.editor.previewSize, 'normal');
+			assert.strictEqual(scope.templates.imageMode, undefined);
+			assert.strictEqual(captures, failedCapture);
+			assert.strictEqual(scope.templates.busy, false);
+			assert.strictEqual(scope.templates.imageData, null);
+			assert.strictEqual(numberField.type, 'number');
+			assert.strictEqual(numberField.value, '1');
+		});
+	}
 
 	it('previews a theme-only export using the default design', () => {
 		const { scope, homey } = loadSettings();
@@ -1748,6 +1994,8 @@ describe('Widget style designer preview', () => {
 			const original = JSON.stringify(scope.getSelectedStyle());
 			for (const columns of ['1', '2', '3']) {
 				scope.editor.previewColumns = columns;
+				assert.strictEqual(scope.previewCardRowStyle()['grid-template-columns'],
+					columns === 'single' ? undefined : 'repeat(' + columns + ', minmax(0, 1fr))');
 				for (const size of ['normal', 'large']) {
 					scope.editor.previewSize = size;
 					for (const type of ['timer', 'transition']) {
@@ -1819,7 +2067,7 @@ describe('Widget style designer preview', () => {
 		}
 		assert.strictEqual(writes.length, 0);
 		assert.match(html, /id="preview-columns"[^>]*ng-model="editor\.previewColumns"/);
-		assert.match(html, /grid-template-columns': 'repeat\(' \+ editor\.previewColumns \+ ', minmax\(0, 1fr\)\)'/);
+		assert.match(html, /ng-style="previewCardRowStyle\(\)"/);
 		assert.match(css, /\.style-preview-columns\s*\{[^}]*gap:\s*8px;/);
 	});
 
@@ -1849,7 +2097,7 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(writes.length, 0);
 		assert.match(html, /id="preview-separator"[^>]*ng-model="editor\.previewSeparator"/);
 		assert.match(html, /id="preview-separator-color"[^>]*ng-model="editor\.previewSeparatorColor"/);
-		assert.match(css, /\.style-preview-frame-multiple\s*\{[^}]*border:\s*1px solid/);
+		assert.match(css, /\.style-preview-frame-multiple\s*\{[^}]*border:\s*0;[^}]*background:\s*var\(--chronograph-surface\);[^}]*box-shadow:\s*var\(--chronograph-frame-shadow\)/);
 		assert.match(css, /\[data-separator="line"\] \.style-preview-columns \+ \.style-preview-columns/);
 		assert.match(css, /\[data-separator="cards"\] \.style-preview-columns/);
 	});
@@ -2335,7 +2583,7 @@ describe('Widget style designer preview', () => {
 		assert.match(html, /editor\.selectedElement === 'icon' \|\| editor\.selectedElement === 'duration'/);
 	});
 
-	it('shows a reserved icon placeholder when its preview row is hidden', () => {
+	it('does not reserve icon space when its entire preview row is hidden', () => {
 		const { scope } = loadSettings();
 		scope.createStyle(false);
 		const style = scope.getSelectedStyle();
@@ -2345,9 +2593,24 @@ describe('Widget style designer preview', () => {
 		scope.reserveElementSpace(true);
 		const hasIconPlaceholder = () => scope.groupedRows(true).some(item =>
 			item.groups.some(group => group.placeholders.includes('icon')));
-		assert.strictEqual(hasIconPlaceholder(), true);
+		assert.strictEqual(hasIconPlaceholder(), false);
+		assert.ok(!scope.groupedRows(true).some(item => item.id === row));
 		scope.reserveElementSpace(false);
 		assert.strictEqual(hasIconPlaceholder(), false);
+	});
+
+	it('excludes hidden padded rows from the current preview but includes them in minimum-height scenarios', () => {
+		const { scope } = loadSettings();
+		scope.editor.selectedStyleId = 'builtin:widgetkeeper';
+		scope.createStyle(true);
+		scope.editor.previewSize = 'large';
+		scope.editor.previewState = 'inactive';
+		scope.getSelectedStyle().rowAlignments.large[4] = 'middle';
+		assert.ok(!scope.previewRowLayout().rows.some(row => row.id === 5));
+		assert.strictEqual(scope.previewRowLayout().rows.find(row => row.id === 4).alignment, 'middle');
+		const running = scope.previewRowLayout(scope.heightScenarios.find(scenario => scenario.state === 'running'));
+		assert.strictEqual(running.rows.find(row => row.id === 5).topPadding, 16);
+		assert.ok(scope.groupedRows(false).some(row => row.id === 5));
 	});
 
 	it('adds reservation defaults to older built-in preview snapshots without replacing edits', () => {
@@ -3079,7 +3342,7 @@ describe('Widget style designer preview', () => {
 
 	it('offers and saves black and white widget and button backgrounds in every theme state', () => {
 		const runtime = require('../assets/js/chronograph-widget-style.js');
-		for (const [color, expected] of [['black', '#000'], ['white', '#fff']]) {
+		for (const [color, expected] of [['black', '#000'], ['white', 'var(--homey-color-white, #fff)']]) {
 			const { scope, writes, editor } = loadSettings();
 			scope.selectEditorMode('color');
 			scope.createStyle(true);

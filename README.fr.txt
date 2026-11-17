@@ -13,6 +13,7 @@ CARACTÉRISTIQUES
 * Le widget Chronograph du tableau de bord permet de choisir dans ses paramètres un minuteur, un chronomètre ou une transition, puis de le mettre en pause, de le reprendre ou de l'arrêter.
 * Personnalisez les dispositions, thèmes et icônes par défaut des widgets simples et multiples, avec temps écoulé, restant et total pour les minuteurs et transitions.
 * Partagez des designs et thèmes via Templates et le Widget Exchange de la communauté, avec aperçus et images plein écran avec zoom à deux doigts.
+* Choisissez le design WidgetKeeper et personnalisez les contours des widgets, avec des aperçus et des images de modèles en modes clair et sombre.
 * Utilisez des expressions mathématiques à l'intérieur des cartes de flux.
 * Utilisez HomeyScript pour surveiller, mettre en pause, reprendre ou arrêter les minuteries, chronomètres et transitions actifs.
 

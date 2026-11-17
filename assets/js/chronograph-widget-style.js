@@ -43,6 +43,30 @@
 		return defaultElementSize(size, element);
 	}
 
+	function elementLineHeight(style, size, element) {
+		var values = style && style.elementLineHeights && style.elementLineHeights[size];
+		var value = values && values[element];
+		return Number.isInteger(value) && value >= 4 && value <= 100 ? value + 'px' : 'initial';
+	}
+
+	function widgetPadding(style, size) {
+		return style && style.widgetPadding && style.widgetPadding[size] || {};
+	}
+
+	function paddingStyle(paddings) {
+		var result = {};
+		['top', 'right', 'bottom', 'left'].forEach(function (side) {
+			var values = paddings.map(function (padding) { return padding[side]; }).filter(function (value) {
+				return Number.isInteger(value) && value >= 0 && value <= 100;
+			});
+			if (!values.length) return;
+			var maximum = Math.max.apply(null, values) + 'px';
+			result['padding' + side[0].toUpperCase() + side.slice(1)] = values.length === paddings.length
+				? maximum : 'max(var(--homey-su-4, 16px), ' + maximum + ')';
+		});
+		return result;
+	}
+
 	function buttonText(style, size, element, defaultStartText) {
 		var values = style && style.buttonTexts && style.buttonTexts[size];
 		var value = values && values[element];
@@ -116,9 +140,10 @@
 		indigo: '#7c83f7',
 		pink: '#f2549e',
 		brown: '#b9875a',
-		grey: '#9a9ca6',
+		grey: 'var(--homey-color-mono-500, #9a9ca6)',
 		black: '#000',
-		white: '#fff'
+		'black-light': '#2B2C36',
+		white: 'var(--homey-color-white, #fff)'
 	};
 
 	function settingId(setting) {
@@ -192,7 +217,8 @@
 		{ id: 'builtin:twilight', nameKey: 'settings.style_scheme_twilight', accent: 'purple', buttonText: 'white' },
 		{ id: 'builtin:blossom', nameKey: 'settings.style_scheme_blossom', accent: 'pink', buttonText: 'black' },
 		{ id: 'builtin:sky', nameKey: 'settings.style_scheme_sky', accent: 'cyan', buttonText: 'black' },
-		{ id: 'builtin:amber', nameKey: 'settings.style_scheme_amber', accent: 'yellow', buttonText: 'black' }
+		{ id: 'builtin:amber', nameKey: 'settings.style_scheme_amber', accent: 'yellow', buttonText: 'black' },
+		{ id: 'builtin:widgetkeeper', nameKey: 'settings.style_design_widgetkeeper', accent: 'blue', buttonText: 'white' }
 	];
 
 	function builtInScheme(id) {
@@ -220,6 +246,10 @@
 		scheme.foregroundColors = {
 			play: definition.buttonText, start: definition.buttonText, pause: definition.buttonText
 		};
+		if (id === 'builtin:widgetkeeper') {
+			scheme.colorOverrides.running.background = 'blue';
+			scheme.backgroundGradients = { running: true };
+		}
 		scheme.progressColors = {};
 		['compact', 'normal', 'large'].forEach(function (size) {
 			scheme.progressColors[size] = { background: 'grey', foreground: definition.accent };
@@ -335,6 +365,7 @@
 		{ id: 'builtin:vertical', nameKey: 'settings.style_design_vertical' },
 		{ id: 'builtin:small', nameKey: 'settings.style_design_small' },
 		{ id: 'builtin:tiny', nameKey: 'settings.style_design_tiny' },
+		{ id: 'builtin:widgetkeeper', nameKey: 'settings.style_design_widgetkeeper' },
 		{ id: 'builtin:transitions', nameKey: 'settings.transitions' }
 	];
 
@@ -382,7 +413,43 @@
 		if (id === 'builtin:current') return currentDesign();
 		if (!builtInDesignDefinitions.some(function (item) { return item.id === id; })) return undefined;
 		var design = currentDesign();
-		if (id === 'builtin:transitions') {
+		if (id === 'builtin:widgetkeeper') {
+			design.rowTopPadding = { large: { 3: 8, 5: 16 } };
+			design.rowAlignments.large[4] = 'bottom';
+			['compact', 'normal', 'large'].forEach(function (size) {
+				design.heightModes[size] = 'minimum-without-inputs';
+				design.elementSizes.overrides[size] = { name: size === 'large' ? 17 : 14 };
+				if (size !== 'large') design.groups[size].elements.progress.row = 0;
+			});
+			design.widgetPadding = { compact: { top: 10, bottom: 4 } };
+			['play', 'pause', 'stop'].forEach(function (element) {
+				design.elementSizes.overrides.compact[element] = 38;
+				design.groups.compact.elements[element].group = 4;
+			});
+			design.elementSizes.overrides.compact.icon = 20;
+			design.groups.compact.elements.name = { row: 1, group: 2, order: 1 };
+			design.groups.compact.elements.status = { row: 1, group: 2, order: 2 };
+			design.groups.compact.elements.duration.group = 3;
+			design.rowColumns.compact[1] = 4;
+			design.columnSpans.compact[1] = [1, 1, 1, 1];
+			design.columnWidths.compact[1] = ['content', 'span', 'content', 'content'];
+			design.columnDirections.compact[1] = ['horizontal', 'vertical', 'horizontal', 'horizontal'];
+			design.columnVerticalAlignments.compact[1] = ['middle', 'middle', 'middle', 'middle'];
+			design.elementSizes.overrides.large.icon = 36;
+			design.elementLineHeights = { compact: { name: 20, status: 18 }, large: { name: 24, duration: 40 } };
+			design.rowColumns.large[1] = 2;
+			design.columnSpans.large[1] = [1, 3];
+			design.columnAlignments.large[1] = ['left', 'left'];
+			design.columnWidths.large[1] = ['content', 'span'];
+			design.columnDirections.large[1] = ['horizontal', 'vertical'];
+			design.columnVerticalAlignments.large[1] = ['middle', 'middle'];
+			design.rowColumnGaps = { large: { 1: 16 } };
+			design.columnElementGaps = { compact: { 1: [8, 0, 8, 4] }, large: { 1: [8, 0] } };
+			design.groups.large.elements.name = { row: 1, group: 2, order: 1 };
+			design.groups.large.elements.status = { row: 1, group: 2, order: 2 };
+			design.groups.normal.elements.status = { row: 1, group: 1, order: 3 };
+			design.reservedElements.large.progress = true;
+		} else if (id === 'builtin:transitions') {
 			['normal', 'large'].forEach(function (size) {
 				var layout = design.groups[size];
 				[layout.elements].concat(Object.values(layout.overrides)).forEach(function (positions) {
@@ -693,6 +760,8 @@
 		var verticalAlignments = style.columnVerticalAlignments && style.columnVerticalAlignments[size] || {};
 		var directions = style.columnDirections && style.columnDirections[size] || {};
 		var widths = style.columnWidths && style.columnWidths[size] || {};
+		var columnGaps = style.rowColumnGaps && style.rowColumnGaps[size] || {};
+		var elementGaps = style.columnElementGaps && style.columnElementGaps[size] || {};
 		var rowSpansByColumn = style.columnRowSpans && style.columnRowSpans[size] || {};
 		return Array.from({ length: rowCount(style, size) }, function (unused, index) {
 			var rowId = index + 1;
@@ -718,7 +787,7 @@
 				});
 				var placeholders = ['icon', 'duration', 'remaining', 'total', 'progress'].filter(function (id) {
 					var position = positions[id];
-					return reserveElement(style, size, id) && position && position.row === rowId && position.group === groupId
+					return visible && reserveElement(style, size, id) && position && position.row === rowId && position.group === groupId
 						&& elements.indexOf(id) === -1;
 				});
 				var renderElements = elements.concat(placeholders).sort(function (left, right) {
@@ -735,6 +804,8 @@
 					verticalAlignment: rowVerticalAlignments[groupIndex] || 'middle',
 					direction: rowDirections[groupIndex] || 'horizontal',
 					width: rowWidths[groupIndex] || 'span',
+					gap: elementGaps[rowId] && elementGaps[rowId][groupIndex] !== undefined
+						? elementGaps[rowId][groupIndex] : 8,
 					rowSpan: rowSpansByColumn[rowId] && rowSpansByColumn[rowId][groupIndex] || 1,
 					elements: elements,
 					placeholders: placeholders,
@@ -744,6 +815,7 @@
 			return groups.some(hasGroupContent)
 				? {
 					id: rowId,
+					columnGap: columnGaps[rowId] !== undefined ? columnGaps[rowId] : 8,
 					alignment: style.rowAlignments && style.rowAlignments[size]
 						&& style.rowAlignments[size][rowId] || 'top',
 					topPadding: style.rowTopPadding && style.rowTopPadding[size]
@@ -760,12 +832,17 @@
 	}
 
 	function valueColor(value) {
+		if (isHexColor(value)) return value;
 		return Object.prototype.hasOwnProperty.call(colorValues, value) ? colorValues[value] : colorValues.default;
+	}
+
+	function isHexColor(value) {
+		return typeof value === 'string' && /^#[0-9a-f]{6}$/i.test(value);
 	}
 
 	function resolveColor(scheme, state, key) {
 		if (!scheme || !scheme.colors) return 'default';
-		var value = key === 'background' ? scheme.colors[state] : scheme.colors[key];
+		var value = key === 'background' ? scheme.colors[scheme.colorModel === 2 ? 'inactive' : state] : scheme.colors[key];
 		var overrides = scheme.colorOverrides || {};
 		if (overrides[state] && overrides[state][key] !== undefined) value = overrides[state][key];
 		return value === undefined ? 'default' : value;
@@ -782,7 +859,7 @@
 
 	function buttonColor(scheme, state, element) {
 		var color = resolveColor(scheme, state, element);
-		if (!Object.prototype.hasOwnProperty.call(colorValues, color) || color === 'default' || color === 'none') {
+		if ((!isHexColor(color) && !Object.prototype.hasOwnProperty.call(colorValues, color)) || color === 'default' || color === 'none') {
 			return element === 'stop' ? 'red' : 'blue';
 		}
 		return color;
@@ -806,8 +883,65 @@
 		return style;
 	}
 
-	function backgroundStyle(scheme, state) {
-		return { backgroundColor: valueColor(resolveColor(scheme, state, 'background')) };
+	function borderWidth(design, size) {
+		if (borderlessFrame(design, size)) return 0;
+		var width = design && design.borderWidths && design.borderWidths[size];
+		return Number.isInteger(width) && width >= 0 && width <= 20 ? width : 0;
+	}
+
+	function borderlessFrame(design, size) {
+		return !!(design && design.borderlessFrames && design.borderlessFrames[size] === true);
+	}
+
+	function frameStyle(borderless) {
+		return borderless ? { border: '0px', boxShadow: 'none' } : {};
+	}
+
+	function borderStyle(design, scheme, size, state) {
+		var width = borderWidth(design, size);
+		var colors = scheme && scheme.borderColors;
+		var overrides = scheme && scheme.borderOverrides && scheme.borderOverrides[state];
+		var color = overrides && overrides.background !== undefined ? overrides.background : colors && colors.background;
+		if (!width || color === 'none') return {};
+		return {
+			border: width + 'px solid ' + (color && color !== 'default' ? valueColor(color) : 'var(--homey-line-color, rgba(128, 128, 128, 0.35))'),
+			borderRadius: 'var(--homey-border-radius-default, 16px)',
+			padding: 'var(--homey-su-2, 8px)'
+		};
+	}
+
+	function backgroundStyle(scheme, state, design, size) {
+		return Object.assign({ backgroundColor: valueColor(resolveColor(scheme, state, 'background')) },
+			backgroundPaint(scheme, state),
+			borderStyle(design, scheme, size, state));
+	}
+
+	function backgroundGradient(scheme, state) {
+		var values = scheme && scheme.backgroundGradients || {};
+		return values[state] === undefined ? values.inactive === true : values[state] === true;
+	}
+
+	function backgroundPaint(scheme, state) {
+		var color = resolveColor(scheme, state, 'background');
+		if (color === 'none' || color === 'default') return {};
+		if (backgroundGradient(scheme, state)) {
+			var surface = 'var(--chronograph-surface, var(--homey-background-color, #fff))';
+			var tint = 'var(--chronograph-gradient-tint, 22%)';
+			return {
+				backgroundColor: surface,
+				backgroundImage: 'linear-gradient(to bottom, color-mix(in srgb, ' + valueColor(color) + ' ' + tint + ', ' + surface
+					+ '), color-mix(in srgb, ' + valueColor(color) + ' calc(' + tint + ' / 2), ' + surface + '))',
+				color: 'var(--homey-text-color, #202127)'
+			};
+		}
+		if (color === 'black-light') return { backgroundColor: valueColor(color), color: '#fff' };
+		if (!isHexColor(color)) return {};
+		var rgb = color.slice(1).match(/../g).map(function (channel) {
+			var value = parseInt(channel, 16) / 255;
+			return value <= 0.04045 ? value / 12.92 : Math.pow((value + 0.055) / 1.055, 2.4);
+		});
+		var luminance = 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
+		return { backgroundColor: color, color: luminance > 0.179 ? '#000' : '#fff' };
 	}
 
 	return {
@@ -833,6 +967,9 @@
 		defaultElementSize: defaultElementSize,
 		migrateElementSizes: migrateElementSizes,
 		elementSize: elementSize,
+		elementLineHeight: elementLineHeight,
+		widgetPadding: widgetPadding,
+		paddingStyle: paddingStyle,
 		buttonText: buttonText,
 		buttonShape: buttonShape,
 		buttonShapeStyle: buttonShapeStyle,
@@ -841,10 +978,17 @@
 		inputFieldLayout: inputFieldLayout,
 		buildRows: buildRows,
 		valueColor: valueColor,
+		isHexColor: isHexColor,
 		buttonColor: buttonColor,
 		resolveColor: resolveColor,
 		resolveForeground: resolveForeground,
 		elementStyle: elementStyle,
-		backgroundStyle: backgroundStyle
+		borderWidth: borderWidth,
+		borderlessFrame: borderlessFrame,
+		frameStyle: frameStyle,
+		borderStyle: borderStyle,
+		backgroundStyle: backgroundStyle,
+		backgroundGradient: backgroundGradient,
+		backgroundPaint: backgroundPaint
 	};
 }));

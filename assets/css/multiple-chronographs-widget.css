@@ -3,15 +3,23 @@ body[data-separator] {
 	background-color: transparent;
 }
 
+body[data-separator="none"],
+body[data-separator="line"] {
+	/* Keep the frame shadow inside the transparent widget's viewport. */
+	padding: 4px 6px 8px;
+}
+
 .multiple-chronographs {
 	padding: var(--homey-su-4, 16px);
-	border-radius: 16px;
-	background: var(--homey-background-color, #fff);
+	border-radius: var(--homey-border-radius-default, 16px);
+	background: var(--chronograph-surface);
+	box-shadow: var(--chronograph-frame-shadow);
 }
 
 body[data-separator="cards"] .multiple-chronographs {
 	padding: 0;
 	background: transparent;
+	box-shadow: none;
 }
 
 .multiple-chronographs-rows {
@@ -31,9 +39,9 @@ body[data-separator="cards"] .multiple-chronographs {
 body[data-separator="cards"] .multiple-chronographs > .chronograph-message,
 body[data-separator="cards"] .multiple-chronographs > .chronograph-error {
 	padding: var(--homey-su-4, 16px);
-	border-radius: 16px;
-	background: var(--homey-background-color, #fff);
-	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+	border-radius: var(--homey-border-radius-default, 16px);
+	background: var(--chronograph-surface);
+	box-shadow: var(--chronograph-frame-shadow);
 }
 
 body[data-separator="cards"] .multiple-chronographs > .chronograph-error + .multiple-chronographs-rows {

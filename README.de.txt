@@ -13,6 +13,7 @@ FEATURES
 * Mit dem Chronograph-Dashboard-Widget kannst du in den Widget-Einstellungen einen Timer, eine Stoppuhr oder einen Übergang auswählen, pausieren, fortsetzen oder stoppen.
 * Passe Layouts, Themes und Standardicons für einzelne und mehrteilige Widgets an, mit verstrichener, verbleibender und gesamter Zeit für Timer und Übergänge.
 * Teile Designs und Themes über Templates und den Widget Exchange der Community, mit Vorschauen und Vollbildern mit Zwei-Finger-Zoom.
+* Wähle das WidgetKeeper-Design und passe Widgetrahmen an, mit hellen und dunklen Vorschauen und Vorlagenbildern.
 * Verwende Mathematik-Ausdrücke innerhalb von Flow-Karten.
 * Nutze HomeyScript, um aktive Timer, Stoppuhren und Übergänge zu überwachen, zu pausieren, fortzusetzen oder zu stoppen.
 

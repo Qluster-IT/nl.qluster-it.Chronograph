@@ -8,6 +8,7 @@ This is a Homey app. Before making changes, read and follow the general instruct
 ## App-specific instructions
 - In Dutch, translate the Chronograph type "transition" as "transitie" (plural "transities"), not "overgang" or "overgangen".
 - The widget should let a user select a timer, stopwatch, or transition and provide controls to pause, resume, and stop the selected chronograph.
+- Missing widget styling capabilities should become designer options, not changes to shared defaults. Match new design requests through preset-specific settings; preserve the appearance of other built-in designs and existing dashboard configurations.
 - Widget bundles preserve pre-minified Angular and Font Awesome assets, including their licences, verbatim. Minify only app-owned code and fail the CSS build on errors or warnings rather than dropping unsupported selectors.
 - Keep configured identities separate from runtime instances: collect only literal saved Flow names and explicit picker selections, excluding wildcards. Do not execute BLL or resolve Homey tags/tokens while rebuilding configuration. Syntax checks here classify identities; runtime decoding still calls BLL directly without delimiter pre-checks.
 - Runtime starts must not add configured names. Keep resolved names and start metadata on the instance and its restart snapshot; save reusable defaults only for names that are independently configured. Changing a coding/tag/token value affects future starts, never an existing instance's identity.

@@ -4,6 +4,59 @@ const assert = require('assert');
 const widgetStyle = require('../assets/js/chronograph-widget-style.js');
 
 describe('Widget style runtime', () => {
+	it('preserves native padding unless overridden and aggregates each side independently', () => {
+		assert.deepStrictEqual(widgetStyle.paddingStyle([{}]), {});
+		assert.deepStrictEqual(widgetStyle.paddingStyle([{ top: 0, right: 12, bottom: 4, left: 0 }]),
+			{ paddingTop: '0px', paddingRight: '12px', paddingBottom: '4px', paddingLeft: '0px' });
+		assert.deepStrictEqual(widgetStyle.paddingStyle([{ top: 4, right: 20 }, { top: 8, left: 0 }]), {
+			paddingTop: '8px', paddingRight: 'max(var(--homey-su-4, 16px), 20px)',
+			paddingLeft: 'max(var(--homey-su-4, 16px), 0px)'
+		});
+		const design = { widgetPadding: { normal: { top: 0 } } };
+		assert.deepStrictEqual(widgetStyle.paddingStyle([widgetStyle.widgetPadding(design, 'compact')]), {});
+		assert.deepStrictEqual(widgetStyle.paddingStyle([widgetStyle.widgetPadding(design, 'normal')]), { paddingTop: '0px' });
+	});
+
+	it('renders custom colors safely and applies the WidgetKeeper gradient only while running', () => {
+		const scheme = widgetStyle.builtInScheme('builtin:widgetkeeper');
+		assert.match(widgetStyle.backgroundPaint(scheme, 'running').backgroundImage, /^linear-gradient\(to bottom,/);
+		assert.deepStrictEqual(widgetStyle.backgroundPaint(scheme, 'paused'), {});
+		assert.deepStrictEqual(widgetStyle.backgroundPaint(scheme, 'inactive'), {});
+		scheme.backgroundGradients = { inactive: true, paused: false };
+		scheme.colors.inactive = scheme.colors.running = scheme.colors.paused = '#2B2C36';
+		assert.strictEqual(widgetStyle.backgroundGradient(scheme, 'running'), true);
+		assert.strictEqual(widgetStyle.backgroundPaint(scheme, 'paused').backgroundImage, undefined);
+		assert.strictEqual(widgetStyle.backgroundPaint(scheme, 'paused').color, '#fff');
+		scheme.colors.paused = '#FAFAFA';
+		assert.strictEqual(widgetStyle.backgroundPaint(scheme, 'paused').color, '#000');
+		scheme.colors.pause = '#aBc123';
+		scheme.foregroundColors.pause = '#123456';
+		scheme.borderColors = { pause: '#654321' };
+		assert.deepStrictEqual(widgetStyle.elementStyle(scheme, 'paused', 'pause'), {
+			backgroundColor: '#aBc123', color: '#123456', border: '1px solid #654321'
+		});
+		assert.strictEqual(widgetStyle.valueColor('black-light'), '#2B2C36');
+		for (const value of ['#123', '#12345678', '#zzzzzz', 'red;display:none', null]) {
+			assert.strictEqual(widgetStyle.isHexColor(value), false);
+			assert.strictEqual(widgetStyle.valueColor(value), 'inherit');
+		}
+	});
+
+	it('keeps the standard frame unless a size requests an outline and resolves its state color', () => {
+		const design = widgetStyle.currentDesign();
+		const scheme = widgetStyle.currentScheme();
+		assert.deepStrictEqual(widgetStyle.borderStyle(design, scheme, 'normal', 'running'), {});
+		design.borderWidths = { normal: 3, large: 0 };
+		assert.match(widgetStyle.backgroundStyle(scheme, 'inactive', design, 'normal').border, /^3px solid var\(--homey-line-color,/);
+		scheme.borderColors = { background: 'blue' };
+		scheme.borderOverrides = { paused: { background: 'red' }, running: { background: 'none' } };
+		assert.strictEqual(widgetStyle.borderStyle(design, scheme, 'normal', 'inactive').border, '3px solid ' + widgetStyle.valueColor('blue'));
+		assert.strictEqual(widgetStyle.borderStyle(design, scheme, 'normal', 'paused').border, '3px solid ' + widgetStyle.valueColor('red'));
+		assert.deepStrictEqual(widgetStyle.borderStyle(design, scheme, 'normal', 'running'), {});
+		assert.deepStrictEqual(widgetStyle.borderStyle(design, scheme, 'large', 'inactive'), {});
+		assert.deepStrictEqual(widgetStyle.borderStyle(design, scheme, 'compact', 'inactive'), {});
+	});
+
 	it('shows optional elapsed and total time for active timers and transitions and reserves them when requested', () => {
 		for (const preset of ['builtin:current', ...widgetStyle.builtInDesignDefinitions.map(item => item.id)]) {
 			const design = widgetStyle.builtInDesign(preset);
@@ -70,7 +123,7 @@ describe('Widget style runtime', () => {
 				const button = state === 'running' ? 'pause' : 'play';
 				assert.deepStrictEqual(widgetStyle.buttonShapeStyle(design, size, button), { borderRadius: '4px' });
 				assert.deepStrictEqual(widgetStyle.elementStyle(scheme, state, button), {
-					backgroundColor: 'transparent', color: '#9a9ca6', border: '1px solid #9a9ca6'
+					backgroundColor: 'transparent', color: widgetStyle.valueColor('grey'), border: '1px solid ' + widgetStyle.valueColor('grey')
 				});
 			}
 		}
@@ -87,6 +140,39 @@ describe('Widget style runtime', () => {
 		delete design.rowCounts;
 		assert.strictEqual(widgetStyle.rowCount(design, 'normal'), 5);
 		assert.ok(!widgetStyle.buildRows(design, 'normal', 'running', 'timer', false).some(row => row.id === 10));
+	});
+
+	it('preserves WidgetKeeper controls and large progress spacing across chronograph types', () => {
+		const design = widgetStyle.builtInDesign('builtin:widgetkeeper');
+		for (const type of ['timer', 'stopwatch', 'transition']) {
+			for (const size of ['compact', 'normal', 'large']) {
+				for (const state of ['running', 'paused']) {
+					const rows = widgetStyle.buildRows(design, size, state, type, false);
+					const elements = rows.flatMap(row => row.groups.flatMap(group => group.elements));
+					assert.ok(elements.includes('duration') && elements.includes('stop'));
+					assert.ok(elements.includes(state === 'running' ? 'pause' : 'play'));
+					if (size === 'compact') {
+						const titles = rows[0].groups.find(group => group.elements.includes('name'));
+						assert.deepStrictEqual(titles.elements, ['name', 'status']);
+						assert.strictEqual(titles.direction, 'vertical');
+						assert.ok(!titles.elements.includes('icon'));
+						const controls = rows[0].groups.find(group => group.elements.includes('stop'));
+						assert.ok(controls.elements.includes(state === 'running' ? 'pause' : 'play'));
+					}
+					if (size === 'large') {
+						const progress = rows.flatMap(row => row.groups).find(group => group.renderElements.includes('progress'));
+						assert.ok(progress);
+						assert.strictEqual(progress.placeholders.includes('progress'), type === 'stopwatch');
+					}
+				}
+				if (type !== 'stopwatch') {
+					const rows = widgetStyle.buildRows(design, size, 'starting', type, true);
+					const elements = rows.flatMap(row => row.groups.flatMap(group => group.elements));
+					assert.ok(elements.includes('fields') && elements.includes('start'));
+					if (size === 'large') assert.strictEqual(rows.find(row => row.id === 4).alignment, 'bottom');
+				}
+			}
+		}
 	});
 
 	it('uses the occupied row counts for built-in presets', () => {
@@ -228,19 +314,39 @@ describe('Widget style runtime', () => {
 		}
 	});
 
-	it('reserves the hidden duration without exposing it in Small and Tiny', () => {
+	it('reserves hidden duration only while its Small or Tiny row is visible', () => {
 		for (const preset of ['builtin:small', 'builtin:tiny']) {
 			const design = widgetStyle.builtInDesign(preset);
 			for (const size of ['compact', 'normal', 'large']) {
 				for (const type of ['timer', 'transition', 'stopwatch']) {
 					const rows = widgetStyle.buildRows(design, size, 'inactive', type, false);
 					const row = rows.find(item => item.id === (preset === 'builtin:tiny' ? 3 : 2));
+					if (preset === 'builtin:tiny') {
+						assert.strictEqual(row, undefined);
+						continue;
+					}
 					const group = row.groups[0];
 					assert.ok(group.placeholders.includes('duration'));
 					assert.ok(!group.elements.includes('duration'));
 					assert.ok(group.renderElements.includes('duration'));
 				}
 			}
+		}
+	});
+
+	it('collapses hidden WidgetKeeper rows despite reservations while retaining minimum-height scenarios', () => {
+		const design = widgetStyle.builtInDesign('builtin:widgetkeeper');
+		design.rowAlignments.large[4] = 'middle';
+		for (const state of ['inactive', 'starting']) {
+			const rows = widgetStyle.buildRows(design, 'large', state, 'timer', state === 'starting');
+			assert.ok(!rows.some(row => row.id === 5));
+			if (state === 'starting') assert.strictEqual(rows.find(row => row.id === 4).alignment, 'middle');
+		}
+		for (const state of ['running', 'paused']) {
+			const measured = widgetStyle.buildRows(design, 'large', state, 'timer', false, true);
+			const progress = measured.find(row => row.id === 5);
+			assert.strictEqual(progress.topPadding, 16);
+			assert.ok(progress.groups.some(group => group.elements.includes('progress')));
 		}
 	});
 

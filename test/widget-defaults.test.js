@@ -76,6 +76,43 @@ async function loadWidget(type, settings, defaults, widgetStyles, hidden = false
 }
 
 describe('Widget duration defaults', () => {
+	it('paints running gradients across the single frame without repeating them inside the design', async () => {
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		const design = runtime.builtInDesign('builtin:widgetkeeper');
+		design.id = 'padded';
+		design.widgetPadding = { large: { top: 0, right: 12, bottom: 4, left: 8 } };
+		const { scope, state, listeners } = await loadWidget('timer', {
+			layout: 'large', designStyle: design.id, colorTheme: 'builtin:widgetkeeper'
+		}, {}, { version: 3, styles: [design], themes: [] });
+		assert.strictEqual(scope.widgetFrameStyle().paddingTop, '0px');
+		assert.strictEqual(scope.widgetFrameStyle().backgroundImage, undefined);
+		state.active = state.running = true;
+		await listeners.chronograph_event_multi();
+		assert.match(scope.widgetFrameStyle().backgroundImage, /^linear-gradient/);
+		assert.strictEqual(scope.designBackgroundStyle().backgroundImage, undefined);
+		assert.strictEqual(scope.designBackgroundStyle().backgroundColor, 'transparent');
+		state.running = false;
+		await listeners.chronograph_event_multi();
+		assert.strictEqual(scope.widgetFrameStyle().backgroundImage, undefined);
+		assert.strictEqual(scope.widgetFrameStyle().paddingRight, '12px');
+	});
+
+	it('applies saved widget outline widths and updates their color when the chronograph pauses', async () => {
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		const design = Object.assign(runtime.currentDesign(), { id: 'outlined', borderWidths: { normal: 3 } });
+		const theme = Object.assign(runtime.currentScheme(), {
+			id: 'outlined-theme', borderColors: { background: 'blue' },
+			borderOverrides: { paused: { background: 'red' } }
+		});
+		const widget = await loadWidget('timer', { designStyle: design.id, colorTheme: theme.id }, {}, {
+			version: 3, styles: [design], themes: [theme]
+		});
+		assert.strictEqual(widget.scope.designBackgroundStyle().border, '3px solid ' + runtime.valueColor('blue'));
+		Object.assign(widget.state, { active: true, running: false, duration: 1000, targetDuration: 10000 });
+		await widget.listeners.chronograph_event_multi();
+		assert.strictEqual(widget.scope.designBackgroundStyle().border, '3px solid ' + runtime.valueColor('red'));
+	});
+
 	it('loads appearance and state in parallel without rendering early or losing elapsed loading time', async () => {
 		let resolveStyles;
 		const styles = new Promise(resolve => { resolveStyles = resolve; });
@@ -547,7 +584,9 @@ describe('Widget duration defaults', () => {
 						assert.ok(elements.includes('duration'), preset.id + ' ' + type + ' ' + layout);
 						assert.ok(elements.includes(running ? 'pause' : 'play'));
 						assert.ok(elements.includes('stop'));
-						assert.strictEqual(elements.includes('progress'), type !== 'stopwatch' && preset.id !== 'builtin:settings');
+						const hasProgress = preset.id !== 'builtin:settings'
+							&& (preset.id !== 'builtin:widgetkeeper' || layout === 'large');
+						assert.strictEqual(elements.includes('progress'), type !== 'stopwatch' && hasProgress);
 					}
 				}
 			}
@@ -595,7 +634,7 @@ describe('Widget duration defaults', () => {
 				const button = widget.scope.designButtonStyle('pause');
 				assert.strictEqual(button.borderRadius, '4px');
 				assert.strictEqual(button.backgroundColor, 'transparent');
-				assert.strictEqual(button.border, '1px solid #9a9ca6');
+				assert.strictEqual(button.border, '1px solid var(--homey-color-mono-500, #9a9ca6)');
 				assert.ok(!widget.requests.some(request => request.url === '/widget-styles'));
 			}
 		}

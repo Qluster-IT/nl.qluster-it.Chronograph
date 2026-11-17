@@ -315,11 +315,15 @@ function onHomeyReady(Homey) {
 					var colors = activeDesignScheme.progressColors && activeDesignScheme.progressColors[$scope.layout];
 					presentations[state] = {
 						elements: {}, buttons: {}, sizes: {}, texts: {}, colors: {}, legacy: {}, markers: {},
-						background: widgetStyleRuntime.backgroundStyle(activeDesignScheme, state),
+						background: widgetStyleRuntime.backgroundStyle(activeDesignScheme, state, activeDesign, $scope.layout),
 						progressDirection: progress && progress.direction || 'left-right',
 						progressBackground: widgetStyleRuntime.valueColor(colors && colors.background || 'grey'),
 						progressForeground: widgetStyleRuntime.valueColor(colors && colors.foreground || 'blue')
 					};
+					if (!multipleEntry && Object.keys(widgetStyleRuntime.backgroundPaint(activeDesignScheme, state)).length) {
+						presentations[state].background.backgroundColor = 'transparent';
+						delete presentations[state].background.backgroundImage;
+					}
 				}
 				return presentations[state];
 			}
@@ -336,6 +340,9 @@ function onHomeyReady(Homey) {
 				var cache = presentationFor($scope.designState).sizes;
 				if (cache[element] === undefined) cache[element] = widgetStyleRuntime.elementSize(activeDesign, $scope.layout, element);
 				return cache[element];
+			};
+			$scope.designElementLineHeight = function (element) {
+				return widgetStyleRuntime.elementLineHeight(activeDesign, $scope.layout, element);
 			};
 			$scope.designButtonText = function (element) {
 				var cache = presentationFor($scope.designState).texts;
@@ -366,6 +373,11 @@ function onHomeyReady(Homey) {
 			};
 			$scope.designBackgroundStyle = function () {
 				return presentationFor($scope.designState).background;
+			};
+			$scope.widgetFrameStyle = function () {
+				return Object.assign({}, $scope.widgetPaddingStyle,
+					widgetStyleRuntime.frameStyle(widgetStyleRuntime.borderlessFrame(activeDesign, $scope.layout)),
+					widgetStyleRuntime.backgroundPaint(activeDesignScheme, $scope.designState));
 			};
 			$scope.schemeElementStyle = function (element) {
 				var state = $scope.selectedChronograph && $scope.selectedChronograph.active
@@ -474,11 +486,17 @@ function onHomeyReady(Homey) {
 			}
 
 			function loadWidgetAppearance() {
+				function applyPadding() {
+					var padding = widgetStyleRuntime.widgetPadding(activeDesign, $scope.layout);
+					if (multipleEntry) $scope.multipleWidget.setPadding(multipleEntry, padding, widgetStyleRuntime.borderlessFrame(activeDesign, $scope.layout));
+					else $scope.widgetPaddingStyle = widgetStyleRuntime.paddingStyle([padding]);
+				}
 				var builtInDesign = widgetStyleRuntime.builtInDesign(designStyleId);
 				var builtInScheme = widgetStyleRuntime.builtInScheme(colorSchemeId);
 				var needsCollection = !builtInDesign || !builtInScheme;
 				if (!needsCollection) {
 					activeDesign = builtInDesign;
+					applyPadding();
 					applyIcon();
 					applyColorScheme(builtInScheme);
 					updateDesignRows();
@@ -495,6 +513,7 @@ function onHomeyReady(Homey) {
 					}
 					$scope.$applyAsync(function () {
 						activeDesign = design || null;
+						applyPadding();
 						applyIcon();
 						applyColorScheme(scheme);
 						updateDesignRows();
@@ -503,6 +522,7 @@ function onHomeyReady(Homey) {
 					styleError = window.chronographErrorMessage(Homey, error);
 					$scope.$applyAsync(function () {
 						activeDesign = null;
+						applyPadding();
 						applyIcon();
 						applyColorScheme(null);
 						updateDesignRows();

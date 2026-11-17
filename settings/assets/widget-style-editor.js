@@ -4,7 +4,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 	var elementIds = ['icon', 'name', 'status', 'duration', 'play', 'pause', 'stop', 'fields'];
 	var groupedElementIds = elementIds.concat(['cancel', 'start', 'progress', 'remaining', 'total']);
 	var sizes = ['compact', 'normal', 'large'];
-	var colorIds = ['default', 'blue', 'red', 'orange', 'yellow', 'green', 'purple', 'teal', 'cyan', 'indigo', 'pink', 'brown', 'grey', 'black', 'white'];
+	var colorIds = ['default', 'blue', 'red', 'orange', 'yellow', 'green', 'purple', 'teal', 'cyan', 'indigo', 'pink', 'brown', 'grey', 'black', 'black-light', 'white'];
 	var foregroundIds = colorIds.slice();
 	var backgroundIds = ['none'].concat(colorIds.slice(1));
 	var legacyColorKeys = ['icon', 'name', 'status', 'duration', 'play', 'pause', 'stop'];
@@ -16,7 +16,11 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 	var rowKeys = Array.from({ length: window.ChronographWidgetStyle.maxRows }, function (unused, index) { return String(index + 1); });
 	var rowCount = window.ChronographWidgetStyle.rowCount;
 	var rowProperties = ['rowVisibility', 'rowColumns', 'columnSpans', 'columnAlignments', 'columnVerticalAlignments',
-		'columnDirections', 'columnWidths', 'columnRowSpans', 'rowAlignments', 'rowTopPadding'];
+		'columnDirections', 'columnWidths', 'columnRowSpans', 'rowAlignments', 'rowTopPadding', 'rowColumnGaps', 'columnElementGaps'];
+	var pixelValues = Array.from({ length: 101 }, function (unused, value) { return value; });
+	function validColor(value, options) {
+		return options.indexOf(value) !== -1 || window.ChronographWidgetStyle.isHexColor(value);
+	}
 
 	function position(row, group, order) {
 		return { row: row, group: group, order: order };
@@ -265,6 +269,16 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 		return columnValues(style, 'columnRowSpans', size, row, 1);
 	}
 
+	function columnElementGaps(style, size, row) {
+		return columnValues(style, 'columnElementGaps', size, row, 8);
+	}
+
+	function storeElementGaps(style, size, row, values) {
+		if (style.columnElementGaps || values.some(function (value) { return value !== 8; })) {
+			storeColumnValues(style, 'columnElementGaps', size, row, values);
+		}
+	}
+
 	function setColumnRowSpan(style, size, row, column, span) {
 		var values = columnRowSpans(style, size, row);
 		if (!style.groups || sizes.indexOf(size) === -1 || rowKeys.indexOf(String(row)) === -1
@@ -398,7 +412,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 				if (positions[id].row === row) positions[id].group = destination(positions[id].group);
 			});
 		});
-		['columnSpans', 'columnAlignments', 'columnVerticalAlignments', 'columnDirections', 'columnWidths', 'columnRowSpans']
+		['columnSpans', 'columnAlignments', 'columnVerticalAlignments', 'columnDirections', 'columnWidths', 'columnRowSpans', 'columnElementGaps']
 			.forEach(function (key) {
 				var values = style[key] && style[key][size] && style[key][size][row];
 				if (!values) return;
@@ -429,6 +443,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 		var directions = columnDirections(style, size, row);
 		var widths = columnWidths(style, size, row);
 		var rowSpans = columnRowSpans(style, size, row);
+		var gaps = columnElementGaps(style, size, row);
 		var index = column - 1;
 		if (!Number.isInteger(index) || index < 0 || index >= spans.length
 			|| !Number.isInteger(span) || span < 1 || span > 4) {
@@ -444,6 +459,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 				directions.push('horizontal');
 				widths.push('span');
 				rowSpans.push(1);
+				gaps.push(8);
 			}
 			if (!style.rowColumns) style.rowColumns = {};
 			if (!style.rowColumns[size]) style.rowColumns[size] = {};
@@ -454,6 +470,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			storeColumnValues(style, 'columnDirections', size, row, directions);
 			storeColumnValues(style, 'columnWidths', size, row, widths);
 			storeColumnValues(style, 'columnRowSpans', size, row, rowSpans);
+			storeElementGaps(style, size, row, gaps);
 			return column;
 		}
 		var removedColumns = [];
@@ -493,6 +510,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			directions = kept.map(function (i) { return directions[i]; });
 			widths = kept.map(function (i) { return widths[i]; });
 			rowSpans = kept.map(function (i) { return rowSpans[i]; });
+			gaps = kept.map(function (i) { return gaps[i]; });
 			spans[spans.length - 1] += removedSpan;
 			index = selectedIndex;
 			if (!style.rowColumns) style.rowColumns = {};
@@ -503,6 +521,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			storeColumnValues(style, 'columnDirections', size, row, directions);
 			storeColumnValues(style, 'columnWidths', size, row, widths);
 			storeColumnValues(style, 'columnRowSpans', size, row, rowSpans);
+			storeElementGaps(style, size, row, gaps);
 		}
 		var difference = span - spans[index];
 		var others = [];
@@ -570,6 +589,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 		var directions = columnDirections(style, size, row);
 		var widths = columnWidths(style, size, row);
 		var rowSpans = columnRowSpans(style, size, row);
+		var gaps = columnElementGaps(style, size, row);
 		if (!Number.isInteger(count) || count < 1 || count > spans.reduce(function (sum, span) { return sum + span; }, 0)) {
 			throw new RangeError('Invalid column count');
 		}
@@ -602,6 +622,9 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 		rowSpans = rowSpans.slice(0, count);
 		while (rowSpans.length < count) rowSpans.push(1);
 		storeColumnValues(style, 'columnRowSpans', size, row, rowSpans);
+		gaps = gaps.slice(0, count);
+		while (gaps.length < count) gaps.push(8);
+		storeElementGaps(style, size, row, gaps);
 		[layout.elements].concat(Object.keys(layout.overrides).map(function (state) {
 			return layout.overrides[state];
 		})).forEach(function (positions) {
@@ -698,9 +721,9 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			return layoutStates.indexOf(state) !== -1 && values && typeof values === 'object'
 				&& !Array.isArray(values) && Object.keys(values).every(function (key) {
 					return key === 'background'
-						? backgroundIds.indexOf(values[key]) !== -1
+						? validColor(values[key], backgroundIds)
 						: colorKeys.indexOf(key) !== -1
-							&& (colorIds.indexOf(values[key]) !== -1 || buttonIds.indexOf(key) !== -1 && values[key] === 'none');
+							&& (validColor(values[key], colorIds) || buttonIds.indexOf(key) !== -1 && values[key] === 'none');
 				});
 		});
 	}
@@ -724,7 +747,9 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 	function validBorderColors(colors) {
 		return colors === undefined || (colors && typeof colors === 'object' && !Array.isArray(colors)
 			&& Object.keys(colors).every(function (key) {
-				return buttonIds.indexOf(key) !== -1 && ['none'].concat(foregroundIds.slice(1)).indexOf(colors[key]) !== -1;
+				return (buttonIds.indexOf(key) !== -1 || key === 'background')
+					&& (key === 'background' && colors[key] === 'default'
+						|| validColor(colors[key], ['none'].concat(foregroundIds.slice(1))));
 			}));
 	}
 
@@ -733,6 +758,13 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			&& Object.keys(overrides).every(function (state) {
 				return state !== 'inactive' && layoutStates.indexOf(state) !== -1
 					&& overrides[state] !== undefined && validBorderColors(overrides[state]);
+			}));
+	}
+
+	function validBackgroundGradients(value) {
+		return value === undefined || (value && typeof value === 'object' && !Array.isArray(value)
+			&& Object.keys(value).every(function (state) {
+				return layoutStates.indexOf(state) !== -1 && typeof value[state] === 'boolean';
 			}));
 	}
 
@@ -748,7 +780,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 	function validForegroundColors(colors) {
 		return colors === undefined || (colors && typeof colors === 'object' && !Array.isArray(colors)
 			&& Object.keys(colors).every(function (key) {
-				return groupedElementIds.indexOf(key) !== -1 && foregroundIds.indexOf(colors[key]) !== -1;
+				return groupedElementIds.indexOf(key) !== -1 && validColor(colors[key], foregroundIds);
 			}));
 	}
 
@@ -863,6 +895,13 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			|| !validStartFieldsVisibility(style.startFieldsVisibility) || !validRowVisibility(style.rowVisibility)
 			|| !validForegroundColors(style.foregroundColors) || !validForegroundOverrides(style.foregroundOverrides)
 			|| !validHeightModes(style.heightModes)
+			|| !validBorderWidths(style.borderWidths)
+			|| !validBorderlessFrames(style.borderlessFrames)
+			|| !validBackgroundGradients(style.backgroundGradients)
+			|| !validPixelMap(style.widgetPadding, ['top', 'right', 'bottom', 'left'], 0)
+			|| !validPixelMap(style.elementLineHeights, ['name', 'status', 'duration', 'remaining', 'total'], 4)
+			|| !validPixelMap(style.rowColumnGaps, rowKeys, 0)
+			|| !validColumnValues(style, 'columnElementGaps', pixelValues)
 			|| !validInputFieldRows(style.inputFieldRows)
 			|| !validElementSizes(style.elementSizes)
 			|| !validButtonTexts(style.buttonTexts)
@@ -887,9 +926,9 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 				&& elementIds.every(function (id) { return cells.filter(function (cell) { return cell === id; }).length === 1; });
 		}) && validColumnPositions(style) && colorKeys.every(function (key) {
 			return ((key === 'start' || key === 'cancel') && style.colors[key] === undefined)
-				|| colorIds.indexOf(style.colors[key]) !== -1 || buttonIds.indexOf(key) !== -1 && style.colors[key] === 'none';
+				|| validColor(style.colors[key], colorIds) || buttonIds.indexOf(key) !== -1 && style.colors[key] === 'none';
 		}) && backgroundKeys.every(function (key) {
-			return backgroundIds.indexOf(style.colors[key]) !== -1;
+			return validColor(style.colors[key], backgroundIds);
 		});
 	}
 
@@ -939,7 +978,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 			var settings = value[size];
 			return sizes.indexOf(size) !== -1 && settings && typeof settings === 'object' && !Array.isArray(settings)
 				&& Object.keys(settings).every(function (key) {
-					return (key === 'background' || key === 'foreground') ? foregroundIds.indexOf(settings[key]) !== -1
+					return (key === 'background' || key === 'foreground') ? validColor(settings[key], foregroundIds)
 						: key === 'direction' ? ['left-right', 'right-left', 'bottom-top', 'top-bottom'].indexOf(settings[key]) !== -1
 							: key === 'timerMode' ? ['elapsed', 'remaining'].indexOf(settings[key]) !== -1
 								: key === 'showSteps' && typeof settings[key] === 'boolean';
@@ -951,6 +990,32 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 		return value === undefined || (value && typeof value === 'object' && !Array.isArray(value)
 			&& Object.keys(value).every(function (size) {
 				return sizes.indexOf(size) !== -1 && ['auto', 'minimum', 'minimum-without-inputs'].indexOf(value[size]) !== -1;
+			}));
+	}
+
+	function validBorderWidths(value) {
+		return value === undefined || (value && typeof value === 'object' && !Array.isArray(value)
+			&& Object.keys(value).every(function (size) {
+				return sizes.indexOf(size) !== -1 && Number.isInteger(value[size]) && value[size] >= 0 && value[size] <= 20;
+			}));
+	}
+
+	function validBorderlessFrames(value) {
+		return value === undefined || (value && typeof value === 'object' && !Array.isArray(value)
+			&& Object.keys(value).every(function (size) {
+				return sizes.indexOf(size) !== -1 && typeof value[size] === 'boolean';
+			}));
+	}
+
+	function validPixelMap(value, keys, minimum) {
+		return value === undefined || (value && typeof value === 'object' && !Array.isArray(value)
+			&& Object.keys(value).every(function (size) {
+				var values = value[size];
+				return sizes.indexOf(size) !== -1 && values && typeof values === 'object' && !Array.isArray(values)
+					&& Object.keys(values).every(function (key) {
+						return keys.indexOf(key) !== -1 && Number.isInteger(values[key])
+							&& values[key] >= minimum && values[key] <= 100;
+					});
 			}));
 	}
 
@@ -1088,11 +1153,12 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 				|| !validColorOverrides(scheme.colorOverrides) || (scheme.colorOverrides && scheme.colorOverrides.inactive)
 				|| !validForegroundColors(scheme.foregroundColors) || !validForegroundOverrides(scheme.foregroundOverrides)
 				|| !validBorderColors(scheme.borderColors) || !validBorderOverrides(scheme.borderOverrides)
+				|| !validBackgroundGradients(scheme.backgroundGradients)
 				|| !validProgressSettings({ groups: true, progressSettings: scheme.progressColors })) return false;
 			if (!colorKeys.every(function (key) {
 				return ((key === 'start' || key === 'cancel') && scheme.colors[key] === undefined)
-					|| colorIds.indexOf(scheme.colors[key]) !== -1 || buttonIds.indexOf(key) !== -1 && scheme.colors[key] === 'none';
-			}) || !backgroundKeys.every(function (key) { return backgroundIds.indexOf(scheme.colors[key]) !== -1; })) return false;
+					|| validColor(scheme.colors[key], colorIds) || buttonIds.indexOf(key) !== -1 && scheme.colors[key] === 'none';
+			}) || !backgroundKeys.every(function (key) { return validColor(scheme.colors[key], backgroundIds); })) return false;
 			if (scheme.progressColors && !Object.keys(scheme.progressColors).every(function (size) {
 				return Object.keys(scheme.progressColors[size]).every(function (key) { return key === 'background' || key === 'foreground'; });
 			})) return false;
@@ -1102,7 +1168,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 	}
 
 	function isValidDesign(style) {
-		if (!style || ['colors', 'colorModel', 'colorOverrides', 'foregroundColors', 'foregroundOverrides', 'foregroundModel', 'borderColors', 'borderOverrides']
+		if (!style || ['colors', 'colorModel', 'colorOverrides', 'foregroundColors', 'foregroundOverrides', 'foregroundModel', 'borderColors', 'borderOverrides', 'backgroundGradients']
 			.some(function (key) { return Object.prototype.hasOwnProperty.call(style, key); })) return false;
 		if (style.groups && !sizes.every(function (size) {
 			return style.groups[size] && style.groups[size].elements
@@ -1119,7 +1185,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 
 	function designFromStyle(style) {
 		var design = angular.copy(style);
-		['colors', 'colorModel', 'colorOverrides', 'foregroundColors', 'foregroundOverrides', 'foregroundModel', 'borderColors', 'borderOverrides'].forEach(function (key) {
+		['colors', 'colorModel', 'colorOverrides', 'foregroundColors', 'foregroundOverrides', 'foregroundModel', 'borderColors', 'borderOverrides', 'backgroundGradients'].forEach(function (key) {
 			delete design[key];
 		});
 		Object.keys(design.progressSettings || {}).forEach(function (size) {
@@ -1131,7 +1197,7 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 
 	function colorSchemeFromStyle(style) {
 		var scheme = { id: style.id, name: style.name, colors: angular.copy(style.colors) };
-		['colorOverrides', 'foregroundColors', 'foregroundOverrides', 'borderColors', 'borderOverrides'].forEach(function (key) {
+		['colorModel', 'colorOverrides', 'foregroundColors', 'foregroundOverrides', 'borderColors', 'borderOverrides', 'backgroundGradients'].forEach(function (key) {
 			if (style[key] !== undefined) scheme[key] = angular.copy(style[key]);
 		});
 		Object.keys(style.progressSettings || {}).forEach(function (size) {
@@ -1196,6 +1262,10 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 		setColumnVerticalAlignment: setColumnVerticalAlignment,
 		setColumnDirection: setColumnDirection,
 		columnWidths: columnWidths,
+		columnElementGaps: columnElementGaps,
+		setColumnElementGap: function (style, size, row, column, value) {
+			setColumnValue(style, 'columnElementGaps', size, row, column, value, pixelValues, 8);
+		},
 		setColumnWidth: setColumnWidth,
 		columnRowSpans: columnRowSpans,
 		setColumnRowSpan: setColumnRowSpan,

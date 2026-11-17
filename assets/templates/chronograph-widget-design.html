@@ -5,10 +5,10 @@
 		ng-style="designLayer.spanning ? { 'grid-template-columns': designLayer.tracks, 'grid-template-rows': designLayer.rowTracks } : {}"
 		ng-attr-aria-hidden="{{ designLayer.measure ? 'true' : undefined }}" ng-attr-inert="{{ designLayer.measure ? '' : undefined }}">
 	<div class="chronograph-design-row" ng-repeat="row in designLayer.rows track by row.id"
-		ng-attr-data-row-alignment="{{ row.alignment }}" ng-style="{ 'grid-template-columns': row.tracks, 'padding-top': row.topPadding + 'px' }">
+		ng-attr-data-row-alignment="{{ row.alignment }}" ng-style="{ 'grid-template-columns': row.tracks, 'padding-top': row.topPadding + 'px', 'column-gap': row.columnGap + 'px' }">
 		<div class="chronograph-design-group" ng-repeat="group in row.groups track by group.id"
 			ng-class="{ 'chronograph-design-group-wrap': group.wrap, 'chronograph-design-group-narrow-start': group.narrowStart }"
-			ng-style="designLayer.spanning ? { 'grid-column': group.gridColumn, 'grid-row': group.gridRow, 'padding-top': group.rowTopPadding + 'px' } : {}"
+			ng-style="designLayer.spanning ? { 'grid-column': group.gridColumn, 'grid-row': group.gridRow, 'padding-top': group.rowTopPadding + 'px', 'padding-right': group.gridEnd >= 0.999999999 ? '0px' : row.columnGap + 'px', 'gap': group.gap + 'px' } : { 'gap': group.gap + 'px' }"
 			ng-attr-data-row-span="{{ group.rowSpan }}"
 			ng-attr-data-grid-last="{{ group.gridEnd >= 0.999999999 ? 'true' : undefined }}"
 			ng-attr-data-alignment="{{ group.alignment }}"
@@ -17,7 +17,7 @@
 			<div class="chronograph-design-element" ng-repeat="element in group.renderElements track by element"
 				ng-class="['chronograph-design-element-' + element, { 'chronograph-design-placeholder': group.placeholders.indexOf(element) !== -1 }]" ng-switch="element"
 				ng-attr-aria-hidden="{{ group.placeholders.indexOf(element) !== -1 ? 'true' : undefined }}"
-				ng-attr-style="--element-size: {{ designElementSize(element) }}px; color: {{ designElementStyle(element).color || 'inherit' }}">
+				ng-attr-style="--element-size: {{ designElementSize(element) }}px; --element-line-height: {{ designElementLineHeight(element) }}; color: {{ designElementStyle(element).color || 'inherit' }}">
 				<h2 ng-switch-when="name" class="chronograph-name">{{ getDisplayName(selectedChronograph) }}</h2>
 				<i ng-switch-when="icon" class="chronograph-icon" ng-if="iconClass" ng-class="iconClass" aria-hidden="true"></i>
 				<img ng-switch-when="icon" class="chronograph-icon" ng-if="iconImage && !iconMask" ng-src="{{ iconImage }}" alt="" aria-hidden="true">

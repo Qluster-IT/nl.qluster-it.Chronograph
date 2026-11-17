@@ -17,8 +17,9 @@ Adds precise timer, stopwatch and transition functionality to Homey.
 * Target multiple timers, stopwatches and transitions at once using wildcards in supported cards.
 * Control timers, stopwatches and transitions from single or multi-chronograph dashboard widgets.
 * Customize widget layouts, themes and per-type default icons, with optional widget-specific Font Awesome Free icons or None.
+* Choose the WidgetKeeper design and customize widget outlines, with light/dark previews and template images.
 * Import, export and share designs and themes through Templates and the community Widget Exchange, with timer previews and zoomable images.
-* Share template posts with three preview images, one each for stopwatches, timers and transitions.
+* Share template posts with six preview images: stopwatches, timers and transitions in light mode, then dark mode.
 * Display elapsed and total time for timers and transitions, with optional reversed time displays.
 * Set a timer or transition widget's default duration to 0 to use the last duration saved by a Flow or API start, if available.
 * Transition widget default start, end and step values use the last saved Flow or API values when set to 0 or left empty.
@@ -89,6 +90,48 @@ theme. For one or two columns, preview the widget's row separation
 and line color as well.
 The real multi-widget paints its background on the rounded outer container,
 not the iframe body; card separation keeps its transparent gaps and rounded rows.
+Default surfaces use Homey's background color in light mode and near-black
+`#181920` with a subtle light inset rim in dark mode. Shared surface CSS keeps live
+widgets and designer previews consistent; explicitly selected
+background colors, including pure black, are unchanged.
+The default and line-separated layouts have an outer card shadow in light mode,
+with a small transparent gutter to keep it visible inside the widget viewport;
+the dark-mode rim replaces that shadow. Separate-card mode applies this treatment
+only to its rows, preserving transparent gaps. Single widgets use Homey's native
+frame with the same default surface and dark rim inside it.
+Blue, green, orange, red and fixed white color choices use Homey's semantic palette
+variables. Grey uses Homey's theme-aware monochrome palette. Black remains fixed
+black; yellow, purple, teal, cyan, indigo, pink and brown are Chronograph extensions.
+Existing saved color IDs remain valid. Preview colors use the same Homey tokens.
+Selecting Widget in a custom Design style exposes a border width per size.
+Homey default preserves the standard frame; explicit 0 removes the app-drawn
+outline and frame rim/shadow, while 1–20px adds an outline. Built-in designs and
+previously saved zero widths retain their existing Homey frame. A shared
+multi-widget frame becomes borderless only when every design in that frame
+requests it, independently per row in separate-card mode. In Themes, selecting
+Widget exposes its border color, including per-state overrides; Default uses
+`--homey-line-color`. The optional outline is drawn inside Homey's native frame,
+whose shadow cannot be restyled through the widget API. Widths and colors survive
+template export/import. Rounded cards use `--homey-border-radius-default`.
+Designer and template previews draw the optional outline inside the Homey frame,
+preserving its outer padding just like live widgets.
+Widget options also provide independent top/right/bottom/left padding overrides
+per size; Homey default leaves native padding untouched. Multi-widgets use the
+largest requested padding on each side of the shared frame, independently for
+each row in separate-card mode. Row column gaps, column element gaps and text
+line-height overrides are reusable designer controls; absent options keep the
+existing defaults. WidgetKeeper Large uses these controls for a 36px icon beside
+a stacked Name and Status header, without design-specific CSS.
+Every designer color selector offers HEX with a validated `#RRGGBB` input and
+native color picker. Black (light) is the fixed `#2B2C36` shade; pure Black remains
+unchanged. Theme background fills can be solid or a top-to-bottom tinted gradient
+per state, inheriting the base fill unless overridden. The matching WidgetKeeper
+theme applies a blue gradient only while running. These settings survive saving
+and TWF export/import; choosing a design does not replace the selected theme.
+App default means the element's normal appearance, not a global theme accent.
+Color overrides consistently show Inherit with the underlying base color.
+Grouped preview buttons use the same block flex layout as live controls, avoiding
+extra text-baseline space around small buttons and their selection outlines.
 Preview Start and Play actions both open hidden timer/transition input rows before
 starting; stopwatches start immediately and paused chronographs resume without input.
 Button text can be customized per design size. Default text is translated;
@@ -97,6 +140,8 @@ across languages, and empty custom text shows only the icon.
 Icon, duration, elapsed duration, total time and status bar elements can reserve space when hidden, separately
 for each design size. Built-in designs reserve icon space by default. Icons are
 centered in a square using the configured icon size.
+Hidden rows do not reserve elements, padding or gaps in the current layout.
+Minimum-height modes still measure other visible states to keep the card height stable.
 Duration counts down for timers and transitions. The optional Elapsed duration
 element counts up and retains the internal `remaining` ID for saved designs and
 template compatibility. Reverse time display swaps both values, independently
@@ -116,8 +161,24 @@ Shared previews match the widgets' size-specific text line heights, including cu
 text sizes and duration spacing when shrinking on narrow widgets.
 Settings preview widgets are capped at 450px wide and fit smaller screens. Template
 images use a fixed 350px capture width per widget, independent of the screen width.
-Each copied forum post includes three separate PNGs, one per chronograph type,
-with a 3-by-3 grid of sizes and states in each, rather than one tall collage.
+Preview frames follow live Homey padding (normally 16px), including design overrides.
+The built-in WidgetKeeper design matches Device Values' Pill tiles, Light Controls and
+standard Thermostat Presets card heights (52px, 88px and 156px) in Compact,
+Normal and Large, with 14px, 14px and 17px names respectively. Start forms may
+expand beyond those heights rather than clipping their inputs.
+Compact uses Lights-style vertical padding (10px top, 4px bottom), a stacked
+name/status column, and 38px controls.
+Large aligns its start-field row to the bottom of the available content area.
+This preset uses existing designer controls for element sizes, placement, reserved
+space, row padding and height modes; duplicate it to customize those settings.
+Existing built-in designs and shared widget defaults are unchanged by this preset.
+The designer's Light/Dark preview selector starts with the browser's color scheme
+and follows browser color-scheme changes, without changing saved designs or themes.
+The local development preview defaults to Light to match its light settings page;
+Dark remains selectable without changing saved designs.
+Each copied forum post includes six separate PNGs: stopwatches, timers and
+transitions in light mode first, then the same three in dark mode. Each has a
+3-by-3 grid of sizes and states, preserving the template's chosen colors.
 Copied forum posts leave an empty, normal paragraph below the title for an optional
 description; the export instructions point users to it without adding placeholder text.
 The community catalogue renders one normal-size running timer from each decoded

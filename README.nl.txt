@@ -13,6 +13,7 @@ FUNCTIES
 * Met de Chronograph-dashboardwidget kun je in de widgetinstellingen een timer, stopwatch of transitie selecteren en deze pauzeren, hervatten of stoppen.
 * Pas indelingen, thema's en standaardiconen aan voor afzonderlijke en meervoudige widgets, met verstreken, resterende en totale tijd voor timers en transities.
 * Deel ontwerpen en thema's via Templates en de Widget Exchange van de community, met voorbeelden en schermvullende afbeeldingen waarop je met twee vingers kunt zoomen.
+* Kies het WidgetKeeper-ontwerp en pas widgetomlijningen aan, met lichte en donkere voorbeelden en templateafbeeldingen.
 * Gebruik wiskundige uitdrukkingen binnen flowkaarten.
 * Gebruik HomeyScript om actieve timers, stopwatches en transities te bekijken, pauzeren, hervatten of stoppen.
 

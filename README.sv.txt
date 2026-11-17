@@ -13,6 +13,7 @@ FUNKTIONER
 * Med Chronographs instrumentpanelswidget kan du välja en timer, ett stoppur eller en övergång i widgetinställningarna och pausa, återuppta eller stoppa den.
 * Anpassa layouter, teman och standardikoner för enskilda och flera widgetar, med förfluten, återstående och total tid för timers och övergångar.
 * Dela designer och teman via Templates och gemenskapens Widget Exchange med förhandsvisningar och helskärmsbilder med tvåfingerzoom.
+* Välj WidgetKeeper-designen och anpassa widgetkanter med ljusa och mörka förhandsvisningar och mallbilder.
 * Använd matematiska uttryck inom flödeskort.
 * Använd HomeyScript för att övervaka, pausa, återuppta eller stoppa aktiva timers, stoppur och övergångar.
 

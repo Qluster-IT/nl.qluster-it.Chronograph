@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../../assets/css/widget-bundle.css">
 </head>
-<body class="homey-widget" data-chronograph-type="timer" ng-attr-data-widget-color="{{ getWidgetColor() }}" ng-controller="ChronographWidgetController" ng-class="{
+<body class="homey-widget" data-chronograph-type="timer" ng-style="widgetFrameStyle()" ng-attr-data-widget-color="{{ getWidgetColor() }}" ng-controller="ChronographWidgetController" ng-class="{
 	'chronograph-vivid-running': selectedChronograph && getWidgetColor() !== 'none'
 }">
 	<main class="chronograph-widget homey-text-regular" ng-class="{

@@ -191,19 +191,19 @@
 				{
 					"id": "default",
 					"title": {
-						"en": "Theme color",
-						"nl": "Themakleur",
-						"da": "Temafarve",
-						"de": "Themenfarbe",
-						"es": "Color del tema",
-						"fr": "Couleur du thème",
-						"it": "Colore del tema",
-						"no": "Temafarge",
-						"sv": "Temafärg",
-						"pl": "Kolor motywu",
-						"ru": "Цвет темы",
-						"ko": "테마 색상",
-						"ar": "لون السمة"
+						"en": "App default",
+						"nl": "App-standaard",
+						"da": "App-standard",
+						"de": "App-Standard",
+						"es": "Predeterminado de la app",
+						"fr": "Valeur par défaut de l’application",
+						"it": "Predefinito dell’app",
+						"no": "Appstandard",
+						"sv": "Appstandard",
+						"pl": "Domyślne aplikacji",
+						"ru": "По умолчанию приложения",
+						"ko": "앱 기본값",
+						"ar": "الإعداد الافتراضي للتطبيق"
 					}
 				},
 				{

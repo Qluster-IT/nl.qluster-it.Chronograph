@@ -95,6 +95,10 @@ window.registerMultipleChronographsWidget = function (Homey) {
 				usedColumns += entry.span;
 			});
 			pending = $scope.entries.length;
+			$scope.rowStyle = function (row) {
+				return Object.assign({ 'grid-template-columns': 'repeat(' + columns + ', minmax(0, 1fr))' },
+					$scope.rowSeparator === 'cards' ? row.paddingStyle : {});
+			};
 
 			function resize() {
 				if (!ready || destroyed || !window.requestAnimationFrame || !Homey.setHeight) return;
@@ -148,6 +152,19 @@ window.registerMultipleChronographsWidget = function (Homey) {
 			}
 
 			$scope.multipleWidget = {
+				setPadding: function (entry, padding, borderless) {
+					entry.padding = padding;
+					entry.borderless = borderless;
+					var runtime = window.ChronographWidgetStyle;
+					$scope.framePaddingStyle = Object.assign(runtime.paddingStyle(
+						$scope.entries.map(function (item) { return item.padding || {}; })),
+						runtime.frameStyle($scope.entries.length > 0 && $scope.entries.every(function (item) { return item.borderless; })));
+					$scope.rows.forEach(function (row) {
+						row.paddingStyle = Object.assign(runtime.paddingStyle(
+							row.map(function (item) { return item.padding || {}; })),
+							runtime.frameStyle(row.length > 0 && row.every(function (item) { return item.borderless; })));
+					});
+				},
 				tileReady: function () {
 					pending--;
 					if (!pending) markReady();

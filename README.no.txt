@@ -13,6 +13,7 @@ FUNKSJONER
 * Med Chronograph-dashbordwidgeten kan du velge en tidtaker, stoppeklokke eller overgang i widgetinnstillingene og pause, gjenoppta eller stoppe den.
 * Tilpass oppsett, temaer og standardikoner for enkelt- og multi-widgeter med forløpt, gjenstående og samlet tid for tidtakere og overganger.
 * Del design og temaer via Templates og fellesskapets Widget Exchange med forhåndsvisninger og fullskjermbilder med tofingerzoom.
+* Velg WidgetKeeper-designet og tilpass widgetkanter med lyse og mørke forhåndsvisninger og malbilder.
 * Bruk matematiske uttrykk inne i flytkort.
 * Bruk HomeyScript til å overvåke, pause, fortsette eller stoppe aktive tidtakere, stoppeklokker og overganger.
 

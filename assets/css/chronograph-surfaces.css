@@ -1,0 +1,14 @@
+body {
+	--chronograph-gradient-tint: 22%;
+	--chronograph-surface: var(--homey-background-color, #fff);
+	--chronograph-frame-rim: none;
+	--chronograph-frame-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.homey-dark-mode,
+.homey-dark-mode body {
+	--chronograph-gradient-tint: 26%;
+	--chronograph-surface: #181920;
+	--chronograph-frame-rim: inset 0 1px 0 rgba(255, 255, 255, 0.05), inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+	--chronograph-frame-shadow: var(--chronograph-frame-rim);
+}
