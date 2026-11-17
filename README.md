@@ -18,6 +18,7 @@ Adds precise timer, stopwatch and transition functionality to Homey.
 * Control timers, stopwatches and transitions from single or multi-chronograph dashboard widgets.
 * Customize widget layouts, themes and per-type default icons, with optional widget-specific Font Awesome Free icons or None.
 * Import, export and share designs and themes through Templates and the community Widget Exchange, with timer previews and zoomable images.
+* Share template posts with three preview images, one each for stopwatches, timers and transitions.
 * Display elapsed and total time for timers and transitions, with optional reversed time displays.
 * Set a timer or transition widget's default duration to 0 to use the last duration saved by a Flow or API start, if available.
 * Transition widget default start, end and step values use the last saved Flow or API values when set to 0 or left empty.
@@ -59,6 +60,10 @@ Initialization failures remain not ready; failure to deliver the realtime
 notification is logged without invalidating the usable readiness endpoint.
 
 ### Local settings preview
+
+Settings navigation and template action buttons use locally bundled icons with
+translated text labels. Widgets and Design styles share a local inline SVG;
+decorative icons are hidden from assistive technology.
 
 The root `locales/` directory contains an empty JSON object for each language.
 Homey Compose fills these files with generated translations when building; edit

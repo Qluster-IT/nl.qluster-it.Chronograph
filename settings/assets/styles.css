@@ -21,6 +21,14 @@ body {
 	color: inherit;
 }
 
+.settings-widgets-icon {
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+	fill: currentColor;
+	vertical-align: -0.125em;
+}
+
 .settings-tabs {
 	display: flex;
 	flex-wrap: nowrap;
@@ -61,7 +69,8 @@ body {
 	background: transparent;
 }
 
-.settings-tab i {
+.settings-tab i,
+.settings-tab .settings-widgets-icon {
 	font-size: 1rem;
 }
 
