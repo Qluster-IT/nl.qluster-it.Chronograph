@@ -1288,5 +1288,20 @@
     "ru": "Исправлены обмен и импорт TWF: шаблоны виджетов Chronograph распознаются корректно, а сообщения о несовместимых шаблонах стали понятнее.",
     "ko": "TWF 공유 및 가져오기에서 Chronograph 위젯 템플릿을 인식하고 호환되지 않는 템플릿에 대해 더 명확한 메시지를 표시하도록 수정했습니다.",
     "ar": "أُصلحت مشاركة TWF واستيرادها للتعرف على قوالب أدوات Chronograph وعرض رسائل أوضح للقوالب غير المتوافقة."
+  },
+  "3.0.10": {
+    "en": "Dashboard widgets now more closely match the designer preview for both built-in and custom designs and themes.",
+    "nl": "Widgets op het dashboard komen nu beter overeen met het voorbeeld in de ontwerper, voor zowel ingebouwde als aangepaste ontwerpen en thema’s.",
+    "da": "Widgets på dashboardet ligner nu forhåndsvisningen i designværktøjet bedre, både med indbyggede og tilpassede designs og temaer.",
+    "de": "Dashboard-Widgets entsprechen jetzt besser der Vorschau im Designer, sowohl bei integrierten als auch bei benutzerdefinierten Designs und Farbschemata.",
+    "es": "Los widgets del panel ahora se parecen más a la vista previa del diseñador, tanto con diseños y temas integrados como personalizados.",
+    "fr": "Les widgets du tableau de bord correspondent désormais mieux à l’aperçu dans l’éditeur, qu’ils utilisent des designs et thèmes intégrés ou personnalisés.",
+    "it": "I widget della dashboard ora corrispondono meglio all’anteprima nell’editor, sia con design e temi predefiniti sia con quelli personalizzati.",
+    "no": "Widgetene på dashbordet samsvarer nå bedre med forhåndsvisningen i designverktøyet, både med innebygde og egendefinerte design og temaer.",
+    "sv": "Widgetar på instrumentpanelen stämmer nu bättre överens med förhandsvisningen i designverktyget, både med inbyggda och anpassade designer och teman.",
+    "pl": "Widżety na pulpicie lepiej odpowiadają teraz podglądowi w edytorze, zarówno w przypadku wbudowanych, jak i własnych projektów i motywów.",
+    "ru": "Виджеты на панели теперь точнее соответствуют предпросмотру в редакторе как со встроенными, так и с пользовательскими дизайнами и темами.",
+    "ko": "대시보드 위젯이 이제 기본 및 사용자 지정 디자인과 테마 모두에서 디자인 편집기의 미리보기와 더 잘 일치합니다.",
+    "ar": "أصبحت أدوات لوحة المعلومات الآن أقرب إلى المعاينة في محرر التصميم، سواء عند استخدام التصاميم والسمات المدمجة أو المخصصة."
   }
 }

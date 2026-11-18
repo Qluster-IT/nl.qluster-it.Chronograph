@@ -1,8 +1,11 @@
+.chronograph-widget [data-button-color] {
+	--chronograph-button-muted-foreground: #fff;
+	--chronograph-button-vivid-foreground: #fff;
+}
+
 .chronograph-widget [data-button-color="blue"] {
 	--chronograph-button-muted: var(--homey-color-blue-600, #0068c8);
-	--chronograph-button-muted-foreground: #fff;
 	--chronograph-button-vivid: var(--homey-color-blue, #2f8df6);
-	--chronograph-button-vivid-foreground: #fff;
 }
 
 .chronograph-widget {
@@ -400,10 +403,17 @@ body[data-chronograph-type] {
 	border-radius: 50%;
 }
 
-.chronograph-design .chronograph-design-element-fields .form-control,
-.chronograph-design .chronograph-design-element-fields .form-select {
+.chronograph-widget .chronograph-design .chronograph-design-element-fields .form-control,
+.chronograph-widget .chronograph-design .chronograph-design-element-fields .form-select {
 	min-height: var(--element-size);
 	height: var(--element-size);
+	color: inherit;
+}
+
+.chronograph-design .chronograph-design-element .chronograph-cancel-button:not(.chronograph-button-with-text) {
+	width: var(--element-size);
+	padding: 0;
+	border-radius: 50%;
 }
 
 .chronograph-design-progress {

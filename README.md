@@ -32,6 +32,13 @@ See the [Chronograph wiki](https://github.com/Qluster-IT/nl.qluster-it.Chronogra
 
 ## Development
 
+Widget typography is shared between native widgets and designer/template previews
+through `assets/css/chronograph-typography.css`. Keep appearance-critical styles
+explicit rather than inheriting Homey or Bootstrap defaults. Widget controls use
+`hy-nostyle` so Homey's form styles do not override the selected design. This
+applies to built-in and custom designs automatically, without rewriting saved
+sizes, line heights, button shapes, or theme colors.
+
 ### Flow card structure
 
 Timer, stopwatch and transition trigger modules share matching, dispatch and
@@ -296,6 +303,10 @@ To regenerate the widget icon previews after updating the icon catalog, run `npm
 Application image by [Agê Barros](https://unsplash.com/@agebarros?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/search/photos/time?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText).
 
 ## Changelog
+
+### v3.0.10
+
+* Dashboard widgets now more closely match the designer preview for both built-in and custom designs and themes.
 
 ### v3.0.9
 

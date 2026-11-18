@@ -12,6 +12,47 @@ const template = fs.readFileSync(path.join(root, 'assets', 'templates', 'chronog
 const preview = fs.readFileSync(path.join(root, 'settings', 'index.html'), 'utf8');
 
 describe('Widget asset bundles', () => {
+	it('shares explicit typography across native widgets and Bootstrap previews', () => {
+		const typography = fs.readFileSync(path.join(root, 'assets', 'css', 'chronograph-typography.css'), 'utf8');
+		assert.ok(preview.includes('../assets/css/chronograph-typography.css'));
+		const rules = Array.from(typography.matchAll(/([^{}]+)\{([^{}]+)\}/g));
+		for (const selectors of [
+			['.chronograph-widget.homey-text-regular', '.style-preview'],
+			['.chronograph-widget .chronograph-action', '.style-preview .style-widget-action'],
+			['.chronograph-widget .form-control', '.style-preview .style-widget-field']
+		]) {
+			const rule = rules.find(match => selectors.every(selector => match[1].split(',').map(value => value.trim()).includes(selector)));
+			assert.ok(rule, selectors.join(' / '));
+			for (const property of ['font-family', 'line-height', 'letter-spacing', 'text-transform']) {
+				assert.match(rule[2], new RegExp(property + ':\\s*[^;]+;'));
+			}
+		}
+	});
+
+	it('opts designed and legacy controls out of Homey form styling', () => {
+		for (const [name, html] of [
+			['design', template],
+			...['timer', 'stopwatch', 'transition', 'multiple_chronographs'].map(widget => [
+				widget, fs.readFileSync(path.join(root, 'widgets', widget, 'public', 'index.html'), 'utf8')
+			])
+		]) {
+			const controls = Array.from(html.matchAll(/<(?:button|input|select)\b[^>]*?\sclass="([^"]+)"/g));
+			assert.ok(controls.length, name);
+			for (const control of controls) assert.ok(control[1].split(/\s+/).includes('hy-nostyle'), name + ': ' + control[0]);
+		}
+	});
+
+	it('provides default foregrounds for every named button palette, not only blue', () => {
+		const rules = Array.from(css.matchAll(/([^{}]+)\{([^{}]*)\}/g));
+		for (const color of ['blue', 'red', 'orange', 'yellow', 'green', 'purple', 'teal', 'cyan', 'indigo', 'pink', 'brown', 'grey']) {
+			const declarations = rules.filter(rule => rule[1].trim() === '.chronograph-widget [data-button-color]'
+				|| rule[1].trim() === '.chronograph-widget [data-button-color="' + color + '"]').map(rule => rule[2]).join('\n');
+			for (const variant of ['muted', 'vivid']) {
+				assert.match(declarations, new RegExp('--chronograph-button-' + variant + '-foreground:\\s*[^;]+;'), color);
+			}
+		}
+	});
+
 	it('ships up-to-date shared assets and caches the design template', () => {
 		const bundles = require('../tools/development/build-widget-assets.js')();
 		for (const [file, content] of Object.entries(bundles)) {

@@ -88,6 +88,34 @@ function stubPreviewPaintDelay(window) {
 }
 
 describe('Widget style designer preview', () => {
+	it('matches native wrapping and narrow start controls without changing the saved design', () => {
+		const { scope } = loadSettings();
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		let narrowGroups = 0;
+		for (const preset of ['builtin:small', 'builtin:tiny']) {
+			scope.editor.selectedStyleId = preset;
+			scope.editor.editStatus = true;
+			scope.editor.previewType = 'timer';
+			scope.editor.previewState = 'starting';
+			const design = scope.getSelectedStyle();
+			const before = JSON.stringify(design);
+			for (const size of ['compact', 'normal', 'large']) {
+				scope.editor.previewSize = size;
+				const native = runtime.buildRows(design, size, 'starting', 'timer', true);
+				for (const row of scope.groupedRows(true)) {
+					for (const group of row.groups.filter(item => item.elements.length)) {
+						const expected = native.find(item => item.id === row.id).groups.find(item => item.id === group.id);
+						assert.strictEqual(group.narrowStart, expected.narrowStart, preset + ':' + size);
+						assert.strictEqual(group.wrap, expected.wrap, preset + ':' + size);
+						if (group.narrowStart) narrowGroups++;
+					}
+				}
+			}
+			assert.strictEqual(JSON.stringify(design), before);
+		}
+		assert.ok(narrowGroups > 0);
+	});
+
 	it('distinguishes explicit borderless frames from native defaults and legacy zero widths', () => {
 		const { scope, editor, writes } = loadSettings();
 		for (const design of scope.builtInDesigns) {

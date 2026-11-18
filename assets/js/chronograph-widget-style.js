@@ -875,7 +875,9 @@
 		var style = {};
 		if (buttonIds.indexOf(element) !== -1) {
 			var background = resolveColor(scheme, state, element);
-			style.backgroundColor = background === 'none' ? 'transparent' : valueColor(buttonColor(scheme, state, element));
+			if (element !== 'cancel' || background !== 'default') {
+				style.backgroundColor = background === 'none' ? 'transparent' : valueColor(buttonColor(scheme, state, element));
+			}
 			var foreground = resolveForeground(scheme, state, element);
 			if (foreground !== 'default') style.color = valueColor(foreground);
 			var borders = scheme && scheme.borderColors || {};

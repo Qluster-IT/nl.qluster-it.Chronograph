@@ -40,29 +40,29 @@
 					<div class="chronograph-duration-fields" ng-if="!isStopwatch">
 						<div chronograph-field-tooltip ng-style="designFieldLayout().positions[0]">
 						<label class="visually-hidden" ng-attr-for="{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-duration' }}">{{ labels.duration }}</label>
-						<input class="form-control" ng-attr-id="{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-duration' }}" type="number" min="1" step="any"
+						<input class="hy-nostyle form-control" ng-attr-id="{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-duration' }}" type="number" min="1" step="any"
 							ng-model="startValues.time" required>
 						</div>
 						<div chronograph-field-tooltip ng-style="designFieldLayout().positions[1]">
 						<label class="visually-hidden" ng-attr-for="{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-duration-unit' }}">{{ labels.unit }}</label>
-						<select class="form-select" ng-attr-id="{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-duration-unit' }}" ng-model="startValues.unit"
+						<select class="hy-nostyle form-select" ng-attr-id="{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-duration-unit' }}" ng-model="startValues.unit"
 							ng-options="unit.id as unit.label for unit in units"></select>
 						</div>
 					</div>
 					<div class="chronograph-transition-fields" ng-if="isTransition">
 						<div chronograph-field-tooltip ng-style="designFieldLayout().positions[2]">
 							<label class="visually-hidden" ng-attr-for="{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-transition-from' }}">{{ labels.from }}</label>
-							<input class="form-control" ng-attr-id="{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-transition-from' }}" type="number" step="any"
+							<input class="hy-nostyle form-control" ng-attr-id="{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-transition-from' }}" type="number" step="any"
 								placeholder="{{ labels.from }}" ng-model="startValues.from" required>
 						</div>
 						<div chronograph-field-tooltip ng-style="designFieldLayout().positions[3]">
 							<label class="visually-hidden" ng-attr-for="{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-transition-to' }}">{{ labels.to }}</label>
-							<input class="form-control" ng-attr-id="{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-transition-to' }}" type="number" step="any"
+							<input class="hy-nostyle form-control" ng-attr-id="{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-transition-to' }}" type="number" step="any"
 								placeholder="{{ labels.to }}" ng-model="startValues.to" required>
 						</div>
 						<div chronograph-field-tooltip ng-style="designFieldLayout().positions[4]">
 							<label class="visually-hidden" ng-attr-for="{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-transition-steps' }}">{{ labels.steps }}</label>
-							<input class="form-control" ng-attr-id="{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-transition-steps' }}" type="number" min="2" step="1"
+							<input class="hy-nostyle form-control" ng-attr-id="{{ designLayer.measure ? undefined : widgetInputPrefix + 'design-transition-steps' }}" type="number" min="2" step="1"
 								placeholder="{{ labels.steps }}" ng-model="startValues.steps" required>
 						</div>
 					</div>
@@ -76,13 +76,13 @@
 					<span class="chronograph-design-progress-marker" ng-repeat="marker in designProgressMarkers() track by $index"
 						ng-style="designProgressMarkerStyle(marker)"></span>
 				</div>
-				<button ng-switch-when="start" class="chronograph-start-button" type="button" ng-click="start()"
+				<button ng-switch-when="start" class="hy-nostyle chronograph-start-button" type="button" ng-click="start()"
 					ng-disabled="busy" ng-attr-data-button-color="{{ designButtonColor('start') }}"
 					ng-class="{ 'chronograph-button-icon-only': !designButtonText('start') }"
 					ng-attr-aria-label="{{ labels.start }}" ng-style="designButtonStyle('start')">
 					<i class="fa-solid fa-play" aria-hidden="true"></i><span ng-if="designButtonText('start')">{{ designButtonText('start') }}</span>
 				</button>
-				<button ng-switch-when="play" class="chronograph-action" type="button"
+				<button ng-switch-when="play" class="hy-nostyle chronograph-action" type="button"
 					ng-click="selectedChronograph.active ? toggle() : beginStart()" ng-disabled="busy"
 					ng-attr-data-button-color="{{ designButtonColor('play') }}"
 					ng-class="{ 'chronograph-button-with-text': designButtonText('play') }"
@@ -90,19 +90,19 @@
 					ng-style="designButtonStyle('play')">
 					<i class="fa-solid fa-play" aria-hidden="true"></i><span ng-if="designButtonText('play')">{{ designButtonText('play') }}</span>
 				</button>
-				<button ng-switch-when="pause" class="chronograph-action" type="button" ng-click="toggle()"
+				<button ng-switch-when="pause" class="hy-nostyle chronograph-action" type="button" ng-click="toggle()"
 					ng-disabled="busy" ng-attr-data-button-color="{{ designButtonColor('pause') }}"
 					ng-class="{ 'chronograph-button-with-text': designButtonText('pause') }"
 					ng-attr-aria-label="{{ labels.pause }}" ng-style="designButtonStyle('pause')">
 					<i class="fa-solid fa-pause" aria-hidden="true"></i><span ng-if="designButtonText('pause')">{{ designButtonText('pause') }}</span>
 				</button>
-				<button ng-switch-when="stop" class="chronograph-action" type="button" ng-click="stop()"
+				<button ng-switch-when="stop" class="hy-nostyle chronograph-action" type="button" ng-click="stop()"
 					ng-disabled="busy" ng-attr-data-button-color="{{ designButtonColor('stop') }}"
 					ng-class="{ 'chronograph-button-with-text': designButtonText('stop') }"
 					ng-attr-aria-label="{{ labels.stop }}" ng-style="designButtonStyle('stop')">
 					<i class="fa-solid fa-stop" aria-hidden="true"></i><span ng-if="designButtonText('stop')">{{ designButtonText('stop') }}</span>
 				</button>
-				<button ng-switch-when="cancel" class="chronograph-cancel-button" type="button" ng-click="cancelStart()"
+				<button ng-switch-when="cancel" class="hy-nostyle chronograph-cancel-button" type="button" ng-click="cancelStart()"
 					ng-disabled="busy" ng-attr-data-button-color="{{ designButtonColor('cancel') }}"
 					ng-class="{ 'chronograph-button-with-text': designButtonText('cancel') }"
 					ng-attr-aria-label="{{ labels.cancel }}" ng-style="designButtonStyle('cancel')">

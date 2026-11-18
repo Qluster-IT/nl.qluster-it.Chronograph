@@ -21,6 +21,7 @@ const vendorStylesheets = [
 ];
 const stylesheets = [
 	'assets/css/chronograph-surfaces.css',
+	'assets/css/chronograph-typography.css',
 	'assets/css/chronograph-icons.css',
 	'assets/css/chronograph-widget.css',
 	'assets/css/multiple-chronographs-widget.css'

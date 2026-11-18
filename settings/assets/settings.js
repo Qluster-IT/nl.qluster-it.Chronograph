@@ -2057,7 +2057,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				style.id, style.groups[$scope.editor.previewSize], $scope.editor.previewSize,
 				state, type, showStateOverrides,
 				style.rowCounts, style.rowVisibility, style.rowColumns, style.rowAlignments, style.rowTopPadding, style.columnSpans, style.columnRowSpans, style.columnAlignments, style.columnVerticalAlignments, style.columnDirections, style.columnWidths, style.reservedElements,
-				style.defaultIcons, style.rowColumnGaps, style.columnElementGaps, $scope.previewIcon(type), $scope.getStartFieldsVisibility()
+				style.defaultIcons, style.rowColumnGaps, style.columnElementGaps, style.wrapNarrowElements, $scope.previewIcon(type), $scope.getStartFieldsVisibility()
 			]);
 			if (groupedRowsCache[cacheKey] && groupedRowsCache[cacheKey].fingerprint === fingerprint) {
 				return groupedRowsCache[cacheKey].rows;
@@ -2095,7 +2095,16 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 						var renderElements = elements.concat(placeholders).sort(function (a, b) {
 							return layout[a].order - layout[b].order || $scope.styleElements.indexOf(a) - $scope.styleElements.indexOf(b);
 						});
-						return { id: group, gap: gaps[group - 1], span: spans[group - 1], rowSpan: rowSpans[group - 1], alignment: alignments[group - 1], verticalAlignment: verticalAlignments[group - 1], direction: directions[group - 1], width: widths[group - 1], elements: elements, placeholders: placeholders, renderElements: renderElements };
+						return {
+							id: group, gap: gaps[group - 1], span: spans[group - 1], rowSpan: rowSpans[group - 1],
+							alignment: alignments[group - 1], verticalAlignment: verticalAlignments[group - 1],
+							direction: directions[group - 1], width: widths[group - 1],
+							narrowStart: style.wrapNarrowElements === true && elements.indexOf('start') !== -1,
+							wrap: style.wrapNarrowElements === true && elements.length === 2
+								&& ((elements.indexOf('start') !== -1 && elements.indexOf('cancel') !== -1)
+									|| (elements.indexOf('status') !== -1 && elements.indexOf('duration') !== -1)),
+							elements: elements, placeholders: placeholders, renderElements: renderElements
+						};
 					})
 				};
 			}).filter(function (row) {

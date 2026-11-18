@@ -28,7 +28,7 @@
 				<p class="chronograph-duration" aria-live="polite" ng-if="selectedChronograph.active" ng-style="schemeElementStyle('duration')">{{ formatDuration(selectedChronograph) }}</p>
 			</div>
 
-			<button class="chronograph-start-button chronograph-compact-start" type="button" ng-if="layout === 'compact' && !selectedChronograph.active && !showStartForm" ng-click="beginStart()" ng-disabled="busy" ng-attr-data-button-color="{{ playColor }}" ng-style="schemeElementStyle('play')" title="{{ labels.start }}" aria-label="{{ labels.start }}">
+			<button class="hy-nostyle chronograph-start-button chronograph-compact-start" type="button" ng-if="layout === 'compact' && !selectedChronograph.active && !showStartForm" ng-click="beginStart()" ng-disabled="busy" ng-attr-data-button-color="{{ playColor }}" ng-style="schemeElementStyle('play')" title="{{ labels.start }}" aria-label="{{ labels.start }}">
 				<i class="fa-solid fa-play" aria-hidden="true"></i>
 			</button>
 
@@ -37,28 +37,28 @@
 					<div class="chronograph-duration-fields">
 						<div chronograph-field-tooltip>
 							<label class="visually-hidden" for="duration">{{ labels.duration }}</label>
-							<input class="form-control" id="duration" type="number" min="1" step="any" ng-model="startValues.time" required>
+							<input class="hy-nostyle form-control" id="duration" type="number" min="1" step="any" ng-model="startValues.time" required>
 						</div>
 						<div chronograph-field-tooltip>
 							<label class="visually-hidden" for="duration-unit">{{ labels.unit }}</label>
-							<select class="form-select" id="duration-unit" ng-model="startValues.unit" ng-options="unit.id as unit.label for unit in units"></select>
+							<select class="hy-nostyle form-select" id="duration-unit" ng-model="startValues.unit" ng-options="unit.id as unit.label for unit in units"></select>
 						</div>
 					</div>
 				</div>
-				<button class="chronograph-start-button" type="submit" ng-disabled="busy" ng-attr-data-button-color="{{ playColor }}" ng-style="schemeElementStyle('start')">
+				<button class="hy-nostyle chronograph-start-button" type="submit" ng-disabled="busy" ng-attr-data-button-color="{{ playColor }}" ng-style="schemeElementStyle('start')">
 					<i class="fa-solid fa-play" aria-hidden="true"></i>
 					{{ labels.start }}
 				</button>
-				<button class="chronograph-cancel-button" type="button" ng-if="layout === 'compact'" ng-click="cancelStart()" ng-disabled="busy" ng-attr-data-button-color="{{ designButtonColor('cancel') }}" ng-style="schemeElementStyle('cancel')" title="{{ labels.cancel }}" aria-label="{{ labels.cancel }}">
+				<button class="hy-nostyle chronograph-cancel-button" type="button" ng-if="layout === 'compact'" ng-click="cancelStart()" ng-disabled="busy" ng-attr-data-button-color="{{ designButtonColor('cancel') }}" ng-style="schemeElementStyle('cancel')" title="{{ labels.cancel }}" aria-label="{{ labels.cancel }}">
 					<i class="fa-solid fa-xmark" aria-hidden="true"></i>
 				</button>
 			</form>
 
 			<div class="chronograph-actions" ng-if="selectedChronograph.active">
-				<button class="chronograph-action" type="button" ng-click="toggle()" ng-disabled="busy" title="{{ selectedChronograph.running ? labels.pause : labels.resume }}" aria-label="{{ selectedChronograph.running ? labels.pause : labels.resume }}" ng-attr-data-button-color="{{ selectedChronograph.running ? pauseColor : playColor }}" ng-style="schemeElementStyle(selectedChronograph.running ? 'pause' : 'play')">
+				<button class="hy-nostyle chronograph-action" type="button" ng-click="toggle()" ng-disabled="busy" title="{{ selectedChronograph.running ? labels.pause : labels.resume }}" aria-label="{{ selectedChronograph.running ? labels.pause : labels.resume }}" ng-attr-data-button-color="{{ selectedChronograph.running ? pauseColor : playColor }}" ng-style="schemeElementStyle(selectedChronograph.running ? 'pause' : 'play')">
 					<i class="fa-solid" ng-class="selectedChronograph.running ? 'fa-pause' : 'fa-play'" aria-hidden="true"></i>
 				</button>
-				<button class="chronograph-action" type="button" ng-click="stop()" ng-disabled="busy" title="{{ labels.stop }}" aria-label="{{ labels.stop }}" ng-attr-data-button-color="{{ stopColor }}" ng-style="schemeElementStyle('stop')">
+				<button class="hy-nostyle chronograph-action" type="button" ng-click="stop()" ng-disabled="busy" title="{{ labels.stop }}" aria-label="{{ labels.stop }}" ng-attr-data-button-color="{{ stopColor }}" ng-style="schemeElementStyle('stop')">
 					<i class="fa-solid fa-stop" aria-hidden="true"></i>
 				</button>
 			</div>

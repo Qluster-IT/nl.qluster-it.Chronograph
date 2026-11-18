@@ -4,6 +4,19 @@ const assert = require('assert');
 const widgetStyle = require('../assets/js/chronograph-widget-style.js');
 
 describe('Widget style runtime', () => {
+	it('keeps the native cancel appearance for App default without ignoring explicit theme overrides', () => {
+		const scheme = widgetStyle.currentScheme();
+		assert.strictEqual(widgetStyle.elementStyle(scheme, 'starting', 'cancel').backgroundColor, undefined);
+		scheme.colors.cancel = 'red';
+		assert.strictEqual(widgetStyle.elementStyle(scheme, 'starting', 'cancel').backgroundColor, widgetStyle.valueColor('red'));
+		scheme.colorOverrides.starting = { cancel: 'none' };
+		scheme.foregroundOverrides = { starting: { cancel: '#123456' } };
+		scheme.borderOverrides = { starting: { cancel: '#654321' } };
+		assert.deepStrictEqual(widgetStyle.elementStyle(scheme, 'starting', 'cancel'), {
+			backgroundColor: 'transparent', color: '#123456', border: '1px solid #654321'
+		});
+	});
+
 	it('preserves native padding unless overridden and aggregates each side independently', () => {
 		assert.deepStrictEqual(widgetStyle.paddingStyle([{}]), {});
 		assert.deepStrictEqual(widgetStyle.paddingStyle([{ top: 0, right: 12, bottom: 4, left: 0 }]),

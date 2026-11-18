@@ -639,6 +639,31 @@ describe('Widget duration defaults', () => {
 		}
 	});
 
+	it('keeps saved design dimensions and theme overrides on custom widget controls', async () => {
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		const design = runtime.currentDesign();
+		design.id = 'custom-design';
+		design.elementSizes = { overrides: { large: { fields: 34 } } };
+		design.elementLineHeights = { large: { name: 31 } };
+		design.buttonShapes = { base: { start: 'square' } };
+		const theme = runtime.currentScheme();
+		theme.id = 'custom-theme';
+		theme.colors.start = '#123456';
+		theme.foregroundColors = { fields: '#234567', start: '#FEDCBA' };
+		theme.borderColors = { start: '#345678' };
+		const collection = { version: 3, styles: [design], themes: [theme] };
+		const before = JSON.stringify(collection);
+		const { scope } = await loadWidget('timer', { layout: 'large', designStyle: design.id, colorTheme: theme.id }, {}, collection);
+		assert.strictEqual(scope.designEnabled, true);
+		assert.strictEqual(scope.designElementSize('fields'), 34);
+		assert.strictEqual(scope.designElementLineHeight('name'), '31px');
+		assert.strictEqual(scope.designElementStyle('fields').color, '#234567');
+		assert.deepStrictEqual({ ...scope.designButtonStyle('start') }, {
+			borderRadius: '4px', backgroundColor: '#123456', color: '#FEDCBA', border: '1px solid #345678'
+		});
+		assert.strictEqual(JSON.stringify(collection), before);
+	});
+
 	it('uses the selected design and default scheme independently', async () => {
 		const design = {
 			id: 'design-a',
