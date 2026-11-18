@@ -100,7 +100,7 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(scope.widgetBorderWidth(), 0);
 		assert.strictEqual(scope.previewTileStyle().boxShadow, 'none');
 		scope.editor.previewColumns = '2';
-		scope.editor.previewSeparator = 'cards';
+		scope.editor.previewSeparator = 'rows';
 		assert.strictEqual(scope.previewCardRowStyle().boxShadow, 'none');
 		scope.editor.previewColumns = 'single';
 		assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true);
@@ -151,6 +151,38 @@ describe('Widget style designer preview', () => {
 		scope.editor.previewSize = 'compact';
 		padding('left').value(null);
 		assert.strictEqual(design.widgetPadding, undefined);
+	});
+
+	it('puts padding and borderless styling on the selected row or individual-card frame', () => {
+		const { scope } = loadSettings();
+		scope.createStyle(true);
+		const design = scope.getSelectedStyle();
+		design.widgetPadding = { normal: { top: 3, left: 0 } };
+		design.borderlessFrames = { normal: true };
+		for (const columns of ['1', '2', '3']) {
+			scope.editor.previewColumns = columns;
+			for (const separator of ['rows', 'rows-small', 'rows-tiny', 'cards', 'cards-small', 'cards-tiny']) {
+				scope.editor.previewSeparator = separator;
+				const rows = separator.startsWith('rows');
+				assert.strictEqual(scope.previewSeparatorLayout(), rows ? 'rows' : 'cards');
+				assert.strictEqual(scope.previewCardRowStyle().paddingTop, rows ? '3px' : undefined);
+				assert.strictEqual(scope.previewTileStyle().paddingTop, rows ? undefined : '3px');
+				assert.strictEqual(scope.previewTileStyle().paddingLeft, rows ? undefined : '0px');
+				assert.strictEqual(scope.previewPaddingStyle('frame').boxShadow, undefined);
+				assert.strictEqual((rows ? scope.previewCardRowStyle() : scope.previewTileStyle()).boxShadow, 'none');
+			}
+		}
+	});
+
+	it('offers every named color in line, element, background, and border selectors', () => {
+		const { scope } = loadSettings();
+		const options = require('../widgets/multiple_chronographs/widget.compose.json').settings
+			.find(setting => setting.id === 'rowSeparatorColor').values;
+		assert.deepStrictEqual(options.map(option => option.id), Array.from(scope.colorOptions, option => option.id));
+		const named = Array.from(scope.colorOptions, option => option.id).filter(id => id !== 'default');
+		for (const key of ['foregroundOptions', 'elementColorOptions', 'backgroundOptions', 'buttonBackgroundOptions', 'borderOptions', 'baseBorderOptions']) {
+			for (const id of named) assert.ok(scope[key].some(option => option.id === id), key + ': ' + id);
+		}
 	});
 
 	it('validates HEX values in every theme channel and keeps gradients out of designs', () => {
@@ -1034,10 +1066,11 @@ describe('Widget style designer preview', () => {
 		assert.match(html, /id="preview-mode"[^>]*ng-model="editor\.previewMode"/);
 	});
 
-	it('copies six 3-by-3 images in light-then-dark order regardless of the settings theme', async () => {
+	[false, true].forEach(insecureHttp => it(`copies six light-then-dark previews ${insecureHttp ? 'on a manual HTTP retry' : 'automatically in a secure context'}`, async () => {
 		const previews = [];
 		const fontRequests = [];
 		const labels = [];
+		let writeStarted = false;
 		let copyHandler;
 		const copied = {};
 		const canvases = [];
@@ -1063,15 +1096,16 @@ describe('Widget style designer preview', () => {
 				canvases.push(canvas);
 				return canvas;
 			},
-			addEventListener(name, handler) { assert.strictEqual(name, 'copy'); copyHandler = handler; },
-			removeEventListener(name, handler) { assert.strictEqual(handler, copyHandler); copyHandler = null; },
+			addEventListener(name, handler) { if (name === 'copy') copyHandler = handler; },
+			removeEventListener() { copyHandler = null; },
 			execCommand() {
+				assert.ok(insecureHttp && copyHandler, 'Only the manual HTTP path uses legacy copy');
 				copyHandler({ preventDefault() {}, clipboardData: { setData(type, value) { copied[type] = value; } } });
 				return true;
 			}
 		};
 		const extras = {
-			document,
+			document, Blob,
 			fetch: async url => {
 				fontRequests.push(url);
 				return { ok: true, arrayBuffer: async () => new Uint8Array([1, 2]).buffer };
@@ -1079,6 +1113,14 @@ describe('Widget style designer preview', () => {
 			btoa: value => Buffer.from(value, 'binary').toString('base64')
 		};
 		const { scope, homey, window } = loadSettings(null, null, null, false, null, extras, false, null, true);
+		window.location = { protocol: 'http:' };
+		window.isSecureContext = !insecureHttp;
+		window.ClipboardItem = function (formats) { this.formats = formats; };
+		window.navigator = { clipboard: { async write([item]) {
+			assert.strictEqual(previews.length, 0);
+			writeStarted = true;
+			for (const [type, blob] of Object.entries(item.formats)) copied[type] = await (await blob).text();
+		} } };
 		window.setTimeout = (fn, delay) => setTimeout(fn, delay === 20 ? 0 : delay);
 		window.clearTimeout = clearTimeout;
 		window.getComputedStyle = element => element === preview ? {
@@ -1087,6 +1129,7 @@ describe('Widget style designer preview', () => {
 				: { '--homey-background-color': '#fff', '--homey-text-color': '#222' })[property]
 		} : { backgroundColor: 'rgb(24, 25, 32)', color: 'rgb(255, 255, 255)' };
 		window.htmlToImage = { toCanvas: async (element, options) => {
+			assert.strictEqual(scope.templates.generating, true);
 			assert.match(options.fontEmbedCSS, /font-family:"Font Awesome 7 Free";font-style:normal;font-weight:400/);
 			assert.match(options.fontEmbedCSS, /font-family:"Font Awesome 7 Free";font-style:normal;font-weight:900/);
 			assert.match(options.fontEmbedCSS, /font-family:"Font Awesome 7 Brands";font-style:normal;font-weight:400/);
@@ -1110,7 +1153,11 @@ describe('Widget style designer preview', () => {
 		scope.getSelectedStyle().defaultIcons = { timer: 'far:clock', stopwatch: 'fab:github', transition: 'chronograph:transition' };
 		scope.saveSettings();
 		const design = scope.getSelectedStyle();
-		homey.api = (method, url, data, callback) => callback(null, 'encoded-template');
+		homey.api = (method, url, data, callback) => {
+			assert.strictEqual(writeStarted, !insecureHttp, 'Only the secure context starts a deferred write');
+			assert.strictEqual(scope.templates.generating, true);
+			callback(null, 'encoded-template');
+		};
 		scope.openTemplates();
 		scope.templates.designId = design.id;
 		scope.generateWidgetTemplate();
@@ -1125,7 +1172,14 @@ describe('Widget style designer preview', () => {
 			}
 			wait();
 		});
+		if (insecureHttp) {
+			assert.strictEqual(scope.templates.copyStatus, 'http');
+			assert.deepStrictEqual(copied, {});
+			scope.copyTemplateForumPost();
+			assert.strictEqual(previews.length, 54, 'Manual copy does not re-render the previews');
+		}
 		assert.strictEqual(scope.templates.copyStatus, 'copied');
+		assert.strictEqual(scope.templates.generating, false);
 		assert.deepStrictEqual(fontRequests.sort(), ['fa-brands-400.woff2', 'fa-regular-400.woff2', 'fa-solid-900.woff2']
 			.map(file => '../assets/webfonts/' + file));
 		assert.deepStrictEqual(previews, ['light', 'dark'].flatMap(mode =>
@@ -1182,6 +1236,34 @@ describe('Widget style designer preview', () => {
 		assert.match(actions, /<p class="help-text">\{\{ t\('settings\.template_editor_switch'\) \}\}<\/p>/);
 		assert.match(actions, /role="status" ng-if="templates\.copyStatus"/);
 		assert.match(actions, /<span ng-if="templates\.copyStatus === 'copied'"><strong>\{\{ t\('settings\.template_copy_copied'\) \}\}<\/strong> \{\{ t\('settings\.template_copy_next'\) \}\}<\/span>/);
+		assert.match(actions, /<strong ng-if="templates\.copyStatus === 'retry'">\{\{ t\('settings\.template_copy_retry'\) \}\}<\/strong>/);
+		assert.match(actions, /<strong ng-if="templates\.copyStatus === 'http'">\{\{ t\('settings\.template_copy_http'\) \}\}<\/strong>/);
+		assert.match(actions, /ng-click="openWidgetExchange\(\)" ng-disabled="templates\.busy \|\| templates\.copyStatus !== 'copied'"/);
+	}));
+
+	it('unlocks the editor and cancels the queued copy when TWF encoding fails', async () => {
+		const { scope, homey, window } = loadSettings(null, null, null, false, null, { Blob });
+		scope.createStyle(true);
+		scope.getSelectedStyle().name = 'Encoding failure fixture';
+		scope.saveSettings();
+		const designId = scope.getSelectedStyle().id;
+		scope.openTemplates();
+		scope.templates.designId = designId;
+		let clipboardData;
+		window.ClipboardItem = function (formats) { clipboardData = formats; };
+		window.navigator = { clipboard: { write: () => clipboardData['text/html'] } };
+		let completeEncode;
+		homey.api = (method, url, data, callback) => { completeEncode = callback; };
+		let alert;
+		homey.alert = message => { alert = message; };
+
+		scope.generateWidgetTemplate();
+		assert.strictEqual(scope.templates.generating, true);
+		completeEncode(new Error('Encoding failed'));
+		await assert.rejects(clipboardData['text/html'], /Encoding failed/);
+		assert.match(alert, /Encoding failed/);
+		assert.strictEqual(scope.templates.generating, false);
+		assert.strictEqual(scope.templates.busy, false);
 	});
 
 	it('reports blocked rich clipboard copying without modifying the export', () => {
@@ -1241,7 +1323,7 @@ describe('Widget style designer preview', () => {
 	it('keeps exchange translations intact in every settings locale', () => {
 		const directory = path.join(root, '.homeycompose', 'locales');
 		const keys = ['template_paste_image_hint', 'template_prepare_image_error', 'template_clipboard_image_error',
-			'template_editor_switch', 'template_copy_copied', 'template_copy_retry',
+			'template_editor_switch', 'template_copy_copied', 'template_copy_retry', 'template_copy_http', 'template_generating',
 			'template_copy_next', 'template_paste_image_reason',
 			'template_paste_edit_description', 'template_paste_wait_image',
 			'template_image_zoom_in', 'template_image_zoom_out', 'template_image_close'];
@@ -1282,6 +1364,7 @@ describe('Widget style designer preview', () => {
 			assert.strictEqual(scope.templates.imageMode, undefined);
 			assert.strictEqual(captures, failedCapture);
 			assert.strictEqual(scope.templates.busy, false);
+			assert.strictEqual(scope.templates.generating, false);
 			assert.strictEqual(scope.templates.imageData, null);
 			assert.strictEqual(numberField.type, 'number');
 			assert.strictEqual(numberField.value, '1');
@@ -1711,7 +1794,9 @@ describe('Widget style designer preview', () => {
 		assert.match(css, /\.style-preview-sticky\s*\{[^}]*position:\s*sticky;[^}]*top:\s*-18px;/);
 		assert.match(html.slice(size, preview), /sticky-border/);
 		assert.match(css, /\.style-preview-sticky\.is-stuck::after\s*\{[^}]*border-bottom:/);
-		assert.match(css, /\.style-preview-sticky \.style-preview-rows\s*\{[^}]*max-height:\s*50vh;[^}]*overflow-y:\s*auto;/);
+		assert.match(css, /\.style-preview-sticky\s*\{[^}]*display:\s*flex;[^}]*flex-direction:\s*column;[^}]*max-height:\s*40vh;[^}]*max-height:\s*40dvh;/);
+		assert.match(css, /\.style-preview-sticky \.style-preview-rows\s*\{[^}]*min-height:\s*0;[^}]*overflow-y:\s*auto;/);
+		assert.match(css, /\.style-preview-sticky \.style-preview-columns\s*\{[^}]*flex-shrink:\s*0;/);
 		assert.match(css, /\.style-preview-rows,\s*\.style-preview\s*\{[^}]*box-sizing:\s*border-box;[^}]*width:\s*100%;[^}]*max-width:\s*450px;/);
 	});
 
@@ -2099,7 +2184,7 @@ describe('Widget style designer preview', () => {
 		assert.match(html, /id="preview-separator-color"[^>]*ng-model="editor\.previewSeparatorColor"/);
 		assert.match(css, /\.style-preview-frame-multiple\s*\{[^}]*border:\s*0;[^}]*background:\s*var\(--chronograph-surface\);[^}]*box-shadow:\s*var\(--chronograph-frame-shadow\)/);
 		assert.match(css, /\[data-separator="line"\] \.style-preview-columns \+ \.style-preview-columns/);
-		assert.match(css, /\[data-separator="cards"\] \.style-preview-columns/);
+		assert.match(css, /\[data-separator\^="rows"\] \.style-preview-columns/);
 	});
 
 	it('localizes chronograph operation errors in settings and preserves unknown errors', () => {
@@ -3530,19 +3615,27 @@ describe('Widget style designer preview', () => {
 		scope.editor.previewState = 'running';
 		const first = scope.stateColorOptions('duration');
 		assert.strictEqual(scope.stateColorOptions('duration'), first);
-		assert.strictEqual(first[0].label, 'settings.style_color_inherit (settings.style_color_default)');
+		assert.strictEqual(first[0].label, 'settings.style_color_inherit (settings.widget_not_running)');
 		scope.getSelectedScheme().colors.duration = 'red';
 		const updated = scope.stateColorOptions('duration');
 		assert.notStrictEqual(updated, first);
-		assert.strictEqual(updated[0].label, 'settings.style_color_inherit (settings.style_color_red)');
+		assert.strictEqual(updated[0].label, 'settings.style_color_inherit (settings.widget_not_running)');
 		assert.strictEqual(scope.stateColorOptions('duration'), updated);
 		const background = scope.stateColorOptions('background');
 		assert.strictEqual(scope.stateColorOptions('background'), background);
 		assert.strictEqual(scope.stateForegroundOptions('duration')[0].label,
-			'settings.style_color_inherit (settings.style_color_red)');
+			'settings.style_color_inherit (settings.widget_not_running)');
 		scope.getSelectedScheme().foregroundColors = { duration: 'red' };
 		assert.strictEqual(scope.stateForegroundOptions('duration')[0].label,
-			'settings.style_color_inherit (settings.style_color_red)');
+			'settings.style_color_inherit (settings.widget_not_running)');
+		scope.editor.selectedBackground = true;
+		for (const state of ['running', 'paused', 'starting']) {
+			scope.editor.previewState = state;
+			assert.strictEqual(scope.stateColorOptions('background')[0].label,
+				'settings.style_color_inherit (settings.widget_not_running)');
+			assert.strictEqual(scope.stateBorderOptions()[0].label,
+				'settings.style_color_inherit (settings.widget_not_running)');
+		}
 	});
 
 	it('keeps row, element and background selection mutually exclusive during preview actions', () => {

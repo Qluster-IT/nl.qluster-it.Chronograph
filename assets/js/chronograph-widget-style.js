@@ -53,6 +53,12 @@
 		return style && style.widgetPadding && style.widgetPadding[size] || {};
 	}
 
+	function separatorLayout(separator) {
+		if (/^rows(?:-small|-tiny)?$/.test(separator)) return 'rows';
+		if (/^cards(?:-small|-tiny)?$/.test(separator)) return 'cards';
+		return 'none';
+	}
+
 	function paddingStyle(paddings) {
 		var result = {};
 		['top', 'right', 'bottom', 'left'].forEach(function (side) {
@@ -421,9 +427,9 @@
 				design.elementSizes.overrides[size] = { name: size === 'large' ? 17 : 14 };
 				if (size !== 'large') design.groups[size].elements.progress.row = 0;
 			});
-			design.widgetPadding = { compact: { top: 10, bottom: 4 } };
+			design.widgetPadding = { compact: { top: 7, bottom: 7 } };
 			['play', 'pause', 'stop'].forEach(function (element) {
-				design.elementSizes.overrides.compact[element] = 38;
+				design.elementSizes.overrides.compact[element] = 32;
 				design.groups.compact.elements[element].group = 4;
 			});
 			design.elementSizes.overrides.compact.icon = 20;
@@ -969,6 +975,7 @@
 		elementSize: elementSize,
 		elementLineHeight: elementLineHeight,
 		widgetPadding: widgetPadding,
+		separatorLayout: separatorLayout,
 		paddingStyle: paddingStyle,
 		buttonText: buttonText,
 		buttonShape: buttonShape,

@@ -29,14 +29,15 @@ window.registerMultipleChronographsWidget = function (Homey) {
 			var separator = settings.rowSeparator == null ? 'none' : settings.rowSeparator;
 			var separatorColor = settings.rowSeparatorColor == null ? 'default' : settings.rowSeparatorColor;
 			var colors = ['default', 'blue', 'red', 'orange', 'yellow', 'green', 'purple', 'teal',
-				'cyan', 'indigo', 'pink', 'brown', 'grey', 'black', 'white'];
-			if (['none', 'cards', 'line'].indexOf(separator) === -1 || colors.indexOf(separatorColor) === -1) {
+				'cyan', 'indigo', 'pink', 'brown', 'grey', 'black', 'black-light', 'white'];
+			if (['none', 'line', 'rows', 'rows-small', 'rows-tiny', 'cards', 'cards-small', 'cards-tiny'].indexOf(separator) === -1 || colors.indexOf(separatorColor) === -1) {
 				console.error('Invalid multiple chronographs row separator settings', separator, separatorColor);
 				$scope.error = Homey.__('settings.multiple_invalid_settings');
 				separator = 'none';
 				separatorColor = 'default';
 			}
 			$scope.rowSeparator = separator;
+			$scope.separatorLayout = window.ChronographWidgetStyle.separatorLayout(separator);
 			$scope.rowSeparatorColor = separatorColor === 'default'
 				? 'currentColor' : window.ChronographWidgetStyle.valueColor(separatorColor);
 
@@ -97,7 +98,12 @@ window.registerMultipleChronographsWidget = function (Homey) {
 			pending = $scope.entries.length;
 			$scope.rowStyle = function (row) {
 				return Object.assign({ 'grid-template-columns': 'repeat(' + columns + ', minmax(0, 1fr))' },
-					$scope.rowSeparator === 'cards' ? row.paddingStyle : {});
+					$scope.separatorLayout === 'rows' ? row.paddingStyle : {});
+			};
+			$scope.entryStyle = function (entry, appearance) {
+				return Object.assign({ 'grid-column': 'span ' + entry.span },
+					$scope.separatorLayout === 'cards'
+						? Object.assign(window.ChronographWidgetStyle.paddingStyle([entry.padding || {}]), appearance) : {});
 			};
 
 			function resize() {

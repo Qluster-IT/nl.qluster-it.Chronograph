@@ -16,7 +16,8 @@ body[data-separator="line"] {
 	box-shadow: var(--chronograph-frame-shadow);
 }
 
-body[data-separator="cards"] .multiple-chronographs {
+body[data-separator^="rows"] .multiple-chronographs,
+body[data-separator^="cards"] .multiple-chronographs {
 	padding: 0;
 	background: transparent;
 	box-shadow: none;
@@ -25,7 +26,7 @@ body[data-separator="cards"] .multiple-chronographs {
 .multiple-chronographs-rows {
 	display: flex;
 	flex-direction: column;
-	gap: 8px;
+	gap: var(--multiple-card-gap, 8px);
 	min-width: 0;
 }
 
@@ -35,16 +36,37 @@ body[data-separator="cards"] .multiple-chronographs {
 	min-width: 0;
 }
 
-.multiple-chronographs-rows[data-separator="cards"] .multiple-chronographs-grid,
-body[data-separator="cards"] .multiple-chronographs > .chronograph-message,
-body[data-separator="cards"] .multiple-chronographs > .chronograph-error {
+.multiple-chronographs-rows[data-separator^="rows"],
+.multiple-chronographs-rows[data-separator^="cards"] {
+	--multiple-card-gap: 16px;
+}
+
+.multiple-chronographs-rows[data-separator$="-small"] {
+	--multiple-card-gap: 12px;
+}
+
+.multiple-chronographs-rows[data-separator$="-tiny"] {
+	--multiple-card-gap: 8px;
+}
+
+.multiple-chronographs-rows[data-separator^="cards"] .multiple-chronographs-grid {
+	gap: var(--multiple-card-gap);
+}
+
+.multiple-chronographs-rows[data-separator^="rows"] .multiple-chronographs-grid,
+.multiple-chronographs-rows[data-separator^="cards"] .chronograph-widget,
+body[data-separator^="rows"] .multiple-chronographs > .chronograph-message,
+body[data-separator^="rows"] .multiple-chronographs > .chronograph-error,
+body[data-separator^="cards"] .multiple-chronographs > .chronograph-message,
+body[data-separator^="cards"] .multiple-chronographs > .chronograph-error {
 	padding: var(--homey-su-4, 16px);
 	border-radius: var(--homey-border-radius-default, 16px);
 	background: var(--chronograph-surface);
 	box-shadow: var(--chronograph-frame-shadow);
 }
 
-body[data-separator="cards"] .multiple-chronographs > .chronograph-error + .multiple-chronographs-rows {
+body[data-separator^="rows"] .multiple-chronographs > .chronograph-error + .multiple-chronographs-rows,
+body[data-separator^="cards"] .multiple-chronographs > .chronograph-error + .multiple-chronographs-rows {
 	margin-top: 8px;
 }
 

@@ -50,7 +50,7 @@ body {
 	border: 0;
 	border-bottom: 3px solid transparent;
 	border-radius: 0;
-	color: var(--homey-color-orange, #b37a22);
+	color: var(--homey-color-mono-600, inherit);
 	font-size: 0.75rem;
 	font-weight: 500;
 	line-height: 1.2;
@@ -482,6 +482,27 @@ body {
 	cursor: zoom-in;
 }
 
+.template-generation-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 10000;
+	display: grid;
+	place-items: center;
+	padding: 16px;
+	background: rgba(0, 0, 0, 0.45);
+	touch-action: none;
+	cursor: wait;
+}
+
+.template-generation-panel {
+	max-width: 100%;
+	padding: 16px 20px;
+	border-radius: 12px;
+	text-align: center;
+	color: var(--homey-text-color, #222);
+	background: var(--homey-background-color, #fff);
+}
+
 .template-image-dialog {
 	position: fixed;
 	inset: 0;
@@ -562,12 +583,19 @@ body {
 	position: sticky;
 	top: -18px;
 	z-index: 10;
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+	max-height: 40vh;
+	max-height: 40dvh;
+	min-height: 0;
 	padding-bottom: 12px;
 	background: var(--homey-background-color, var(--homey-color-background, Canvas));
 }
 
 .style-size-selector {
 	display: grid;
+	flex-shrink: 0;
 	grid-template-columns: minmax(0, 40%) minmax(0, 1fr);
 	align-items: center;
 	gap: 12px;
@@ -588,12 +616,22 @@ body {
 }
 
 .style-preview-sticky .style-preview-rows {
-	max-height: 50vh;
+	min-height: 0;
 	overflow-y: auto;
+}
+
+.style-preview-sticky .style-preview-columns {
+	flex-shrink: 0;
 }
 
 .style-preview-rows,
 .style-preview {
+	/* Settings and widgets use different Homey spacing scales. */
+	--homey-su: 4px;
+	--homey-su-1: 4px;
+	--homey-su-2: 8px;
+	--homey-su-3: 12px;
+	--homey-su-4: 16px;
 	box-sizing: border-box;
 	width: 100%;
 	max-width: 450px;
@@ -602,28 +640,53 @@ body {
 .style-preview-rows {
 	display: flex;
 	flex-direction: column;
-	gap: 8px;
+	gap: var(--style-preview-card-gap, 8px);
 	min-width: 0;
+}
+
+/* Emulate dashboard-card corners, not the settings page's radius token. */
+.style-preview,
+.style-preview-frame-multiple,
+.style-preview-rows[data-separator^="rows"] .style-preview-columns,
+.style-preview-rows[data-separator^="cards"] .style-preview {
+	border-radius: 10px;
 }
 
 .style-preview-frame-multiple {
 	padding: var(--homey-su-4, 16px);
 	border: 0;
-	border-radius: var(--homey-border-radius-default, 16px);
 	background: var(--chronograph-surface);
 	box-shadow: var(--chronograph-frame-shadow);
 }
 
-.style-preview-frame-multiple[data-separator="cards"] {
+.style-preview-frame-multiple[data-separator^="rows"],
+.style-preview-frame-multiple[data-separator^="cards"] {
 	padding: 0;
 	background: transparent;
 	box-shadow: none;
 }
 
-.style-preview-rows[data-separator="cards"] .style-preview-columns {
+.style-preview-rows[data-separator^="rows"],
+.style-preview-rows[data-separator^="cards"] {
+	--style-preview-card-gap: 16px;
+}
+
+.style-preview-rows[data-separator$="-small"] {
+	--style-preview-card-gap: 12px;
+}
+
+.style-preview-rows[data-separator$="-tiny"] {
+	--style-preview-card-gap: 8px;
+}
+
+.style-preview-rows[data-separator^="cards"] .style-preview-columns {
+	gap: var(--style-preview-card-gap);
+}
+
+.style-preview-rows[data-separator^="rows"] .style-preview-columns,
+.style-preview-rows[data-separator^="cards"] .style-preview {
 	padding: var(--homey-su-4, 16px);
-	border-radius: var(--homey-border-radius-default, 16px);
-	background: var(--chronograph-surface);
+	background: var(--style-background, var(--chronograph-surface));
 	box-shadow: var(--chronograph-frame-shadow);
 }
 
@@ -653,8 +716,6 @@ body {
 	--style-background: var(--chronograph-surface);
 	padding: var(--homey-su-4, 16px);
 	border: 0;
-	/* Emulate dashboard-card corners, not the settings page's radius token. */
-	border-radius: 10px;
 	background: var(--style-background);
 	box-shadow: var(--chronograph-frame-shadow);
 }
@@ -690,12 +751,19 @@ body {
 
 .style-preview-multiple {
 	--style-background: transparent;
+	/* Match the live grid: stretch the tile, not its contents. */
+	align-content: start;
 	min-width: 0;
 	padding: 0;
 	border: 0;
 	border-radius: 0;
 	box-shadow: none;
 	overflow-x: auto;
+}
+
+.style-preview-rows[data-separator^="cards"] .style-preview-multiple[data-background="none"],
+.style-preview-rows[data-separator^="cards"] .style-preview-multiple[data-background="default"] {
+	--style-background: var(--chronograph-surface);
 }
 
 .style-preview-height,

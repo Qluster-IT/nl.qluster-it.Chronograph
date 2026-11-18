@@ -6,7 +6,7 @@
 	<link rel="stylesheet" href="../../assets/css/widget-bundle.css">
 </head>
 <body class="homey-widget" ng-controller="MultipleChronographsController" ng-attr-data-separator="{{ rowSeparator }}">
-	<main class="multiple-chronographs" ng-style="rowSeparator === 'cards' ? {} : framePaddingStyle">
+	<main class="multiple-chronographs" ng-style="separatorLayout !== 'none' ? {} : framePaddingStyle">
 		<p class="chronograph-error" role="alert" ng-if="error">{{ error }}</p>
 		<p class="chronograph-message" ng-if="!entries.length && !error">{{ emptyMessage }}</p>
 		<div class="multiple-chronographs-rows" ng-attr-data-separator="{{ rowSeparator }}"
@@ -15,7 +15,7 @@
 				ng-style="rowStyle(row)">
 			<article ng-repeat="widgetEntry in row track by widgetEntry.slot"
 				ng-controller="ChronographWidgetController"
-				ng-style="{ 'grid-column': 'span ' + widgetEntry.span }"
+				ng-style="entryStyle(widgetEntry, widgetFrameStyle())"
 				class="chronograph-widget homey-text-regular"
 				ng-class="{ 'chronograph-vivid': runningColor !== 'none' || inactiveColor !== 'none',
 					'chronograph-layout-normal': layout === 'normal', 'chronograph-layout-large': layout === 'large',

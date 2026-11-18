@@ -103,7 +103,7 @@ describe('Multiple Chronographs widget', () => {
 		designs[1].widgetPadding = { normal: { top: 8, right: 0, bottom: 20, left: 9 } };
 		designs[0].borderlessFrames = designs[2].borderlessFrames = { normal: true };
 		designs[1].borderWidths = { normal: 0 };
-		for (const rowSeparator of ['none', 'line', 'cards']) {
+		for (const rowSeparator of ['none', 'line', 'rows', 'rows-small', 'rows-tiny', 'cards', 'cards-small', 'cards-tiny']) {
 			const settings = { columns: '2', rowSeparator }, states = {};
 			for (let slot = 1; slot <= 3; slot++) {
 				settings['chronograph' + slot] = { type: 'timer', name: String(slot) };
@@ -111,17 +111,28 @@ describe('Multiple Chronographs widget', () => {
 				settings['chronograph' + slot + 'Layout'] = 'normal';
 				states['timer:' + slot] = { name: String(slot), type: 'timer', active: false };
 			}
-			const { parent } = await loadWidget(settings, states, { version: 3, styles: designs, themes: [] });
+			const { parent, children } = await loadWidget(settings, states, { version: 3, styles: designs, themes: [] });
+			assert.strictEqual(parent.error, null, rowSeparator);
 			assert.strictEqual(parent.framePaddingStyle.paddingTop, 'max(var(--homey-su-4, 16px), 8px)');
 			const first = parent.rowStyle(parent.rows[0]), second = parent.rowStyle(parent.rows[1]);
-			assert.strictEqual(first.paddingTop, rowSeparator === 'cards' ? '8px' : undefined);
-			assert.strictEqual(first.paddingRight, rowSeparator === 'cards' ? '10px' : undefined);
-			assert.strictEqual(first.paddingBottom, rowSeparator === 'cards' ? '20px' : undefined);
-			assert.strictEqual(first.paddingLeft, rowSeparator === 'cards' ? '9px' : undefined);
+			const rows = rowSeparator.startsWith('rows'), cards = rowSeparator.startsWith('cards');
+			assert.strictEqual(first.paddingTop, rows ? '8px' : undefined);
+			assert.strictEqual(first.paddingRight, rows ? '10px' : undefined);
+			assert.strictEqual(first.paddingBottom, rows ? '20px' : undefined);
+			assert.strictEqual(first.paddingLeft, rows ? '9px' : undefined);
 			assert.strictEqual(second.paddingTop, undefined);
 			assert.strictEqual(parent.framePaddingStyle.boxShadow, undefined);
 			assert.strictEqual(first.boxShadow, undefined);
-			assert.strictEqual(second.boxShadow, rowSeparator === 'cards' ? 'none' : undefined);
+			assert.strictEqual(second.boxShadow, rows ? 'none' : undefined);
+			const tile = parent.entryStyle(parent.entries[0], children[0].widgetFrameStyle());
+			assert.strictEqual(tile['grid-column'], 'span 1');
+			assert.strictEqual(tile.paddingTop, cards ? '4px' : undefined);
+			assert.strictEqual(tile.paddingRight, cards ? '10px' : undefined);
+			assert.strictEqual(tile.paddingLeft, cards ? '0px' : undefined);
+			assert.strictEqual(tile.boxShadow, cards ? 'none' : undefined);
+			const otherTile = parent.entryStyle(parent.entries[1], children[1].widgetFrameStyle());
+			assert.strictEqual(otherTile.paddingTop, cards ? '8px' : undefined);
+			assert.strictEqual(otherTile.boxShadow, undefined);
 			parent.entries.forEach(entry => parent.multipleWidget.setPadding(entry, entry.padding, true));
 			assert.strictEqual(parent.framePaddingStyle.boxShadow, 'none');
 		}
@@ -521,7 +532,7 @@ describe('Multiple Chronographs widget', () => {
 		assert.strictEqual(manifest.settings.length, 93);
 		assert.deepStrictEqual(manifest.settings[0].values.map(value => value.id), ['1', '2', '3']);
 		assert.deepStrictEqual(manifest.settings.find(setting => setting.id === 'rowSeparator').values.map(value => value.id),
-			['none', 'cards', 'line']);
+			['none', 'rows', 'rows-small', 'rows-tiny', 'cards', 'cards-small', 'cards-tiny', 'line']);
 		assert.strictEqual(manifest.settings.find(setting => setting.id === 'rowSeparator').value, 'none');
 		for (let slot = 1; slot <= 10; slot++) {
 			for (const suffix of ['', 'ColumnSpan', 'AlternativeName', 'DesignStyle', 'ColorTheme', 'Layout', 'Icon', 'ShowMilliseconds', 'ReverseTime']) {
@@ -582,8 +593,9 @@ describe('Multiple Chronographs widget', () => {
 		assert.match(css, /body\[data-separator\]\s*\{[^}]*padding:\s*0;[^}]*background-color:\s*transparent/s);
 		assert.match(css, /body\[data-separator="none"\],\s*body\[data-separator="line"\]\s*\{[^}]*padding:\s*4px 6px 8px;/s);
 		assert.match(css, /\.multiple-chronographs\s*\{[^}]*padding:\s*var\(--homey-su-4,\s*16px\);[^}]*border-radius:\s*var\(--homey-border-radius-default,\s*16px\);[^}]*background:\s*var\(--chronograph-surface\);[^}]*box-shadow:\s*var\(--chronograph-frame-shadow\)/s);
-		assert.match(css, /body\[data-separator="cards"\] \.multiple-chronographs\s*\{[^}]*padding:\s*0;[^}]*background:\s*transparent;[^}]*box-shadow:\s*none/s);
-		assert.match(css, /\[data-separator="cards"\] \.multiple-chronographs-grid[^}]*padding:\s*var\(--homey-su-4,\s*16px\)[^}]*background:\s*var\(--chronograph-surface\)/s);
+		assert.match(css, /body\[data-separator\^="cards"\] \.multiple-chronographs\s*\{[^}]*padding:\s*0;[^}]*background:\s*transparent;[^}]*box-shadow:\s*none/s);
+		assert.match(css, /\[data-separator\^="rows"\] \.multiple-chronographs-grid,[^{]*\{[^}]*padding:\s*var\(--homey-su-4,\s*16px\)[^}]*background:\s*var\(--chronograph-surface\)/s);
+		assert.match(html, /ng-style="entryStyle\(widgetEntry, widgetFrameStyle\(\)\)"/);
 	});
 
 	it('uses the selected separator and validates its color', async () => {
@@ -609,8 +621,10 @@ describe('Multiple Chronographs widget', () => {
 			const locale = require('../.homeycompose/locales/' + language + '.settings.json');
 			assert.strictEqual(separator.title[language], locale.multiple_row_separator);
 			assert.strictEqual(color.title[language], locale.multiple_separator_color);
-			assert.strictEqual(separator.values.find(item => item.id === 'cards').title[language], locale.multiple_separator_cards);
-			assert.strictEqual(separator.values.find(item => item.id === 'line').title[language], locale.multiple_separator_line);
+			for (const id of ['rows', 'rows-small', 'rows-tiny', 'cards', 'cards-small', 'cards-tiny', 'line']) {
+				assert.strictEqual(separator.values.find(item => item.id === id).title[language],
+					locale['multiple_separator_' + id.replace(/-/g, '_')]);
+			}
 			for (const option of color.values) {
 				assert.strictEqual(option.title[language], locale['style_color_' + option.id]);
 			}

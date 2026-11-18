@@ -17,7 +17,8 @@ Adds precise timer, stopwatch and transition functionality to Homey.
 * Target multiple timers, stopwatches and transitions at once using wildcards in supported cards.
 * Control timers, stopwatches and transitions from single or multi-chronograph dashboard widgets.
 * Customize widget layouts, themes and per-type default icons, with optional widget-specific Font Awesome Free icons or None.
-* Choose the WidgetKeeper design and customize widget outlines, with light/dark previews and template images.
+* Choose the WidgetKeeper design, or customize padding, outlines, HEX colors and gradient backgrounds in the designer.
+* Group multi-widget tiles into shared rows or individual cards with three spacing options, and preview them in light or dark mode.
 * Import, export and share designs and themes through Templates and the community Widget Exchange, with timer previews and zoomable images.
 * Share template posts with six preview images: stopwatches, timers and transitions in light mode, then dark mode.
 * Display elapsed and total time for timers and transitions, with optional reversed time displays.
@@ -63,8 +64,10 @@ notification is logged without invalidating the usable readiness endpoint.
 ### Local settings preview
 
 Settings navigation and template action buttons use locally bundled icons with
-translated text labels. Widgets and Design styles share a local inline SVG;
+translated text labels. Widgets and Designs share a local inline SVG;
 decorative icons are hidden from assistive technology.
+Inactive settings tabs use Homey's monochrome text color; the selected tab
+retains Chronograph's accent.
 
 The root `locales/` directory contains an empty JSON object for each language.
 Homey Compose fills these files with generated translations when building; edit
@@ -86,52 +89,67 @@ Homey device, so final appearance and behavior still require a Homey check.
 The designer can also preview three independently selectable chronograph types
 in a one-, two-, or three-column multi-widget; tile width depends on the
 available preview space. All tiles share the selected design, size, state and
-theme. For one or two columns, preview the widget's row separation
-and line color as well.
+theme. All column counts support separation and line-color previews.
+Widget-style rows give each row a shared card; Widget-style cards give every
+chronograph its own card, respecting column spans. Both offer normal (16px),
+small (12px, matching WidgetKeeper Lights) and tiny (8px) gaps. Individual cards
+use the selected gap horizontally and vertically; row cards use it between rows.
+Multi-preview tiles in a row share a frame height without stretching their
+internal layouts to match their neighbors, as in the live widget.
+The multi-widget line-color selector includes every named designer color,
+including Black (light/dark); HEX remains a designer-only choice.
+Preview spacing is scoped to the widget's 4px space-unit scale, independent of
+Homey's settings-page tokens. The complete sticky preview, including its Size
+selector, is capped at 40% of the viewport height; taller previews scroll inside
+that panel without shrinking the widget layout or covering the element editor.
 The real multi-widget paints its background on the rounded outer container,
-not the iframe body; card separation keeps its transparent gaps and rounded rows.
+not the iframe body; row/card separation keeps transparent gaps between frames.
 Default surfaces use Homey's background color in light mode and near-black
 `#181920` with a subtle light inset rim in dark mode. Shared surface CSS keeps live
 widgets and designer previews consistent; explicitly selected
 background colors, including pure black, are unchanged.
 The default and line-separated layouts have an outer card shadow in light mode,
 with a small transparent gutter to keep it visible inside the widget viewport;
-the dark-mode rim replaces that shadow. Separate-card mode applies this treatment
-only to its rows, preserving transparent gaps. Single widgets use Homey's native
+the dark-mode rim replaces that shadow. Both Widget-style rows and Widget-style cards
+apply this treatment to their own frames, preserving transparent gaps. Single widgets use Homey's native
 frame with the same default surface and dark rim inside it.
 Blue, green, orange, red and fixed white color choices use Homey's semantic palette
 variables. Grey uses Homey's theme-aware monochrome palette. Black remains fixed
 black; yellow, purple, teal, cyan, indigo, pink and brown are Chronograph extensions.
 Existing saved color IDs remain valid. Preview colors use the same Homey tokens.
-Selecting Widget in a custom Design style exposes a border width per size.
+Selecting Widget in a custom design exposes a border width per size.
 Homey default preserves the standard frame; explicit 0 removes the app-drawn
 outline and frame rim/shadow, while 1–20px adds an outline. Built-in designs and
 previously saved zero widths retain their existing Homey frame. A shared
 multi-widget frame becomes borderless only when every design in that frame
-requests it, independently per row in separate-card mode. In Themes, selecting
+requests it. Widget-style rows evaluate this per row; Widget-style cards use
+each tile's own design. In Themes, selecting
 Widget exposes its border color, including per-state overrides; Default uses
 `--homey-line-color`. The optional outline is drawn inside Homey's native frame,
 whose shadow cannot be restyled through the widget API. Widths and colors survive
-template export/import. App-drawn rounded cards use `--homey-border-radius-default`.
-Single-widget previews emulate the dashboard card's 10px outer corners instead
-of inheriting the settings page's radius; native widget frames are unchanged.
+template export/import. App-drawn runtime cards use `--homey-border-radius-default`.
+Single-widget previews and all visible multi-widget preview frames (shared,
+per-row, or per-card) emulate the dashboard's 10px corners instead of inheriting
+the settings page's radius. Native widget frames are unchanged.
 Designer and template previews draw the optional outline inside the Homey frame,
 preserving its outer padding just like live widgets.
 Widget options also provide independent top/right/bottom/left padding overrides
 per size; Homey default leaves native padding untouched. Multi-widgets use the
-largest requested padding on each side of the shared frame, independently for
-each row in separate-card mode. Row column gaps, column element gaps and text
+largest requested padding on each side of the shared frame or row. With individual
+cards, each tile uses its own padding. Row column gaps, column element gaps and text
 line-height overrides are reusable designer controls; absent options keep the
 existing defaults. WidgetKeeper Large uses these controls for a 36px icon beside
 a stacked Name and Status header, without design-specific CSS.
 Every designer color selector offers HEX with a validated `#RRGGBB` input and
-native color picker. Black (light) is the fixed `#2B2C36` shade; pure Black remains
-unchanged. Theme background fills can be solid or a top-to-bottom tinted gradient
-per state, inheriting the base fill unless overridden. The matching WidgetKeeper
+native color picker. The **Black (light/dark)** option keeps the existing `black-light`
+palette ID and remains distinct from pure **Black**. Theme background fills can
+be solid or a top-to-bottom tinted gradient per state, inheriting the base fill
+unless overridden. The matching WidgetKeeper
 theme applies a blue gradient only while running. These settings survive saving
 and TWF export/import; choosing a design does not replace the selected theme.
 App default means the element's normal appearance, not a global theme accent.
-Color overrides consistently show Inherit with the underlying base color.
+State color overrides consistently show Inherit (Not running), naming the source
+state rather than its current color.
 The Theme state selector explains that Not running sets each element's base
 color, Inherit reuses it in other states, and App default leaves it automatic.
 Grouped preview buttons use the same block flex layout as live controls, avoiding
@@ -170,8 +188,8 @@ The built-in WidgetKeeper design matches Device Values' Pill tiles, Light Contro
 standard Thermostat Presets card heights (52px, 88px and 156px) in Compact,
 Normal and Large, with 14px, 14px and 17px names respectively. Start forms may
 expand beyond those heights rather than clipping their inputs.
-Compact uses Lights-style vertical padding (10px top, 4px bottom), a stacked
-name/status column, and 38px controls.
+Compact uses balanced vertical padding (7px top and bottom), a stacked
+name/status column, and vertically centered 32px controls.
 Large aligns its start-field row to the bottom of the available content area.
 This preset uses existing designer controls for element sizes, placement, reserved
 space, row padding and height modes; duplicate it to customize those settings.
@@ -185,6 +203,16 @@ transitions in light mode first, then the same three in dark mode. Each has a
 3-by-3 grid of sizes and states, preserving the template's chosen colors.
 Copied forum posts leave an empty, normal paragraph below the title for an optional
 description; the export instructions point users to it without adding placeholder text.
+Creating a TWF starts the rich clipboard write on the click and supplies the
+images after rendering. A progress overlay blocks interaction during encoding
+and rendering. If copying is blocked, the bold retry message points to
+**Copy post and images** without requiring another render.
+Automatic copying requires a secure context and clipboard permission in the
+settings frame. HTTPS fixes the insecure HTTP case, but the Homey web frame
+can still block automatic copying. In either case, click **Copy post and images**
+after generation to copy the text and all six PNGs without rendering again.
+**Post on Forum** becomes available once the full post has been copied. The
+separate **Topic** button opens the Widget Exchange discussion directly.
 The community catalogue renders one normal-size running timer from each decoded
 template when list previews are enabled, caching that preview for the loaded entry.
 Expanded entries retain the forum images; clicking an image opens a scrollable
@@ -266,19 +294,11 @@ Application image by [Agê Barros](https://unsplash.com/@agebarros?utm_source=un
 
 ### Unreleased
 
-* Allow black and white for widget and button backgrounds, as well as text and borders, in themes.
-* Apply matching time typography, custom sizing, and narrow-widget behavior to Total time in widgets and Designer previews.
-* Fix Cancel button background colors bleeding onto the surrounding layout in Designer previews.
-* Add a built-in Transitions design with all elements placed in Normal and Large, based on Default.
-* Correct French timer action labels to distinguish timers from stopwatches consistently.
-* Add an optional Total time element for timer and transition widget designs, unused by default.
-
-* Add an optional Elapsed duration element for timers and transitions to widget designs.
-* Show remaining duration by default for transitions, like timers, with a reverse-time option per widget or multiple-widget tile that swaps remaining and elapsed displays.
-* Share saved custom widget designs and themes as compact templates, with a visual import review.
-* Use Templates for design and theme import/export; remove the separate JSON-file controls.
-* Copy a template forum post with three size-and-state preview grids for timers, stopwatches and transitions.
-* Renamed widget color scheme settings to themes; existing dashboard settings require migration.
+* Added WidgetKeeper and Transitions designs, plus more ways to customize widget spacing, outlines, and colors.
+* Group multi-widget tiles into Widget-style rows or individual cards with Tiny, Small, or Normal spacing.
+* Widget previews look more like dashboard cards and are easier to use on small screens.
+* Timers and transitions can show elapsed and total time, with an option to reverse the time display.
+* TWF exports show progress and include light and dark preview images. If automatic copying is blocked, copy the post and images manually before opening the forum. The community button is now **Topic**.
 
 ### v3.0.5
 

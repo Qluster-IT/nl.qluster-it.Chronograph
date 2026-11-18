@@ -484,9 +484,13 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		$scope.previewElementLineHeight = function (element) {
 			return sizeRuntime.elementLineHeight($scope.getSelectedStyle(), $scope.editor.previewSize, element);
 		};
+		$scope.previewSeparatorLayout = function () {
+			return $scope.editor.previewColumns === 'single' ? 'none' : sizeRuntime.separatorLayout($scope.editor.previewSeparator);
+		};
 		$scope.previewPaddingStyle = function (location) {
-			var owner = $scope.editor.previewColumns === 'single' ? 'tile'
-				: $scope.editor.previewSeparator === 'cards' ? 'row' : 'frame';
+			var layout = $scope.previewSeparatorLayout();
+			var owner = $scope.editor.previewColumns === 'single' || layout === 'cards' ? 'tile'
+				: layout === 'rows' ? 'row' : 'frame';
 			return owner === location ? Object.assign(sizeRuntime.paddingStyle([
 				sizeRuntime.widgetPadding($scope.getSelectedStyle(), $scope.editor.previewSize)
 			]), sizeRuntime.frameStyle(sizeRuntime.borderlessFrame($scope.getSelectedStyle(), $scope.editor.previewSize))) : {};
@@ -888,6 +892,10 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			return values[state] === undefined ? state === 'inactive' ? false : null : values[state];
 		};
 
+		function inheritedStateColorLabel() {
+			return Homey.__('settings.style_color_inherit') + ' (' + Homey.__('settings.widget_not_running') + ')';
+		}
+
 		$scope.stateColorOptions = function (key) {
 			var inherited = $scope.previewColor(key, true);
 			var options = key === 'background' ? $scope.backgroundOptions : $scope.isButtonElement(key) ? $scope.buttonBackgroundOptions : $scope.colorOptions;
@@ -895,7 +903,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			if (cached && cached.inherited === inherited && cached.options === options) return cached.values;
 			var values = [{
 				id: 'inherit',
-				label: Homey.__('settings.style_color_inherit') + ' (' + (sizeRuntime.isHexColor(inherited) ? inherited : Homey.__('settings.style_color_' + inherited)) + ')'
+				label: inheritedStateColorLabel()
 			}].concat(options);
 			colorOptionsCache[key] = { inherited: inherited, options: options, values: values };
 			return values;
@@ -938,8 +946,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				|| (key === 'cancel' || key === 'background' ? 'default' : 'none');
 			var cacheKey = 'border:' + key, cached = colorOptionsCache[cacheKey];
 			if (cached && cached.inherited === inherited && cached.options === $scope.borderOptions) return cached.values;
-			var label = sizeRuntime.isHexColor(inherited) ? inherited : Homey.__('settings.style_color_' + inherited);
-			var values = [{ id: 'inherit', label: Homey.__('settings.style_color_inherit') + ' (' + label + ')' }].concat($scope.borderOptions);
+			var values = [{ id: 'inherit', label: inheritedStateColorLabel() }].concat($scope.borderOptions);
 			colorOptionsCache[cacheKey] = { inherited: inherited, options: $scope.borderOptions, values: values };
 			return values;
 		};
@@ -987,9 +994,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			if (cached && cached.inherited === inherited && cached.options === options) return cached.values;
 			var values = [{
 				id: 'inherit',
-				label: Homey.__('settings.style_color_inherit') + ' (' + (sizeRuntime.isHexColor(inherited) ? inherited : Homey.__(inherited === 'default'
-					? ($scope.isButtonElement(key) ? 'settings.style_foreground_automatic' : 'settings.style_color_default')
-					: 'settings.style_color_' + inherited)) + ')'
+				label: inheritedStateColorLabel()
 			}].concat(options);
 			colorOptionsCache[cacheKey] = { inherited: inherited, options: options, values: values };
 			return values;
@@ -1255,18 +1260,25 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				return;
 			}
 			template.busy = true;
+			template.generating = true;
+			var pendingCopy = beginTemplateForumPostCopy();
 			Homey.api('POST', '/widget-templates/encode', {
 				design: design ? widgetStyleEditor.designFromStyle(design) : undefined,
 				theme: theme ? angular.copy(theme) : undefined
 			}, function (error, text) {
 				$scope.$applyAsync(function () {
 					template.busy = false;
-					if (error) { showError(error); return; }
+					if (error) {
+						template.generating = false;
+						if (pendingCopy) pendingCopy.reject(error);
+						showError(error);
+						return;
+					}
 					clearTemplateImage();
 					template.exportText = text;
 					template.exportDesignName = design && design.name;
 					template.exportThemeName = theme && theme.name;
-					$scope.prepareTemplateImage();
+					$scope.prepareTemplateImage(pendingCopy);
 				});
 			});
 		};
@@ -1291,10 +1303,10 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		$scope.copyWidgetTemplate = function (id) {
 			var field = document.getElementById(id);
 			if (!field || !field.value) return;
-			$scope.templates.copyStatus = null;
 			field.focus();
 			field.select();
 			if (!document.execCommand('copy')) Homey.alert(Homey.__('settings.template_copy_error'));
+			else if ($scope.templates.copyStatus === 'copied') $scope.templates.copyStatus = null;
 		};
 
 		async function templatePreviewImages() {
@@ -1432,32 +1444,90 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			});
 		}
 
-		$scope.prepareTemplateImage = function () {
+		function requiresManualCopyOnHttp() {
+			return window.isSecureContext === false && window.location && window.location.protocol === 'http:';
+		}
+
+		function beginTemplateForumPostCopy() {
+			if (requiresManualCopyOnHttp()) return null;
+			var clipboard = window.navigator && window.navigator.clipboard;
+			if (!clipboard || !clipboard.write || !window.ClipboardItem) return null;
+			var resolvePost, rejectPost;
+			var post = new Promise(function (resolve, reject) {
+				resolvePost = resolve;
+				rejectPost = reject;
+			});
+			var formats = {};
+			['text/plain', 'text/html'].forEach(function (type) {
+				formats[type] = post.then(function (data) { return new Blob([data[type]], { type: type }); });
+				// The browser may reject the write without consuming the deferred data.
+				formats[type].catch(function () {});
+			});
+			try {
+				// Start within the click's user activation; supply the images after rendering.
+				var result = clipboard.write([new window.ClipboardItem(formats)]).then(function () {
+					return true;
+				}, function () { return false; });
+				return { resolve: resolvePost, reject: rejectPost, result: result };
+			} catch (error) {
+				rejectPost(error);
+				return null;
+			}
+		}
+
+		$scope.prepareTemplateImage = function (pendingCopy) {
 			var template = $scope.templates;
-			if (template.busy || !template.exportText) return;
+			if (template.busy || !template.exportText) {
+				if (!template.busy) template.generating = false;
+				if (pendingCopy) pendingCopy.reject(new Error('Forum post is unavailable'));
+				return;
+			}
 			clearTemplateImage();
 			template.busy = true;
+			template.generating = true;
 			template.imageProgress = 0;
+			function finishCopy(copied) {
+				if (copied) {
+					$scope.$applyAsync(function () {
+						template.busy = false;
+						template.copyStatus = 'copied';
+					});
+					return;
+				}
+				// Let the view remove inert before the legacy copy path focuses the text field.
+				$timeout(function () {
+					template.busy = false;
+					$scope.copyTemplateForumPost(true);
+				});
+			}
 			return templatePreviewImages().then(function (images) {
 				$scope.$applyAsync(function () {
 					template.imageData = images;
-					template.busy = false;
+					template.generating = false;
 					template.imageProgress = null;
-					$scope.copyTemplateForumPost(true);
+					if (requiresManualCopyOnHttp()) {
+						template.busy = false;
+						template.copyStatus = 'http';
+					} else if (pendingCopy) {
+						pendingCopy.resolve(templateForumPostClipboardData());
+						pendingCopy.result.then(finishCopy);
+					} else {
+						finishCopy(false);
+					}
 				});
 			}, function (error) {
+				if (pendingCopy) pendingCopy.reject(error);
 				$scope.$applyAsync(function () {
 					template.busy = false;
+					template.generating = false;
 					template.imageProgress = null;
 					Homey.alert(Homey.__('settings.template_prepare_image_error') + '\n' + window.chronographErrorMessage(Homey, error));
 				});
 			});
 		};
 
-		$scope.copyTemplateForumPost = function (automatic) {
+		function templateForumPostClipboardData() {
 			var template = $scope.templates;
-			if (template.busy || !template.exportText || !template.imageData || !template.imageData.length) return;
-			template.copyStatus = null;
 			function escapeHtml(value) {
 				return value.replace(/[&<>"']/g, function (character) {
 					return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character];
@@ -1470,11 +1540,19 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 					return '<p><img alt="Widget preview" src="' + image + '"></p>';
 				}).join('')
 				+ '<p>TWF:</p><pre data-params="javascript"><code class="language-javascript">' + escapeHtml(template.exportText) + '</code></pre>';
+			return { 'text/plain': text, 'text/html': html };
+		}
+
+		$scope.copyTemplateForumPost = function (automatic) {
+			var template = $scope.templates;
+			if (template.busy || !template.exportText || !template.imageData || !template.imageData.length) return;
+			template.copyStatus = null;
+			var data = templateForumPostClipboardData();
 			var copied = false;
 			function onCopy(event) {
 				event.preventDefault();
-				event.clipboardData.setData('text/plain', text);
-				event.clipboardData.setData('text/html', html);
+				event.clipboardData.setData('text/plain', data['text/plain']);
+				event.clipboardData.setData('text/html', data['text/html']);
 				copied = true;
 			}
 			var copyError;
@@ -1524,8 +1602,8 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				}
 				template.busy = true;
 				var item = new window.ClipboardItem({
-					'text/plain': new Blob([text], { type: 'text/plain' }),
-					'text/html': new Blob([html], { type: 'text/html' })
+					'text/plain': new Blob([data['text/plain']], { type: 'text/plain' }),
+					'text/html': new Blob([data['text/html']], { type: 'text/html' })
 				});
 				window.navigator.clipboard.write([item]).then(function () {
 					$scope.$applyAsync(function () { finish(); });

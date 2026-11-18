@@ -17,7 +17,7 @@
 </head>
 
 <body ng-app="chronographSettings" ng-controller="SettingsController">
-	<main class="settings-page container-fluid">
+	<main class="settings-page container-fluid" ng-attr-inert="{{ templates.generating ? '' : undefined }}">
 		<nav class="settings-tabs nav nav-tabs" role="tablist" ng-attr-aria-label="{{ t('settings.settings_navigation') }}">
 			<button class="hy-nostyle settings-tab nav-link" type="button" role="tab"
 				ng-class="{ active: activeTab === 'chronographs' }"
@@ -224,14 +224,19 @@
 							<option value="2">2</option>
 							<option value="3">3</option>
 						</select>
-						<label ng-if="editor.previewColumns === '1' || editor.previewColumns === '2'" class="hy-nostyle" for="preview-separator">{{ t('settings.multiple_row_separator') }}</label>
-						<select ng-if="editor.previewColumns === '1' || editor.previewColumns === '2'" id="preview-separator" class="form-select" ng-model="editor.previewSeparator">
+						<label ng-if="editor.previewColumns !== 'single'" class="hy-nostyle" for="preview-separator">{{ t('settings.multiple_row_separator') }}</label>
+						<select ng-if="editor.previewColumns !== 'single'" id="preview-separator" class="form-select" ng-model="editor.previewSeparator">
 							<option value="none">{{ t('settings.style_color_none') }}</option>
+							<option value="rows">{{ t('settings.multiple_separator_rows') }}</option>
+							<option value="rows-small">{{ t('settings.multiple_separator_rows_small') }}</option>
+							<option value="rows-tiny">{{ t('settings.multiple_separator_rows_tiny') }}</option>
 							<option value="cards">{{ t('settings.multiple_separator_cards') }}</option>
+							<option value="cards-small">{{ t('settings.multiple_separator_cards_small') }}</option>
+							<option value="cards-tiny">{{ t('settings.multiple_separator_cards_tiny') }}</option>
 							<option value="line">{{ t('settings.multiple_separator_line') }}</option>
 						</select>
-						<label ng-if="(editor.previewColumns === '1' || editor.previewColumns === '2') && editor.previewSeparator === 'line'" class="hy-nostyle" for="preview-separator-color">{{ t('settings.multiple_separator_color') }}</label>
-						<select ng-if="(editor.previewColumns === '1' || editor.previewColumns === '2') && editor.previewSeparator === 'line'" id="preview-separator-color" class="form-select" ng-model="editor.previewSeparatorColor"
+						<label ng-if="editor.previewColumns !== 'single' && editor.previewSeparator === 'line'" class="hy-nostyle" for="preview-separator-color">{{ t('settings.multiple_separator_color') }}</label>
+						<select ng-if="editor.previewColumns !== 'single' && editor.previewSeparator === 'line'" id="preview-separator-color" class="form-select" ng-model="editor.previewSeparatorColor"
 							ng-options="color.id as color.label for color in elementColorOptions"></select>
 						<p id="preview-columns-hint" class="help-text style-progress-full-row" ng-if="editor.previewColumns !== 'single'">{{ t('settings.style_preview_columns_hint') }}</p>
 						<div class="style-preview-tile-controls style-progress-full-row" ng-if="editor.previewColumns !== 'single'">
@@ -257,7 +262,7 @@
 						</select>
 					</div>
 					<div class="style-preview-rows style-preview-light" ng-class="{ 'style-preview-frame-multiple': editor.previewColumns !== 'single', 'style-preview-dark': editor.previewMode === 'dark', 'style-preview-counter-invert': previewCounterInvert }"
-						ng-attr-data-separator="{{ editor.previewColumns === '1' || editor.previewColumns === '2' ? editor.previewSeparator : 'none' }}"
+						ng-attr-data-separator="{{ editor.previewColumns !== 'single' ? editor.previewSeparator : 'none' }}"
 						ng-attr-style="{{ previewFrameStyle() }}">
 						<div class="style-preview-columns" ng-repeat="previewRow in previewRows() track by $index"
 							ng-style="previewCardRowStyle()">
@@ -676,17 +681,17 @@
 						<textarea id="template-export-text" class="form-control" rows="3" readonly ng-value="templates.exportText"></textarea>
 						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="copyWidgetTemplate('template-export-text')" ng-disabled="templates.busy"><i class="fa-solid fa-copy" aria-hidden="true"></i> {{ t('settings.template_copy') }}</button>
 						<label class="hy-nostyle" for="template-forum-post">{{ t('settings.template_forum_post') }}</label>
-						<textarea id="template-forum-post" class="form-control" rows="5" readonly ng-value="templateForumPost()"></textarea>
+						<textarea id="template-forum-post" class="form-control" rows="3" readonly ng-value="templateForumPost()"></textarea>
 						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="copyTemplateForumPost()" ng-disabled="templates.busy || !templates.imageData"><i class="fa-solid fa-clipboard" aria-hidden="true"></i> {{ t('settings.template_copy_post') }}</button>
-						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="openWidgetExchange()" ng-disabled="templates.busy"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i> {{ t('settings.template_post_forum') }}</button>
+						<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button" ng-click="openWidgetExchange()" ng-disabled="templates.busy || templates.copyStatus !== 'copied'"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i> {{ t('settings.template_post_forum') }}</button>
 						<p class="help-text template-export-instruction" role="status" ng-if="templates.copyStatus">
 							<span ng-if="templates.copyStatus === 'copied'"><strong>{{ t('settings.template_copy_copied') }}</strong> {{ t('settings.template_copy_next') }}</span>
-							<span ng-if="templates.copyStatus !== 'copied'">{{ t('settings.template_copy_' + templates.copyStatus) }}</span>
+							<strong ng-if="templates.copyStatus === 'http'">{{ t('settings.template_copy_http') }}</strong>
+							<strong ng-if="templates.copyStatus === 'retry'">{{ t('settings.template_copy_retry') }}</strong>
 						</p>
 						<p class="help-text template-export-instruction"><strong>{{ t('settings.template_paste_image_hint') }}</strong> {{ t('settings.template_paste_image_reason') }} <strong>{{ t('settings.template_paste_edit_description') }}</strong>{{ t('settings.template_paste_wait_image') }}</p>
 						<p class="help-text">{{ t('settings.template_editor_switch') }}</p>
 						<img class="template-editor-switch" src="assets/forum-editor-switch.png" ng-attr-alt="{{ t('settings.template_editor_switch') }}">
-						<p class="help-text" role="status" ng-if="templates.busy && templates.imageProgress !== null && templates.imageProgress !== undefined">{{ t('settings.template_rendering') }} {{ templates.imageProgress }}/54</p>
 					</div>
 				</section>
 				<section ng-if="templates.section === 'import'">
@@ -846,6 +851,14 @@
 			</div>
 		</dialog>
 	</main>
+	<div class="template-generation-overlay" ng-if="templates.generating">
+		<div class="template-generation-panel">
+			<strong role="status">{{ t('settings.template_generating') }}</strong>
+			<div aria-hidden="true" ng-if="templates.imageProgress != null">
+				{{ t('settings.template_rendering') }} {{ templates.imageProgress }}/54
+			</div>
+		</div>
+	</div>
 
 	<script type="text/ng-template" id="grouped-preview.html">
 		<div class="style-grouped-preview" ng-attr-data-row-spanning="{{ previewRowLayout(previewScenario, previewTile.type).spanning }}"
