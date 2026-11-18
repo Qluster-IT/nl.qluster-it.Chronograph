@@ -4,11 +4,14 @@
 	"private": true,
 	"scripts": {
 		"preview:settings": "node settings-preview.js",
-		"test": "mocha \"../../test/**/*.test.js\""
+		"test": "mocha"
+	},
+	"mocha": {
+		"spec": "../../test/**/*.test.js"
 	},
 	"husky": {
 		"hooks": {
-			"pre-commit": "npm --prefix ../.. test"
+			"pre-commit": "mocha --reporter dot"
 		}
 	},
 	"devDependencies": {

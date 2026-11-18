@@ -10,6 +10,7 @@ const runtimeScript = fs.readFileSync(path.join(root, 'assets', 'js', 'chronogra
 const errorScript = fs.readFileSync(path.join(root, 'assets', 'js', 'chronograph-errors.js'), 'utf8');
 const editorScript = fs.readFileSync(path.join(root, 'settings', 'assets', 'widget-style-editor.js'), 'utf8');
 const settingsScript = fs.readFileSync(path.join(root, 'settings', 'assets', 'settings.js'), 'utf8');
+const compiledSettingsScripts = [runtimeScript, errorScript, editorScript, settingsScript].map(source => new vm.Script(source));
 const html = fs.readFileSync(path.join(root, 'settings', 'index.html'), 'utf8');
 const css = fs.readFileSync(path.join(root, 'settings', 'assets', 'styles.css'), 'utf8');
 
@@ -29,16 +30,13 @@ function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns, extr
 		toJson: JSON.stringify
 	};
 	const listeners = {};
-	const context = { angular, window: {
+	const context = vm.createContext({ angular, window: {
 		chronographSettingsPreview: preview,
 		addEventListener(name, callback) { listeners[name] = callback; },
 		removeEventListener(name) { delete listeners[name]; }
-	} };
+	} });
 	if (extras) Object.assign(context, extras);
-	vm.runInNewContext(runtimeScript, context);
-	vm.runInNewContext(errorScript, context);
-	vm.runInNewContext(editorScript, context);
-	vm.runInNewContext(settingsScript, context);
+	for (const script of compiledSettingsScripts) script.runInContext(context);
 	const watches = [];
 	const scope = {
 		$on() {},
@@ -81,6 +79,12 @@ function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns, extr
 	if (!renderExport) scope.prepareTemplateImage = () => {};
 	if (!noSelection) scope.selectVisibilityRow(1);
 	return { scope, writes, timers, editor, homey, listeners, directives, window: context.window };
+}
+
+function stubPreviewPaintDelay(window) {
+	// Canvas is mocked, so yield without waiting for a browser paint. Keep capture deadlines real.
+	window.setTimeout = (callback, delay) => delay === 20 ? setImmediate(callback) : setTimeout(callback, delay);
+	window.clearTimeout = clearTimeout;
 }
 
 describe('Widget style designer preview', () => {
@@ -1121,8 +1125,7 @@ describe('Widget style designer preview', () => {
 			writeStarted = true;
 			for (const [type, blob] of Object.entries(item.formats)) copied[type] = await (await blob).text();
 		} } };
-		window.setTimeout = (fn, delay) => setTimeout(fn, delay === 20 ? 0 : delay);
-		window.clearTimeout = clearTimeout;
+		stubPreviewPaintDelay(window);
 		window.getComputedStyle = element => element === preview ? {
 			getPropertyValue: property => (scope.templates.imageMode === 'dark'
 				? { '--homey-background-color': '#181920', '--homey-text-color': '#fff' }
@@ -1345,8 +1348,7 @@ describe('Widget style designer preview', () => {
 				fetch: async () => ({ ok: true, arrayBuffer: async () => new Uint8Array([1]).buffer }),
 				btoa: value => Buffer.from(value, 'binary').toString('base64')
 			}, false, null, true);
-			window.setTimeout = (fn, delay) => setTimeout(fn, delay === 20 ? 0 : delay);
-			window.clearTimeout = clearTimeout;
+			stubPreviewPaintDelay(window);
 			window.getComputedStyle = () => ({ getPropertyValue: () => '#fff' });
 			window.htmlToImage = { toCanvas: async () => {
 				assert.strictEqual(numberField.type, 'text');

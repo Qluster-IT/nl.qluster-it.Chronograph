@@ -272,7 +272,8 @@ If you'd like to contribute code to this project, please read the
 
 Install the development tools with `npm ci --prefix tools/development`, then run
 the tests from the app root with `npm test`. This also installs the pre-commit
-test hook when Git hooks are available. Development dependencies stay under
+hook when Git hooks are available. The hook runs Mocha directly with compact
+output and uses the same full-suite configuration as `npm test`. Development dependencies stay under
 `tools/` and are excluded from the Homey app.
 
 ## Support

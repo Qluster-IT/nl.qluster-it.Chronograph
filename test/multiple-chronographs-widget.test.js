@@ -7,6 +7,11 @@ const vm = require('vm');
 const root = path.join(__dirname, '..');
 const manifest = require('../widgets/multiple_chronographs/widget.compose.json');
 const api = require('../widgets/multiple_chronographs/api.js');
+const widgetScripts = ['chronograph-widget-style.js', 'chronograph-errors.js', 'chronograph-widget.js', 'multiple-chronographs-widget.js']
+	.map(file => {
+		const filename = path.join(root, 'assets', 'js', file);
+		return new vm.Script(fs.readFileSync(filename, 'utf8'), { filename });
+	});
 
 async function loadWidget(settings, states, widgetStyles, hidden = false) {
 	const controllers = {};
@@ -34,15 +39,13 @@ async function loadWidget(settings, states, widgetStyles, hidden = false) {
 		return scope;
 	};
 	const module = { controller: (name, definition) => { controllers[name] = definition[definition.length - 1]; }, directive() {} };
-	const context = {
+	const context = vm.createContext({
 		angular: { module: () => module, bootstrap() {} }, window: {}, Promise, Date, console,
 		document: { hidden, body: { getAttribute: () => null }, querySelector: () => null,
 			addEventListener: (name, callback) => { documentListeners[name] = callback; },
 			removeEventListener: name => { delete documentListeners[name]; } }
-	};
-	for (const file of ['chronograph-widget-style.js', 'chronograph-errors.js', 'chronograph-widget.js', 'multiple-chronographs-widget.js']) {
-		vm.runInNewContext(fs.readFileSync(path.join(root, 'assets', 'js', file), 'utf8'), context);
-	}
+	});
+	for (const script of widgetScripts) script.runInContext(context);
 	const layoutCalls = { buildRows: 0, layoutSpanningRows: 0, inputFieldLayout: 0 };
 	for (const name of Object.keys(layoutCalls)) {
 		const original = context.window.ChronographWidgetStyle[name];

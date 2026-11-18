@@ -5,9 +5,10 @@ const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 
-const script = fs.readFileSync(path.join(__dirname, '..', 'assets', 'js', 'chronograph-widget.js'), 'utf8');
-const styleScript = fs.readFileSync(path.join(__dirname, '..', 'assets', 'js', 'chronograph-widget-style.js'), 'utf8');
-const errorScript = fs.readFileSync(path.join(__dirname, '..', 'assets', 'js', 'chronograph-errors.js'), 'utf8');
+const widgetScripts = ['chronograph-widget-style.js', 'chronograph-errors.js', 'chronograph-widget.js'].map(file => {
+	const filename = path.join(__dirname, '..', 'assets', 'js', file);
+	return new vm.Script(fs.readFileSync(filename, 'utf8'), { filename });
+});
 
 async function loadWidget(type, settings, defaults, widgetStyles, hidden = false) {
 	let controller;
@@ -35,7 +36,7 @@ async function loadWidget(type, settings, defaults, widgetStyles, hidden = false
 			return Promise.resolve(url === '/widget-styles' ? widgetStyles : Object.assign({}, state));
 		}
 	};
-	const context = {
+	const context = vm.createContext({
 		angular: { module: () => module, bootstrap() {} },
 		document: {
 			hidden,
@@ -47,10 +48,8 @@ async function loadWidget(type, settings, defaults, widgetStyles, hidden = false
 		window: {},
 		Promise,
 		Date: Clock
-	};
-	vm.runInNewContext(styleScript, context);
-	vm.runInNewContext(errorScript, context);
-	vm.runInNewContext(script, context);
+	});
+	for (const script of widgetScripts) script.runInContext(context);
 	const styleCalls = {};
 	for (const name of ['elementStyle', 'elementSize', 'buttonText', 'buttonShapeStyle', 'buttonColor', 'backgroundStyle', 'valueColor', 'resolveColor']) {
 		styleCalls[name] = 0;
