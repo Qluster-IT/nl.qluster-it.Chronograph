@@ -207,6 +207,10 @@ Creating a TWF starts the rich clipboard write on the click and supplies the
 images after rendering. A progress overlay blocks interaction during encoding
 and rendering. If copying is blocked, the bold retry message points to
 **Copy post and images** without requiring another render.
+TWF exports and imports use the compressed v1 format, starting with
+`[twf:Chronograph:Chronographs:`. All chronograph widget variants share this
+family; other apps and widget families are rejected. Unreleased prototype
+encodings are not supported.
 Automatic copying requires a secure context and clipboard permission in the
 settings frame. HTTPS fixes the insecure HTTP case, but the Homey web frame
 can still block automatic copying. In either case, click **Copy post and images**
@@ -293,7 +297,11 @@ Application image by [Agê Barros](https://unsplash.com/@agebarros?utm_source=un
 
 ## Changelog
 
-### Unreleased
+### v3.0.9
+
+* Fixed TWF sharing and imports to recognize templates for Chronograph widgets and show clearer messages for incompatible templates.
+
+### v3.0.8
 
 * Added WidgetKeeper and Transitions designs, plus more ways to customize widget spacing, outlines, and colors.
 * Group multi-widget tiles into Widget-style rows or individual cards with Tiny, Small, or Normal spacing.

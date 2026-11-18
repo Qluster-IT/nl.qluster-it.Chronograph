@@ -5,6 +5,20 @@ const { getCatalog } = require('../lib/widget-template-catalog');
 const { encodeTemplate, decodeTemplate } = require('../lib/widget-template');
 
 describe('Widget template community catalog', () => {
+	it('excludes other widget families, other apps and headers without a widget family', async () => {
+		const text = await encodeTemplate({ theme: { name: 'Blue', colors: { name: 'blue' } } });
+		const post = { id: 2, post_number: 2, raw: [
+			text, text.replace(':Chronographs:', ':HistoryChart:'),
+			text.replace(':Chronograph:', ':OtherApp:'), text.replace(':Chronographs:', ':')
+		].join('\n') };
+		const entries = await getCatalog(async () => ({
+			ok: true,
+			text: async () => JSON.stringify({ post_stream: { stream: [2], posts: [post] } })
+		}));
+		assert.strictEqual(entries.length, 1);
+		assert.strictEqual(entries[0].text, text);
+	});
+
 	it('loads all topic posts and extracts templates without rendering post markup', async () => {
 		const text = await encodeTemplate({ theme: { name: 'Blue', colors: { name: 'blue' } } });
 		const calls = [];

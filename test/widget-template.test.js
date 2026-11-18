@@ -30,7 +30,8 @@ describe('Widget template transfer', () => {
 		const theme = { id: 'local-theme', name: 'My theme', colors: { name: 'blue' },
 			borderColors: { background: 'green' }, borderOverrides: { paused: { background: 'red' } } };
 		const text = await encodeTemplate({ design, theme });
-		assert.match(text, /^\[twf:Chronograph:DESIGN,THEME:"[A-Za-z0-9+/]+={0,2}":\/twf\]$/);
+		assert.match(text, /^\[twf:Chronograph:Chronographs:DESIGN,THEME:"[A-Za-z0-9+/]+={0,2}":\/twf\]$/);
+		assert.strictEqual(JSON.parse(zlib.brotliDecompressSync(Buffer.from(text.split('"')[1], 'base64'))).v, 1);
 		assert.deepStrictEqual(JSON.parse(JSON.stringify(await decodeTemplate(text))), JSON.parse(JSON.stringify({
 			design: { ...design, id: undefined },
 			theme: { ...theme, id: undefined }
@@ -61,13 +62,20 @@ describe('Widget template transfer', () => {
 
 	it('supports either item and rejects mismatched or unsupported payloads', async () => {
 		const text = await encodeTemplate({ theme: { id: 'x', name: 'Theme', colors: {} } });
-		assert.match(text, /^\[twf:Chronograph:THEME:/);
+		assert.match(text, /^\[twf:Chronograph:Chronographs:THEME:/);
+		await assert.rejects(() => decodeTemplate(text.replace(':Chronographs:', ':HistoryChart:')), /This TWF is for HistoryChart, not Chronographs/);
+		await assert.rejects(() => decodeTemplate(text.replace(':Chronograph:', ':OtherApp:')), /This TWF is for OtherApp, not Chronograph/);
+		await assert.rejects(() => decodeTemplate(text.replace(':Chronographs:', ':')), /not Chronographs/);
 		await assert.rejects(() => decodeTemplate(text.replace(':THEME:', ':DESIGN:')));
 		await assert.rejects(() => decodeTemplate(text.replace(':"', ':"!')));
-		const future = zlib.brotliCompressSync(JSON.stringify({ v: 3, t: {} })).toString('base64');
-		await assert.rejects(() => decodeTemplate(`[twf:Chronograph:THEME:"${future}":/twf]`), /Unsupported template version/);
+		for (const version of [0, 2, 3]) {
+			const unsupported = zlib.brotliCompressSync(JSON.stringify({ v: version, t: {} })).toString('base64');
+			await assert.rejects(() => decodeTemplate(`[twf:Chronograph:Chronographs:THEME:"${unsupported}":/twf]`), /Unsupported template version/);
+		}
 		const old = zlib.gzipSync(JSON.stringify({ v: 1, t: {} })).toString('base64');
-		await assert.rejects(() => decodeTemplate(`[twf:Chronograph:THEME:"${old}":/twf]`));
+		await assert.rejects(() => decodeTemplate(`[twf:Chronograph:Chronographs:THEME:"${old}":/twf]`));
+		const uncompressed = Buffer.from(JSON.stringify({ version: 1, theme: { name: 'Theme', colors: {} } })).toString('base64');
+		await assert.rejects(() => decodeTemplate(`[twf:Chronograph:Chronographs:THEME:"${uncompressed}":/twf]`));
 		await assert.rejects(() => encodeTemplate({}));
 	});
 
@@ -83,7 +91,7 @@ describe('Widget template transfer', () => {
 
 	it('rejects Brotli payloads whose decompressed JSON exceeds the limit', async () => {
 		const payload = zlib.brotliCompressSync(Buffer.alloc(512 * 1024 + 1)).toString('base64');
-		await assert.rejects(() => decodeTemplate(`[twf:Chronograph:THEME:"${payload}":/twf]`));
+		await assert.rejects(() => decodeTemplate(`[twf:Chronograph:Chronographs:THEME:"${payload}":/twf]`));
 	});
 
 	it('preserves each built-in design and reduces the compressed payload', async () => {
@@ -92,7 +100,7 @@ describe('Widget template transfer', () => {
 			const text = await encodeTemplate({ design });
 			assert.deepStrictEqual(JSON.parse(JSON.stringify((await decodeTemplate(text)).design)), design);
 			const payload = text.split('"')[1];
-			const baseline = zlib.gzipSync(JSON.stringify({ v: 2, d: design }), { level: 9 }).toString('base64');
+			const baseline = zlib.gzipSync(JSON.stringify({ v: 1, d: design }), { level: 9 }).toString('base64');
 			assert.ok(payload.length < baseline.length, preset.id);
 		}
 	});
