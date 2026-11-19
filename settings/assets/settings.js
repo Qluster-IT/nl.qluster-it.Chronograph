@@ -403,15 +403,17 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			if (id === $scope.editor.selectedStyleId) return id;
 			leaveEditingItem(function () {
 				$scope.editor.selectedStyleId = id;
-				$scope.editor.selectedCell = null;
-				$scope.refreshLayoutElement();
+				resetDesignerSelection();
 			});
 			return $scope.editor.selectedStyleId;
 		};
 		$scope.selectEditingScheme = function (id) {
 			if (!arguments.length) return $scope.editor.selectedSchemeId;
 			if (id === $scope.editor.selectedSchemeId) return id;
-			leaveEditingItem(function () { $scope.editor.selectedSchemeId = id; });
+			leaveEditingItem(function () {
+				$scope.editor.selectedSchemeId = id;
+				resetDesignerSelection();
+			});
 			return $scope.editor.selectedSchemeId;
 		};
 		$scope.selectEditorMode = function (mode) {
@@ -423,11 +425,16 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			if ($scope.editor.invalidRowRule) { Homey.alert(Homey.__('settings.style_row_invalid')); return; }
 			leaveEditingItem(function () {
 				if (!$scope.getSelectedStyle()) $scope.editor.selectedStyleId = 'builtin:current';
+				var design = $scope.getSelectedStyle();
+				var canKeepSelection = !$scope.isDesignReadOnly() && !$scope.isSchemeReadOnly();
+				var element = canKeepSelection ? $scope.editor.selectedElement : null;
+				var background = canKeepSelection && $scope.editor.selectedBackground;
+				if (element && design && !design.groups && $scope.getStyleCells().indexOf(element) === -1) element = null;
 				$scope.editor.mode = mode;
-				$scope.editor.selectedRow = null;
-				$scope.editor.selectedColumn = null;
-				$scope.editor.selectedCell = null;
-				$scope.editor.rowRule = null;
+				resetDesignerSelection();
+				$scope.editor.selectedElement = element;
+				$scope.editor.selectedBackground = background;
+				$scope.refreshLayoutElement();
 			});
 		};
 
@@ -1737,9 +1744,8 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 							delete editHistories[editingKey()];
 							editHistory = null;
 							$scope.editor[selectionKey] = 'builtin:current';
-							$scope.editor.selectedCell = null;
 							$scope.editor.invalidRowRule = false;
-							$scope.refreshLayoutElement();
+							resetDesignerSelection();
 						}
 					}
 					if (!savedStyles[collectionKey].some(function (item) { return item.id === style.id; })) {
@@ -1801,7 +1807,10 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		}
 
 		function clearDesignerSelection() {
-			if (!canChangeSelection()) return;
+			if (canChangeSelection()) resetDesignerSelection();
+		}
+
+		function resetDesignerSelection() {
 			$scope.editor.selectedElement = null;
 			$scope.editor.selectedRow = null;
 			$scope.editor.selectedColumn = null;
@@ -3237,20 +3246,39 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		link: function (scope, element) {
 			var sticky = element[0];
 			var scrollContainer = sticky.closest('.settings-content');
+			var settingsPage = scrollContainer.parentNode;
+			var tabs = settingsPage.querySelector('.settings-tabs');
+			var sentinel = document.createElement('div');
+			sentinel.setAttribute('aria-hidden', 'true');
+			sticky.parentNode.insertBefore(sentinel, sticky);
+			var timer = null;
 			function update() {
-				var containerStyle = window.getComputedStyle(scrollContainer);
-				var offset = parseFloat(containerStyle.borderTopWidth) + parseFloat(containerStyle.paddingTop)
-					+ parseFloat(window.getComputedStyle(sticky).top);
+				timer = null;
 				sticky.classList.toggle('is-stuck', scrollContainer.clientHeight > 0
-					&& sticky.getBoundingClientRect().top <= scrollContainer.getBoundingClientRect().top + offset + 0.5);
+					&& sticky.getClientRects().length > 0 && sticky.getAttribute('data-editable') === 'true'
+					&& sentinel.getBoundingClientRect().top < scrollContainer.getBoundingClientRect().top - 0.5);
 			}
-			scrollContainer.addEventListener('scroll', update);
-			window.addEventListener('resize', update);
-			scope.$watch('activeTab', function () { scope.$evalAsync(update); });
-			update();
+			function schedule() {
+				if (timer === null) timer = window.setTimeout(update, 0);
+			}
+			function updateTabHeight() {
+				if (tabs.offsetHeight) settingsPage.style.setProperty('--chronograph-settings-tabs-height', tabs.offsetHeight + 'px');
+				schedule();
+			}
+			var observer = window.ResizeObserver ? new window.ResizeObserver(updateTabHeight) : null;
+			if (observer) observer.observe(tabs);
+			scrollContainer.addEventListener('scroll', schedule, { passive: true });
+			window.addEventListener('resize', updateTabHeight);
+			scope.$watch(function () {
+				return scope.activeTab + ':' + sticky.getAttribute('data-editable');
+			}, function () { scope.$evalAsync(schedule); });
+			updateTabHeight();
 			scope.$on('$destroy', function () {
-				scrollContainer.removeEventListener('scroll', update);
-				window.removeEventListener('resize', update);
+				scrollContainer.removeEventListener('scroll', schedule);
+				window.removeEventListener('resize', updateTabHeight);
+				if (observer) observer.disconnect();
+				if (timer !== null) window.clearTimeout(timer);
+				sentinel.remove();
 			});
 		}
 	};

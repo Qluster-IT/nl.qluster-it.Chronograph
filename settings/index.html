@@ -92,7 +92,7 @@
 			</section>
 		</section>
 
-		<section class="settings-content" role="tabpanel" ng-show="activeTab === 'widgets'">
+		<section class="settings-content settings-widgets-content" role="tabpanel" ng-show="activeTab === 'widgets'">
 			<div ng-if="!templates.open" class="template-header style-editor-header">
 				<h2>{{ labels.widgetStyles }}</h2>
 				<button class="hy-nostyle btn btn-outline-primary btn-sm" type="button"
@@ -251,7 +251,7 @@
 							</label>
 						</div>
 					</div>
-					<div class="style-preview-sticky" sticky-border>
+					<div class="style-preview-sticky" sticky-border ng-attr-data-editable="{{ editor.mode === 'design' ? !isDesignReadOnly() : !isSchemeReadOnly() }}">
 					<div class="style-size-selector">
 						<label class="hy-nostyle" for="preview-size">{{ t('settings.style_size') }}</label>
 						<select id="preview-size" class="form-select" ng-model="editor.previewSize"

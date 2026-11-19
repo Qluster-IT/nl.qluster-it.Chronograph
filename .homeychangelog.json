@@ -1303,5 +1303,20 @@
     "ru": "Виджеты на панели теперь точнее соответствуют предпросмотру в редакторе как со встроенными, так и с пользовательскими дизайнами и темами.",
     "ko": "대시보드 위젯이 이제 기본 및 사용자 지정 디자인과 테마 모두에서 디자인 편집기의 미리보기와 더 잘 일치합니다.",
     "ar": "أصبحت أدوات لوحة المعلومات الآن أقرب إلى المعاينة في محرر التصميم، سواء عند استخدام التصاميم والسمات المدمجة أو المخصصة."
+  },
+  "3.0.11": {
+    "en": "Improved selection and preview behavior in the widget designer.",
+    "nl": "Selectie en voorbeeldweergave in de widgetontwerper verbeterd.",
+    "da": "Forbedret valg og forhåndsvisning i widgetdesigneren.",
+    "de": "Auswahl und Vorschau im Widget-Designer verbessert.",
+    "es": "Mejoras en la selección y la vista previa del diseñador de widgets.",
+    "fr": "Amélioration de la sélection et de l’aperçu dans l’éditeur de widgets.",
+    "it": "Migliorate la selezione e l’anteprima nell’editor dei widget.",
+    "no": "Forbedret valg og forhåndsvisning i widgetdesigneren.",
+    "sv": "Förbättrad markering och förhandsvisning i widgetdesignern.",
+    "pl": "Ulepszono zaznaczanie i podgląd w edytorze widżetów.",
+    "ru": "Улучшены выбор и предпросмотр в редакторе виджетов.",
+    "ko": "위젯 디자이너의 선택 및 미리보기 기능을 개선했습니다.",
+    "ar": "تحسين التحديد والمعاينة في محرر تصميم الأدوات."
   }
 }

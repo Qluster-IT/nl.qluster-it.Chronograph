@@ -154,6 +154,9 @@ be solid or a top-to-bottom tinted gradient per state, inheriting the base fill
 unless overridden. The matching WidgetKeeper
 theme applies a blue gradient only while running. These settings survive saving
 and TWF export/import; choosing a design does not replace the selected theme.
+Switching between Designs and Themes keeps the selected Widget or element only
+if it can be selected in both modes. Choosing or deleting a design or theme
+clears the editor selection and preview highlight.
 App default means the element's normal appearance, not a global theme accent.
 State color overrides consistently show Inherit (Not running), naming the source
 state rather than its current color.
@@ -161,6 +164,8 @@ The Theme state selector explains that Not running sets each element's base
 color, Inherit reuses it in other states, and App default leaves it automatic.
 Grouped preview buttons use the same block flex layout as live controls, avoiding
 extra text-baseline space around small buttons and their selection outlines.
+The designer preview shows its full contents until it pins over the settings
+tabs while editing; the pinned preview can scroll within 45% of the viewport.
 Preview Start and Play actions both open hidden timer/transition input rows before
 starting; stopwatches start immediately and paused chronographs resume without input.
 Button text can be customized per design size. Default text is translated;
@@ -303,6 +308,10 @@ To regenerate the widget icon previews after updating the icon catalog, run `npm
 Application image by [Agê Barros](https://unsplash.com/@agebarros?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/search/photos/time?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText).
 
 ## Changelog
+
+### v3.0.11
+
+* Improved selection and preview behavior in the widget designer.
 
 ### v3.0.10
 

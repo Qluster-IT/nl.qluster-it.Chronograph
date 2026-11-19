@@ -1521,9 +1521,8 @@ describe('Widget style designer preview', () => {
 			assert.strictEqual(scope.selectedColorKey(), null);
 			scope.selectEditorMode('color');
 			assert.strictEqual(scope.editor.selectedElement, null);
-			scope.selectLayoutElement('duration');
 			scope.selectEditorMode('design');
-			assert.strictEqual(scope.editor.selectedElement, 'duration');
+			assert.strictEqual(scope.editor.selectedElement, null);
 		}
 	});
 
@@ -1583,6 +1582,77 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(JSON.stringify(scope.getSelectedStyle()), original);
 		assert.strictEqual(scope.isDirty(), false);
 		assert.strictEqual(writes.length, 0);
+	});
+
+	it('carries only shared selections between editable Designs and Themes', () => {
+		const { scope } = loadSettings();
+		scope.createStyle(true);
+		scope.saveSettings();
+		scope.selectEditorMode('color');
+		assert.strictEqual(scope.selectedColorKey(), null);
+		scope.createStyle(true);
+		scope.saveSettings();
+		scope.selectEditorMode('design');
+
+		for (const select of [() => scope.selectVisibilityRow(1), () => scope.selectColumn(1, 1)]) {
+			select();
+			assert.ok(scope.editor.selectedRow || scope.editor.selectedColumn);
+			scope.selectEditorMode('color');
+			assert.strictEqual(scope.editor.selectedRow, null);
+			assert.strictEqual(scope.editor.selectedColumn, null);
+			assert.strictEqual(scope.editor.rowRule, null);
+			assert.strictEqual(scope.selectedColorKey(), null);
+			scope.selectEditorMode('design');
+		}
+
+		scope.selectLayoutElement('name');
+		scope.selectEditorMode('color');
+		assert.strictEqual(scope.selectedColorKey(), 'name');
+		scope.selectEditorMode('design');
+		assert.strictEqual(scope.editor.selectedElement, 'name');
+		scope.selectWidgetBackground();
+		scope.selectEditorMode('color');
+		assert.strictEqual(scope.selectedColorKey(), 'background');
+		scope.selectEditorMode('design');
+		assert.strictEqual(scope.editor.selectedBackground, true);
+	});
+
+	it('does not restore a hidden selection after switching to a read-only preset', () => {
+		const { scope } = loadSettings();
+		scope.createStyle(true);
+		scope.saveSettings();
+		scope.selectLayoutElement('name');
+		scope.selectEditorMode('color');
+		assert.strictEqual(scope.isSchemeReadOnly(), true);
+		assert.strictEqual(scope.selectedColorKey(), null);
+		scope.selectEditorMode('design');
+		assert.strictEqual(scope.editor.selectedElement, null);
+		const id = scope.editor.selectedStyleId;
+		scope.selectWidgetBackground();
+		scope.selectEditingStyle('builtin:current');
+		scope.selectEditingStyle(id);
+		assert.strictEqual(scope.editor.selectedBackground, false);
+	});
+
+	it('clears editor highlights after deleting a saved design or an unsaved theme', () => {
+		const { scope, writes } = loadSettings();
+		scope.createStyle(true);
+		scope.saveSettings();
+		scope.selectColumn(1, 1);
+		assert.ok(scope.editor.selectedColumn);
+		scope.deleteStyle();
+		assert.strictEqual(scope.isDesignReadOnly(), true);
+		assert.strictEqual(scope.editor.selectedColumn, null);
+		assert.strictEqual(writes.length, 2);
+
+		scope.selectEditorMode('color');
+		scope.createStyle(true);
+		scope.selectWidgetBackground();
+		scope.deleteStyle();
+		assert.strictEqual(scope.isSchemeReadOnly(), true);
+		assert.strictEqual(scope.editor.selectedBackground, false);
+		assert.strictEqual(scope.selectedColorKey(), null);
+		assert.strictEqual(writes.length, 2);
 	});
 
 	it('keeps moved elements and reordered rows and columns selected', () => {
@@ -1821,13 +1891,79 @@ describe('Widget style designer preview', () => {
 		const preview = html.indexOf('class="style-preview-columns"');
 		assert.ok(options !== -1 && options < tiles && tiles < size && size < preview);
 		assert.match(html.slice(size, preview), /id="preview-size"[^>]*ng-model="editor\.previewSize"/);
-		assert.match(css, /\.style-preview-sticky\s*\{[^}]*position:\s*sticky;[^}]*top:\s*-18px;/);
+		assert.match(css, /\.style-preview-sticky\s*\{[^}]*position:\s*sticky;[^}]*top:\s*0;/);
 		assert.match(html.slice(size, preview), /sticky-border/);
 		assert.match(css, /\.style-preview-sticky\.is-stuck::after\s*\{[^}]*border-bottom:/);
-		assert.match(css, /\.style-preview-sticky\s*\{[^}]*display:\s*flex;[^}]*flex-direction:\s*column;[^}]*max-height:\s*40vh;[^}]*max-height:\s*40dvh;/);
-		assert.match(css, /\.style-preview-sticky \.style-preview-rows\s*\{[^}]*min-height:\s*0;[^}]*overflow-y:\s*auto;/);
+		assert.match(css, /\.style-preview-sticky\s*\{[^}]*padding-bottom:\s*12px;/);
+		assert.match(css, /\.style-preview-sticky\.is-stuck\[data-editable="true"\] \.style-preview-rows\s*\{[^}]*max-height:\s*45vh;[^}]*max-height:\s*45dvh;[^}]*overflow-y:\s*auto;/);
 		assert.match(css, /\.style-preview-sticky \.style-preview-columns\s*\{[^}]*flex-shrink:\s*0;/);
 		assert.match(css, /\.style-preview-rows,\s*\.style-preview\s*\{[^}]*box-sizing:\s*border-box;[^}]*width:\s*100%;[^}]*max-width:\s*450px;/);
+	});
+
+	it('pins only an editable visible preview after its original position crosses the settings edge', () => {
+		let sentinelTop = 100;
+		let editable = 'true';
+		let visible = true;
+		let stuck = false;
+		let destroyed;
+		let watch;
+		let pending;
+		let removed = false;
+		const events = {};
+		const sentinel = {
+			setAttribute() {},
+			getBoundingClientRect: () => ({ top: sentinelTop }),
+			remove() { removed = true; }
+		};
+		const tabs = { offsetHeight: 58 };
+		const settingsPage = {
+			querySelector: () => tabs,
+			style: { setProperty(name, value) { assert.strictEqual(value, '58px'); } }
+		};
+		const scroller = {
+			parentNode: settingsPage,
+			clientHeight: 500,
+			getBoundingClientRect: () => ({ top: 0 }),
+			addEventListener(name, callback) { events[name] = callback; },
+			removeEventListener(name) { delete events[name]; }
+		};
+		const sticky = {
+			closest: () => scroller,
+			parentNode: { insertBefore(node) { assert.strictEqual(node, sentinel); } },
+			getClientRects: () => visible ? [1] : [],
+			getAttribute: () => editable,
+			classList: { toggle(name, value) { stuck = value; } }
+		};
+		const { directives, window } = loadSettings(null, null, null, false, null, {
+			document: { createElement: () => sentinel }
+		});
+		window.setTimeout = callback => { pending = callback; return 1; };
+		window.clearTimeout = () => { pending = null; };
+		const scope = {
+			activeTab: 'widgets',
+			$watch(get, callback) { watch = callback; },
+			$evalAsync(callback) { callback(); },
+			$on(name, callback) { destroyed = callback; }
+		};
+		directives.stickyBorder().link(scope, [sticky]);
+		pending();
+		assert.strictEqual(stuck, false);
+		sentinelTop = -1;
+		events.scroll();
+		pending();
+		assert.strictEqual(stuck, true);
+		editable = 'false';
+		watch();
+		pending();
+		assert.strictEqual(stuck, false);
+		editable = 'true';
+		visible = false;
+		events.scroll();
+		pending();
+		assert.strictEqual(stuck, false);
+		destroyed();
+		assert.strictEqual(removed, true);
+		assert.strictEqual(events.scroll, undefined);
 	});
 
 	it('selects theme elements from the designer without allowing layout changes', () => {
