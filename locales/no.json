@@ -377,7 +377,9 @@
     "multiple_separator_cards_small": "Widgetlignende kort (små)",
     "multiple_separator_cards_tiny": "Widgetlignende kort (svært små)",
     "template_generating": "Lager TWF og bilder. Vent et øyeblikk.",
-    "template_copy_http": "Automatisk kopiering er ikke tilgjengelig via denne HTTP-tilkoblingen. Klikk på Kopier innlegg og bilder, eller åpne Homey via HTTPS for å kopiere automatisk."
+    "template_copy_http": "Automatisk kopiering er ikke tilgjengelig via denne HTTP-tilkoblingen. Klikk på Kopier innlegg og bilder, eller åpne Homey via HTTPS for å kopiere automatisk.",
+    "template_catalog_oldest": "Eldste",
+    "template_image_browser_help": "Hold Ctrl og rull for å zoome; dra i bildet for å flytte det når det er zoomet inn."
   },
   "timer_not_running": "Timeren __name__ kjører ikke.",
   "stopwatch_not_running": "Stoppeklokken __name__ kjører ikke.",

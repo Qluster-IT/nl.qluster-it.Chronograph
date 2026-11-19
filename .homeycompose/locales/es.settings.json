@@ -32,6 +32,7 @@
 	"template_catalog_search": "Buscar",
 	"template_catalog_sort": "Ordenar por",
 	"template_catalog_newest": "Más recientes",
+	"template_catalog_oldest": "Más antiguos",
 	"template_catalog_likes": "Me gusta",
 	"template_catalog_favorites": "Favoritos",
 	"template_catalog_empty": "No se encontraron plantillas coincidentes.",

@@ -229,11 +229,14 @@ can still block automatic copying. In either case, click **Copy post and images*
 after generation to copy the text and all six PNGs without rendering again.
 **Post on Forum** becomes available once the full post has been copied. The
 separate **Topic** button opens the Widget Exchange discussion directly.
-The community catalogue renders one normal-size running timer from each decoded
-template when list previews are enabled, caching that preview for the loaded entry.
-Expanded entries retain the forum images; clicking an image opens a scrollable
+The community catalogue remembers its sort order (Newest, Oldest, Name, Likes
+or Favorites). When list previews are enabled, it renders one normal-size
+running timer from each decoded template. Expanding an entry replaces only its
+live preview with details and forum images; other entries retain their previews.
+Clicking an image opens a scrollable
 zoom viewer filling the settings viewport, with touch-sized controls and the
-full-resolution forum upload when available. Two-finger pinching zooms around
+full-resolution forum upload when available, preserving the image's original
+colors in light and dark settings. Two-finger pinching zooms around
 the fingers' midpoint; one-finger scrolling and the zoom buttons remain available.
 Custom names must be unique within designs and within themes, ignoring case and
 surrounding spaces; built-in names may be reused.
@@ -308,6 +311,10 @@ To regenerate the widget icon previews after updating the icon catalog, run `npm
 Application image by [Agê Barros](https://unsplash.com/@agebarros?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/search/photos/time?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText).
 
 ## Changelog
+
+### v3.1.0
+
+* The Widget Exchange remembers its sort order and shows expanded template details and images in place of live previews. The image viewer supports Ctrl+scroll zoom and mouse-drag panning.
 
 ### v3.0.11
 

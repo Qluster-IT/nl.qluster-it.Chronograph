@@ -377,7 +377,9 @@
     "multiple_separator_cards_small": "بطاقات بنمط الأدوات (صغيرة)",
     "multiple_separator_cards_tiny": "بطاقات بنمط الأدوات (صغيرة جدًا)",
     "template_generating": "جارٍ إنشاء ملف TWF والصور. يرجى الانتظار قليلًا.",
-    "template_copy_http": "النسخ التلقائي غير متاح عبر اتصال HTTP هذا. انقر على «نسخ المنشور والصور» أو افتح Homey عبر HTTPS للنسخ تلقائيًا."
+    "template_copy_http": "النسخ التلقائي غير متاح عبر اتصال HTTP هذا. انقر على «نسخ المنشور والصور» أو افتح Homey عبر HTTPS للنسخ تلقائيًا.",
+    "template_catalog_oldest": "الأقدم",
+    "template_image_browser_help": "اضغط باستمرار على Ctrl ومرّر للتكبير؛ اسحب الصورة المكبّرة لتحريكها."
   },
   "timer_not_running": "المؤقت __name__ غير قيد التشغيل.",
   "stopwatch_not_running": "ساعة الإيقاف __name__ غير قيد التشغيل.",

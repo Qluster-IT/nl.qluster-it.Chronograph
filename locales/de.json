@@ -377,7 +377,9 @@
     "multiple_separator_cards_small": "Widgetartige Karten (klein)",
     "multiple_separator_cards_tiny": "Widgetartige Karten (sehr klein)",
     "template_generating": "TWF und Bilder werden erstellt. Bitte warte einen Moment.",
-    "template_copy_http": "Über diese HTTP-Verbindung ist automatisches Kopieren nicht verfügbar. Klicke auf Beitrag und Bilder kopieren oder öffne Homey über HTTPS, um automatisch zu kopieren."
+    "template_copy_http": "Über diese HTTP-Verbindung ist automatisches Kopieren nicht verfügbar. Klicke auf Beitrag und Bilder kopieren oder öffne Homey über HTTPS, um automatisch zu kopieren.",
+    "template_catalog_oldest": "Älteste",
+    "template_image_browser_help": "Zum Zoomen Strg gedrückt halten und scrollen; das vergrößerte Bild zum Verschieben ziehen."
   },
   "timer_not_running": "Timer __name__ läuft nicht.",
   "stopwatch_not_running": "Stopuhr __name__ läuft nicht.",

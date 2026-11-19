@@ -377,7 +377,9 @@
     "multiple_separator_cards_small": "Schede tipo widget (piccole)",
     "multiple_separator_cards_tiny": "Schede tipo widget (molto piccole)",
     "template_generating": "Generazione del TWF e delle immagini. Attendi un momento.",
-    "template_copy_http": "La copia automatica non è disponibile con questa connessione HTTP. Fai clic su Copia post e immagini oppure apri Homey via HTTPS per copiare automaticamente."
+    "template_copy_http": "La copia automatica non è disponibile con questa connessione HTTP. Fai clic su Copia post e immagini oppure apri Homey via HTTPS per copiare automaticamente.",
+    "template_catalog_oldest": "Meno recenti",
+    "template_image_browser_help": "Tieni premuto Ctrl e scorri per ingrandire; trascina l’immagine ingrandita per spostarla."
   },
   "timer_not_running": "Il timer __name__ non è in esecuzione.",
   "stopwatch_not_running": "Il cronometro __name__ non è in esecuzione.",

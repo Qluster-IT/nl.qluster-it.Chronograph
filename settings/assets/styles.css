@@ -543,7 +543,9 @@ body {
 .template-image-toolbar output { min-width: 4rem; text-align: center; font-variant-numeric: tabular-nums; }
 .template-image-toolbar button:last-child { margin-left: auto; }
 .template-image-viewport { flex: 1; min-width: 0; min-height: 0; overflow: auto; overscroll-behavior: contain; touch-action: pan-x pan-y; }
-.template-image-viewport img { display: block; max-width: none; height: auto; }
+.template-image-viewport.template-image-zoomed { cursor: grab; }
+.template-image-viewport.template-image-dragging { cursor: grabbing; user-select: none; }
+.template-image-viewport img { display: block; max-width: none; height: auto; user-select: none; }
 
 .template-export-instruction strong {
 	color: var(--homey-text-color, #222);

@@ -32,6 +32,7 @@
 	"template_catalog_search": "Suchen",
 	"template_catalog_sort": "Sortieren nach",
 	"template_catalog_newest": "Neueste",
+	"template_catalog_oldest": "Älteste",
 	"template_catalog_likes": "Gefällt mir",
 	"template_catalog_favorites": "Favoriten",
 	"template_catalog_empty": "Keine passenden Vorlagen gefunden.",

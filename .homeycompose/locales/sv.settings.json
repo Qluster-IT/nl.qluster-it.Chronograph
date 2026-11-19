@@ -32,6 +32,7 @@
 	"template_catalog_search": "Sök",
 	"template_catalog_sort": "Sortera efter",
 	"template_catalog_newest": "Nyaste",
+	"template_catalog_oldest": "Äldsta",
 	"template_catalog_likes": "Gilla-markeringar",
 	"template_catalog_favorites": "Favoriter",
 	"template_catalog_empty": "Inga matchande mallar hittades.",

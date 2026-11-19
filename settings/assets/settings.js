@@ -56,7 +56,8 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		$scope.widgetStyles = { version: 3, styles: [], themes: [] };
 		$scope.templates = { open: false, section: 'export', designId: null, themeId: null, text: '',
 			previewDesignId: 'builtin:current', previewThemeId: 'builtin:current', review: null, busy: false,
-			catalog: null, catalogQuery: '', catalogOrder: '-number', favorites: {},
+			catalog: null, catalogQuery: '', catalogOrder: '-number', savedCatalogOrder: '-number',
+			catalogOrderReady: false, catalogOrderSaving: false, favorites: {},
 			showPreviews: false, previewsAvailable: false, previewsSaving: false };
 		$scope.editor = {
 			mode: 'design',
@@ -1152,6 +1153,33 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 					template.previewsSaving = false;
 					if (error) { showError(error); return; }
 					template.showPreviews = enabled;
+				});
+			});
+		};
+
+		function isTemplateCatalogOrder(order) {
+			return ['-number', 'number', 'title', '-likes', '-favorite'].indexOf(order) !== -1;
+		}
+
+		$scope.saveTemplateCatalogOrder = function () {
+			var template = $scope.templates;
+			var order = template.catalogOrder;
+			if (template.catalogOrderSaving || !template.catalogOrderReady || !isTemplateCatalogOrder(order)) {
+				template.catalogOrder = template.savedCatalogOrder;
+				return;
+			}
+			if (order === template.savedCatalogOrder) return;
+			var previousOrder = template.savedCatalogOrder;
+			template.catalogOrderSaving = true;
+			Homey.set('widgetTemplateCatalogSort', order, function (error) {
+				$scope.$applyAsync(function () {
+					template.catalogOrderSaving = false;
+					if (error) {
+						template.catalogOrder = previousOrder;
+						showError(error);
+						return;
+					}
+					template.savedCatalogOrder = order;
 				});
 			});
 		};
@@ -2977,6 +3005,19 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				});
 			});
 
+			Homey.get('widgetTemplateCatalogSort', function (error, value) {
+				$scope.$applyAsync(function () {
+					if (error) showError(error);
+					else if (value !== null && value !== undefined && !isTemplateCatalogOrder(value)) {
+						showError(new Error('Invalid template catalog sort preference'));
+					} else if (isTemplateCatalogOrder(value)) {
+						$scope.templates.catalogOrder = value;
+						$scope.templates.savedCatalogOrder = value;
+					}
+					$scope.templates.catalogOrderReady = true;
+				});
+			});
+
 			Homey.get('widgetStyles', function (error, value) {
 				$scope.$applyAsync(function () {
 					if (error) {
@@ -3180,12 +3221,13 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			});
 		}
 	};
-}).directive('templateImagePinch', function () {
+}).directive('templateImageGestures', function () {
 	return {
 		restrict: 'A',
 		link: function (scope, element) {
 			var viewport = element[0];
 			var gesture;
+			var drag;
 			function distance(touches) {
 				return Math.hypot(touches[1].clientX - touches[0].clientX, touches[1].clientY - touches[0].clientY);
 			}
@@ -3196,9 +3238,9 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 					y: (touches[0].clientY + touches[1].clientY) / 2 - bounds.top
 				};
 			}
-			function end() { gesture = null; }
+			function endGesture() { gesture = null; }
 			function start(event) {
-				end();
+				endGesture();
 				if (event.touches.length !== 2) return;
 				var image = viewport.querySelector('img');
 				var separation = distance(event.touches);
@@ -3227,16 +3269,73 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				viewport.scrollLeft = gesture.x * scale - point.x;
 				viewport.scrollTop = gesture.y * scale - point.y;
 			}
+			function zoomAt(target, clientX, clientY) {
+				var current = scope.templates.imageZoom;
+				var zoom = Math.max(1, Math.min(5, target));
+				if (zoom === current) return;
+				var bounds = viewport.getBoundingClientRect();
+				var x = clientX - bounds.left;
+				var y = clientY - bounds.top;
+				var contentX = viewport.scrollLeft + x;
+				var contentY = viewport.scrollTop + y;
+				scope.$apply(function () { scope.zoomTemplateImage(zoom - current); });
+				var scale = scope.templates.imageZoom / current;
+				viewport.scrollLeft = contentX * scale - x;
+				viewport.scrollTop = contentY * scale - y;
+			}
+			function wheel(event) {
+				if (!event.ctrlKey || !event.deltaY) return;
+				if (event.cancelable) event.preventDefault();
+				zoomAt(scope.templates.imageZoom * Math.exp(-event.deltaY * 0.0015), event.clientX, event.clientY);
+			}
+			function pointerDown(event) {
+				if (event.pointerType !== 'mouse' || event.button !== 0 || scope.templates.imageZoom <= 1) return;
+				drag = {
+					id: event.pointerId,
+					x: event.clientX, y: event.clientY,
+					scrollLeft: viewport.scrollLeft, scrollTop: viewport.scrollTop
+				};
+				viewport.classList.add('template-image-dragging');
+				if (viewport.setPointerCapture) viewport.setPointerCapture(event.pointerId);
+				if (event.cancelable) event.preventDefault();
+			}
+			function pointerMove(event) {
+				if (!drag || drag.id !== event.pointerId) return;
+				if (event.cancelable) event.preventDefault();
+				viewport.scrollLeft = drag.scrollLeft - (event.clientX - drag.x);
+				viewport.scrollTop = drag.scrollTop - (event.clientY - drag.y);
+			}
+			function pointerEnd(event) {
+				if (!drag || event && drag.id !== event.pointerId) return;
+				var pointerId = drag.id;
+				drag = null;
+				viewport.classList.remove('template-image-dragging');
+				if (viewport.hasPointerCapture && viewport.hasPointerCapture(pointerId)) viewport.releasePointerCapture(pointerId);
+			}
+			function end() { endGesture(); pointerEnd(); }
+			viewport.addEventListener('wheel', wheel, { passive: false });
 			viewport.addEventListener('touchstart', start, { passive: false });
 			viewport.addEventListener('touchmove', move, { passive: false });
-			viewport.addEventListener('touchend', end);
-			viewport.addEventListener('touchcancel', end);
+			viewport.addEventListener('touchend', endGesture);
+			viewport.addEventListener('touchcancel', endGesture);
+			viewport.addEventListener('pointerdown', pointerDown);
+			viewport.addEventListener('pointermove', pointerMove);
+			viewport.addEventListener('pointerup', pointerEnd);
+			viewport.addEventListener('pointercancel', pointerEnd);
+			viewport.addEventListener('lostpointercapture', pointerEnd);
 			scope.$watch('templates.imageViewer', end);
 			scope.$on('$destroy', function () {
+				viewport.removeEventListener('wheel', wheel);
 				viewport.removeEventListener('touchstart', start);
 				viewport.removeEventListener('touchmove', move);
-				viewport.removeEventListener('touchend', end);
-				viewport.removeEventListener('touchcancel', end);
+				viewport.removeEventListener('touchend', endGesture);
+				viewport.removeEventListener('touchcancel', endGesture);
+				viewport.removeEventListener('pointerdown', pointerDown);
+				viewport.removeEventListener('pointermove', pointerMove);
+				viewport.removeEventListener('pointerup', pointerEnd);
+				viewport.removeEventListener('pointercancel', pointerEnd);
+				viewport.removeEventListener('lostpointercapture', pointerEnd);
+				end();
 			});
 		}
 	};

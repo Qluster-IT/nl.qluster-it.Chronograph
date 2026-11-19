@@ -14,7 +14,7 @@ const compiledSettingsScripts = [runtimeScript, errorScript, editorScript, setti
 const html = fs.readFileSync(path.join(root, 'settings', 'index.html'), 'utf8');
 const css = fs.readFileSync(path.join(root, 'settings', 'assets', 'styles.css'), 'utf8');
 
-function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns, extras, noSelection, helpPreference, renderExport, previewsPreference) {
+function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns, extras, noSelection, helpPreference, renderExport, previewsPreference, catalogOrderPreference) {
 	let editor;
 	let controller;
 	const directives = {};
@@ -59,7 +59,8 @@ function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns, extr
 		get(key, callback) {
 			callback(null, key === 'roundOfDurationsFlowcards' ? 2 : key === 'widgetStyles' ? widgetStyles
 				: key === 'previewBuiltIns' ? previewBuiltIns : key === 'widgetDesignerHelpExpanded' ? helpPreference
-					: key === 'widgetTemplateShowPreviews' ? previewsPreference : null);
+					: key === 'widgetTemplateShowPreviews' ? previewsPreference
+						: key === 'widgetTemplateCatalogSort' ? catalogOrderPreference : null);
 		},
 		set: set || ((key, value, callback) => { writes.push({ key, value }); callback(null); }),
 		api(method, url, data, callback) { callback(null, []); },
@@ -721,12 +722,36 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(scope.templates.showPreviews, false);
 		assert.strictEqual(scope.templates.catalog[0], item);
 		assert.strictEqual(requests, 1);
-		assert.match(html, /ng-if="templates\.showPreviews" ng-init="loadCatalogPreview\(item\)"/);
+		assert.match(html, /ng-if="templates\.showPreviews && templates\.selectedCatalogId !== item\.id" ng-init="loadCatalogPreview\(item\)"/);
 		assert.match(html, /template-catalog-preview="item\.preview"/);
 		assert.doesNotMatch(html, /ng-src="\{\{ item\.images\[0\] \}\}"/);
 		assert.match(html, /ng-repeat="image in item\.images track by \$index"[\s\S]*?ng-click="openTemplateImage\(image, item\.title\)"/);
 		assert.match(html, /ng-click="toggleTemplatePreviews\(\)"[\s\S]*?ng-attr-aria-pressed="\{\{ templates\.showPreviews \}\}"[\s\S]*?ng-attr-aria-label="\{\{ t\('settings\.template_show_examples'\) \}\}"/);
 		assert.match(html, /templates\.showPreviews \? 'fa-eye' : 'fa-eye-slash'/);
+	});
+
+	it('saves and restores the community catalog sort preference', () => {
+		const { scope, homey, writes } = loadSettings(null, null, null, false, null, null, false, null, false, null, 'number');
+		assert.strictEqual(scope.templates.catalogOrder, 'number');
+		assert.strictEqual(scope.templates.catalogOrderReady, true);
+		scope.templates.catalogOrder = '-likes';
+		scope.saveTemplateCatalogOrder();
+		assert.deepStrictEqual(writes[0], { key: 'widgetTemplateCatalogSort', value: '-likes' });
+		assert.strictEqual(scope.templates.savedCatalogOrder, '-likes');
+
+		const reopened = loadSettings(null, null, null, false, null, null, false, null, false, null, '-likes').scope;
+		assert.strictEqual(reopened.templates.catalogOrder, '-likes');
+		assert.match(html, /option value="number">\{\{ t\('settings\.template_catalog_oldest'\) \}\}/);
+		assert.match(html, /ng-change="saveTemplateCatalogOrder\(\)"/);
+
+		const errors = [];
+		homey.alert = message => errors.push(message);
+		homey.set = (key, value, callback) => callback(new Error('Sort save failed'));
+		scope.templates.catalogOrder = 'title';
+		scope.saveTemplateCatalogOrder();
+		assert.strictEqual(scope.templates.catalogOrder, '-likes');
+		assert.strictEqual(scope.templates.catalogOrderSaving, false);
+		assert.match(errors[0], /Sort save failed/);
 	});
 
 	it('decodes each catalog preview once and renders only a normal running timer without changing the designer', () => {
@@ -865,7 +890,7 @@ describe('Widget style designer preview', () => {
 			addEventListener(name, callback, config) { handlers[name] = callback; options[name] = config; },
 			removeEventListener(name, callback) { assert.strictEqual(callback, handlers[name]); delete handlers[name]; }
 		};
-		directives.templateImagePinch().link(scope, [viewport]);
+		directives.templateImageGestures().link(scope, [viewport]);
 		const touch = (id, x, y) => ({ identifier: id, clientX: x, clientY: y });
 		const event = touches => ({ touches, cancelable: true, preventDefault() { prevented++; } });
 		handlers.touchstart(event([touch(1, 110, 120)]));
@@ -892,6 +917,69 @@ describe('Widget style designer preview', () => {
 		handlers.touchmove(event([touch(1, 0, 120), touch(2, 600, 120)]));
 		assert.strictEqual(scope.templates.imageZoom, 1);
 		assert.strictEqual(options.touchmove.passive, false);
+		destroy();
+		assert.deepStrictEqual(Object.keys(handlers), []);
+	});
+
+	it('zooms around Ctrl-wheel and pans with mouse drag while zoomed', () => {
+		const { scope, directives } = loadSettings();
+		const handlers = {};
+		const captured = new Set();
+		let destroy;
+		let prevented = 0;
+		scope.templates.imageZoom = 2;
+		scope.$apply = callback => callback();
+		scope.$on = (name, callback) => { if (name === '$destroy') destroy = callback; };
+		const classes = new Set();
+		const viewport = {
+			scrollLeft: 100, scrollTop: 80,
+			getBoundingClientRect: () => ({ left: 10, top: 20 }),
+			classList: {
+				add(name) { classes.add(name); },
+				remove(name) { classes.delete(name); }
+			},
+			setPointerCapture(id) { captured.add(id); },
+			hasPointerCapture(id) { return captured.has(id); },
+			releasePointerCapture(id) { captured.delete(id); },
+			addEventListener(name, callback) { handlers[name] = callback; },
+			removeEventListener(name, callback) { assert.strictEqual(callback, handlers[name]); delete handlers[name]; }
+		};
+		directives.templateImageGestures().link(scope, [viewport]);
+		const event = values => Object.assign({
+			cancelable: true,
+			preventDefault() { prevented++; }
+		}, values);
+		handlers.wheel(event({ ctrlKey: false, deltaY: -100, clientX: 110, clientY: 120 }));
+		assert.strictEqual(scope.templates.imageZoom, 2);
+		assert.strictEqual(prevented, 0);
+		handlers.wheel(event({ ctrlKey: true, deltaY: -100, clientX: 110, clientY: 120 }));
+		const zoomed = 2 * Math.exp(0.15);
+		assert.ok(Math.abs(scope.templates.imageZoom - zoomed) < 1e-10);
+		assert.ok(Math.abs(viewport.scrollLeft - (200 * zoomed / 2 - 100)) < 1e-10);
+		assert.ok(Math.abs(viewport.scrollTop - (180 * zoomed / 2 - 100)) < 1e-10);
+		assert.strictEqual(prevented, 1);
+		handlers.wheel(event({ ctrlKey: true, deltaY: -10000, clientX: 110, clientY: 120 }));
+		assert.strictEqual(scope.templates.imageZoom, 5);
+		handlers.wheel(event({ ctrlKey: true, deltaY: 10000, clientX: 110, clientY: 120 }));
+		assert.strictEqual(scope.templates.imageZoom, 1);
+
+		scope.templates.imageZoom = 2;
+		viewport.scrollLeft = 100;
+		viewport.scrollTop = 80;
+		handlers.pointerdown(event({ pointerType: 'mouse', pointerId: 7, button: 0, clientX: 100, clientY: 100 }));
+		assert.ok(captured.has(7));
+		assert.ok(classes.has('template-image-dragging'));
+		handlers.pointermove(event({ pointerType: 'mouse', pointerId: 7, clientX: 130, clientY: 85 }));
+		assert.strictEqual(viewport.scrollLeft, 70);
+		assert.strictEqual(viewport.scrollTop, 95);
+		handlers.pointerup(event({ pointerId: 7 }));
+		assert.strictEqual(captured.has(7), false);
+		assert.strictEqual(classes.has('template-image-dragging'), false);
+		handlers.pointermove(event({ pointerId: 7, clientX: 140, clientY: 90 }));
+		assert.strictEqual(viewport.scrollLeft, 70);
+		assert.strictEqual(viewport.scrollTop, 95);
+		assert.match(html, /template-image-gestures/);
+		assert.match(css, /\.template-image-viewport\.template-image-zoomed\s*\{[^}]*cursor:\s*grab/);
 		destroy();
 		assert.deepStrictEqual(Object.keys(handlers), []);
 	});

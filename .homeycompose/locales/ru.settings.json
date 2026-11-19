@@ -32,6 +32,7 @@
 	"template_catalog_search": "Поиск",
 	"template_catalog_sort": "Сортировать по",
 	"template_catalog_newest": "Сначала новые",
+	"template_catalog_oldest": "Сначала старые",
 	"template_catalog_likes": "Отметки «Нравится»",
 	"template_catalog_favorites": "Избранное",
 	"template_catalog_empty": "Подходящие шаблоны не найдены.",

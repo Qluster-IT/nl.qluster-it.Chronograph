@@ -1318,5 +1318,20 @@
     "ru": "Улучшены выбор и предпросмотр в редакторе виджетов.",
     "ko": "위젯 디자이너의 선택 및 미리보기 기능을 개선했습니다.",
     "ar": "تحسين التحديد والمعاينة في محرر تصميم الأدوات."
+  },
+  "3.1.0": {
+    "en": "The Widget Exchange remembers your sort order. Expanded templates show their details and posted images instead of the live preview. The image viewer supports Ctrl+scroll zoom and mouse-drag panning.",
+    "nl": "De Widget Exchange onthoudt nu de sortering. Uitgeklapte templates tonen details en geplaatste afbeeldingen in plaats van het livevoorbeeld. De afbeeldingsviewer ondersteunt ook zoomen met Ctrl+scrollen en verplaatsen met de muis.",
+    "da": "Widget Exchange husker nu din sortering. Udvidede skabeloner viser detaljer og opslåede billeder i stedet for liveforhåndsvisningen. Billedvisningen understøtter også zoom med Ctrl+scroll og panorering med musen.",
+    "de": "Der Widget Exchange merkt sich jetzt die Sortierung. Ausgeklappte Vorlagen zeigen Details und veröffentlichte Bilder anstelle der Live-Vorschau. Der Bildbetrachter unterstützt jetzt auch Zoomen mit Strg+Scrollen und Verschieben per Maus.",
+    "es": "El Widget Exchange recuerda ahora el orden elegido. Al expandir una plantilla, se muestran sus detalles e imágenes publicadas en lugar de la vista previa en vivo. El visor de imágenes también permite ampliar con Ctrl+la rueda y mover la imagen arrastrando con el ratón.",
+    "fr": "Le Widget Exchange mémorise désormais votre ordre de tri. Les modèles développés affichent leurs détails et les images publiées à la place de l’aperçu en direct. La visionneuse permet aussi de zoomer avec Ctrl+la molette et de déplacer l’image en la faisant glisser.",
+    "it": "Il Widget Exchange ora ricorda l’ordinamento scelto. Espandendo un modello, vengono mostrati i dettagli e le immagini pubblicate al posto dell’anteprima dal vivo. Il visualizzatore consente anche di ingrandire con Ctrl+rotellina e spostare l’immagine trascinandola.",
+    "no": "Widget Exchange husker nå sorteringen din. Utvidede maler viser detaljer og publiserte bilder i stedet for direkte forhåndsvisning. Bildeviseren støtter nå også zoom med Ctrl+rulling og panorering med musen.",
+    "sv": "Widget Exchange kommer nu ihåg din sortering. När en mall expanderas visas dess detaljer och publicerade bilder i stället för liveförhandsvisningen. Bildvisaren stöder nu även zoomning med Ctrl+scroll och panorering med musen.",
+    "pl": "Widget Exchange zapamiętuje wybraną kolejność sortowania. Po rozwinięciu szablonu jego szczegóły i opublikowane obrazy zastępują podgląd na żywo. Przeglądarka obrazów obsługuje teraz powiększanie kółkiem myszy z Ctrl oraz przesuwanie obrazu przeciąganiem.",
+    "ru": "Widget Exchange теперь запоминает выбранный порядок сортировки. В раскрытом шаблоне отображаются его описание и опубликованные изображения вместо предпросмотра. В просмотрщике изображений также можно масштабировать с Ctrl+колесо и перемещать увеличенное изображение мышью.",
+    "ko": "Widget Exchange가 이제 선택한 정렬 순서를 기억합니다. 템플릿을 펼치면 실시간 미리보기 대신 세부 정보와 게시된 이미지가 표시됩니다. 이미지 뷰어에서 Ctrl+스크롤로 확대하고 마우스로 이미지를 끌어 이동할 수도 있습니다.",
+    "ar": "يتذكر Widget Exchange الآن ترتيب الفرز الذي اخترته. عند توسيع قالب، تظهر تفاصيله وصوره المنشورة بدلاً من المعاينة المباشرة. يدعم عارض الصور أيضًا التكبير باستخدام Ctrl والتمرير، وتحريك الصورة بالسحب بالماوس."
   }
 }

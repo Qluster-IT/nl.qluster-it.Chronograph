@@ -32,6 +32,7 @@
 	"template_catalog_search": "بحث",
 	"template_catalog_sort": "ترتيب حسب",
 	"template_catalog_newest": "الأحدث",
+	"template_catalog_oldest": "الأقدم",
 	"template_catalog_likes": "الإعجابات",
 	"template_catalog_favorites": "المفضلة",
 	"template_catalog_empty": "لم يتم العثور على قوالب مطابقة.",

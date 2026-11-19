@@ -374,7 +374,9 @@
     "multiple_separator_cards_small": "Widgetachtige kaarten (klein)",
     "multiple_separator_cards_tiny": "Widgetachtige kaarten (zeer klein)",
     "template_generating": "De TWF en afbeeldingen worden gemaakt. Een ogenblik geduld.",
-    "template_copy_http": "Automatisch kopiëren is niet beschikbaar via deze HTTP-verbinding. Klik op Bericht en afbeeldingen kopiëren of open Homey via HTTPS om automatisch te kopiëren."
+    "template_copy_http": "Automatisch kopiëren is niet beschikbaar via deze HTTP-verbinding. Klik op Bericht en afbeeldingen kopiëren of open Homey via HTTPS om automatisch te kopiëren.",
+    "template_catalog_oldest": "Oudste",
+    "template_image_browser_help": "Houd Ctrl ingedrukt en scroll om in te zoomen; sleep de afbeelding om deze te verplaatsen."
   },
   "timer_not_running": "Timer __name__ loopt niet.",
   "stopwatch_not_running": "Stopwatch __name__ loopt niet.",

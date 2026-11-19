@@ -32,6 +32,7 @@
 	"template_catalog_search": "Søk",
 	"template_catalog_sort": "Sorter etter",
 	"template_catalog_newest": "Nyeste",
+	"template_catalog_oldest": "Eldste",
 	"template_catalog_likes": "Likerklikk",
 	"template_catalog_favorites": "Favoritter",
 	"template_catalog_empty": "Ingen samsvarende maler funnet.",

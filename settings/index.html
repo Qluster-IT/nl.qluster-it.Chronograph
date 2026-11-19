@@ -761,8 +761,9 @@
 							</button>
 							<input class="hy-nostyle form-control" id="template-catalog-search" type="search" ng-model="templates.catalogQuery"
 								ng-disabled="!templates.catalog" ng-attr-placeholder="{{ t('settings.template_catalog_search') }}" ng-attr-aria-label="{{ t('settings.template_catalog_search') }}">
-							<select id="template-catalog-sort" class="form-select" ng-model="templates.catalogOrder" ng-disabled="!templates.catalog" ng-attr-aria-label="{{ t('settings.template_catalog_sort') }}">
+							<select id="template-catalog-sort" class="form-select" ng-model="templates.catalogOrder" ng-change="saveTemplateCatalogOrder()" ng-disabled="!templates.catalog || !templates.catalogOrderReady || templates.catalogOrderSaving" ng-attr-aria-label="{{ t('settings.template_catalog_sort') }}">
 								<option value="-number">{{ t('settings.template_catalog_newest') }}</option>
+								<option value="number">{{ t('settings.template_catalog_oldest') }}</option>
 								<option value="title">{{ t('settings.style_name') }}</option>
 								<option value="-likes">{{ t('settings.template_catalog_likes') }}</option>
 								<option value="-favorite">{{ t('settings.template_catalog_favorites') }}</option>
@@ -783,7 +784,7 @@
 									ng-attr-aria-expanded="{{ templates.selectedCatalogId === item.id }}">
 									<span>{{ item.title }}</span>
 								</button>
-								<div ng-if="templates.showPreviews" ng-init="loadCatalogPreview(item)">
+								<div ng-if="templates.showPreviews && templates.selectedCatalogId !== item.id" ng-init="loadCatalogPreview(item)">
 									<p class="help-text" ng-if="item.previewLoading">{{ t('settings.template_catalog_loading') }}</p>
 									<p class="chronograph-error" role="alert" ng-if="item.previewError">{{ item.previewError }}</p>
 									<div ng-if="item.preview" class="template-catalog-thumbnail" template-catalog-preview="item.preview" t="t" labels="labels" inert aria-hidden="true"></div>
@@ -846,9 +847,9 @@
 				<button class="hy-nostyle btn btn-outline-primary" type="button" ng-click="zoomTemplateImage(0.5)" ng-disabled="templates.imageZoom >= 5" ng-attr-aria-label="{{ t('settings.template_image_zoom_in') }}"><i class="fa-solid fa-magnifying-glass-plus" aria-hidden="true"></i></button>
 				<button class="hy-nostyle btn btn-outline-primary" type="button" ng-click="closeTemplateImage()"><i class="fa-solid fa-xmark" aria-hidden="true"></i> {{ t('settings.template_image_close') }}</button>
 			</div>
-			<div class="template-image-viewport" template-image-pinch>
+			<div class="template-image-viewport" ng-class="{ 'template-image-zoomed': templates.imageZoom > 1 }" template-image-gestures>
 				<img ng-if="templates.imageViewer" ng-src="{{ templates.imageViewer.image }}" ng-attr-alt="{{ templates.imageViewer.title }}"
-					ng-style="{ width: (templates.imageZoom * 100) + '%' }">
+					ng-style="{ width: (templates.imageZoom * 100) + '%' }" draggable="false">
 			</div>
 		</dialog>
 	</main>

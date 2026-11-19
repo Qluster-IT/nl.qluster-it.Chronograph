@@ -32,6 +32,7 @@
 	"template_catalog_search": "Rechercher",
 	"template_catalog_sort": "Trier par",
 	"template_catalog_newest": "Plus récents",
+	"template_catalog_oldest": "Plus anciens",
 	"template_catalog_likes": "Mentions J'aime",
 	"template_catalog_favorites": "Favoris",
 	"template_catalog_empty": "Aucun modèle correspondant trouvé.",

@@ -32,6 +32,7 @@
 	"template_catalog_search": "Search",
 	"template_catalog_sort": "Sort by",
 	"template_catalog_newest": "Newest",
+	"template_catalog_oldest": "Oldest",
 	"template_catalog_likes": "Likes",
 	"template_catalog_favorites": "Favorites",
 	"template_catalog_empty": "No matching templates found.",

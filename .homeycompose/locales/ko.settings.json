@@ -32,6 +32,7 @@
 	"template_catalog_search": "검색",
 	"template_catalog_sort": "정렬 기준",
 	"template_catalog_newest": "최신순",
+	"template_catalog_oldest": "오래된 순",
 	"template_catalog_likes": "좋아요",
 	"template_catalog_favorites": "즐겨찾기",
 	"template_catalog_empty": "일치하는 템플릿이 없습니다.",

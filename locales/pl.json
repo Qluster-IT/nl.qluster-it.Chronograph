@@ -377,7 +377,9 @@
     "multiple_separator_cards_small": "Karty jak widżety (małe)",
     "multiple_separator_cards_tiny": "Karty jak widżety (bardzo małe)",
     "template_generating": "Trwa tworzenie TWF i obrazów. Poczekaj chwilę.",
-    "template_copy_http": "Automatyczne kopiowanie nie jest dostępne przez to połączenie HTTP. Kliknij Kopiuj post i obrazy lub otwórz Homey przez HTTPS, aby kopiować automatycznie."
+    "template_copy_http": "Automatyczne kopiowanie nie jest dostępne przez to połączenie HTTP. Kliknij Kopiuj post i obrazy lub otwórz Homey przez HTTPS, aby kopiować automatycznie.",
+    "template_catalog_oldest": "Najstarsze",
+    "template_image_browser_help": "Przytrzymaj Ctrl i przewiń, aby powiększyć; przeciągnij powiększony obraz, aby go przesunąć."
   },
   "timer_not_running": "Timer __name__ nie działa.",
   "stopwatch_not_running": "Stoper __name__ nie działa.",
