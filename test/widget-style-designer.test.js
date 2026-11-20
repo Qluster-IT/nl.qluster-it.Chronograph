@@ -327,6 +327,7 @@ describe('Widget style designer preview', () => {
 		control.commit();
 		assert.strictEqual(control.invalid, true);
 		assert.deepStrictEqual(changes, []);
+		assert.strictEqual(control.swatch().backgroundColor, '#123456', 'Invalid drafts never replace the valid model swatch');
 		control.picker = '#ABCDEF';
 		control.pick();
 		assert.strictEqual(control.hex, '#ABCDEF');
@@ -337,6 +338,35 @@ describe('Widget style designer preview', () => {
 		control.choose();
 		assert.strictEqual(changes.at(-1), 'black-light');
 		assert.strictEqual(window.ChronographWidgetStyle.valueColor(changes.at(-1)), '#2B2C36');
+	});
+
+	it('shows effective theme overrides, default contrast and gradients in color dots without changing settings', () => {
+		const { scope, window, writes } = loadSettings();
+		scope.selectEditorMode('color');
+		scope.createStyle(true);
+		const theme = scope.getSelectedScheme();
+		theme.colors.inactive = '#123456';
+		theme.foregroundColors = { name: 'default' };
+		theme.colorOverrides = { running: { pause: '#ABCDEF' } };
+		theme.borderColors = { pause: '#135790' };
+		theme.borderOverrides = { paused: { pause: '#246801' } };
+		scope.editor.previewState = 'running';
+		assert.strictEqual(scope.colorSwatchStyle('background', 'pause').backgroundColor, '#ABCDEF');
+		assert.strictEqual(scope.colorSwatchStyle('foreground', 'name').backgroundColor, '#fff');
+		assert.strictEqual(scope.colorSwatchStyle('border', 'pause').backgroundColor, '#135790');
+		scope.editor.previewState = 'paused';
+		assert.strictEqual(scope.colorSwatchStyle('border', 'pause').backgroundColor, '#246801');
+		theme.backgroundGradients = { inactive: true };
+		const gradient = scope.colorSwatchStyle('background', 'background');
+		assert.match(gradient.backgroundImage, /linear-gradient.*#123456/);
+		assert.match(scope.colorSwatchStyle('foreground', 'name').backgroundColor, /^var\(--homey-text-color/);
+		theme.foregroundColors.name = '#FEDCBA';
+		assert.strictEqual(scope.colorSwatchStyle('foreground', 'name').backgroundColor, '#FEDCBA');
+		theme.colors.pause = 'none';
+		assert.strictEqual(scope.colorSwatchStyle('background', 'pause').backgroundColor, 'transparent');
+		assert.strictEqual(scope.colorSwatchStyle('border', 'stop').backgroundColor, 'transparent');
+		assert.strictEqual(scope.colorSwatchStyle('progress', 'background').backgroundColor, window.ChronographWidgetStyle.valueColor('grey'));
+		assert.strictEqual(writes.length, 0);
 	});
 
 	it('keeps outline spacing inside the Homey frame in designer and template previews', () => {
@@ -1863,7 +1893,7 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(writes.length, 0);
 	});
 
-	it('carries only shared selections between editable Designs and Themes', () => {
+	it('carries row, column, element and Widget selections between Designs and Themes', () => {
 		const { scope } = loadSettings();
 		scope.createStyle(true);
 		scope.saveSettings();
@@ -1876,10 +1906,11 @@ describe('Widget style designer preview', () => {
 		for (const select of [() => scope.selectVisibilityRow(1), () => scope.selectColumn(1, 1)]) {
 			select();
 			assert.ok(scope.editor.selectedRow || scope.editor.selectedColumn);
+			const row = scope.editor.selectedRow;
+			const column = JSON.stringify(scope.editor.selectedColumn);
 			scope.selectEditorMode('color');
-			assert.strictEqual(scope.editor.selectedRow, null);
-			assert.strictEqual(scope.editor.selectedColumn, null);
-			assert.strictEqual(scope.editor.rowRule, null);
+			assert.strictEqual(scope.editor.selectedRow, row);
+			assert.strictEqual(JSON.stringify(scope.editor.selectedColumn), column);
 			assert.strictEqual(scope.selectedColorKey(), null);
 			scope.selectEditorMode('design');
 		}
@@ -1896,21 +1927,45 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(scope.editor.selectedBackground, true);
 	});
 
-	it('does not restore a hidden selection after switching to a read-only preset', () => {
+	it('preserves selectable highlights across read-only modes but clears them when changing the selected design', () => {
 		const { scope } = loadSettings();
 		scope.createStyle(true);
 		scope.saveSettings();
 		scope.selectLayoutElement('name');
 		scope.selectEditorMode('color');
 		assert.strictEqual(scope.isSchemeReadOnly(), true);
-		assert.strictEqual(scope.selectedColorKey(), null);
+		assert.strictEqual(scope.selectedColorKey(), 'name');
 		scope.selectEditorMode('design');
-		assert.strictEqual(scope.editor.selectedElement, null);
+		assert.strictEqual(scope.editor.selectedElement, 'name');
 		const id = scope.editor.selectedStyleId;
 		scope.selectWidgetBackground();
 		scope.selectEditingStyle('builtin:current');
 		scope.selectEditingStyle(id);
 		assert.strictEqual(scope.editor.selectedBackground, false);
+	});
+
+	it('selects built-in rows and columns in both modes without allowing layout reordering', () => {
+		const { scope, writes } = loadSettings();
+		const original = JSON.stringify(scope.getSelectedStyle());
+		for (const mode of ['design', 'color']) {
+			scope.selectEditorMode(mode);
+			scope.selectWidgetBackground();
+			scope.toggleVisibilityRow(1);
+			assert.strictEqual(scope.editor.selectedRow, 1);
+			scope.toggleVisibilityRow(1);
+			assert.strictEqual(scope.editor.selectedRow, null);
+			scope.toggleColumn(1, 1);
+			assert.deepStrictEqual(JSON.parse(JSON.stringify(scope.editor.selectedColumn)), { row: 1, group: 1 });
+			scope.moveGroupedElement('name', 0, 1);
+			scope.moveDesignerRow(1, 2);
+			scope.moveDesignerColumn(1, 1, 2);
+			scope.moveStyleElement(0, 1);
+			assert.strictEqual(JSON.stringify(scope.getSelectedStyle()), original);
+			scope.toggleColumn(1, 1);
+			assert.strictEqual(scope.editor.selectedColumn, null);
+		}
+		assert.strictEqual(scope.isDirty(), false);
+		assert.strictEqual(writes.length, 0);
 	});
 
 	it('clears editor highlights after deleting a saved design or an unsaved theme', () => {
@@ -2565,7 +2620,7 @@ describe('Widget style designer preview', () => {
 		assert.ok(grouped.includes("'style-preview-selected': !previewScenario && editor.selectedElement === element && group.placeholders.indexOf(element) === -1"));
 		assert.ok(legacy.includes("'style-preview-selected': !previewScenario && editor.selectedElement === element"));
 		assert.ok(legacy.includes("'style-preview-selected': !previewScenario && editor.selectedElement === 'cancel'"));
-		assert.ok(html.includes("'style-preview-show-selection': editor.mode === 'design' ? !isDesignReadOnly() : !isSchemeReadOnly()"));
+		assert.ok(html.includes('class="style-preview-layer style-preview-show-selection"'));
 		assert.match(css, /\.style-preview-show-selection \.style-preview-selected\s*\{[^}]*outline:\s*2px solid/);
 	});
 
@@ -3238,7 +3293,7 @@ describe('Widget style designer preview', () => {
 		}
 		assert.match(html, /style-group-drop=/);
 		assert.match(html, /style-group-element=/);
-		assert.match(html, /<fieldset class="hy-nostyle style-progress-controls" ng-if="editor\.mode === 'design' && editor\.selectedElement === 'progress'">/);
+		assert.match(html, /<fieldset class="hy-nostyle style-progress-controls" ng-if="editor\.mode === 'design' && !isDesignReadOnly\(\) && editor\.selectedElement === 'progress'">/);
 	});
 
 	it('shares the built-in design and scheme with widget rendering', () => {
@@ -3379,7 +3434,7 @@ describe('Widget style designer preview', () => {
 			scope.progressDirection('top-bottom');
 			assert.strictEqual(JSON.stringify(scope.getSelectedStyle()), before, id);
 		}
-		assert.ok(html.includes('ng-if="editor.mode === \'design\' ? !isDesignReadOnly() : !isSchemeReadOnly()"'));
+		assert.ok(html.includes('ng-if="editor.mode === \'design\' && !isDesignReadOnly() && editor.selectedColumn"'));
 		assert.ok(html.includes("'settings.style_design_builtin_hint'"));
 		assert.ok(!html.includes("'settings.style_builtin_hint'"));
 	});
@@ -3407,7 +3462,7 @@ describe('Widget style designer preview', () => {
 		const nameCondition = 'ng-if="editor.mode === \'color\' ? !isSchemeReadOnly() : !isDesignReadOnly()"';
 		assert.ok(html.split('\n').some(line => line.includes(nameCondition) && line.includes('for="widget-style-name"')));
 		assert.ok(html.split('\n').some(line => line.includes(nameCondition) && line.includes('id="widget-style-name"')));
-		assert.ok(html.includes('ng-if="editor.mode === \'design\' ? !isDesignReadOnly() : !isSchemeReadOnly()"'));
+		assert.ok(html.includes('ng-if="editor.mode === \'design\' && !isDesignReadOnly() && editor.rowRule"'));
 		for (const id of ['preview-scheme', 'preview-design', 'preview-type', 'preview-size', 'preview-state']) {
 			assert.ok(html.includes('id="' + id + '"'), id);
 		}

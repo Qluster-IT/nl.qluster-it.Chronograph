@@ -101,6 +101,14 @@ Sample names use the singular type label in the Homey user's language;
 generated template images use Stopwatch, Timer and Transition in English.
 Generated image canvases use separate light/dark dashboard backdrops outside
 the widgets, preserving their selected surfaces, borders and rounded corners.
+Color pickers show a circular swatch before the label. Labels without a swatch,
+such as **Background fill**, align with the color label text. Swatches follow
+the selected light or dark preview and show effective theme colors, including
+inherited overrides, valid HEX edits, gradients, progress colors and borders.
+Widget bars, rows, columns and elements can be selected and highlighted in both
+Designs and Themes, including built-in presets. Selections survive switching
+modes when available in both. Layout editing and dragging remain restricted to
+custom designs in Design mode.
 Widget-style rows give each row a shared card; Widget-style cards give every
 chronograph its own card, respecting column spans. Both offer normal (16px),
 small (12px, matching WidgetKeeper Lights) and tiny (8px) gaps. Individual cards
@@ -324,10 +332,21 @@ Widget icons use [Font Awesome Free 7.3.1](https://fontawesome.com), including s
 Template preview images use html-to-image; its license is in `assets/licenses/html-to-image-LICENSE.txt`.
 
 To regenerate the widget icon previews after updating the icon catalog, run `npm ci --prefix tools/icon-previews` followed by `npm run generate:icon-previews`. The generator and its dependencies are excluded from the Homey app; the generated preview catalog remains in `assets/`.
+Generation losslessly recompresses PNG image data while preserving exact scanlines
+and all other PNG chunks, including dimensions and color metadata.
+Run `npm run optimize:icon-previews` to apply the same reduction to an existing
+preview catalog without rerendering icons or installing generator dependencies.
 
 Application image by [Agê Barros](https://unsplash.com/@agebarros?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/search/photos/time?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText).
 
 ## Changelog
+
+### v3.1.2
+
+* Color pickers show the effective color in the selected light or dark preview, with aligned labels.
+* Select and highlight widgets, rows, columns, and elements in Designs and Themes, including built-in presets.
+* Generated template images use Homey’s light and dark dashboard backgrounds.
+* Reduced app size without losing any icons or image quality.
 
 ### v3.1.1
 

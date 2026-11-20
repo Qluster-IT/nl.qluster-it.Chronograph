@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const zlib = require('zlib');
 const { Resvg } = require('@resvg/resvg-js');
+const { optimizePng } = require('./optimize-icon-previews');
 
 const assets = path.join(__dirname, '..', '..', 'assets');
 const catalog = JSON.parse(zlib.gunzipSync(fs.readFileSync(
@@ -16,9 +17,9 @@ for (const [style, name, width, height, pathData] of catalog) {
 		.map(d => '<path d="' + d + '"/>').join('');
 	const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '
 		+ width + ' ' + height + '" fill="#2f8df6">' + paths + '</svg>';
-	previews[style + ':' + name] = new Resvg(svg, {
+	previews[style + ':' + name] = optimizePng(new Resvg(svg, {
 		fitTo: { mode: 'zoom', value: 64 / Math.max(width, height) }
-	}).render().asPng().toString('base64');
+	}).render().asPng()).toString('base64');
 }
 
 fs.writeFileSync(

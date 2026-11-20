@@ -460,14 +460,17 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			leaveEditingItem(function () {
 				if (!$scope.getSelectedStyle()) $scope.editor.selectedStyleId = 'builtin:current';
 				var design = $scope.getSelectedStyle();
-				var canKeepSelection = !$scope.isDesignReadOnly() && !$scope.isSchemeReadOnly();
-				var element = canKeepSelection ? $scope.editor.selectedElement : null;
-				var background = canKeepSelection && $scope.editor.selectedBackground;
+				var element = $scope.editor.selectedElement;
+				var background = $scope.editor.selectedBackground;
+				var row = $scope.editor.selectedRow;
+				var column = $scope.editor.selectedColumn;
 				if (element && design && !design.groups && $scope.getStyleCells().indexOf(element) === -1) element = null;
 				$scope.editor.mode = mode;
 				resetDesignerSelection();
 				$scope.editor.selectedElement = element;
 				$scope.editor.selectedBackground = background;
+				if (row && layoutRows().indexOf(row) !== -1) $scope.selectVisibilityRow(row);
+				else if (column && design && design.groups) $scope.selectColumn(column.row, column.group);
 				$scope.refreshLayoutElement();
 			});
 		};
@@ -588,6 +591,45 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		$scope.previewBorderStyle = function (state) {
 			return sizeRuntime.borderStyle($scope.getSelectedStyle(), $scope.getSelectedScheme(),
 				$scope.editor.previewSize, state || $scope.editor.previewState);
+		};
+		$scope.colorSwatchStyle = function (channel, key) {
+			var scheme = $scope.getSelectedScheme(), state = $scope.editor.previewState;
+			var paint = previewBackgroundPaint(scheme, state);
+			var text = paint.color || 'var(--homey-text-color)';
+			var color;
+			if (channel === 'separator') {
+				return { backgroundColor: $scope.previewSeparatorColor() };
+			}
+			if (channel === 'progress') {
+				color = $scope.progressSetting(key);
+				return { backgroundColor: color === 'default' ? text : sizeRuntime.valueColor(color) };
+			}
+			if (channel === 'background') {
+				if (key === 'background') {
+					return { backgroundColor: paint.backgroundColor || 'var(--chronograph-surface)',
+						backgroundImage: paint.backgroundImage || 'none' };
+				}
+				return { backgroundColor: $scope.previewButtonStyle(key).backgroundColor
+					|| ($scope.editor.previewMode === 'dark' ? '#2e3039'
+						: 'color-mix(in srgb, var(--homey-text-color) 8%, var(--homey-background-color))') };
+			}
+			if (channel === 'border') {
+				var overrides = scheme && scheme.borderOverrides && scheme.borderOverrides[state];
+				color = overrides && overrides[key] !== undefined ? overrides[key]
+					: scheme && scheme.borderColors && scheme.borderColors[key]
+						|| (key === 'background' || key === 'cancel' ? 'default' : 'none');
+				return { backgroundColor: color !== 'default' ? sizeRuntime.valueColor(color)
+					: key === 'background' ? 'var(--homey-line-color)'
+						: 'color-mix(in srgb, var(--homey-text-color-light) 30%, var(--homey-background-color))' };
+			}
+			color = $scope.previewForeground(key);
+			if (color === 'default') {
+				color = $scope.previewColor(key);
+				return { backgroundColor: $scope.isButtonElement(key) && key !== 'cancel' ? sizeRuntime.valueColor('white')
+					: color && color !== 'default' ? sizeRuntime.valueColor(color)
+						: key === 'status' ? 'var(--homey-text-color-light)' : text };
+			}
+			return { backgroundColor: sizeRuntime.valueColor(color) };
 		};
 		var sizeDraft;
 		function layoutRows() {
@@ -1955,7 +1997,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		};
 
 		$scope.moveGroupedElement = function (element, row, group, insertionIndex) {
-			if ($scope.editor.mode !== 'design' || $scope.savingSettings
+			if ($scope.editor.mode !== 'design' || $scope.isDesignReadOnly() || $scope.savingSettings
 				|| $scope.styleElements.indexOf(element) === -1
 				|| [0].concat(layoutRows()).indexOf(row) === -1 || $scope.layoutGroups.indexOf(group) === -1
 				|| (row === 0 && group !== 1)) return;
@@ -2019,7 +2061,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 
 		$scope.moveDesignerRow = function (source, target) {
 			var style = $scope.getSelectedStyle();
-			if ($scope.editor.mode !== 'design' || !style || !style.groups || $scope.savingSettings || !canChangeSelection()
+			if ($scope.editor.mode !== 'design' || $scope.isDesignReadOnly() || !style || !style.groups || $scope.savingSettings || !canChangeSelection()
 				|| layoutRows().indexOf(source) === -1 || layoutRows().indexOf(target) === -1 || source === target) return;
 			widgetStyleEditor.moveRow(style, $scope.editor.previewSize, source, target);
 			$scope.selectVisibilityRow(target);
@@ -2028,7 +2070,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 
 		$scope.moveDesignerColumn = function (row, source, target) {
 			var style = $scope.getSelectedStyle();
-			if ($scope.editor.mode !== 'design' || !style || !style.groups || $scope.savingSettings || !canChangeSelection()
+			if ($scope.editor.mode !== 'design' || $scope.isDesignReadOnly() || !style || !style.groups || $scope.savingSettings || !canChangeSelection()
 				|| layoutRows().indexOf(row) === -1 || !Number.isInteger(source) || !Number.isInteger(target)
 				|| source < 1 || target < 1 || source > widgetStyleEditor.rowColumns(style, $scope.editor.previewSize, row)
 				|| target > widgetStyleEditor.rowColumns(style, $scope.editor.previewSize, row) || source === target) return;
@@ -2186,7 +2228,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 
 		$scope.moveStyleElement = function (source, target) {
 			var style = $scope.getSelectedStyle();
-			if (!style || $scope.savingSettings || !Number.isInteger(source) || !Number.isInteger(target)
+			if ($scope.editor.mode !== 'design' || $scope.isDesignReadOnly() || !style || $scope.savingSettings || !Number.isInteger(source) || !Number.isInteger(target)
 				|| source < 0 || target < 0 || source >= 12 || target >= 12) return;
 			var size = $scope.editor.previewSize;
 			if ($scope.editor.editStatus) {
@@ -3145,17 +3187,27 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		restrict: 'E',
 		require: 'ngModel',
 		scope: true,
-		template: '<select class="form-select" ng-attr-id="{{ colorControl.inputId }}" ng-model="colorControl.choice"'
+		template: '<label class="hy-nostyle style-color-label" ng-attr-for="{{ colorControl.inputId }}">'
+			+ '<span class="style-color-sample style-preview-light" ng-class="{ \'style-preview-dark\': editor.previewMode === \'dark\','
+			+ ' \'style-preview-counter-invert\': previewCounterInvert }" aria-hidden="true">'
+			+ '<span class="style-color-dot" ng-style="colorControl.swatch()"></span></span>{{ colorControl.label }}</label>'
+			+ '<div class="style-color-control"><select class="form-select" ng-attr-id="{{ colorControl.inputId }}" ng-model="colorControl.choice"'
 			+ ' ng-options="color.id as color.label for color in colorControl.options" ng-change="colorControl.choose()" ng-disabled="savingSettings"></select>'
 			+ '<div class="style-hex-controls" ng-if="colorControl.choice === \'hex\'">'
 			+ '<input class="hy-nostyle form-control" type="text" maxlength="7" spellcheck="false" ng-attr-aria-label="{{ t(\'settings.style_color_hex\') }}"'
 			+ ' ng-model="colorControl.hex" ng-change="colorControl.commit()" ng-disabled="savingSettings">'
 			+ '<input class="hy-nostyle form-control form-control-color" type="color" ng-attr-aria-label="{{ t(\'settings.style_color_picker\') }}"'
 			+ ' ng-model="colorControl.picker" ng-change="colorControl.pick()" ng-disabled="savingSettings"></div>'
-			+ '<p class="help-text" role="alert" ng-if="colorControl.invalid">{{ t(\'settings.style_hex_invalid\') }}</p>',
+			+ '<p class="help-text" role="alert" ng-if="colorControl.invalid">{{ t(\'settings.style_hex_invalid\') }}</p></div>',
 		link: function (scope, element, attrs, model) {
 			var control = scope.colorControl = { hex: '#2F8DF6', picker: '#2F8DF6' };
 			attrs.$observe('inputId', function (id) { control.inputId = id; });
+			attrs.$observe('label', function (label) { control.label = label; });
+			control.swatch = function () {
+				return attrs.swatchStyle ? scope.$eval(attrs.swatchStyle)
+					: { backgroundColor: control.choice === 'hex' ? model.$viewValue
+						: window.ChronographWidgetStyle.valueColor(model.$viewValue) };
+			};
 			scope.$watchCollection(attrs.colorOptions, function (options) {
 				control.options = (options || []).concat([{ id: 'hex', label: scope.t('settings.style_color_hex') }]);
 			});

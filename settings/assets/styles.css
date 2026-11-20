@@ -1326,8 +1326,32 @@ body {
 [data-foreground="navy"] { --foreground-color: var(--chronograph-color-navy); }
 
 style-color-select {
-	display: block;
+	display: contents;
+}
+
+.style-color-control {
 	min-width: 0;
+}
+
+label.style-color-label {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.style-color-sample,
+.style-color-dot {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	flex: 0 0 auto;
+	border-radius: 50%;
+}
+
+.style-color-dot {
+	box-sizing: border-box;
+	vertical-align: top;
+	border: 1px solid rgba(128, 128, 128, 0.6);
 }
 
 .style-hex-controls {
@@ -1656,6 +1680,10 @@ style-color-select {
 	grid-template-columns: minmax(0, 1fr) minmax(110px, 1fr);
 	align-items: center;
 	gap: 12px;
+}
+
+.style-color-row > label:not(.style-color-label) {
+	padding-inline-start: 24px;
 }
 
 @media (max-width: 360px) {

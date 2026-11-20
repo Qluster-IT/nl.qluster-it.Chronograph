@@ -6,8 +6,73 @@ const path = require('path');
 const vm = require('vm');
 const zlib = require('zlib');
 const { searchIcons } = require('../lib/widget-icons.js');
+const { optimizePng } = require('../tools/icon-previews/optimize-icon-previews');
 
 describe('Widget icon autocomplete', () => {
+	it('losslessly recompresses split PNG image data and preserves metadata before and after it', () => {
+		const previews = JSON.parse(zlib.gunzipSync(fs.readFileSync(
+			path.join(__dirname, '..', 'assets', 'fontawesome-previews.json.gz')
+		)));
+		function chunks(png) {
+			const result = [];
+			for (let offset = 8; offset < png.length;) {
+				const end = offset + png.readUInt32BE(offset) + 12;
+				result.push(png.subarray(offset, end));
+				offset = end;
+			}
+			return result;
+		}
+		function chunk(type, data) {
+			const result = Buffer.alloc(data.length + 12);
+			result.writeUInt32BE(data.length);
+			result.write(type, 4, 'ascii');
+			data.copy(result, 8);
+			let crc = 0xffffffff;
+			for (const byte of result.subarray(4, -4)) {
+				crc ^= byte;
+				for (let bit = 0; bit < 8; bit++) crc = crc & 1 ? 0xedb88320 ^ (crc >>> 1) : crc >>> 1;
+			}
+			result.writeUInt32BE((crc ^ 0xffffffff) >>> 0, result.length - 4);
+			return result;
+		}
+		const icon = Buffer.from(previews['fas:stopwatch'], 'base64');
+		const originals = chunks(icon);
+		const type = value => value.toString('ascii', 4, 8);
+		const imageData = values => zlib.inflateSync(Buffer.concat(
+			values.filter(value => type(value) === 'IDAT').map(value => value.subarray(8, -4))
+		));
+		const scanlines = imageData(originals);
+		const uncompressed = zlib.deflateSync(scanlines, { level: 0 });
+		const split = Math.floor(uncompressed.length / 2);
+		const fixture = Buffer.concat([
+			icon.subarray(0, 8), originals[0],
+			chunk('tEXt', Buffer.from('Description\0Preserved before image data')),
+			chunk('IDAT', uncompressed.subarray(0, split)),
+			chunk('IDAT', uncompressed.subarray(split)),
+			chunk('tEXt', Buffer.from('Author\0Preserved after image data')),
+			originals[originals.length - 1]
+		]);
+		const optimized = optimizePng(fixture);
+		const result = chunks(optimized);
+		assert.ok(optimized.length < fixture.length);
+		assert.deepStrictEqual(imageData(result), scanlines);
+		assert.deepStrictEqual(result.filter(value => type(value) !== 'IDAT'),
+			chunks(fixture).filter(value => type(value) !== 'IDAT'));
+		for (const value of result) assert.deepStrictEqual(value, chunk(type(value), value.subarray(8, -4)));
+		assert.deepStrictEqual(optimizePng(optimized), optimized);
+	});
+
+	it('rejects invalid PNG input instead of saving a damaged preview', () => {
+		const previews = JSON.parse(zlib.gunzipSync(fs.readFileSync(
+			path.join(__dirname, '..', 'assets', 'fontawesome-previews.json.gz')
+		)));
+		const png = Buffer.from(previews['fas:stopwatch'], 'base64');
+		assert.throws(() => optimizePng(Buffer.from('not a PNG')), /Invalid PNG signature/);
+		assert.throws(() => optimizePng(png.subarray(0, 20)), /Invalid PNG chunk length/);
+		png[png.length - 1] ^= 1;
+		assert.throws(() => optimizePng(png), /Invalid PNG chunk checksum/);
+	});
+
 	it('loads icon files only on the first autocomplete search', () => {
 		let reads = 0;
 		const module = { exports: {} };
