@@ -360,5 +360,10 @@
 	"multiple_separator_rows_small": "Filas como widgets (pequeñas)",
 	"multiple_separator_rows_tiny": "Filas como widgets (muy pequeñas)",
 	"multiple_separator_cards_small": "Tarjetas como widgets (pequeñas)",
-	"multiple_separator_cards_tiny": "Tarjetas como widgets (muy pequeñas)"
+	"multiple_separator_cards_tiny": "Tarjetas como widgets (muy pequeñas)",
+	"style_color_red-soft": "Rojo (claro)",
+	"style_color_red-dark": "Rojo (oscuro)",
+	"style_color_grey-light": "Gris (claro)",
+	"style_color_grey-dark": "Gris (oscuro)",
+	"style_color_navy": "Azul marino"
 }

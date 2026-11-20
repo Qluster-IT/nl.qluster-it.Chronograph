@@ -360,5 +360,10 @@
 	"multiple_separator_rows_small": "Widgetachtige rijen (klein)",
 	"multiple_separator_rows_tiny": "Widgetachtige rijen (zeer klein)",
 	"multiple_separator_cards_small": "Widgetachtige kaarten (klein)",
-	"multiple_separator_cards_tiny": "Widgetachtige kaarten (zeer klein)"
+	"multiple_separator_cards_tiny": "Widgetachtige kaarten (zeer klein)",
+	"style_color_red-soft": "Rood (licht)",
+	"style_color_red-dark": "Rood (donker)",
+	"style_color_grey-light": "Grijs (licht)",
+	"style_color_grey-dark": "Grijs (donker)",
+	"style_color_navy": "Marineblauw"
 }

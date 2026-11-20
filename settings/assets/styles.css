@@ -2,6 +2,20 @@ html > body[ng-controller="SettingsController"] {
 	padding: 0 !important;
 }
 
+:root {
+	--chronograph-color-blue: #2f8df6;
+	--chronograph-color-red: #f25f5c;
+	--chronograph-color-orange: #f07a1f;
+	--chronograph-color-green: #71d51b;
+	--chronograph-color-grey: #9a9ca6;
+	--chronograph-color-white: #fff;
+	--chronograph-color-red-soft: #FF453A;
+	--chronograph-color-red-dark: #8B0000;
+	--chronograph-color-grey-light: #D1D5DB;
+	--chronograph-color-grey-dark: #4B5563;
+	--chronograph-color-navy: #1E3A5F;
+}
+
 body {
 	margin: 0;
 	height: 100vh;
@@ -652,6 +666,19 @@ body {
 	flex-shrink: 0;
 }
 
+/* Custom-view Homey tokens are not the dashboard widget palette. */
+.style-preview-rows,
+.style-preview,
+.style-color-elements,
+.style-group-editor {
+	--homey-color-blue: var(--chronograph-color-blue);
+	--homey-color-red: var(--chronograph-color-red);
+	--homey-color-orange: var(--chronograph-color-orange);
+	--homey-color-green: var(--chronograph-color-green);
+	--homey-color-mono-500: var(--chronograph-color-grey);
+	--homey-color-white: var(--chronograph-color-white);
+}
+
 .style-preview-rows,
 .style-preview {
 	/* Settings and widgets use different Homey spacing scales. */
@@ -752,9 +779,8 @@ body {
 	--chronograph-gradient-tint: 22%;
 	color-scheme: light;
 	--homey-background-color: var(--homey-color-white, #fff);
-	--homey-text-color: #222;
+	--homey-text-color: #202127;
 	--homey-text-color-light: #777982;
-	--homey-color-mono-500: #9a9ca6;
 	--homey-line-color: rgba(128, 128, 128, 0.35);
 	--chronograph-surface: var(--homey-background-color);
 	--chronograph-frame-rim: none;
@@ -826,25 +852,6 @@ body {
 	inset: 0;
 	z-index: 1;
 	pointer-events: none;
-}
-
-.style-preview[data-background="blue"] { --style-background: color-mix(in oklab, var(--homey-color-blue, #2f8df6) 55%, #000); }
-.style-preview[data-background="red"] { --style-background: color-mix(in oklab, var(--homey-color-red, #f25f5c) 55%, #000); }
-.style-preview[data-background="orange"] { --style-background: color-mix(in oklab, var(--homey-color-orange, #f07a1f) 55%, #000); }
-.style-preview[data-background="yellow"] { --style-background: #b28f12; }
-.style-preview[data-background="green"] { --style-background: color-mix(in oklab, var(--homey-color-green, #71d51b) 55%, #000); }
-.style-preview[data-background="purple"] { --style-background: #7500fb; }
-.style-preview[data-background="teal"] { --style-background: #0b7468; }
-.style-preview[data-background="cyan"] { --style-background: #0a6e8c; }
-.style-preview[data-background="indigo"] { --style-background: #3f3bc4; }
-.style-preview[data-background="pink"] { --style-background: #b8155f; }
-.style-preview[data-background="brown"] { --style-background: #7a4b24; }
-.style-preview[data-background="grey"] { --style-background: color-mix(in oklab, var(--homey-color-mono-500, #9a9ca6) 55%, #000); }
-.style-preview[data-background="black"] { --style-background: #000; }
-.style-preview[data-background="white"] { --style-background: var(--homey-color-white, #fff); }
-
-.style-preview[data-background]:not([data-background="none"]) {
-	color: #fff;
 }
 
 .style-grouped-preview {
@@ -1241,6 +1248,11 @@ body {
 .style-widget-element[data-palette="black-light"] { --style-color: #2B2C36; }
 .style-widget-element[data-palette^="#"] { --style-color: var(--hex-palette); }
 .style-widget-element[data-palette="white"] { --style-color: var(--homey-color-white, #fff); }
+.style-widget-element[data-palette="red-soft"], .style-cell-content[data-palette="red-soft"] { --style-color: var(--chronograph-color-red-soft); }
+.style-widget-element[data-palette="red-dark"], .style-cell-content[data-palette="red-dark"] { --style-color: var(--chronograph-color-red-dark); }
+.style-widget-element[data-palette="grey-light"], .style-cell-content[data-palette="grey-light"] { --style-color: var(--chronograph-color-grey-light); }
+.style-widget-element[data-palette="grey-dark"], .style-cell-content[data-palette="grey-dark"] { --style-color: var(--chronograph-color-grey-dark); }
+.style-widget-element[data-palette="navy"], .style-cell-content[data-palette="navy"] { --style-color: var(--chronograph-color-navy); }
 
 [data-foreground="blue"] { --foreground-color: var(--homey-color-blue, #2f8df6); }
 [data-foreground="red"] { --foreground-color: var(--homey-color-red, #f25f5c); }
@@ -1258,6 +1270,11 @@ body {
 [data-foreground="black-light"] { --foreground-color: #2B2C36; }
 [data-foreground^="#"] { --foreground-color: var(--hex-foreground); }
 [data-foreground="white"] { --foreground-color: var(--homey-color-white, #fff); }
+[data-foreground="red-soft"] { --foreground-color: var(--chronograph-color-red-soft); }
+[data-foreground="red-dark"] { --foreground-color: var(--chronograph-color-red-dark); }
+[data-foreground="grey-light"] { --foreground-color: var(--chronograph-color-grey-light); }
+[data-foreground="grey-dark"] { --foreground-color: var(--chronograph-color-grey-dark); }
+[data-foreground="navy"] { --foreground-color: var(--chronograph-color-navy); }
 
 style-color-select {
 	display: block;

@@ -6,6 +6,7 @@ This is a Homey app. Before making changes, read and follow the general instruct
 
 
 ## App-specific instructions
+- Follow `C:\Users\Qlustrator\.copilot\instructions\homey-colors.md` as the source of truth for shared palette IDs/values, Homey token/fallback pairs, and preview parity. Preserve Chronograph-specific colors and saved theme appearance.
 - In Dutch, translate the Chronograph type "transition" as "transitie" (plural "transities"), not "overgang" or "overgangen".
 - The widget should let a user select a timer, stopwatch, or transition and provide controls to pause, resume, and stop the selected chronograph.
 - Missing widget styling capabilities should become designer options, not changes to shared defaults. Match new design requests through preset-specific settings; preserve the appearance of other built-in designs and existing dashboard configurations.

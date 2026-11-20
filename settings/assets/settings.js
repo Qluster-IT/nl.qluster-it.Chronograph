@@ -3,6 +3,16 @@
 var chronographSettingsScope;
 var pendingHomey;
 
+function previewBackgroundPaint(scheme, state) {
+	var runtime = window.ChronographWidgetStyle;
+	var color = runtime.resolveColor(scheme, state, 'background');
+	var paint = runtime.backgroundPaint(scheme, state);
+	if (color !== 'default' && color !== 'none' && paint.backgroundColor === undefined) {
+		paint.backgroundColor = runtime.valueColor(color);
+	}
+	return paint;
+}
+
 window.onHomeyReady = function (homey) {
 	pendingHomey = homey;
 	if (chronographSettingsScope) chronographSettingsScope.initialize(homey);
@@ -506,10 +516,10 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 		$scope.templatePaddingStyle = function () {
 			return Object.assign(sizeRuntime.paddingStyle([sizeRuntime.widgetPadding($scope.getSelectedStyle(), $scope.editor.previewSize)]),
 				sizeRuntime.frameStyle(sizeRuntime.borderlessFrame($scope.getSelectedStyle(), $scope.editor.previewSize)),
-				sizeRuntime.backgroundPaint($scope.getSelectedScheme(), $scope.editor.previewState));
+				previewBackgroundPaint($scope.getSelectedScheme(), $scope.editor.previewState));
 		};
 		$scope.previewTileStyle = function (state) {
-			return Object.assign($scope.previewPaddingStyle('tile'), sizeRuntime.backgroundPaint(
+			return Object.assign($scope.previewPaddingStyle('tile'), previewBackgroundPaint(
 				$scope.getSelectedScheme(), state || $scope.editor.previewState));
 		};
 		$scope.previewCardRowStyle = function () {
@@ -687,14 +697,8 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			return sizeRuntime.buttonShape(style, size, element);
 		};
 		$scope.previewButtonStyle = function (element, state) {
-			var style = sizeRuntime.buttonShapeStyle($scope.getSelectedStyle(), $scope.editor.previewSize, element);
-			var scheme = $scope.getSelectedScheme();
-			var colorStyle = sizeRuntime.elementStyle(scheme, state || $scope.editor.previewState, element);
-			if (colorStyle.border) style.border = colorStyle.border;
-			if (sizeRuntime.isHexColor(sizeRuntime.resolveColor(scheme, state || $scope.editor.previewState, element))) style.backgroundColor = colorStyle.backgroundColor;
-			if (sizeRuntime.isHexColor(sizeRuntime.resolveForeground(scheme, state || $scope.editor.previewState, element))) style.color = colorStyle.color;
-			if (sizeRuntime.resolveColor(scheme, state || $scope.editor.previewState, element) === 'none') style.backgroundColor = 'transparent';
-			return style;
+			return Object.assign(sizeRuntime.elementStyle($scope.getSelectedScheme(), state || $scope.editor.previewState, element),
+				sizeRuntime.buttonShapeStyle($scope.getSelectedStyle(), $scope.editor.previewSize, element));
 		};
 		$scope.useDefaultButtonText = function (value) {
 			var style = $scope.getSelectedStyle();
@@ -1324,7 +1328,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			var heading = [];
 			if (template.exportDesignName) heading.push('Design: ' + template.exportDesignName.replace(/\s+/g, ' ').trim());
 			if (template.exportThemeName) heading.push('Theme: ' + template.exportThemeName.replace(/\s+/g, ' ').trim());
-			return '# ' + heading.join(' | ') + '\n\n\n\nTWF:\n```javascript\n' + template.exportText + '\n```';
+			return '# ' + heading.join(' | ') + '\n\n\n\n```javascript\n' + template.exportText + '\n```';
 		};
 
 		$scope.openWidgetExchange = function (number) {
@@ -1574,7 +1578,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				+ template.imageData.map(function (image) {
 					return '<p><img alt="Widget preview" src="' + image + '"></p>';
 				}).join('')
-				+ '<p>TWF:</p><pre data-params="javascript"><code class="language-javascript">' + escapeHtml(template.exportText) + '</code></pre>';
+				+ '<pre data-params="javascript"><code class="language-javascript">' + escapeHtml(template.exportText) + '</code></pre>';
 			return { 'text/plain': text, 'text/html': html };
 		}
 
@@ -3157,8 +3161,10 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 }).directive('templateCatalogPreview', function () {
 	return {
 		restrict: 'A',
-		scope: { preview: '=templateCatalogPreview', t: '=', labels: '=' },
-		template: '<div class="style-preview style-preview-normal" ng-attr-data-background="{{ previewColor(\'background\') }}"'
+		scope: { preview: '=templateCatalogPreview', t: '=', labels: '=', mode: '=?', counterInvert: '=?' },
+		template: '<div class="style-preview style-preview-normal style-preview-light"'
+			+ ' ng-class="{ \'style-preview-dark\': mode === \'dark\', \'style-preview-counter-invert\': counterInvert }"'
+			+ ' ng-attr-data-background="{{ previewColor(\'background\') }}"'
 			+ ' ng-style="templatePaddingStyle()" ng-attr-data-allow-shrink="{{ preview.design.allowShrink !== false }}">'
 			+ '<div class="style-preview-outline style-preview-height" ng-style="previewBorderStyle()">'
 			+ '<div class="style-preview-layer" ng-include="\'grouped-preview.html\'"></div></div></div>',
@@ -3178,7 +3184,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			scope.templatePaddingStyle = function () {
 				return Object.assign(runtime.paddingStyle([runtime.widgetPadding(scope.preview.design, 'normal')]),
 					runtime.frameStyle(runtime.borderlessFrame(scope.preview.design, 'normal')),
-					runtime.backgroundPaint(scope.preview.theme, 'running'));
+					previewBackgroundPaint(scope.preview.theme, 'running'));
 			};
 			scope.previewHexStyle = function (element) {
 				return '--hex-palette: ' + runtime.valueColor(scope.previewColor(element))
@@ -3195,13 +3201,8 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			scope.previewForeground = function (element) { return runtime.resolveForeground(scope.preview.theme, 'running', element); };
 			scope.previewBorderStyle = function () { return runtime.borderStyle(scope.preview.design, scope.preview.theme, 'normal', 'running'); };
 			scope.previewButtonStyle = function (element) {
-				var style = runtime.buttonShapeStyle(scope.preview.design, 'normal', element);
-				var colors = runtime.elementStyle(scope.preview.theme, 'running', element);
-				if (colors.border) style.border = colors.border;
-				if (runtime.isHexColor(scope.previewColor(element))) style.backgroundColor = colors.backgroundColor;
-				if (runtime.isHexColor(scope.previewForeground(element))) style.color = colors.color;
-				if (scope.previewColor(element) === 'none') style.backgroundColor = 'transparent';
-				return style;
+				return Object.assign(runtime.elementStyle(scope.preview.theme, 'running', element),
+					runtime.buttonShapeStyle(scope.preview.design, 'normal', element));
 			};
 			scope.buttonText = function (element) { return runtime.buttonText(scope.preview.design, 'normal', element, scope.t('settings.widget_start')); };
 			scope.previewActionLabel = function (element) { return scope.labels[element]; };

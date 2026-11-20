@@ -218,6 +218,69 @@ describe('Widget style designer preview', () => {
 		}
 	});
 
+	it('appends shared palette colors and round trips them in every theme channel', async () => {
+		const { scope, editor } = loadSettings();
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		const { encodeTemplate, decodeTemplate } = require('../lib/widget-template.js');
+		const additions = { 'red-soft': '#FF453A', 'red-dark': '#8B0000',
+			'grey-light': '#D1D5DB', 'grey-dark': '#4B5563', navy: '#1E3A5F' };
+		const existing = ['default', 'blue', 'red', 'orange', 'yellow', 'green', 'purple', 'teal',
+			'cyan', 'indigo', 'pink', 'brown', 'grey', 'black', 'black-light', 'white'];
+		assert.deepStrictEqual(Array.from(editor.colorIds), existing.concat(Object.keys(additions)));
+		scope.selectEditorMode('color');
+		scope.createStyle(true);
+		for (const [id, hex] of Object.entries(additions)) {
+			for (const key of ['colorOptions', 'foregroundOptions', 'elementColorOptions', 'backgroundOptions',
+				'buttonBackgroundOptions', 'borderOptions', 'baseBorderOptions']) {
+				assert.ok(scope[key].some(option => option.id === id), key + ': ' + id);
+			}
+			const theme = scope.getSelectedScheme();
+			theme.colors.name = id;
+			theme.colors.inactive = id;
+			theme.colors.pause = id;
+			theme.colorOverrides = { running: { background: id } };
+			theme.foregroundColors = { pause: id };
+			theme.foregroundOverrides = { paused: { pause: id } };
+			theme.borderColors = { background: id, pause: id };
+			theme.borderOverrides = { paused: { background: id } };
+			theme.progressColors = { normal: { foreground: id, background: id } };
+			assert.strictEqual(editor.isValidCollection(scope.widgetStyles), true, id);
+			const decoded = await decodeTemplate(await encodeTemplate({ theme }));
+			const expected = JSON.parse(JSON.stringify(theme));
+			delete expected.id;
+			assert.deepStrictEqual(JSON.parse(JSON.stringify(decoded.theme)), expected);
+			const reloaded = loadSettings({ version: 3, styles: [], themes: [{ ...decoded.theme, id: 'palette' }] });
+			assert.strictEqual(reloaded.editor.isValidCollection(reloaded.scope.widgetStyles), true, id);
+			assert.strictEqual(runtime.valueColor(id), hex);
+			assert.strictEqual(runtime.backgroundStyle(decoded.theme, 'running').backgroundColor, hex);
+			const button = runtime.elementStyle(decoded.theme, 'paused', 'pause');
+			assert.strictEqual(button.backgroundColor, hex);
+			assert.strictEqual(button.color, hex);
+			assert.strictEqual(runtime.elementStyle(decoded.theme, 'inactive', 'name').color, hex);
+		}
+		const localeDirectory = path.join(root, '.homeycompose', 'locales');
+		for (const file of fs.readdirSync(localeDirectory).filter(name => name.endsWith('.settings.json'))) {
+			const locale = JSON.parse(fs.readFileSync(path.join(localeDirectory, file), 'utf8'));
+			for (const id of Object.keys(additions)) {
+				assert.ok(locale['style_color_' + id], file + ': ' + id);
+				assert.doesNotMatch(locale['style_color_' + id], /[?\uFFFD]/);
+			}
+		}
+	});
+
+	it('preserves all existing named palette values', () => {
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		const expected = {
+			default: 'inherit', none: 'transparent', blue: 'var(--homey-color-blue, #2f8df6)',
+			red: 'var(--homey-color-red, #f25f5c)', orange: 'var(--homey-color-orange, #f07a1f)',
+			yellow: '#f5c518', green: 'var(--homey-color-green, #71d51b)', purple: '#9033fc',
+			teal: '#1fc7b0', cyan: '#2cc3e8', indigo: '#7c83f7', pink: '#f2549e',
+			brown: '#b9875a', grey: 'var(--homey-color-mono-500, #9a9ca6)', black: '#000',
+			'black-light': '#2B2C36', white: 'var(--homey-color-white, #fff)'
+		};
+		for (const [id, value] of Object.entries(expected)) assert.strictEqual(runtime.valueColor(id), value, id);
+	});
+
 	it('validates HEX values in every theme channel and keeps gradients out of designs', () => {
 		const { scope, editor } = loadSettings();
 		scope.selectEditorMode('color');
@@ -329,6 +392,38 @@ describe('Widget style designer preview', () => {
 		assert.match(css, /\.style-grouped-preview \.style-widget-element \.style-widget-action\s*\{[^}]*display:\s*flex;/);
 	});
 
+	it('uses widget button colors for app defaults and overrides in designer and catalog previews', () => {
+		const { scope, homey, editor, directives } = loadSettings();
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		const theme = scope.getSelectedScheme();
+		const design = editor.designFromStyle(scope.getSelectedStyle());
+		homey.api = (method, url, data, callback) => callback(null, { design, theme });
+		const item = { text: 'template' };
+		scope.loadCatalogPreview(item);
+		const catalog = {
+			preview: item.preview, t: key => key, labels: scope.labels,
+			$watch(key, changed) { changed(this.preview); }
+		};
+		directives.templateCatalogPreview().link(catalog);
+		catalog.preview.theme = theme;
+		for (const color of ['default', 'blue', 'red-soft', '#123456', 'none']) {
+			theme.colors.pause = color;
+			theme.foregroundColors = { pause: 'navy' };
+			for (const element of ['pause', 'stop', 'cancel', 'start']) {
+				const expected = runtime.elementStyle(theme, 'running', element);
+				for (const styles of [scope.previewButtonStyle(element, 'running'), catalog.previewButtonStyle(element)]) {
+					assert.strictEqual(styles.backgroundColor, expected.backgroundColor, color + ': ' + element);
+					assert.strictEqual(styles.color, expected.color, color + ': ' + element);
+				}
+			}
+		}
+		theme.colorOverrides.paused = { pause: 'red-dark' };
+		theme.foregroundOverrides = { paused: { pause: '#ABCDEF' } };
+		const paused = scope.previewButtonStyle('pause', 'paused');
+		assert.strictEqual(paused.backgroundColor, runtime.elementStyle(theme, 'paused', 'pause').backgroundColor);
+		assert.strictEqual(paused.color, '#ABCDEF');
+	});
+
 	it('matches widget text line heights across sizes and narrow layouts', () => {
 		const widgetCss = fs.readFileSync(path.join(root, 'assets', 'css', 'chronograph-widget.css'), 'utf8');
 		function lineHeights(source, selector) {
@@ -358,6 +453,35 @@ describe('Widget style designer preview', () => {
 				assert.ok(expected.length);
 				assert.deepStrictEqual(lineHeights(css, '.style-preview-' + size
 					+ '[data-allow-shrink="true"] .style-widget-' + element), expected);
+			}
+		}
+	});
+
+	it('uses widget solid and gradient backgrounds instead of a separate muted preview palette', () => {
+		const { scope, homey, editor, directives } = loadSettings();
+		const runtime = require('../assets/js/chronograph-widget-style.js');
+		const theme = scope.getSelectedScheme();
+		const design = editor.designFromStyle(scope.getSelectedStyle());
+		homey.api = (method, url, data, callback) => callback(null, { design, theme });
+		const item = { text: 'template' };
+		scope.loadCatalogPreview(item);
+		const catalog = {
+			preview: item.preview, t: key => key, labels: scope.labels,
+			$watch(key, changed) { changed(this.preview); }
+		};
+		directives.templateCatalogPreview().link(catalog);
+		catalog.preview.theme = theme;
+		for (const color of ['blue', 'red', 'green', 'purple', 'black-light', '#123456']) {
+			theme.colors.inactive = color;
+			for (const gradient of [false, true]) {
+				theme.backgroundGradients = { inactive: gradient };
+				scope.editor.previewState = 'running';
+				const expected = runtime.backgroundStyle(theme, 'running');
+				for (const style of [scope.previewTileStyle(), scope.templatePaddingStyle(), catalog.templatePaddingStyle()]) {
+					assert.strictEqual(style.backgroundColor, expected.backgroundColor, color);
+					assert.strictEqual(style.backgroundImage, expected.backgroundImage, color);
+					assert.strictEqual(style.color, expected.color, color);
+				}
 			}
 		}
 	});
@@ -1113,7 +1237,7 @@ describe('Widget style designer preview', () => {
 		scope.templates.designId = design.id;
 		scope.templates.themeId = theme.id;
 		scope.generateWidgetTemplate();
-		assert.strictEqual(scope.templateForumPost(), '# Design: Control Deck | Theme: Lagoon Pulse\n\n\n\nTWF:\n```javascript\nencoded-template\n```');
+		assert.strictEqual(scope.templateForumPost(), '# Design: Control Deck | Theme: Lagoon Pulse\n\n\n\n```javascript\nencoded-template\n```');
 		scope.templates.themeId = '';
 		scope.generateWidgetTemplate();
 		assert.ok(scope.templateForumPost().startsWith('# Design: Control Deck\n'));
@@ -1327,7 +1451,7 @@ describe('Widget style designer preview', () => {
 		const imageData = canvases.map(canvas => canvas.toDataURL());
 		assert.deepStrictEqual(Array.from(scope.templates.imageData), imageData);
 		assert.ok(copied['text/plain'].includes('```javascript\nencoded-template\n```'));
-		assert.ok(copied['text/plain'].startsWith('# Design: Design <example>\n\n\n\nTWF:'));
+		assert.ok(copied['text/plain'].startsWith('# Design: Design <example>\n\n\n\n```javascript\n'));
 		assert.ok(copied['text/html'].includes('<h1>Design: Design &lt;example&gt;</h1>'));
 		assert.ok(copied['text/html'].includes('</h1><p><br></p><p><img'));
 		assert.ok(!copied['text/html'].includes('Describe your template here.'));
@@ -1336,6 +1460,7 @@ describe('Widget style designer preview', () => {
 			|| copied['text/html'].indexOf(imageData[index - 1]) < copied['text/html'].indexOf(image)));
 		imageData.forEach(image => assert.ok(copied['text/html'].includes('<img alt="Widget preview" src="' + image + '">')));
 		assert.ok(copied['text/html'].includes('<pre data-params="javascript"><code class="language-javascript">encoded-template</code></pre>'));
+		assert.ok(!copied['text/html'].includes('<p>TWF:</p>'));
 		assert.strictEqual(scope.editor.previewSize, 'normal');
 		assert.strictEqual(scope.templates.imageMode, undefined);
 		assert.strictEqual(preview.style.width, '80%');

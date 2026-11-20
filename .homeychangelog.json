@@ -1333,5 +1333,20 @@
     "ru": "Widget Exchange теперь запоминает выбранный порядок сортировки. В раскрытом шаблоне отображаются его описание и опубликованные изображения вместо предпросмотра. В просмотрщике изображений также можно масштабировать с Ctrl+колесо и перемещать увеличенное изображение мышью.",
     "ko": "Widget Exchange가 이제 선택한 정렬 순서를 기억합니다. 템플릿을 펼치면 실시간 미리보기 대신 세부 정보와 게시된 이미지가 표시됩니다. 이미지 뷰어에서 Ctrl+스크롤로 확대하고 마우스로 이미지를 끌어 이동할 수도 있습니다.",
     "ar": "يتذكر Widget Exchange الآن ترتيب الفرز الذي اخترته. عند توسيع قالب، تظهر تفاصيله وصوره المنشورة بدلاً من المعاينة المباشرة. يدعم عارض الصور أيضًا التكبير باستخدام Ctrl والتمرير، وتحريك الصورة بالسحب بالماوس."
+  },
+  "3.1.1": {
+    "en": "Added Red (light), Red (dark), Grey (light), Grey (dark), and Navy to the widget designer and multi-widget line colors.\nReduced app size.",
+    "nl": "Rood (licht), Rood (donker), Grijs (licht), Grijs (donker) en Marineblauw toegevoegd aan de widgetontwerper en de lijnkleuren van de multi-widget.\nAppgrootte verkleind.",
+    "da": "Tilføjet Rød (lys), Rød (mørk), Grå (lys), Grå (mørk) og Marineblå til widgetdesigneren og multi-widgetens linjefarver.\nReduceret appens størrelse.",
+    "de": "Rot (hell), Rot (dunkel), Grau (hell), Grau (dunkel) und Marineblau zum Widget-Designer und zu den Linienfarben des Multi-Widgets hinzugefügt.\nApp-Größe reduziert.",
+    "es": "Se añadieron Rojo (claro), Rojo (oscuro), Gris (claro), Gris (oscuro) y Azul marino al diseñador de widgets y a los colores de línea del multi-widget.\nSe redujo el tamaño de la app.",
+    "fr": "Ajout de Rouge (clair), Rouge (foncé), Gris (clair), Gris (foncé) et Bleu marine dans l’éditeur de widgets et les couleurs de ligne du multi-widget.\nTaille de l’application réduite.",
+    "it": "Aggiunti Rosso (chiaro), Rosso (scuro), Grigio (chiaro), Grigio (scuro) e Blu navy all’editor dei widget e ai colori delle linee del multi-widget.\nRidotte le dimensioni dell’app.",
+    "no": "Lagt til Rød (lys), Rød (mørk), Grå (lys), Grå (mørk) og Marineblå i widgetdesigneren og multi-widgetens linjefarger.\nRedusert appens størrelse.",
+    "sv": "Lagt till Röd (ljus), Röd (mörk), Grå (ljus), Grå (mörk) och Marinblå i widgetdesignern och multi-widgetens linjefärger.\nMinskad appstorlek.",
+    "pl": "Dodano Czerwony (jasny), Czerwony (ciemny), Szary (jasny), Szary (ciemny) i Granatowy do edytora widżetów i kolorów linii multi-widżetu.\nZmniejszono rozmiar aplikacji.",
+    "ru": "В редактор виджетов и цвета линий мультивиджета добавлены Красный (светлый), Красный (тёмный), Серый (светлый), Серый (тёмный) и Тёмно-синий.\nУменьшен размер приложения.",
+    "ko": "위젯 디자이너와 멀티 위젯의 선 색상에 빨강 (밝음), 빨강 (어두움), 회색 (밝음), 회색 (어두움), 남색을 추가했습니다.\n앱 크기를 줄였습니다.",
+    "ar": "أُضيفت الألوان أحمر (فاتح)، أحمر (داكن)، رمادي (فاتح)، رمادي (داكن) وأزرق كحلي إلى مصمم الأدوات وألوان خطوط الأداة المتعددة.\nتم تقليل حجم التطبيق."
   }
 }

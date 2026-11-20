@@ -124,6 +124,10 @@ Blue, green, orange, red and fixed white color choices use Homey's semantic pale
 variables. Grey uses Homey's theme-aware monochrome palette. Black remains fixed
 black; yellow, purple, teal, cyan, indigo, pink and brown are Chronograph extensions.
 Existing saved color IDs remain valid. Preview colors use the same Homey tokens.
+Designer and template previews isolate dashboard palette defaults from the
+settings page's custom-view colors; explicit theme overrides remain unchanged.
+Additional named choices are Red (light), Red (dark), Grey (light), Grey (dark),
+and Navy, available throughout the designer and for multi-widget line colors.
 Selecting Widget in a custom design exposes a border width per size.
 Homey default preserves the standard frame; explicit 0 removes the app-drawn
 outline and frame rim/shadow, while 1–20px adds an outline. Built-in designs and
@@ -295,6 +299,12 @@ hook when Git hooks are available. The hook runs Mocha directly with compact
 output and uses the same full-suite configuration as `npm test`. Development dependencies stay under
 `tools/` and are excluded from the Homey app.
 
+`npm install` also prunes BLL's non-runtime documentation, tests, type definitions
+and source maps before Homey packages production dependencies. Run
+`node tools/prune-dependencies.js` to repeat this after restoring dependencies.
+Runtime code, data and licences are retained. The Homey package excludes this
+development README and the unused legacy Vue script; all app assets remain included.
+
 ## Support
 
 If you like this project, perhaps you can support us by making a donation?
@@ -311,6 +321,11 @@ To regenerate the widget icon previews after updating the icon catalog, run `npm
 Application image by [Agê Barros](https://unsplash.com/@agebarros?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/search/photos/time?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText).
 
 ## Changelog
+
+### v3.1.1
+
+* Added Red (light), Red (dark), Grey (light), Grey (dark), and Navy to the widget designer and multi-widget line colors.
+* Reduced app size.
 
 ### v3.1.0
 

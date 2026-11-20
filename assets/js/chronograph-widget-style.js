@@ -149,7 +149,12 @@
 		grey: 'var(--homey-color-mono-500, #9a9ca6)',
 		black: '#000',
 		'black-light': '#2B2C36',
-		white: 'var(--homey-color-white, #fff)'
+		white: 'var(--homey-color-white, #fff)',
+		'red-soft': '#FF453A',
+		'red-dark': '#8B0000',
+		'grey-light': '#D1D5DB',
+		'grey-dark': '#4B5563',
+		navy: '#1E3A5F'
 	};
 
 	function settingId(setting) {

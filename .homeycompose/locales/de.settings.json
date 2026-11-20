@@ -360,5 +360,10 @@
 	"multiple_separator_rows_small": "Widgetartige Zeilen (klein)",
 	"multiple_separator_rows_tiny": "Widgetartige Zeilen (sehr klein)",
 	"multiple_separator_cards_small": "Widgetartige Karten (klein)",
-	"multiple_separator_cards_tiny": "Widgetartige Karten (sehr klein)"
+	"multiple_separator_cards_tiny": "Widgetartige Karten (sehr klein)",
+	"style_color_red-soft": "Rot (hell)",
+	"style_color_red-dark": "Rot (dunkel)",
+	"style_color_grey-light": "Grau (hell)",
+	"style_color_grey-dark": "Grau (dunkel)",
+	"style_color_navy": "Marineblau"
 }

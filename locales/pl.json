@@ -379,7 +379,12 @@
     "template_generating": "Trwa tworzenie TWF i obrazów. Poczekaj chwilę.",
     "template_copy_http": "Automatyczne kopiowanie nie jest dostępne przez to połączenie HTTP. Kliknij Kopiuj post i obrazy lub otwórz Homey przez HTTPS, aby kopiować automatycznie.",
     "template_catalog_oldest": "Najstarsze",
-    "template_image_browser_help": "Przytrzymaj Ctrl i przewiń, aby powiększyć; przeciągnij powiększony obraz, aby go przesunąć."
+    "template_image_browser_help": "Przytrzymaj Ctrl i przewiń, aby powiększyć; przeciągnij powiększony obraz, aby go przesunąć.",
+    "style_color_red-soft": "Czerwony (jasny)",
+    "style_color_red-dark": "Czerwony (ciemny)",
+    "style_color_grey-light": "Szary (jasny)",
+    "style_color_grey-dark": "Szary (ciemny)",
+    "style_color_navy": "Granatowy"
   },
   "timer_not_running": "Timer __name__ nie działa.",
   "stopwatch_not_running": "Stoper __name__ nie działa.",

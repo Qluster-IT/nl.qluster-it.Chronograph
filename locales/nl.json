@@ -376,7 +376,12 @@
     "template_generating": "De TWF en afbeeldingen worden gemaakt. Een ogenblik geduld.",
     "template_copy_http": "Automatisch kopiëren is niet beschikbaar via deze HTTP-verbinding. Klik op Bericht en afbeeldingen kopiëren of open Homey via HTTPS om automatisch te kopiëren.",
     "template_catalog_oldest": "Oudste",
-    "template_image_browser_help": "Houd Ctrl ingedrukt en scroll om in te zoomen; sleep de afbeelding om deze te verplaatsen."
+    "template_image_browser_help": "Houd Ctrl ingedrukt en scroll om in te zoomen; sleep de afbeelding om deze te verplaatsen.",
+    "style_color_red-soft": "Rood (licht)",
+    "style_color_red-dark": "Rood (donker)",
+    "style_color_grey-light": "Grijs (licht)",
+    "style_color_grey-dark": "Grijs (donker)",
+    "style_color_navy": "Marineblauw"
   },
   "timer_not_running": "Timer __name__ loopt niet.",
   "stopwatch_not_running": "Stopwatch __name__ loopt niet.",

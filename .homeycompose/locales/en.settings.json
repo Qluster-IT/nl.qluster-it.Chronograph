@@ -360,5 +360,10 @@
 	"multiple_separator_rows_small": "Widget-style rows (small)",
 	"multiple_separator_rows_tiny": "Widget-style rows (tiny)",
 	"multiple_separator_cards_small": "Widget-style cards (small)",
-	"multiple_separator_cards_tiny": "Widget-style cards (tiny)"
+	"multiple_separator_cards_tiny": "Widget-style cards (tiny)",
+	"style_color_red-soft": "Red (light)",
+	"style_color_red-dark": "Red (dark)",
+	"style_color_grey-light": "Grey (light)",
+	"style_color_grey-dark": "Grey (dark)",
+	"style_color_navy": "Navy"
 }

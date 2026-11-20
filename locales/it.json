@@ -379,7 +379,12 @@
     "template_generating": "Generazione del TWF e delle immagini. Attendi un momento.",
     "template_copy_http": "La copia automatica non è disponibile con questa connessione HTTP. Fai clic su Copia post e immagini oppure apri Homey via HTTPS per copiare automaticamente.",
     "template_catalog_oldest": "Meno recenti",
-    "template_image_browser_help": "Tieni premuto Ctrl e scorri per ingrandire; trascina l’immagine ingrandita per spostarla."
+    "template_image_browser_help": "Tieni premuto Ctrl e scorri per ingrandire; trascina l’immagine ingrandita per spostarla.",
+    "style_color_red-soft": "Rosso (chiaro)",
+    "style_color_red-dark": "Rosso (scuro)",
+    "style_color_grey-light": "Grigio (chiaro)",
+    "style_color_grey-dark": "Grigio (scuro)",
+    "style_color_navy": "Blu navy"
   },
   "timer_not_running": "Il timer __name__ non è in esecuzione.",
   "stopwatch_not_running": "Il cronometro __name__ non è in esecuzione.",

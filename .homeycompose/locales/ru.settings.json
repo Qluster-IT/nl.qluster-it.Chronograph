@@ -360,5 +360,10 @@
 	"multiple_separator_rows_small": "Строки как виджеты (маленькие)",
 	"multiple_separator_rows_tiny": "Строки как виджеты (очень маленькие)",
 	"multiple_separator_cards_small": "Карточки как виджеты (маленькие)",
-	"multiple_separator_cards_tiny": "Карточки как виджеты (очень маленькие)"
+	"multiple_separator_cards_tiny": "Карточки как виджеты (очень маленькие)",
+	"style_color_red-soft": "Красный (светлый)",
+	"style_color_red-dark": "Красный (тёмный)",
+	"style_color_grey-light": "Серый (светлый)",
+	"style_color_grey-dark": "Серый (тёмный)",
+	"style_color_navy": "Тёмно-синий"
 }

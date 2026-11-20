@@ -379,7 +379,12 @@
     "template_generating": "Skapar TWF och bilder. Vänta ett ögonblick.",
     "template_copy_http": "Automatisk kopiering är inte tillgänglig via den här HTTP-anslutningen. Klicka på Kopiera inlägg och bilder eller öppna Homey via HTTPS för automatisk kopiering.",
     "template_catalog_oldest": "Äldsta",
-    "template_image_browser_help": "Håll Ctrl och rulla för att zooma; dra i bilden för att flytta den när den är inzoomad."
+    "template_image_browser_help": "Håll Ctrl och rulla för att zooma; dra i bilden för att flytta den när den är inzoomad.",
+    "style_color_red-soft": "Röd (ljus)",
+    "style_color_red-dark": "Röd (mörk)",
+    "style_color_grey-light": "Grå (ljus)",
+    "style_color_grey-dark": "Grå (mörk)",
+    "style_color_navy": "Marinblå"
   },
   "timer_not_running": "Timern __name__ körs inte.",
   "stopwatch_not_running": "Stoppuret __name__ körs inte.",

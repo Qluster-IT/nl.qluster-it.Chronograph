@@ -379,7 +379,12 @@
     "template_generating": "TWF und Bilder werden erstellt. Bitte warte einen Moment.",
     "template_copy_http": "Über diese HTTP-Verbindung ist automatisches Kopieren nicht verfügbar. Klicke auf Beitrag und Bilder kopieren oder öffne Homey über HTTPS, um automatisch zu kopieren.",
     "template_catalog_oldest": "Älteste",
-    "template_image_browser_help": "Zum Zoomen Strg gedrückt halten und scrollen; das vergrößerte Bild zum Verschieben ziehen."
+    "template_image_browser_help": "Zum Zoomen Strg gedrückt halten und scrollen; das vergrößerte Bild zum Verschieben ziehen.",
+    "style_color_red-soft": "Rot (hell)",
+    "style_color_red-dark": "Rot (dunkel)",
+    "style_color_grey-light": "Grau (hell)",
+    "style_color_grey-dark": "Grau (dunkel)",
+    "style_color_navy": "Marineblau"
   },
   "timer_not_running": "Timer __name__ läuft nicht.",
   "stopwatch_not_running": "Stopuhr __name__ läuft nicht.",

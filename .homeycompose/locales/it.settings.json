@@ -360,5 +360,10 @@
 	"multiple_separator_rows_small": "Righe tipo widget (piccole)",
 	"multiple_separator_rows_tiny": "Righe tipo widget (molto piccole)",
 	"multiple_separator_cards_small": "Schede tipo widget (piccole)",
-	"multiple_separator_cards_tiny": "Schede tipo widget (molto piccole)"
+	"multiple_separator_cards_tiny": "Schede tipo widget (molto piccole)",
+	"style_color_red-soft": "Rosso (chiaro)",
+	"style_color_red-dark": "Rosso (scuro)",
+	"style_color_grey-light": "Grigio (chiaro)",
+	"style_color_grey-dark": "Grigio (scuro)",
+	"style_color_navy": "Blu navy"
 }

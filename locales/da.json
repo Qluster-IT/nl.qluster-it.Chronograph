@@ -379,7 +379,12 @@
     "template_generating": "Opretter TWF og billeder. Vent et øjeblik.",
     "template_copy_http": "Automatisk kopiering er ikke tilgængelig via denne HTTP-forbindelse. Klik på Kopiér indlæg og billeder, eller åbn Homey via HTTPS for at kopiere automatisk.",
     "template_catalog_oldest": "Ældste",
-    "template_image_browser_help": "Hold Ctrl nede, og rul for at zoome; træk i billedet for at flytte det, når der er zoomet ind."
+    "template_image_browser_help": "Hold Ctrl nede, og rul for at zoome; træk i billedet for at flytte det, når der er zoomet ind.",
+    "style_color_red-soft": "Rød (lys)",
+    "style_color_red-dark": "Rød (mørk)",
+    "style_color_grey-light": "Grå (lys)",
+    "style_color_grey-dark": "Grå (mørk)",
+    "style_color_navy": "Marineblå"
   },
   "timer_not_running": "Timeren __name__ kører ikke.",
   "stopwatch_not_running": "Stopuret __name__ kører ikke.",

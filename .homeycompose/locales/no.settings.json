@@ -360,5 +360,10 @@
 	"multiple_separator_rows_small": "Widgetlignende rader (små)",
 	"multiple_separator_rows_tiny": "Widgetlignende rader (svært små)",
 	"multiple_separator_cards_small": "Widgetlignende kort (små)",
-	"multiple_separator_cards_tiny": "Widgetlignende kort (svært små)"
+	"multiple_separator_cards_tiny": "Widgetlignende kort (svært små)",
+	"style_color_red-soft": "Rød (lys)",
+	"style_color_red-dark": "Rød (mørk)",
+	"style_color_grey-light": "Grå (lys)",
+	"style_color_grey-dark": "Grå (mørk)",
+	"style_color_navy": "Marineblå"
 }

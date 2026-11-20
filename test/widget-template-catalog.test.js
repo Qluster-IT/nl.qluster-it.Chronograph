@@ -24,7 +24,7 @@ describe('Widget template community catalog', () => {
 		const calls = [];
 		const posts = [
 			{ id: 1, post_number: 1, raw: 'Placeholder', username: 'owner' },
-			{ id: 2, post_number: 2, raw: `# Blue theme\nA <script>description</script>\n![preview](upload://abc.png)\n\nTWF:\n\`\`\`\n${text}\n\`\`\``, username: 'author',
+			{ id: 2, post_number: 2, raw: `# Blue theme\nA <script>description</script>\n![preview](upload://abc.png)\n\n\`\`\`\n${text}\n\`\`\``, username: 'author',
 				cooked: '<img src="https://us1.discourse-cdn.com/flex025/uploads/athom/original/3X/a/b/preview.png"><img src="https://example.com/tracker.png">',
 				actions_summary: [{ id: 2, count: 5 }] },
 			{ id: 3, post_number: 3, raw: `# Hidden\n${text}`, hidden: true }
@@ -50,7 +50,7 @@ describe('Widget template community catalog', () => {
 
 	it('extracts and imports JavaScript-fenced templates without including the fence in the description', async () => {
 		const text = await encodeTemplate({ theme: { name: 'Blue', colors: { name: 'blue' } } });
-		const post = { id: 2, post_number: 2, raw: `# Blue theme\nDescription\n\nTWF:\n\`\`\`javascript\n${text}\n\`\`\`` };
+		const post = { id: 2, post_number: 2, raw: `# Blue theme\nDescription\n\n\`\`\`javascript\n${text}\n\`\`\`` };
 		const entries = await getCatalog(async () => ({
 			ok: true,
 			text: async () => JSON.stringify({ post_stream: { stream: [2], posts: [post] } })

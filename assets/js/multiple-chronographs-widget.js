@@ -29,7 +29,8 @@ window.registerMultipleChronographsWidget = function (Homey) {
 			var separator = settings.rowSeparator == null ? 'none' : settings.rowSeparator;
 			var separatorColor = settings.rowSeparatorColor == null ? 'default' : settings.rowSeparatorColor;
 			var colors = ['default', 'blue', 'red', 'orange', 'yellow', 'green', 'purple', 'teal',
-				'cyan', 'indigo', 'pink', 'brown', 'grey', 'black', 'black-light', 'white'];
+				'cyan', 'indigo', 'pink', 'brown', 'grey', 'black', 'black-light', 'white',
+				'red-soft', 'red-dark', 'grey-light', 'grey-dark', 'navy'];
 			if (['none', 'line', 'rows', 'rows-small', 'rows-tiny', 'cards', 'cards-small', 'cards-tiny'].indexOf(separator) === -1 || colors.indexOf(separatorColor) === -1) {
 				console.error('Invalid multiple chronographs row separator settings', separator, separatorColor);
 				$scope.error = Homey.__('settings.multiple_invalid_settings');

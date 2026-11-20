@@ -379,7 +379,12 @@
     "template_generating": "جارٍ إنشاء ملف TWF والصور. يرجى الانتظار قليلًا.",
     "template_copy_http": "النسخ التلقائي غير متاح عبر اتصال HTTP هذا. انقر على «نسخ المنشور والصور» أو افتح Homey عبر HTTPS للنسخ تلقائيًا.",
     "template_catalog_oldest": "الأقدم",
-    "template_image_browser_help": "اضغط باستمرار على Ctrl ومرّر للتكبير؛ اسحب الصورة المكبّرة لتحريكها."
+    "template_image_browser_help": "اضغط باستمرار على Ctrl ومرّر للتكبير؛ اسحب الصورة المكبّرة لتحريكها.",
+    "style_color_red-soft": "أحمر (فاتح)",
+    "style_color_red-dark": "أحمر (داكن)",
+    "style_color_grey-light": "رمادي (فاتح)",
+    "style_color_grey-dark": "رمادي (داكن)",
+    "style_color_navy": "أزرق كحلي"
   },
   "timer_not_running": "المؤقت __name__ غير قيد التشغيل.",
   "stopwatch_not_running": "ساعة الإيقاف __name__ غير قيد التشغيل.",

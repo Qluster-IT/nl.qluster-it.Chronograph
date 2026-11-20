@@ -360,5 +360,10 @@
 	"multiple_separator_rows_small": "صفوف بنمط الأدوات (صغيرة)",
 	"multiple_separator_rows_tiny": "صفوف بنمط الأدوات (صغيرة جدًا)",
 	"multiple_separator_cards_small": "بطاقات بنمط الأدوات (صغيرة)",
-	"multiple_separator_cards_tiny": "بطاقات بنمط الأدوات (صغيرة جدًا)"
+	"multiple_separator_cards_tiny": "بطاقات بنمط الأدوات (صغيرة جدًا)",
+	"style_color_red-soft": "أحمر (فاتح)",
+	"style_color_red-dark": "أحمر (داكن)",
+	"style_color_grey-light": "رمادي (فاتح)",
+	"style_color_grey-dark": "رمادي (داكن)",
+	"style_color_navy": "أزرق كحلي"
 }

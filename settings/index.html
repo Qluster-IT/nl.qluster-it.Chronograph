@@ -787,7 +787,8 @@
 								<div ng-if="templates.showPreviews && templates.selectedCatalogId !== item.id" ng-init="loadCatalogPreview(item)">
 									<p class="help-text" ng-if="item.previewLoading">{{ t('settings.template_catalog_loading') }}</p>
 									<p class="chronograph-error" role="alert" ng-if="item.previewError">{{ item.previewError }}</p>
-									<div ng-if="item.preview" class="template-catalog-thumbnail" template-catalog-preview="item.preview" t="t" labels="labels" inert aria-hidden="true"></div>
+									<div ng-if="item.preview" class="template-catalog-thumbnail" template-catalog-preview="item.preview" t="t" labels="labels"
+										mode="editor.previewMode" counter-invert="previewCounterInvert" inert aria-hidden="true"></div>
 								</div>
 								</div>
 							</div>

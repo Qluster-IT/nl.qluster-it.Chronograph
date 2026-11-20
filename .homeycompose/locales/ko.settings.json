@@ -360,5 +360,10 @@
 	"multiple_separator_rows_small": "위젯 스타일 행 (작게)",
 	"multiple_separator_rows_tiny": "위젯 스타일 행 (아주 작게)",
 	"multiple_separator_cards_small": "위젯 스타일 카드 (작게)",
-	"multiple_separator_cards_tiny": "위젯 스타일 카드 (아주 작게)"
+	"multiple_separator_cards_tiny": "위젯 스타일 카드 (아주 작게)",
+	"style_color_red-soft": "빨강 (밝음)",
+	"style_color_red-dark": "빨강 (어두움)",
+	"style_color_grey-light": "회색 (밝음)",
+	"style_color_grey-dark": "회색 (어두움)",
+	"style_color_navy": "남색"
 }

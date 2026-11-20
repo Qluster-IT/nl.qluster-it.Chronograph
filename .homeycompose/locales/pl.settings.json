@@ -360,5 +360,10 @@
 	"multiple_separator_rows_small": "Wiersze jak widżety (małe)",
 	"multiple_separator_rows_tiny": "Wiersze jak widżety (bardzo małe)",
 	"multiple_separator_cards_small": "Karty jak widżety (małe)",
-	"multiple_separator_cards_tiny": "Karty jak widżety (bardzo małe)"
+	"multiple_separator_cards_tiny": "Karty jak widżety (bardzo małe)",
+	"style_color_red-soft": "Czerwony (jasny)",
+	"style_color_red-dark": "Czerwony (ciemny)",
+	"style_color_grey-light": "Szary (jasny)",
+	"style_color_grey-dark": "Szary (ciemny)",
+	"style_color_navy": "Granatowy"
 }

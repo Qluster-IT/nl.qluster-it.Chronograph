@@ -1,7 +1,7 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "nl.fellownet.chronograph",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "compatibility": ">=12.3.0",
   "sdk": 3,
   "name": {
@@ -10538,6 +10538,96 @@
                 "ru": "Белый",
                 "ko": "흰색",
                 "ar": "أبيض"
+              }
+            },
+            {
+              "id": "red-soft",
+              "title": {
+                "en": "Red (light)",
+                "nl": "Rood (licht)",
+                "da": "Rød (lys)",
+                "de": "Rot (hell)",
+                "es": "Rojo (claro)",
+                "fr": "Rouge (clair)",
+                "it": "Rosso (chiaro)",
+                "no": "Rød (lys)",
+                "sv": "Röd (ljus)",
+                "pl": "Czerwony (jasny)",
+                "ru": "Красный (светлый)",
+                "ko": "빨강 (밝음)",
+                "ar": "أحمر (فاتح)"
+              }
+            },
+            {
+              "id": "red-dark",
+              "title": {
+                "en": "Red (dark)",
+                "nl": "Rood (donker)",
+                "da": "Rød (mørk)",
+                "de": "Rot (dunkel)",
+                "es": "Rojo (oscuro)",
+                "fr": "Rouge (foncé)",
+                "it": "Rosso (scuro)",
+                "no": "Rød (mørk)",
+                "sv": "Röd (mörk)",
+                "pl": "Czerwony (ciemny)",
+                "ru": "Красный (тёмный)",
+                "ko": "빨강 (어두움)",
+                "ar": "أحمر (داكن)"
+              }
+            },
+            {
+              "id": "grey-light",
+              "title": {
+                "en": "Grey (light)",
+                "nl": "Grijs (licht)",
+                "da": "Grå (lys)",
+                "de": "Grau (hell)",
+                "es": "Gris (claro)",
+                "fr": "Gris (clair)",
+                "it": "Grigio (chiaro)",
+                "no": "Grå (lys)",
+                "sv": "Grå (ljus)",
+                "pl": "Szary (jasny)",
+                "ru": "Серый (светлый)",
+                "ko": "회색 (밝음)",
+                "ar": "رمادي (فاتح)"
+              }
+            },
+            {
+              "id": "grey-dark",
+              "title": {
+                "en": "Grey (dark)",
+                "nl": "Grijs (donker)",
+                "da": "Grå (mørk)",
+                "de": "Grau (dunkel)",
+                "es": "Gris (oscuro)",
+                "fr": "Gris (foncé)",
+                "it": "Grigio (scuro)",
+                "no": "Grå (mørk)",
+                "sv": "Grå (mörk)",
+                "pl": "Szary (ciemny)",
+                "ru": "Серый (тёмный)",
+                "ko": "회색 (어두움)",
+                "ar": "رمادي (داكن)"
+              }
+            },
+            {
+              "id": "navy",
+              "title": {
+                "en": "Navy",
+                "nl": "Marineblauw",
+                "da": "Marineblå",
+                "de": "Marineblau",
+                "es": "Azul marino",
+                "fr": "Bleu marine",
+                "it": "Blu navy",
+                "no": "Marineblå",
+                "sv": "Marinblå",
+                "pl": "Granatowy",
+                "ru": "Тёмно-синий",
+                "ko": "남색",
+                "ar": "أزرق كحلي"
               }
             }
           ]

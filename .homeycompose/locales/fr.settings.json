@@ -360,5 +360,10 @@
 	"multiple_separator_rows_small": "Lignes de type widget (petites)",
 	"multiple_separator_rows_tiny": "Lignes de type widget (très petites)",
 	"multiple_separator_cards_small": "Cartes de type widget (petites)",
-	"multiple_separator_cards_tiny": "Cartes de type widget (très petites)"
+	"multiple_separator_cards_tiny": "Cartes de type widget (très petites)",
+	"style_color_red-soft": "Rouge (clair)",
+	"style_color_red-dark": "Rouge (foncé)",
+	"style_color_grey-light": "Gris (clair)",
+	"style_color_grey-dark": "Gris (foncé)",
+	"style_color_navy": "Bleu marine"
 }

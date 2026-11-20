@@ -4,7 +4,8 @@ angular.module('chronographSettings').factory('widgetStyleEditor', function () {
 	var elementIds = ['icon', 'name', 'status', 'duration', 'play', 'pause', 'stop', 'fields'];
 	var groupedElementIds = elementIds.concat(['cancel', 'start', 'progress', 'remaining', 'total']);
 	var sizes = ['compact', 'normal', 'large'];
-	var colorIds = ['default', 'blue', 'red', 'orange', 'yellow', 'green', 'purple', 'teal', 'cyan', 'indigo', 'pink', 'brown', 'grey', 'black', 'black-light', 'white'];
+	var colorIds = ['default', 'blue', 'red', 'orange', 'yellow', 'green', 'purple', 'teal', 'cyan', 'indigo', 'pink', 'brown', 'grey', 'black', 'black-light', 'white',
+		'red-soft', 'red-dark', 'grey-light', 'grey-dark', 'navy'];
 	var foregroundIds = colorIds.slice();
 	var backgroundIds = ['none'].concat(colorIds.slice(1));
 	var legacyColorKeys = ['icon', 'name', 'status', 'duration', 'play', 'pause', 'stop'];
