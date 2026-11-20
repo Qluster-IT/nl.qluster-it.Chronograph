@@ -135,18 +135,18 @@
 	var colorValues = {
 		default: 'inherit',
 		none: 'transparent',
-		blue: 'var(--homey-color-blue, #2f8df6)',
-		red: 'var(--homey-color-red, #f25f5c)',
-		orange: 'var(--homey-color-orange, #f07a1f)',
+		blue: 'var(--homey-color-blue, var(--chronograph-fallback-blue, #0082fa))',
+		red: 'var(--homey-color-red, #d81c1d)',
+		orange: 'var(--homey-color-orange, #ff8400)',
 		yellow: '#f5c518',
-		green: 'var(--homey-color-green, #71d51b)',
+		green: 'var(--homey-color-green, #3fc700)',
 		purple: '#9033fc',
 		teal: '#1fc7b0',
 		cyan: '#2cc3e8',
 		indigo: '#7c83f7',
 		pink: '#f2549e',
 		brown: '#b9875a',
-		grey: 'var(--homey-color-mono-500, #9a9ca6)',
+		grey: 'var(--homey-color-mono-500, var(--chronograph-fallback-grey, #7a7a7f))',
 		black: '#000',
 		'black-light': '#2B2C36',
 		white: 'var(--homey-color-white, #fff)',
@@ -917,7 +917,7 @@
 		var color = overrides && overrides.background !== undefined ? overrides.background : colors && colors.background;
 		if (!width || color === 'none') return {};
 		return {
-			border: width + 'px solid ' + (color && color !== 'default' ? valueColor(color) : 'var(--homey-line-color, rgba(128, 128, 128, 0.35))'),
+			border: width + 'px solid ' + (color && color !== 'default' ? valueColor(color) : 'var(--homey-line-color, var(--chronograph-fallback-line, #dadae2))'),
 			borderRadius: 'var(--homey-border-radius-default, 16px)',
 			padding: 'var(--homey-su-2, 8px)'
 		};

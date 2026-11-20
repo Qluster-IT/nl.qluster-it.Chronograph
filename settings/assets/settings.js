@@ -93,8 +93,23 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			foregroundValues: {},
 			previewValues: { time: 1, unit: 'seconds', from: null, to: null, steps: null }
 		};
+		var previewHostElements = [];
+		var previewHostObserver;
+		for (var hostElement = window.frameElement; hostElement; hostElement = hostElement.parentElement) {
+			previewHostElements.push(hostElement);
+		}
+		function updatePreviewCounterInvert() {
+			if (previewHostElements.length) {
+				$scope.previewCounterInvert = previewHostElements.some(function (element) {
+					var filter = element.ownerDocument.defaultView.getComputedStyle(element).filter;
+					return /\binvert\((?:1(?:\.0+)?|100%)\)/.test(filter) && /\bhue-rotate\(180deg\)/.test(filter);
+				});
+			} else {
+				$scope.previewCounterInvert = false;
+			}
+		}
 		function updatePreviewMode() {
-			$scope.previewCounterInvert = window.parent !== window && !!(darkSchemeQuery && darkSchemeQuery.matches);
+			updatePreviewCounterInvert();
 			$scope.editor.previewMode = darkSchemeQuery && darkSchemeQuery.matches ? 'dark' : 'light';
 		}
 		updatePreviewMode();
@@ -102,6 +117,14 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			$scope.$applyAsync(updatePreviewMode);
 		}
 		if (darkSchemeQuery && darkSchemeQuery.addEventListener) darkSchemeQuery.addEventListener('change', previewSchemeChanged);
+		if (previewHostElements.length && window.MutationObserver) {
+			previewHostObserver = new window.MutationObserver(function () {
+				$scope.$applyAsync(updatePreviewCounterInvert);
+			});
+			previewHostElements.forEach(function (element) {
+				previewHostObserver.observe(element, { attributes: true, attributeFilter: ['class', 'style'] });
+			});
+		}
 		$scope.rowCountOptions = Array.from({ length: window.ChronographWidgetStyle.maxRows }, function (unused, index) { return index + 1; });
 		$scope.iconPickers = {
 			timer: { query: '', results: [], visibleCount: 60, open: false, busy: false, request: 0 },
@@ -1384,7 +1407,6 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			var types = ['stopwatch', 'timer', 'transition'];
 			var sizes = ['compact', 'normal', 'large'];
 			var states = ['running', 'paused', 'inactive'];
-			var typeLabels = { stopwatch: 'stopwatches', timer: 'timers', transition: 'transitions' };
 			var stateLabels = { running: 'widget_running', paused: 'widget_paused', inactive: 'widget_not_running' };
 			var images = [];
 			try {
@@ -1429,7 +1451,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 						var imageStyle = window.getComputedStyle(preview);
 						images.push({
 							type: type, rows: rows,
-							background: imageStyle.getPropertyValue('--homey-background-color').trim(),
+							background: mode === 'dark' ? '#111217' : '#f5f4fa',
 							textColor: imageStyle.getPropertyValue('--homey-text-color').trim()
 						});
 					}
@@ -1465,7 +1487,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 				context.textBaseline = 'middle';
 				var y = padding;
 				context.font = '600 20px sans-serif';
-				context.fillText(Homey.__('settings.' + typeLabels[panel.type]), padding, y + headingHeight / 2);
+				context.fillText(previewTypeNames[panel.type], padding, y + headingHeight / 2);
 				y += headingHeight;
 				context.font = '600 14px sans-serif';
 				sizes.forEach(function (size, column) {
@@ -2554,6 +2576,11 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 			return id && id.indexOf('far:') === 0 ? 'fa-regular'
 				: id && id.indexOf('fab:') === 0 ? 'fa-brands' : 'fa-solid';
 		};
+		var previewTypeNames = { stopwatch: 'Stopwatch', timer: 'Timer', transition: 'Transition' };
+		$scope.previewName = function (type) {
+			type = type || $scope.editor.previewType;
+			return $scope.templates.generating ? previewTypeNames[type] : $scope.t('settings.widget_type_' + type);
+		};
 		$scope.previewIcon = function (type) {
 			type = type || $scope.editor.previewType;
 			var id = defaultIconId(type);
@@ -2802,6 +2829,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 
 		$scope.$on('$destroy', function () {
 			if (darkSchemeQuery && darkSchemeQuery.removeEventListener) darkSchemeQuery.removeEventListener('change', previewSchemeChanged);
+			if (previewHostObserver) previewHostObserver.disconnect();
 			clearTemplateImage();
 			if (refreshInterval) $interval.cancel(refreshInterval);
 			if (durationInterval) $interval.cancel(durationInterval);
@@ -3161,7 +3189,7 @@ angular.module('chronographSettings', []).controller('SettingsController', [
 }).directive('templateCatalogPreview', function () {
 	return {
 		restrict: 'A',
-		scope: { preview: '=templateCatalogPreview', t: '=', labels: '=', mode: '=?', counterInvert: '=?' },
+		scope: { preview: '=templateCatalogPreview', t: '=', labels: '=', previewName: '=', mode: '=?', counterInvert: '=?' },
 		template: '<div class="style-preview style-preview-normal style-preview-light"'
 			+ ' ng-class="{ \'style-preview-dark\': mode === \'dark\', \'style-preview-counter-invert\': counterInvert }"'
 			+ ' ng-attr-data-background="{{ previewColor(\'background\') }}"'

@@ -604,7 +604,7 @@ describe('Multiple Chronographs widget', () => {
 	it('uses the selected separator and validates its color', async () => {
 		const line = await loadWidget({ rowSeparator: 'line', rowSeparatorColor: 'red' }, {});
 		assert.strictEqual(line.parent.rowSeparator, 'line');
-		assert.strictEqual(line.parent.rowSeparatorColor, 'var(--homey-color-red, #f25f5c)');
+		assert.strictEqual(line.parent.rowSeparatorColor, 'var(--homey-color-red, #d81c1d)');
 		for (const option of manifest.settings.find(setting => setting.id === 'rowSeparatorColor').values) {
 			const widget = await loadWidget({ rowSeparator: 'line', rowSeparatorColor: option.id }, {});
 			assert.strictEqual(widget.parent.error, null, option.id);

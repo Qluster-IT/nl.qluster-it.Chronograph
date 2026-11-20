@@ -539,7 +539,7 @@ describe('Widget duration defaults', () => {
 				empty.state.running = true;
 				await empty.listeners.chronograph_event_multi();
 				assert.strictEqual(empty.scope.designState, 'running');
-				assert.strictEqual(empty.scope.designElementStyle('duration').color, 'var(--homey-color-blue, #2f8df6)');
+				assert.strictEqual(empty.scope.designElementStyle('duration').color, 'var(--homey-color-blue, var(--chronograph-fallback-blue, #0082fa))');
 				assert.strictEqual(empty.scope.designRows.some(row => row.groups.some(group => group.elements.includes('pause'))), true);
 				assert.strictEqual(empty.scope.designRows.some(row => row.groups.some(group => group.elements.includes('progress'))), type !== 'stopwatch');
 			}
@@ -554,7 +554,7 @@ describe('Widget duration defaults', () => {
 		assert.deepStrictEqual(Array.from(scope.designRows, row => row.id), [1, 2, 4]);
 		assert.strictEqual(scope.iconColor, 'red');
 		assert.strictEqual(scope.iconMask, 'url("' + icon + '")');
-		assert.strictEqual(scope.designElementStyle('name').color, 'var(--homey-color-green, #71d51b)');
+		assert.strictEqual(scope.designElementStyle('name').color, 'var(--homey-color-green, #3fc700)');
 		assert.strictEqual(requests.filter(request => request.url === '/widget-styles').length, 1);
 	});
 
@@ -633,7 +633,7 @@ describe('Widget duration defaults', () => {
 				const button = widget.scope.designButtonStyle('pause');
 				assert.strictEqual(button.borderRadius, '4px');
 				assert.strictEqual(button.backgroundColor, 'transparent');
-				assert.strictEqual(button.border, '1px solid var(--homey-color-mono-500, #9a9ca6)');
+				assert.strictEqual(button.border, '1px solid var(--homey-color-mono-500, var(--chronograph-fallback-grey, #7a7a7f))');
 				assert.ok(!widget.requests.some(request => request.url === '/widget-styles'));
 			}
 		}
@@ -809,7 +809,7 @@ describe('Widget duration defaults', () => {
 			assert.strictEqual(scope.designRows[1].groups[1].elements.includes('start'), true);
 			assert.strictEqual(scope.iconColor, 'red');
 			assert.strictEqual(scope.playColor, 'blue');
-			assert.strictEqual(scope.schemeElementStyle('name').color, 'var(--homey-color-green, #71d51b)');
+			assert.strictEqual(scope.schemeElementStyle('name').color, 'var(--homey-color-green, #3fc700)');
 		}
 	});
 

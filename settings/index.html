@@ -18,7 +18,7 @@
 </head>
 
 <body ng-app="chronographSettings" ng-controller="SettingsController">
-	<main class="settings-page container-fluid" ng-attr-inert="{{ templates.generating ? '' : undefined }}">
+	<main class="settings-page container-fluid" ng-attr-data-preview-mode="{{ editor.previewMode }}" ng-attr-inert="{{ templates.generating ? '' : undefined }}">
 		<nav class="settings-tabs nav nav-tabs" role="tablist" ng-attr-aria-label="{{ t('settings.settings_navigation') }}">
 			<button class="hy-nostyle settings-tab nav-link" type="button" role="tab"
 				ng-class="{ active: activeTab === 'chronographs' }"
@@ -563,7 +563,7 @@
 									ng-attr-style="{{ previewHexStyle(element, previewTileState(previewScenario, previewTile.type)) }}"
 									ng-attr-data-foreground="{{ previewForeground(element, false, previewTileState(previewScenario, previewTile.type)) }}">
 									<i ng-if="element === 'icon'" class="style-preview-chronograph-icon" ng-class="[previewIconStyle(), previewIcon()]" aria-hidden="true"></i>
-									<strong ng-if="element === 'name'">{{ t('settings.widget_chronograph') }}</strong>
+									<strong ng-if="element === 'name'">{{ previewName() }}</strong>
 									<span ng-if="element === 'status'">{{ editor.previewState === 'running' ? labels.running : (editor.previewState === 'paused' ? labels.paused : t('settings.widget_not_running')) }}</span>
 									<span ng-if="element === 'duration'">12:34.56</span>
 									<span ng-if="element === 'remaining'">07:25.44</span>
@@ -787,7 +787,7 @@
 								<div ng-if="templates.showPreviews && templates.selectedCatalogId !== item.id" ng-init="loadCatalogPreview(item)">
 									<p class="help-text" ng-if="item.previewLoading">{{ t('settings.template_catalog_loading') }}</p>
 									<p class="chronograph-error" role="alert" ng-if="item.previewError">{{ item.previewError }}</p>
-									<div ng-if="item.preview" class="template-catalog-thumbnail" template-catalog-preview="item.preview" t="t" labels="labels"
+									<div ng-if="item.preview" class="template-catalog-thumbnail" template-catalog-preview="item.preview" t="t" labels="labels" preview-name="previewName"
 										mode="editor.previewMode" counter-invert="previewCounterInvert" inert aria-hidden="true"></div>
 								</div>
 								</div>
@@ -886,7 +886,7 @@
 						ng-attr-data-palette="{{ isButtonElement(element) ? previewColor(element) : 'default' }}"
 						ng-attr-data-foreground="{{ previewForeground(element) }}">
 						<i ng-if="element === 'icon'" class="style-preview-chronograph-icon" ng-class="[previewIconStyle(previewTile.type), previewIcon(previewTile.type)]" aria-hidden="true"></i>
-						<strong ng-if="element === 'name'">{{ previewTile ? t('settings.' + (previewTile.type === 'stopwatch' ? 'stopwatches' : (previewTile.type === 'timer' ? 'timers' : 'transitions'))) : t('settings.widget_chronograph') }}</strong>
+						<strong ng-if="element === 'name'">{{ previewName(previewTile && previewTile.type) }}</strong>
 						<span ng-if="element === 'status'">{{ previewTileState(previewScenario, previewTile.type) === 'running' ? labels.running : (previewTileState(previewScenario, previewTile.type) === 'paused' ? labels.paused : t('settings.widget_not_running')) }}</span>
 						<span ng-if="element === 'duration'">12:34.56</span>
 						<span ng-if="element === 'remaining'">07:25.44</span>
@@ -932,7 +932,7 @@
 					ng-attr-style="{{ previewHexStyle(element, previewTileState(previewScenario, previewTile.type)) }}"
 					ng-attr-data-foreground="{{ previewForeground(element, false, previewTileState(previewScenario, previewTile.type)) }}">
 					<i ng-if="element === 'icon'" ng-class="[previewIconStyle(previewTile.type), previewIcon(previewTile.type)]" aria-hidden="true"></i>
-					<strong ng-if="element === 'name'">{{ (previewTile ? previewTile.type : editor.previewType) === 'stopwatch' ? t('settings.stopwatches') : ((previewTile ? previewTile.type : editor.previewType) === 'timer' ? t('settings.timers') : t('settings.transitions')) }}</strong>
+					<strong ng-if="element === 'name'">{{ previewName(previewTile && previewTile.type) }}</strong>
 					<span ng-if="element === 'status'">{{ previewTileState(previewScenario, previewTile.type) === 'running' ? labels.running : (previewTileState(previewScenario, previewTile.type) === 'paused' ? labels.paused : t('settings.widget_not_running')) }}</span>
 					<span ng-if="element === 'duration'">12:34.56</span>
 					<span ng-if="element === 'remaining'">07:25.44</span>

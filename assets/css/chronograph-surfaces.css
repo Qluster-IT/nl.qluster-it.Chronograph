@@ -1,4 +1,9 @@
 body {
+	--chronograph-fallback-blue: #0082fa;
+	--chronograph-fallback-grey: #7a7a7f;
+	--chronograph-fallback-text: #1c1c1c;
+	--chronograph-fallback-muted: #93939a;
+	--chronograph-fallback-line: #dadae2;
 	--chronograph-gradient-tint: 22%;
 	--chronograph-surface: var(--homey-background-color, #fff);
 	--chronograph-frame-rim: none;
@@ -7,6 +12,11 @@ body {
 
 .homey-dark-mode,
 .homey-dark-mode body {
+	--chronograph-fallback-blue: #339bfb;
+	--chronograph-fallback-grey: #80818e;
+	--chronograph-fallback-text: #e4e4e7;
+	--chronograph-fallback-muted: #999aa3;
+	--chronograph-fallback-line: #3b3d4a;
 	--chronograph-gradient-tint: 26%;
 	--chronograph-surface: #181920;
 	--chronograph-frame-rim: inset 0 1px 0 rgba(255, 255, 255, 0.05), inset 0 0 0 1px rgba(255, 255, 255, 0.03);

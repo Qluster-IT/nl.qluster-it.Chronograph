@@ -3,11 +3,11 @@ html > body[ng-controller="SettingsController"] {
 }
 
 :root {
-	--chronograph-color-blue: #2f8df6;
-	--chronograph-color-red: #f25f5c;
-	--chronograph-color-orange: #f07a1f;
-	--chronograph-color-green: #71d51b;
-	--chronograph-color-grey: #9a9ca6;
+	--chronograph-color-blue: #0082fa;
+	--chronograph-color-red: #d81c1d;
+	--chronograph-color-orange: #ff8400;
+	--chronograph-color-green: #3fc700;
+	--chronograph-color-grey: #7a7a7f;
 	--chronograph-color-white: #fff;
 	--chronograph-color-red-soft: #FF453A;
 	--chronograph-color-red-dark: #8B0000;
@@ -22,6 +22,11 @@ body {
 	color: var(--homey-color-text, var(--homey-text-color, inherit));
 	background: var(--homey-background-color, transparent);
 	overflow: hidden;
+}
+
+.settings-page[data-preview-mode="dark"] {
+	--chronograph-color-blue: #339bfb;
+	--chronograph-color-grey: #80818e;
 }
 
 .settings-page {
@@ -668,7 +673,7 @@ body {
 
 /* Custom-view Homey tokens are not the dashboard widget palette. */
 .style-preview-rows,
-.style-preview,
+.style-preview-light,
 .style-color-elements,
 .style-group-editor {
 	--homey-color-blue: var(--chronograph-color-blue);
@@ -776,12 +781,35 @@ body {
 }
 
 .style-preview-light {
+	--chronograph-fallback-blue: #0082fa;
+	--chronograph-fallback-grey: #7a7a7f;
+	--chronograph-fallback-text: #1c1c1c;
+	--chronograph-fallback-muted: #93939a;
+	--chronograph-fallback-line: #dadae2;
+	--chronograph-color-blue: #0082fa;
+	--chronograph-color-grey: #7a7a7f;
+	--homey-color-mono-000: #fff;
+	--homey-color-mono-010: #fbfbfd;
+	--homey-color-mono-025: #f4f4fa;
+	--homey-color-mono-050: #eaeaf1;
+	--homey-color-mono-100: #dadae2;
+	--homey-color-mono-200: #c8c8d0;
+	--homey-color-mono-300: #b1b1b9;
+	--homey-color-mono-400: #93939a;
+	--homey-color-mono-600: #626265;
+	--homey-color-mono-700: #49494b;
+	--homey-color-mono-800: #303031;
+	--homey-color-mono-900: #1c1c1c;
+	--homey-color-mono-1000: #000;
+	--homey-color-blue-600: #0068c8;
+	--homey-color-red-600: #ad1617;
+	--homey-color-green-700: #267700;
 	--chronograph-gradient-tint: 22%;
 	color-scheme: light;
 	--homey-background-color: var(--homey-color-white, #fff);
-	--homey-text-color: #202127;
-	--homey-text-color-light: #777982;
-	--homey-line-color: rgba(128, 128, 128, 0.35);
+	--homey-text-color: var(--homey-color-mono-900);
+	--homey-text-color-light: var(--homey-color-mono-400);
+	--homey-line-color: var(--homey-color-mono-100);
 	--chronograph-surface: var(--homey-background-color);
 	--chronograph-frame-rim: none;
 	--chronograph-frame-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
@@ -789,12 +817,33 @@ body {
 }
 
 .style-preview-dark {
+	--chronograph-fallback-blue: #339bfb;
+	--chronograph-fallback-grey: #80818e;
+	--chronograph-fallback-text: #e4e4e7;
+	--chronograph-fallback-muted: #999aa3;
+	--chronograph-fallback-line: #3b3d4a;
+	--chronograph-color-blue: #339bfb;
+	--chronograph-color-grey: #80818e;
+	--homey-color-mono-000: #000;
+	--homey-color-mono-010: #09090c;
+	--homey-color-mono-025: #111218;
+	--homey-color-mono-050: #1f2029;
+	--homey-color-mono-100: #2b2c36;
+	--homey-color-mono-200: #3b3d4a;
+	--homey-color-mono-300: #4f515f;
+	--homey-color-mono-400: #666875;
+	--homey-color-mono-600: #999aa3;
+	--homey-color-mono-700: #b2b3b8;
+	--homey-color-mono-800: #cacace;
+	--homey-color-mono-900: #e4e4e7;
+	--homey-color-mono-1000: #fff;
 	--chronograph-gradient-tint: 26%;
 	color-scheme: dark;
-	--homey-background-color: #181920;
-	--homey-text-color: #fff;
-	--homey-text-color-light: #9a9ca6;
-	--homey-line-color: rgba(255, 255, 255, 0.15);
+	--homey-background-color: var(--homey-color-mono-050);
+	--homey-text-color: var(--homey-color-mono-900);
+	--homey-text-color-light: var(--homey-color-mono-600);
+	--homey-line-color: var(--homey-color-mono-200);
+	--chronograph-surface: #181920;
 	--chronograph-frame-rim: inset 0 1px 0 rgba(255, 255, 255, 0.05), inset 0 0 0 1px rgba(255, 255, 255, 0.03);
 	--chronograph-frame-shadow: var(--chronograph-frame-rim);
 }
@@ -1232,18 +1281,18 @@ body {
 	}
 }
 
-.style-widget-element[data-palette="blue"] { --style-color: var(--homey-color-blue, #2f8df6); }
-.style-widget-element[data-palette="red"] { --style-color: var(--homey-color-red, #f25f5c); }
-.style-widget-element[data-palette="orange"] { --style-color: var(--homey-color-orange, #f07a1f); }
+.style-widget-element[data-palette="blue"] { --style-color: var(--homey-color-blue, var(--chronograph-fallback-blue, #0082fa)); }
+.style-widget-element[data-palette="red"] { --style-color: var(--homey-color-red, #d81c1d); }
+.style-widget-element[data-palette="orange"] { --style-color: var(--homey-color-orange, #ff8400); }
 .style-widget-element[data-palette="yellow"] { --style-color: #f5c518; }
-.style-widget-element[data-palette="green"] { --style-color: var(--homey-color-green, #71d51b); }
+.style-widget-element[data-palette="green"] { --style-color: var(--homey-color-green, #3fc700); }
 .style-widget-element[data-palette="purple"] { --style-color: #9033fc; }
 .style-widget-element[data-palette="teal"] { --style-color: #1fc7b0; }
 .style-widget-element[data-palette="cyan"] { --style-color: #2cc3e8; }
 .style-widget-element[data-palette="indigo"] { --style-color: #7c83f7; }
 .style-widget-element[data-palette="pink"] { --style-color: #f2549e; }
 .style-widget-element[data-palette="brown"] { --style-color: #b9875a; }
-.style-widget-element[data-palette="grey"] { --style-color: var(--homey-color-mono-500, #9a9ca6); }
+.style-widget-element[data-palette="grey"] { --style-color: var(--homey-color-mono-500, var(--chronograph-fallback-grey, #7a7a7f)); }
 .style-widget-element[data-palette="black"] { --style-color: #000; }
 .style-widget-element[data-palette="black-light"] { --style-color: #2B2C36; }
 .style-widget-element[data-palette^="#"] { --style-color: var(--hex-palette); }
@@ -1254,18 +1303,18 @@ body {
 .style-widget-element[data-palette="grey-dark"], .style-cell-content[data-palette="grey-dark"] { --style-color: var(--chronograph-color-grey-dark); }
 .style-widget-element[data-palette="navy"], .style-cell-content[data-palette="navy"] { --style-color: var(--chronograph-color-navy); }
 
-[data-foreground="blue"] { --foreground-color: var(--homey-color-blue, #2f8df6); }
-[data-foreground="red"] { --foreground-color: var(--homey-color-red, #f25f5c); }
-[data-foreground="orange"] { --foreground-color: var(--homey-color-orange, #f07a1f); }
+[data-foreground="blue"] { --foreground-color: var(--homey-color-blue, var(--chronograph-fallback-blue, #0082fa)); }
+[data-foreground="red"] { --foreground-color: var(--homey-color-red, #d81c1d); }
+[data-foreground="orange"] { --foreground-color: var(--homey-color-orange, #ff8400); }
 [data-foreground="yellow"] { --foreground-color: #f5c518; }
-[data-foreground="green"] { --foreground-color: var(--homey-color-green, #71d51b); }
+[data-foreground="green"] { --foreground-color: var(--homey-color-green, #3fc700); }
 [data-foreground="purple"] { --foreground-color: #9033fc; }
 [data-foreground="teal"] { --foreground-color: #1fc7b0; }
 [data-foreground="cyan"] { --foreground-color: #2cc3e8; }
 [data-foreground="indigo"] { --foreground-color: #7c83f7; }
 [data-foreground="pink"] { --foreground-color: #f2549e; }
 [data-foreground="brown"] { --foreground-color: #b9875a; }
-[data-foreground="grey"] { --foreground-color: var(--homey-color-mono-500, #9a9ca6); }
+[data-foreground="grey"] { --foreground-color: var(--homey-color-mono-500, var(--chronograph-fallback-grey, #7a7a7f)); }
 [data-foreground="black"] { --foreground-color: #000; }
 [data-foreground="black-light"] { --foreground-color: #2B2C36; }
 [data-foreground^="#"] { --foreground-color: var(--hex-foreground); }
@@ -1580,20 +1629,20 @@ style-color-select {
 	overflow-wrap: anywhere;
 }
 
-.style-cell-content[data-palette="blue"] { --style-color: var(--homey-color-blue, #2f8df6); }
+.style-cell-content[data-palette="blue"] { --style-color: var(--homey-color-blue, var(--chronograph-fallback-blue, #0082fa)); }
 .style-cell-content[data-palette="black-light"] { --style-color: #2B2C36; }
 .style-cell-content[data-palette^="#"] { --style-color: var(--hex-palette); }
-.style-cell-content[data-palette="red"] { --style-color: var(--homey-color-red, #f25f5c); }
-.style-cell-content[data-palette="orange"] { --style-color: var(--homey-color-orange, #f07a1f); }
+.style-cell-content[data-palette="red"] { --style-color: var(--homey-color-red, #d81c1d); }
+.style-cell-content[data-palette="orange"] { --style-color: var(--homey-color-orange, #ff8400); }
 .style-cell-content[data-palette="yellow"] { --style-color: #f5c518; }
-.style-cell-content[data-palette="green"] { --style-color: var(--homey-color-green, #71d51b); }
+.style-cell-content[data-palette="green"] { --style-color: var(--homey-color-green, #3fc700); }
 .style-cell-content[data-palette="purple"] { --style-color: #9033fc; }
 .style-cell-content[data-palette="teal"] { --style-color: #1fc7b0; }
 .style-cell-content[data-palette="cyan"] { --style-color: #2cc3e8; }
 .style-cell-content[data-palette="indigo"] { --style-color: #7c83f7; }
 .style-cell-content[data-palette="pink"] { --style-color: #f2549e; }
 .style-cell-content[data-palette="brown"] { --style-color: #b9875a; }
-.style-cell-content[data-palette="grey"] { --style-color: var(--homey-color-mono-500, #9a9ca6); }
+.style-cell-content[data-palette="grey"] { --style-color: var(--homey-color-mono-500, var(--chronograph-fallback-grey, #7a7a7f)); }
 .style-cell-content[data-palette="black"] { --style-color: #000; }
 .style-cell-content[data-palette="white"] { --style-color: var(--homey-color-white, #fff); }
 

@@ -5,14 +5,14 @@
 
 .chronograph-widget [data-button-color="blue"] {
 	--chronograph-button-muted: var(--homey-color-blue-600, #0068c8);
-	--chronograph-button-vivid: var(--homey-color-blue, #2f8df6);
+	--chronograph-button-vivid: var(--homey-color-blue, var(--chronograph-fallback-blue, #0082fa));
 }
 
 .chronograph-widget {
-	--chronograph-text: var(--homey-text-color, #202127);
-	--chronograph-muted: var(--homey-text-color-light, #777982);
-	--chronograph-blue: var(--homey-color-blue, #2f8df6);
-	--chronograph-red: var(--homey-color-red, #f25f5c);
+	--chronograph-text: var(--homey-text-color, var(--chronograph-fallback-text, #1c1c1c));
+	--chronograph-muted: var(--homey-text-color-light, var(--chronograph-fallback-muted, #93939a));
+	--chronograph-blue: var(--homey-color-blue, var(--chronograph-fallback-blue, #0082fa));
+	--chronograph-red: var(--homey-color-red, #d81c1d);
 	--chronograph-neutral: color-mix(in srgb, var(--chronograph-text) 8%, var(--homey-background-color, transparent));
 	min-width: 220px;
 	color: var(--chronograph-text);
@@ -21,12 +21,12 @@
 
 .chronograph-widget [data-button-color="red"] {
 	--chronograph-button-muted: var(--homey-color-red-600, #ad1617);
-	--chronograph-button-vivid: var(--homey-color-red, #f25f5c);
+	--chronograph-button-vivid: var(--homey-color-red, #d81c1d);
 }
 
 .chronograph-widget [data-button-color="orange"] {
 	--chronograph-button-muted: #a85700;
-	--chronograph-button-vivid: var(--homey-color-orange, #f07a1f);
+	--chronograph-button-vivid: var(--homey-color-orange, #ff8400);
 }
 
 .chronograph-widget [data-button-color="yellow"] {
@@ -38,7 +38,7 @@
 
 .chronograph-widget [data-button-color="green"] {
 	--chronograph-button-muted: var(--homey-color-green-700, #267700);
-	--chronograph-button-vivid: var(--homey-color-green, #71d51b);
+	--chronograph-button-vivid: var(--homey-color-green, #3fc700);
 	--chronograph-button-vivid-foreground: #1a1b21;
 }
 
@@ -79,7 +79,7 @@
 
 .chronograph-widget [data-button-color="grey"] {
 	--chronograph-button-muted: var(--homey-color-mono-600, #53555f);
-	--chronograph-button-vivid: var(--homey-color-mono-500, #9a9ca6);
+	--chronograph-button-vivid: var(--homey-color-mono-500, var(--chronograph-fallback-grey, #7a7a7f));
 	--chronograph-button-vivid-foreground: #1a1b21;
 }
 
@@ -483,7 +483,7 @@ body[data-chronograph-type] {
 }
 
 .chronograph-vivid-running {
-	--chronograph-current-color: var(--homey-color-blue, #2f8df6);
+	--chronograph-current-color: var(--homey-color-blue, var(--chronograph-fallback-blue, #0082fa));
 	background: color-mix(in oklab, var(--chronograph-current-color) 55%, #000);
 	color: #fff;
 	--chronograph-muted: rgb(255 255 255 / 78%);
@@ -491,11 +491,11 @@ body[data-chronograph-type] {
 }
 
 body.chronograph-vivid-running[data-widget-color="red"] {
-	--chronograph-current-color: var(--homey-color-red, #f25f5c);
+	--chronograph-current-color: var(--homey-color-red, #d81c1d);
 }
 
 body.chronograph-vivid-running[data-widget-color="orange"] {
-	--chronograph-current-color: var(--homey-color-orange, #f07a1f);
+	--chronograph-current-color: var(--homey-color-orange, #ff8400);
 }
 
 body.chronograph-vivid-running[data-widget-color="yellow"] {
@@ -503,7 +503,7 @@ body.chronograph-vivid-running[data-widget-color="yellow"] {
 }
 
 body.chronograph-vivid-running[data-widget-color="green"] {
-	--chronograph-current-color: var(--homey-color-green, #71d51b);
+	--chronograph-current-color: var(--homey-color-green, #3fc700);
 }
 
 body.chronograph-vivid-running[data-widget-color="purple"] {
@@ -531,7 +531,7 @@ body.chronograph-vivid-running[data-widget-color="brown"] {
 }
 
 body.chronograph-vivid-running[data-widget-color="grey"] {
-	--chronograph-current-color: var(--homey-color-mono-500, #9a9ca6);
+	--chronograph-current-color: var(--homey-color-mono-500, var(--chronograph-fallback-grey, #7a7a7f));
 }
 
 body.chronograph-vivid-running {

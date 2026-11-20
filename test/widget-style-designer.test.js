@@ -38,8 +38,9 @@ function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns, extr
 	if (extras) Object.assign(context, extras);
 	for (const script of compiledSettingsScripts) script.runInContext(context);
 	const watches = [];
+	const scopeEvents = {};
 	const scope = {
-		$on() {},
+		$on(name, callback) { scopeEvents[name] = callback; },
 		$watchGroup() {},
 		$watch(get, callback) { watches.push({ get, callback }); },
 		$digest() {
@@ -79,7 +80,7 @@ function loadSettings(widgetStyles, confirm, set, preview, previewBuiltIns, extr
 	scope.initialize(homey);
 	if (!renderExport) scope.prepareTemplateImage = () => {};
 	if (!noSelection) scope.selectVisibilityRow(1);
-	return { scope, writes, timers, editor, homey, listeners, directives, window: context.window };
+	return { scope, writes, timers, editor, homey, listeners, scopeEvents, directives, window: context.window };
 }
 
 function stubPreviewPaintDelay(window) {
@@ -268,14 +269,14 @@ describe('Widget style designer preview', () => {
 		}
 	});
 
-	it('preserves all existing named palette values', () => {
+	it('uses real Homey fallbacks and preserves fixed named palette values', () => {
 		const runtime = require('../assets/js/chronograph-widget-style.js');
 		const expected = {
-			default: 'inherit', none: 'transparent', blue: 'var(--homey-color-blue, #2f8df6)',
-			red: 'var(--homey-color-red, #f25f5c)', orange: 'var(--homey-color-orange, #f07a1f)',
-			yellow: '#f5c518', green: 'var(--homey-color-green, #71d51b)', purple: '#9033fc',
+			default: 'inherit', none: 'transparent', blue: 'var(--homey-color-blue, var(--chronograph-fallback-blue, #0082fa))',
+			red: 'var(--homey-color-red, #d81c1d)', orange: 'var(--homey-color-orange, #ff8400)',
+			yellow: '#f5c518', green: 'var(--homey-color-green, #3fc700)', purple: '#9033fc',
 			teal: '#1fc7b0', cyan: '#2cc3e8', indigo: '#7c83f7', pink: '#f2549e',
-			brown: '#b9875a', grey: 'var(--homey-color-mono-500, #9a9ca6)', black: '#000',
+			brown: '#b9875a', grey: 'var(--homey-color-mono-500, var(--chronograph-fallback-grey, #7a7a7f))', black: '#000',
 			'black-light': '#2B2C36', white: 'var(--homey-color-white, #fff)'
 		};
 		for (const [id, value] of Object.entries(expected)) assert.strictEqual(runtime.valueColor(id), value, id);
@@ -1281,6 +1282,25 @@ describe('Widget style designer preview', () => {
 		assert.strictEqual(writes.length, 0);
 	});
 
+	it('localizes singular preview names to the Homey user language but keeps generated image names English', () => {
+		const { scope, homey, writes } = loadSettings();
+		for (const language of ['nl', 'de']) {
+			const locale = JSON.parse(fs.readFileSync(path.join(root, '.homeycompose', 'locales', language + '.settings.json'), 'utf8'));
+			homey.__ = key => locale[key.replace(/^settings\./, '')];
+			for (const [type, english] of Object.entries({ stopwatch: 'Stopwatch', timer: 'Timer', transition: 'Transition' })) {
+				scope.editor.previewType = type;
+				assert.strictEqual(scope.previewName(), locale['widget_type_' + type]);
+				assert.strictEqual(scope.previewName('timer'), locale.widget_type_timer);
+				scope.templates.generating = true;
+				assert.strictEqual(scope.previewName(), english);
+				scope.templates.generating = false;
+				assert.strictEqual(scope.previewName(), locale['widget_type_' + type]);
+			}
+		}
+		assert.strictEqual(scope.isDirty(), false);
+		assert.strictEqual(writes.length, 0);
+	});
+
 	it('defaults preview mode to the browser and permits changes without editing saved styles', () => {
 		for (const matches of [false, true]) {
 			let changed;
@@ -1303,11 +1323,54 @@ describe('Widget style designer preview', () => {
 			changed();
 			assert.strictEqual(scope.editor.previewMode, query.matches ? 'dark' : 'light');
 			browser.parent = {};
+			browser.frameElement = null;
 			query.matches = true;
 			changed();
-			assert.strictEqual(scope.previewCounterInvert, true);
+			assert.strictEqual(scope.previewCounterInvert, false, 'Dark preference does not prove inversion in an opaque host');
 		}
 		assert.match(html, /id="preview-mode"[^>]*ng-model="editor\.previewMode"/);
+	});
+
+	it('counter-inverts inspectable host filters rather than inferring inversion from browser appearance', () => {
+		for (const prefersDark of [false, true]) {
+			let hostChanged;
+			let disconnected = false;
+			const observed = [];
+			const hostDocument = { defaultView: { getComputedStyle: element => ({ filter: element.filter }) } };
+			const parent = { ownerDocument: hostDocument, filter: 'none', parentElement: null };
+			const frame = { ownerDocument: hostDocument, filter: 'none', parentElement: parent };
+			const browser = {
+				parent: {}, frameElement: frame,
+				matchMedia: () => ({ matches: prefersDark }),
+				MutationObserver: function (callback) {
+					hostChanged = callback;
+					this.observe = element => observed.push(element);
+					this.disconnect = () => { disconnected = true; };
+				}
+			};
+			const { scope, writes, scopeEvents } = loadSettings(null, null, null, false, null, { window: browser });
+			assert.strictEqual(scope.previewCounterInvert, false, 'Uninverted web host');
+			assert.deepStrictEqual(observed, [frame, parent]);
+			scope.editor.previewMode = 'light';
+			parent.filter = 'invert(1) hue-rotate(180deg)';
+			hostChanged();
+			assert.strictEqual(scope.previewCounterInvert, true, 'Inverted ancestor');
+			assert.strictEqual(scope.editor.previewMode, 'light', 'Host changes retain the selected preview mode');
+			parent.filter = 'none';
+			frame.filter = 'invert(0)';
+			hostChanged();
+			assert.strictEqual(scope.previewCounterInvert, false, 'Host inversion removed');
+			frame.filter = 'invert(1)';
+			hostChanged();
+			assert.strictEqual(scope.previewCounterInvert, false, 'Other filters are not Homey counter-inversion');
+			frame.filter = 'invert(100%) hue-rotate(180deg)';
+			hostChanged();
+			assert.strictEqual(scope.previewCounterInvert, true, 'Inverted iframe');
+			assert.strictEqual(scope.isDirty(), false);
+			assert.strictEqual(writes.length, 0);
+			scopeEvents.$destroy();
+			assert.strictEqual(disconnected, true);
+		}
 	});
 
 	[false, true].forEach(insecureHttp => it(`copies six light-then-dark previews ${insecureHttp ? 'on a manual HTTP retry' : 'automatically in a secure context'}`, async () => {
@@ -1357,6 +1420,7 @@ describe('Widget style designer preview', () => {
 			btoa: value => Buffer.from(value, 'binary').toString('base64')
 		};
 		const { scope, homey, window } = loadSettings(null, null, null, false, null, extras, false, null, true);
+		scope.editor.previewMode = 'dark';
 		window.location = { protocol: 'http:' };
 		window.isSecureContext = !insecureHttp;
 		window.ClipboardItem = function (formats) { this.formats = formats; };
@@ -1373,6 +1437,7 @@ describe('Widget style designer preview', () => {
 		} : { backgroundColor: 'rgb(24, 25, 32)', color: 'rgb(255, 255, 255)' };
 		window.htmlToImage = { toCanvas: async (element, options) => {
 			assert.strictEqual(scope.templates.generating, true);
+			assert.strictEqual(scope.previewName(), { stopwatch: 'Stopwatch', timer: 'Timer', transition: 'Transition' }[scope.editor.previewType]);
 			assert.match(options.fontEmbedCSS, /font-family:"Font Awesome 7 Free";font-style:normal;font-weight:400/);
 			assert.match(options.fontEmbedCSS, /font-family:"Font Awesome 7 Free";font-style:normal;font-weight:900/);
 			assert.match(options.fontEmbedCSS, /font-family:"Font Awesome 7 Brands";font-style:normal;font-weight:400/);
@@ -1429,9 +1494,9 @@ describe('Widget style designer preview', () => {
 			['stopwatch', 'timer', 'transition'].flatMap(type =>
 				['running', 'paused', 'inactive'].flatMap(state =>
 					['compact', 'normal', 'large'].map(size => [mode, type, state, size])))));
-		assert.strictEqual(labels.filter(label => label === 'settings.stopwatches').length, 2);
-		assert.strictEqual(labels.filter(label => label === 'settings.timers').length, 2);
-		assert.strictEqual(labels.filter(label => label === 'settings.transitions').length, 2);
+		assert.strictEqual(labels.filter(label => label === 'Stopwatch').length, 2);
+		assert.strictEqual(labels.filter(label => label === 'Timer').length, 2);
+		assert.strictEqual(labels.filter(label => label === 'Transition').length, 2);
 		assert.strictEqual(labels.filter(label => label === 'settings.style_compact').length, 6);
 		assert.strictEqual(labels.filter(label => label === 'settings.widget_running').length, 6);
 		assert.strictEqual(labels.filter(label => label === 'settings.widget_paused').length, 6);
@@ -1440,7 +1505,8 @@ describe('Widget style designer preview', () => {
 		assert.deepStrictEqual(canvases.map(canvas => [canvas.width, canvas.height]),
 			[[1216, 518], [1216, 608], [1216, 698], [1216, 518], [1216, 608], [1216, 698]]);
 		canvases.forEach((canvas, index) => {
-			assert.strictEqual(canvas.background, index < 3 ? '#fff' : '#181920');
+			assert.strictEqual(canvas.background, index < 3 ? '#f5f4fa' : '#111217',
+				'Outside-widget canvas uses the dashboard backdrop, not the widget surface or editor mode');
 			assert.strictEqual(canvas.textColor, index < 3 ? '#222' : '#fff');
 			assert.strictEqual(canvas.draws.length, 9);
 			assert.ok(canvas.draws.every(draw => draw.image.type === ['stopwatch', 'timer', 'transition'][index % 3]));

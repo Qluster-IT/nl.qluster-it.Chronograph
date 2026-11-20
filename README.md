@@ -97,6 +97,10 @@ The designer can also preview three independently selectable chronograph types
 in a one-, two-, or three-column multi-widget; tile width depends on the
 available preview space. All tiles share the selected design, size, state and
 theme. All column counts support separation and line-color previews.
+Sample names use the singular type label in the Homey user's language;
+generated template images use Stopwatch, Timer and Transition in English.
+Generated image canvases use separate light/dark dashboard backdrops outside
+the widgets, preserving their selected surfaces, borders and rounded corners.
 Widget-style rows give each row a shared card; Widget-style cards give every
 chronograph its own card, respecting column spans. Both offer normal (16px),
 small (12px, matching WidgetKeeper Lights) and tiny (8px) gaps. Individual cards
@@ -123,9 +127,12 @@ frame with the same default surface and dark rim inside it.
 Blue, green, orange, red and fixed white color choices use Homey's semantic palette
 variables. Grey uses Homey's theme-aware monochrome palette. Black remains fixed
 black; yellow, purple, teal, cyan, indigo, pink and brown are Chronograph extensions.
+When Homey tokens are unavailable, shared fallbacks use the same light/dark
+palette, text and outline colors as Homey widgets.
 Existing saved color IDs remain valid. Preview colors use the same Homey tokens.
 Designer and template previews isolate dashboard palette defaults from the
-settings page's custom-view colors; explicit theme overrides remain unchanged.
+settings page's custom-view colors and reproduce Homey's light/dark token
+mappings rather than forcing fallback colors; explicit theme overrides remain unchanged.
 Additional named choices are Red (light), Red (dark), Grey (light), Grey (dark),
 and Navy, available throughout the designer and for multi-widget line colors.
 Selecting Widget in a custom design exposes a border width per size.
