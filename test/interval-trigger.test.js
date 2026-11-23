@@ -92,6 +92,36 @@ describe('Every interval Flow trigger', () => {
 		assert.deepStrictEqual(runs.filter(run => run.at === now).map(run => run.id).sort(), ['a', 'b', 'minutes', 'seconds']);
 	});
 
+	it('schedules 50 ms intervals only when configured and shares equivalent second intervals', async () => {
+		flows = [{ id: 'existing', args: { amount: 1, unit: 'seconds' } }];
+		await start();
+		assert.strictEqual(timers.size, 1);
+		assert.strictEqual(Array.from(timers.values())[0].at - now, 1000);
+		flows.push({ id: 'fast', args: { amount: 50, unit: 'milliseconds' } });
+		flows.push({ id: 'equivalent', args: { amount: 1000, unit: 'milliseconds' } });
+		card.emit('update');
+		await flush();
+		assert.strictEqual(timers.size, 1);
+		assert.strictEqual(Array.from(timers.values())[0].at - now, 50);
+		await advance(1000);
+		assert.strictEqual(calls.filter(call => call.state.interval === 50).length, 20);
+		assert.strictEqual(calls.filter(call => call.state.interval === 1000).length, 1);
+		assert.deepStrictEqual(runs.filter(run => run.at === now).map(run => run.id).sort(), ['equivalent', 'existing', 'fast']);
+		flows = [{ id: 'existing', args: { amount: 1, unit: 'seconds' } }];
+		card.emit('update');
+		await flush();
+		assert.strictEqual(timers.size, 1);
+		assert.strictEqual(Array.from(timers.values())[0].at - now, 1000);
+	});
+
+	it('rejects millisecond intervals below 50 or outside 50 ms steps', async () => {
+		flows = [0, 1, 49, 51, 99, 50.5].map(amount => ({ id: String(amount), args: { amount, unit: 'milliseconds' } }));
+		await start();
+		assert.strictEqual(errors.length, flows.length);
+		assert.strictEqual(timers.size, 0);
+		assert.strictEqual(calls.length, 0);
+	});
+
 	it('reconciles saved, changed and removed Flow cards without resetting existing intervals', async () => {
 		flows = [{ id: 'a', args: { amount: 5, unit: 'seconds' } }];
 		await start();
@@ -252,7 +282,7 @@ describe('Every interval Flow trigger', () => {
 		assert.strictEqual(trigger.args[0].type, 'number');
 		assert.strictEqual(trigger.args[0].min, 1);
 		assert.strictEqual(trigger.args[0].step, 1);
-		assert.deepStrictEqual(trigger.args[1].values.map(value => value.id), ['seconds', 'minutes', 'hours', 'days']);
+		assert.deepStrictEqual(trigger.args[1].values.map(value => value.id), ['seconds', 'minutes', 'hours', 'days', 'milliseconds']);
 		for (const language of ['en', 'nl', 'da', 'de', 'es', 'fr', 'it', 'no', 'sv', 'pl', 'ru', 'ko', 'ar']) {
 			for (const text of [trigger.title[language], trigger.titleFormatted[language], trigger.hint[language],
 				...trigger.args.map(arg => arg.title[language]), ...trigger.args[1].values.map(value => value.label[language])]) {

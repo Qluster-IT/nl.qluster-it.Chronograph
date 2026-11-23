@@ -73,7 +73,7 @@ describe('Widget icon autocomplete', () => {
 		assert.throws(() => optimizePng(png), /Invalid PNG chunk checksum/);
 	});
 
-	it('loads icon files only on the first autocomplete search', () => {
+	it('loads preview files only when images are requested', () => {
 		let reads = 0;
 		const module = { exports: {} };
 		vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'lib', 'widget-icons.js'), 'utf8'), {
@@ -85,6 +85,15 @@ describe('Widget icon autocomplete', () => {
 				: require(id)
 		});
 		assert.strictEqual(reads, 0);
+		const withoutImages = module.exports.searchIcons('transition', 'None', { includeImages: false });
+		assert.ok(withoutImages.length);
+		assert.ok(withoutImages.every(icon => !Object.prototype.hasOwnProperty.call(icon, 'image')));
+		assert.strictEqual(reads, 1);
+		module.exports.searchIcons('clock', 'None', { includeImages: false });
+		assert.strictEqual(reads, 1);
+		const transition = module.exports.searchIcons('transition', 'None')[0];
+		assert.ok(transition.image.startsWith('data:image/png;base64,'));
+		assert.strictEqual(reads, 3);
 		assert.ok(module.exports.searchIcons('stopwatch', 'None').length);
 		assert.strictEqual(reads, 3);
 		module.exports.searchIcons('clock', 'None');

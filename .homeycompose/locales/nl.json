@@ -3,6 +3,7 @@
 	"stopwatch_not_running": "Stopwatch __name__ loopt niet.",
 	"transition_not_running": "Transitie __name__ loopt niet.",
 	"invalid_duration": "Ongeldige looptijd.",
+	"invalid_millisecond_duration": "Vul voor milliseconden minimaal 50 in, in stappen van 50.",
 	"invalid_transition": "Ongeldige transitie.",
 	"invalid_name": "Ongeldige naam.",
 	"name_required": "U moet een naam (typen en) kiezen of een naam invoeren.",

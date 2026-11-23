@@ -3,6 +3,7 @@
 	"stopwatch_not_running": "Секундомер __name__ не запущен.",
 	"transition_not_running": "Переход __name__ не запущен.",
 	"invalid_duration": "Недопустимая длительность.",
+	"invalid_millisecond_duration": "Для миллисекунд введите не менее 50 с шагом 50.",
 	"invalid_transition": "Недопустимый переход.",
 	"invalid_name": "Недопустимое имя.",
 	"name_required": "Вам нужно (ввести и) выбрать имя или введите имя.",

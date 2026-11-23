@@ -396,5 +396,6 @@
   "existing": "Istniejący",
   "new": "Nowy",
   "name_based_api_notice": "API Chronograph zmieniło się: używaj nazw zamiast identyfikatorów. Zaktualizuj skrypty i integracje; zobacz wiki API.",
-  "widget_features_notice": "Chronograph ma teraz widżety pulpitu! Otwórz ustawienia aplikacji, aby zarządzać chronografami oraz projektować układy i motywy widżetów."
+  "widget_features_notice": "Chronograph ma teraz widżety pulpitu! Otwórz ustawienia aplikacji, aby zarządzać chronografami oraz projektować układy i motywy widżetów.",
+  "invalid_millisecond_duration": "Dla milisekund wpisz co najmniej 50, w krokach co 50."
 }

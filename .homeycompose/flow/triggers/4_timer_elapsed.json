@@ -31,19 +31,19 @@
     "ar": "يعمل المؤقت [[namedd]] / [[name]] منذ [[time]] [[unit]]"
   },
   "hint": {
-    "en": "This card is activated when a timer with the provided name has been running for the specified duration.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.",
-    "nl": "Dit kaartje wordt geactiveerd wanneer een timer met de opgegeven naam de ingestelde tijd heeft gelopen.\nU kunt een naam selecteren, typen en selecteren, of een naam invoeren in het naamveld.\nDe kiezer is leidend als beide zijn ingevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.",
-    "da": "Dette kort aktiveres, når en timer med det angivne navn har kørt i den valgte tid.\nDu kan vælge et navn, skrive og vælge det eller skrive et navn i navnefeltet.\nVælgeren har forrang, når begge er udfyldt.\nNavnet vises først i vælgeren, når det (aktiverede) flow er gemt.",
-    "de": "Diese Karte wird aktiviert, wenn ein Timer mit dem angegebenen Namen die festgelegte Zeit gelaufen ist.\nSie können einen Namen auswählen, eingeben und auswählen oder in das Namensfeld eingeben.\nWenn beide Felder ausgefüllt sind, hat die Auswahl Vorrang.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows in der Auswahl angezeigt.",
-    "es": "Esta tarjeta se activa cuando un temporizador con el nombre indicado ha estado en marcha durante el tiempo especificado.\nPuedes seleccionar un nombre, escribirlo y seleccionarlo, o escribir un nombre en el campo correspondiente.\nEl selector tiene prioridad cuando ambos campos están completos.\nEl nombre solo aparecerá en el selector después de guardar el flujo (habilitado).",
-    "fr": "Cette carte s’active lorsqu’un minuteur portant le nom fourni a fonctionné pendant la durée indiquée.\nVous pouvez sélectionner un nom, le saisir puis le sélectionner, ou saisir un nom dans le champ correspondant.\nLe sélecteur est prioritaire lorsque les deux champs sont remplis.\nLe nom n’apparaîtra dans le sélecteur qu’après l’enregistrement du flux (activé).",
-    "it": "Questa scheda si attiva quando un timer con il nome specificato è in esecuzione da quanto indicato.\nPuoi selezionare un nome, digitarlo e selezionarlo oppure inserirlo nel campo del nome.\nIl selettore ha la precedenza quando entrambi i campi sono compilati.\nIl nome apparirà nel selettore solo dopo aver salvato il Flow (abilitato).",
-    "no": "Dette kortet aktiveres når en timer med det angitte navnet har kjørt så lenge som angitt.\nDu kan velge et navn, skrive det inn og velge det, eller skrive et navn i navnefeltet.\nVelgeren har forrang når begge feltene er fylt ut.\nNavnet vises i velgeren først etter at den (aktiverte) flyten er lagret.",
-    "sv": "Det här kortet aktiveras när en timer med det angivna namnet har körts under den angivna tiden.\nDu kan välja ett namn, skriva och välja det eller skriva ett namn i namnfältet.\nVäljaren har företräde när båda fälten är ifyllda.\nNamnet visas i väljaren först när det (aktiverade) flödet har sparats.",
-    "pl": "Ta karta uruchamia się, gdy timer o podanej nazwie działa przez określony czas.\nMożesz wybrać nazwę, wpisać ją i wybrać albo wpisać ją w polu nazwy.\nWybór z listy ma pierwszeństwo, gdy oba pola są wypełnione.\nNazwa pojawi się na liście dopiero po zapisaniu (włączonego) Flow.",
-    "ru": "Эта карта активируется, когда таймер с указанным именем работает заданное время.\nМожно выбрать имя, ввести его и выбрать или указать имя в соответствующем поле.\nЕсли заполнены оба поля, приоритет имеет выбор из списка.\nИмя появится в списке только после сохранения включенного Flow.",
-    "ko": "지정한 이름의 타이머가 설정한 시간 동안 실행되었을 때 이 카드가 활성화됩니다.\n이름을 선택하거나 입력한 후 선택하거나 이름 입력란에 직접 입력할 수 있습니다.\n두 항목이 모두 입력된 경우 선택기가 우선합니다.\n이름은 플로우를 활성화하여 저장한 후에만 선택기에 표시됩니다.",
-    "ar": "يتم تفعيل هذه البطاقة عندما يعمل المؤقت ذو الاسم المحدد للمدة التي اخترتها.\nيمكنك اختيار اسم، أو كتابته ثم اختياره، أو إدخاله في حقل الاسم.\nتكون الأولوية للاختيار من القائمة عند ملء الحقلين.\nلن يظهر الاسم في القائمة إلا بعد حفظ التدفق (المفعّل)."
+    "en": "This card is activated when a timer with the provided name has been running for the specified duration.\nYou can either select a name, or type and select it, or type a name in the name field.\nThe Picker is leading when both are filled.\nThe name will only appear in the picker after saving the (enabled) flow.\nFor milliseconds, enter at least 50 in increments of 50.",
+    "nl": "Dit kaartje wordt geactiveerd wanneer een timer met de opgegeven naam de ingestelde tijd heeft gelopen.\nU kunt een naam selecteren, typen en selecteren, of een naam invoeren in het naamveld.\nDe kiezer is leidend als beide zijn ingevuld.\nDe naam verschijnt pas in de kiezer nadat de (ingeschakelde) flow is opgeslagen.\nVul voor milliseconden minimaal 50 in, in stappen van 50.",
+    "da": "Dette kort aktiveres, når en timer med det angivne navn har kørt i den valgte tid.\nDu kan vælge et navn, skrive og vælge det eller skrive et navn i navnefeltet.\nVælgeren har forrang, når begge er udfyldt.\nNavnet vises først i vælgeren, når det (aktiverede) flow er gemt.\nFor millisekunder skal du indtaste mindst 50 i trin på 50.",
+    "de": "Diese Karte wird aktiviert, wenn ein Timer mit dem angegebenen Namen die festgelegte Zeit gelaufen ist.\nSie können einen Namen auswählen, eingeben und auswählen oder in das Namensfeld eingeben.\nWenn beide Felder ausgefüllt sind, hat die Auswahl Vorrang.\nDer Name wird erst nach dem Speichern des (aktivierten) Flows in der Auswahl angezeigt.\nGib für Millisekunden mindestens 50 in Schritten von 50 ein.",
+    "es": "Esta tarjeta se activa cuando un temporizador con el nombre indicado ha estado en marcha durante el tiempo especificado.\nPuedes seleccionar un nombre, escribirlo y seleccionarlo, o escribir un nombre en el campo correspondiente.\nEl selector tiene prioridad cuando ambos campos están completos.\nEl nombre solo aparecerá en el selector después de guardar el flujo (habilitado).\nPara milisegundos, introduce al menos 50 en incrementos de 50.",
+    "fr": "Cette carte s’active lorsqu’un minuteur portant le nom fourni a fonctionné pendant la durée indiquée.\nVous pouvez sélectionner un nom, le saisir puis le sélectionner, ou saisir un nom dans le champ correspondant.\nLe sélecteur est prioritaire lorsque les deux champs sont remplis.\nLe nom n’apparaîtra dans le sélecteur qu’après l’enregistrement du flux (activé).\nPour les millisecondes, saisissez au moins 50 par incréments de 50.",
+    "it": "Questa scheda si attiva quando un timer con il nome specificato è in esecuzione da quanto indicato.\nPuoi selezionare un nome, digitarlo e selezionarlo oppure inserirlo nel campo del nome.\nIl selettore ha la precedenza quando entrambi i campi sono compilati.\nIl nome apparirà nel selettore solo dopo aver salvato il Flow (abilitato).\nPer i millisecondi, inserisci almeno 50 in incrementi di 50.",
+    "no": "Dette kortet aktiveres når en timer med det angitte navnet har kjørt så lenge som angitt.\nDu kan velge et navn, skrive det inn og velge det, eller skrive et navn i navnefeltet.\nVelgeren har forrang når begge feltene er fylt ut.\nNavnet vises i velgeren først etter at den (aktiverte) flyten er lagret.\nFor millisekunder, skriv inn minst 50 i trinn på 50.",
+    "sv": "Det här kortet aktiveras när en timer med det angivna namnet har körts under den angivna tiden.\nDu kan välja ett namn, skriva och välja det eller skriva ett namn i namnfältet.\nVäljaren har företräde när båda fälten är ifyllda.\nNamnet visas i väljaren först när det (aktiverade) flödet har sparats.\nFör millisekunder, ange minst 50 i steg om 50.",
+    "pl": "Ta karta uruchamia się, gdy timer o podanej nazwie działa przez określony czas.\nMożesz wybrać nazwę, wpisać ją i wybrać albo wpisać ją w polu nazwy.\nWybór z listy ma pierwszeństwo, gdy oba pola są wypełnione.\nNazwa pojawi się na liście dopiero po zapisaniu (włączonego) Flow.\nDla milisekund wpisz co najmniej 50, w krokach co 50.",
+    "ru": "Эта карта активируется, когда таймер с указанным именем работает заданное время.\nМожно выбрать имя, ввести его и выбрать или указать имя в соответствующем поле.\nЕсли заполнены оба поля, приоритет имеет выбор из списка.\nИмя появится в списке только после сохранения включенного Flow.\nДля миллисекунд введите не менее 50 с шагом 50.",
+    "ko": "지정한 이름의 타이머가 설정한 시간 동안 실행되었을 때 이 카드가 활성화됩니다.\n이름을 선택하거나 입력한 후 선택하거나 이름 입력란에 직접 입력할 수 있습니다.\n두 항목이 모두 입력된 경우 선택기가 우선합니다.\n이름은 플로우를 활성화하여 저장한 후에만 선택기에 표시됩니다.\n밀리초는 50 이상을 50 단위로 입력하세요.",
+    "ar": "يتم تفعيل هذه البطاقة عندما يعمل المؤقت ذو الاسم المحدد للمدة التي اخترتها.\nيمكنك اختيار اسم، أو كتابته ثم اختياره، أو إدخاله في حقل الاسم.\nتكون الأولوية للاختيار من القائمة عند ملء الحقلين.\nلن يظهر الاسم في القائمة إلا بعد حفظ التدفق (المفعّل).\nللميلي ثانية، أدخل 50 على الأقل بزيادات قدرها 50."
   },
   "args": [
     {
@@ -211,6 +211,24 @@
             "ru": "дни",
             "ko": "일",
             "ar": "أيام"
+          }
+        },
+        {
+          "id": "milliseconds",
+          "label": {
+            "en": "milliseconds",
+            "nl": "milliseconden",
+            "da": "millisekunder",
+            "de": "Millisekunden",
+            "es": "milisegundos",
+            "fr": "millisecondes",
+            "it": "millisecondi",
+            "no": "millisekunder",
+            "sv": "millisekunder",
+            "pl": "milisekundy",
+            "ru": "миллисекунды",
+            "ko": "밀리초",
+            "ar": "ميلي ثانية"
           }
         }
       ]

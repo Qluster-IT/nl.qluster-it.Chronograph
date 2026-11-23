@@ -1363,5 +1363,20 @@
     "ru": "В списках цветов отображается фактический цвет для выбранного светлого или тёмного предпросмотра, а подписи выровнены.\nВ дизайнах и темах можно выбирать и подсвечивать виджеты, строки, столбцы и элементы, в том числе во встроенных наборах настроек.\nСоздаваемые изображения шаблонов используют светлый и тёмный фон панели Homey.\nРазмер приложения уменьшен без потери значков или качества изображений.",
     "ko": "색상 선택기에 선택한 밝은 또는 어두운 미리보기의 실제 색상이 표시되며 레이블이 정렬됩니다.\n디자인과 테마에서 위젯, 행, 열 및 요소를 선택해 강조할 수 있으며, 기본 제공 프리셋에도 적용됩니다.\n생성된 템플릿 이미지는 Homey 대시보드의 밝은 배경과 어두운 배경을 사용합니다.\n아이콘이나 이미지 품질을 잃지 않고 앱 크기를 줄였습니다.",
     "ar": "تعرض أدوات اختيار الألوان اللون الفعلي في المعاينة الفاتحة أو الداكنة المختارة، مع محاذاة التسميات.\nيمكن تحديد الأدوات والصفوف والأعمدة والعناصر وإبرازها في التصاميم والسمات، بما في ذلك الإعدادات المسبقة المدمجة.\nتستخدم صور القوالب المُنشأة خلفيات لوحة معلومات Homey الفاتحة والداكنة.\nتم تقليل حجم التطبيق دون فقدان الأيقونات أو جودة الصور."
+  },
+  "3.1.3": {
+    "en": "Added milliseconds in 50 ms steps to timer and stopwatch milestone cards and the Every interval card.\nAdded milliseconds to timer and transition start and resume cards.",
+    "nl": "Milliseconden in stappen van 50 ms toegevoegd aan de timer- en stopwatchmomentkaarten en de kaart Elk interval.\nMilliseconden toegevoegd aan de start- en hervatkaarten voor timers en transities.",
+    "da": "Tilføjet millisekunder i trin på 50 ms til timer- og stopurkortene for bestemte tidspunkter og kortet Hvert interval.\nTilføjet millisekunder til kortene for start og genoptagelse af timere og overgange.",
+    "de": "Millisekunden in 50-ms-Schritten für Timer- und Stoppuhr-Zeitpunktkarten sowie die Karte Jedes Intervall hinzugefügt.\nMillisekunden für Start- und Fortsetzen-Karten von Timern und Übergängen hinzugefügt.",
+    "es": "Se añadieron milisegundos en pasos de 50 ms a las tarjetas de momentos del temporizador y cronómetro y a la tarjeta Cada intervalo.\nSe añadieron milisegundos a las tarjetas para iniciar y reanudar temporizadores y transiciones.",
+    "fr": "Ajout des millisecondes par pas de 50 ms aux cartes de durée du minuteur et du chronomètre ainsi qu’à la carte À chaque intervalle.\nAjout des millisecondes aux cartes de démarrage et de reprise des minuteurs et des transitions.",
+    "it": "Aggiunti i millisecondi in passi di 50 ms alle schede dei traguardi di timer e cronometro e alla scheda A ogni intervallo.\nAggiunti i millisecondi alle schede di avvio e ripresa di timer e transizioni.",
+    "no": "Lagt til millisekunder i trinn på 50 ms for tidskortene til timer og stoppeklokke og kortet Hvert intervall.\nLagt til millisekunder i kortene for å starte og gjenoppta timere og overganger.",
+    "sv": "Lagt till millisekunder i steg om 50 ms för tidskort för timer och stoppur samt kortet Varje intervall.\nLagt till millisekunder i korten för att starta och återuppta timers och övergångar.",
+    "pl": "Dodano milisekundy w krokach co 50 ms do kart momentów timera i stopera oraz karty Co określony czas.\nDodano milisekundy do kart uruchamiania i wznawiania timerów i przejść.",
+    "ru": "Для карточек достижения времени таймера и секундомера и карточки периодического интервала добавлены миллисекунды с шагом 50 мс.\nДобавлены миллисекунды для карточек запуска и возобновления таймеров и переходов.",
+    "ko": "타이머 및 스톱워치의 시간 도달 카드와 일정 간격 카드에 50ms 단위의 밀리초를 추가했습니다.\n타이머와 전환의 시작 및 재개 카드에 밀리초를 추가했습니다.",
+    "ar": "أُضيفت المللي ثانية بخطوات 50 مللي ثانية إلى بطاقات وصول المؤقت وساعة الإيقاف إلى مدة معينة وبطاقة كل فترة.\nأُضيفت المللي ثانية إلى بطاقات بدء المؤقتات والانتقالات واستئنافها."
   }
 }

@@ -3,6 +3,7 @@
 	"stopwatch_not_running": "Il cronometro __name__ non è in esecuzione.",
 	"transition_not_running": "La transizione __name__ non è in esecuzione.",
 	"invalid_duration": "Durata non valida.",
+	"invalid_millisecond_duration": "Per i millisecondi, inserisci almeno 50 in incrementi di 50.",
 	"invalid_transition": "Transizione non valida.",
 	"invalid_name": "Nome non valido.",
 	"name_required": "Devi digitare e selezionare un nome o inserirne uno.",

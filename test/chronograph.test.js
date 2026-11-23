@@ -451,6 +451,20 @@ describe('Chronograph', () => {
 		}
 	});
 
+	it('schedules a millisecond milestone without introducing periodic high-frequency polling', function() {
+		const stopwatch = new Chronograph('ms-milestone', 'millisecond milestone');
+		stopwatch.setData('type', ChronographType.STOPWATCH);
+		Chronograph.addStopwatchSplits(stopwatch, [{ name: 'millisecond milestone', time: 150, unit: 'milliseconds' }]);
+		stopwatch.start();
+		assert.strictEqual(timeouts.length, 1);
+		assert.strictEqual(timeouts[0].at - now, 150);
+		clock.tick(149);
+		assert.strictEqual(events.split, undefined);
+		clock.tick(1);
+		assert.strictEqual(events.split, 1);
+		assert.strictEqual(timeouts.length, 0);
+	});
+
 	it('generates transition splits precisely and repeats them after a backward adjustment', async function() {
 		const fired = [];
 		const onSplit = (item, split) => {
@@ -667,6 +681,33 @@ describe('Chronograph', () => {
 			[2, 'seconds', 'elapsed']
 		]);
 		delete Chronograph._chronographs[timer.getId()];
+	});
+
+	it('fires millisecond elapsed and remaining timer milestones at their deadlines', function() {
+		const timer = new Chronograph('ms-timer', 'millisecond timer', 1, 'seconds');
+		timer.setData('type', ChronographType.TIMER);
+		const splits = {
+			elapsed: [{ name: 'millisecond timer', time: 150, unit: 'milliseconds' }],
+			remaining: [{ name: 'millisecond timer', time: 200, unit: 'milliseconds' }]
+		};
+		Chronograph.addTimerSplits(timer, {}, splits);
+		const fired = [];
+		const listener = (item, split) => {
+			if (item === timer) fired.push([split.data.timerSplitType, Date.now()]);
+		};
+		Chronograph.events.on('split', listener);
+		try {
+			timer.start();
+			assert.strictEqual(timeouts.length, 1);
+			clock.tick(149);
+			assert.deepStrictEqual(fired, []);
+			clock.tick(1);
+			assert.deepStrictEqual(fired, [['elapsed', 1000150]]);
+			clock.tick(650);
+			assert.deepStrictEqual(fired, [['elapsed', 1000150], ['remaining', 1000800]]);
+		} finally {
+			Chronograph.events.removeListener('split', listener);
+		}
 	});
 
 	it('should allow for multiple timers with splits at once', function(done) {

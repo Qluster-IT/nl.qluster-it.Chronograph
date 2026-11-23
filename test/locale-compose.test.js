@@ -5,6 +5,39 @@ const fs = require('fs');
 const path = require('path');
 
 describe('Homey Compose locales', () => {
+	it('provides 50 ms guidance and the new unit on timed trigger cards without changing their default', () => {
+		const languages = ['en', 'nl', 'da', 'de', 'es', 'fr', 'it', 'no', 'sv', 'pl', 'ru', 'ko', 'ar'];
+		for (const file of ['4_stopwatch_split.json', '4_timer_split.json', '4_timer_elapsed.json', '6_interval_elapsed.json']) {
+			const source = require(path.join('..', '.homeycompose', 'flow', 'triggers', file));
+			const generated = require('../app.json').flow.triggers.find(card => card.id === source.id);
+			const values = source.args.find(arg => arg.name === 'unit').values;
+			assert.deepStrictEqual(generated, source);
+			assert.strictEqual(values[0].id, 'seconds');
+			assert.strictEqual(values[values.length - 1].id, 'milliseconds');
+			for (const language of languages) {
+				assert.ok(source.hint[language].includes('50'), `${file}: ${language}: hint`);
+				assert.ok(values[values.length - 1].label[language], `${file}: ${language}: label`);
+			}
+		}
+	});
+
+	it('provides the millisecond unit and 50 ms guidance on timed start and resume actions', () => {
+		const languages = ['en', 'nl', 'da', 'de', 'es', 'fr', 'it', 'no', 'sv', 'pl', 'ru', 'ko', 'ar'];
+		for (const file of ['0_timer_start.json', '0_timer_start_v2.json', '0_transition_start.json',
+			'2_timer_resume.json', '2_timer_resume_v2.json', '2_transition_resume.json']) {
+			const source = require(path.join('..', '.homeycompose', 'flow', 'actions', file));
+			const generated = require('../app.json').flow.actions.find(card => card.id === source.id);
+			const values = source.args.find(arg => arg.name === 'unit').values;
+			assert.deepStrictEqual(generated, source);
+			assert.strictEqual(values[0].id, 'seconds');
+			assert.strictEqual(values[values.length - 1].id, 'milliseconds');
+			for (const language of languages) {
+				assert.ok(source.hint[language].includes('50'), `${file}: ${language}: hint`);
+				assert.ok(values[values.length - 1].label[language], `${file}: ${language}: label`);
+			}
+		}
+	});
+
 	it('keeps French timer and stopwatch terminology distinct in plain and formatted action titles', () => {
 		const actions = require('../app.json').flow.actions;
 		for (const [file, word, otherWord] of [
@@ -58,6 +91,7 @@ describe('Homey Compose locales', () => {
 			const source = JSON.parse(fs.readFileSync(path.join(sourceDir, file), 'utf8'));
 			const settings = JSON.parse(fs.readFileSync(path.join(sourceDir, `${language}.settings.json`), 'utf8'));
 			const placeholder = JSON.parse(fs.readFileSync(path.join(root, 'locales', file), 'utf8'));
+			assert.ok(source.invalid_millisecond_duration.includes('50'), `${language}: millisecond error`);
 			assert.strictEqual(require('../.homeycompose/app.json').name[language], 'Chronograph', `${language}: app name`);
 			assert.ok(source.name_based_api_notice.includes('Chronograph'), `${language}: API notice brand`);
 			assert.ok(settings.settings_navigation.includes('Chronograph'), `${language}: settings navigation brand`);

@@ -396,5 +396,6 @@
   "existing": "Eksisterende",
   "new": "Ny",
   "name_based_api_notice": "Chronograph-API er ændret: Brug navne i stedet for ID'er. Opdater dine scripts og integrationer; se API-wikien.",
-  "widget_features_notice": "Chronograph har nu dashboardwidgets! Åbn appens indstillinger for at administrere kronografer og designe widgetlayouts og temaer."
+  "widget_features_notice": "Chronograph har nu dashboardwidgets! Åbn appens indstillinger for at administrere kronografer og designe widgetlayouts og temaer.",
+  "invalid_millisecond_duration": "For millisekunder skal du indtaste mindst 50 i trin på 50."
 }

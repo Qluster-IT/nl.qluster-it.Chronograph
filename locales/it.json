@@ -396,5 +396,6 @@
   "existing": "Esistente",
   "new": "Nuovo",
   "name_based_api_notice": "L'API Chronograph è cambiata: usa i nomi invece degli ID. Aggiorna script e integrazioni; consulta il wiki API.",
-  "widget_features_notice": "Chronograph offre ora widget per la dashboard! Apri le impostazioni dell'app per gestire i cronografi e creare layout e schemi colori per i widget."
+  "widget_features_notice": "Chronograph offre ora widget per la dashboard! Apri le impostazioni dell'app per gestire i cronografi e creare layout e schemi colori per i widget.",
+  "invalid_millisecond_duration": "Per i millisecondi, inserisci almeno 50 in incrementi di 50."
 }

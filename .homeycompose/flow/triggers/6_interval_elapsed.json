@@ -31,19 +31,19 @@
     "ar": "كل [[amount]] [[unit]]"
   },
   "hint": {
-    "en": "Enter a fixed whole number. Flows with the same interval share a schedule. If an interval expires while the app is stopped, it triggers once after startup and then begins a new interval.",
-    "nl": "Vul een vast geheel getal in. Flows met hetzelfde interval delen een schema. Als een interval verloopt terwijl de app is gestopt, wordt de Flow na het opstarten één keer gestart en begint een nieuw interval.",
-    "da": "Indtast et fast heltal. Flows med samme interval deler en tidsplan. Hvis et interval udløber, mens appen er stoppet, udløses det én gang efter opstart, og et nyt interval begynder.",
-    "de": "Gib eine feste ganze Zahl ein. Flows mit demselben Intervall teilen sich einen Zeitplan. Läuft ein Intervall bei gestoppter App ab, wird es nach dem Start einmal ausgelöst und ein neues Intervall beginnt.",
-    "es": "Introduce un número entero fijo. Los Flows con el mismo intervalo comparten una programación. Si un intervalo vence mientras la aplicación está detenida, se activa una vez al iniciarse y comienza un nuevo intervalo.",
-    "fr": "Saisissez un nombre entier fixe. Les Flows ayant le même intervalle partagent un calendrier. Si un intervalle expire lorsque l'application est arrêtée, il se déclenche une fois au démarrage, puis un nouvel intervalle commence.",
-    "it": "Inserisci un numero intero fisso. I Flow con lo stesso intervallo condividono una pianificazione. Se un intervallo scade mentre l'app è arrestata, si attiva una volta all'avvio e inizia un nuovo intervallo.",
-    "no": "Skriv inn et fast heltall. Flow-er med samme intervall deler en tidsplan. Hvis et intervall utløper mens appen er stoppet, utløses det én gang etter oppstart, og et nytt intervall begynner.",
-    "sv": "Ange ett fast heltal. Flow med samma intervall delar ett schema. Om ett intervall löper ut medan appen är stoppad utlöses det en gång vid start och ett nytt intervall börjar.",
-    "pl": "Wpisz stałą liczbę całkowitą. Flow o tym samym interwale korzystają ze wspólnego harmonogramu. Jeśli interwał upłynie, gdy aplikacja jest zatrzymana, zostanie uruchomiony raz po starcie i rozpocznie się nowy interwał.",
-    "ru": "Введите постоянное целое число. Flow с одинаковым интервалом используют общее расписание. Если интервал истёк, пока приложение было остановлено, он сработает один раз после запуска, затем начнётся новый интервал.",
-    "ko": "고정된 정수를 입력하세요. 간격이 같은 Flow는 일정을 공유합니다. 앱이 중지된 동안 간격이 만료되면 시작 후 한 번 실행되고 새 간격이 시작됩니다.",
-    "ar": "أدخل عددًا صحيحًا ثابتًا. تشترك تدفقات Flow ذات الفترة نفسها في جدول واحد. إذا انتهت فترة أثناء توقف التطبيق، تُفعّل مرة واحدة بعد بدء التشغيل ثم تبدأ فترة جديدة."
+    "en": "Enter a fixed whole number. Flows with the same interval share a schedule. If an interval expires while the app is stopped, it triggers once after startup and then begins a new interval.\nFor milliseconds, enter at least 50 in increments of 50.",
+    "nl": "Vul een vast geheel getal in. Flows met hetzelfde interval delen een schema. Als een interval verloopt terwijl de app is gestopt, wordt de Flow na het opstarten één keer gestart en begint een nieuw interval.\nVul voor milliseconden minimaal 50 in, in stappen van 50.",
+    "da": "Indtast et fast heltal. Flows med samme interval deler en tidsplan. Hvis et interval udløber, mens appen er stoppet, udløses det én gang efter opstart, og et nyt interval begynder.\nFor millisekunder skal du indtaste mindst 50 i trin på 50.",
+    "de": "Gib eine feste ganze Zahl ein. Flows mit demselben Intervall teilen sich einen Zeitplan. Läuft ein Intervall bei gestoppter App ab, wird es nach dem Start einmal ausgelöst und ein neues Intervall beginnt.\nGib für Millisekunden mindestens 50 in Schritten von 50 ein.",
+    "es": "Introduce un número entero fijo. Los Flows con el mismo intervalo comparten una programación. Si un intervalo vence mientras la aplicación está detenida, se activa una vez al iniciarse y comienza un nuevo intervalo.\nPara milisegundos, introduce al menos 50 en incrementos de 50.",
+    "fr": "Saisissez un nombre entier fixe. Les Flows ayant le même intervalle partagent un calendrier. Si un intervalle expire lorsque l'application est arrêtée, il se déclenche une fois au démarrage, puis un nouvel intervalle commence.\nPour les millisecondes, saisissez au moins 50 par incréments de 50.",
+    "it": "Inserisci un numero intero fisso. I Flow con lo stesso intervallo condividono una pianificazione. Se un intervallo scade mentre l'app è arrestata, si attiva una volta all'avvio e inizia un nuovo intervallo.\nPer i millisecondi, inserisci almeno 50 in incrementi di 50.",
+    "no": "Skriv inn et fast heltall. Flow-er med samme intervall deler en tidsplan. Hvis et intervall utløper mens appen er stoppet, utløses det én gang etter oppstart, og et nytt intervall begynner.\nFor millisekunder, skriv inn minst 50 i trinn på 50.",
+    "sv": "Ange ett fast heltal. Flow med samma intervall delar ett schema. Om ett intervall löper ut medan appen är stoppad utlöses det en gång vid start och ett nytt intervall börjar.\nFör millisekunder, ange minst 50 i steg om 50.",
+    "pl": "Wpisz stałą liczbę całkowitą. Flow o tym samym interwale korzystają ze wspólnego harmonogramu. Jeśli interwał upłynie, gdy aplikacja jest zatrzymana, zostanie uruchomiony raz po starcie i rozpocznie się nowy interwał.\nDla milisekund wpisz co najmniej 50, w krokach co 50.",
+    "ru": "Введите постоянное целое число. Flow с одинаковым интервалом используют общее расписание. Если интервал истёк, пока приложение было остановлено, он сработает один раз после запуска, затем начнётся новый интервал.\nДля миллисекунд введите не менее 50 с шагом 50.",
+    "ko": "고정된 정수를 입력하세요. 간격이 같은 Flow는 일정을 공유합니다. 앱이 중지된 동안 간격이 만료되면 시작 후 한 번 실행되고 새 간격이 시작됩니다.\n밀리초는 50 이상을 50 단위로 입력하세요.",
+    "ar": "أدخل عددًا صحيحًا ثابتًا. تشترك تدفقات Flow ذات الفترة نفسها في جدول واحد. إذا انتهت فترة أثناء توقف التطبيق، تُفعّل مرة واحدة بعد بدء التشغيل ثم تبدأ فترة جديدة.\nللميلي ثانية، أدخل 50 على الأقل بزيادات قدرها 50."
   },
   "args": [
     {
@@ -156,6 +156,24 @@
             "ru": "дней",
             "ko": "일",
             "ar": "أيام"
+          }
+        },
+        {
+          "id": "milliseconds",
+          "label": {
+            "en": "milliseconds",
+            "nl": "milliseconden",
+            "da": "millisekunder",
+            "de": "Millisekunden",
+            "es": "milisegundos",
+            "fr": "millisecondes",
+            "it": "millisecondi",
+            "no": "millisekunder",
+            "sv": "millisekunder",
+            "pl": "milisekundy",
+            "ru": "миллисекунды",
+            "ko": "밀리초",
+            "ar": "ميلي ثانية"
           }
         }
       ]

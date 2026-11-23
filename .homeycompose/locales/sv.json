@@ -3,6 +3,7 @@
 	"stopwatch_not_running": "Stoppuret __name__ körs inte.",
 	"transition_not_running": "Övergången __name__ körs inte.",
 	"invalid_duration": "Ogiltig varaktighet.",
+	"invalid_millisecond_duration": "För millisekunder, ange minst 50 i steg om 50.",
 	"invalid_transition": "Ogiltig övergång.",
 	"invalid_name": "Ogiltigt namn.",
 	"name_required": "Du behöver (skriva och) välja ett namn eller ange ett namn.",

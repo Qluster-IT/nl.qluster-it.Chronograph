@@ -3,6 +3,7 @@
 	"stopwatch_not_running": "Stopwatch __name__ is not running.",
 	"transition_not_running": "Transition __name__ is not running.",
 	"invalid_duration": "Invalid duration.",
+	"invalid_millisecond_duration": "For milliseconds, enter at least 50 in increments of 50.",
 	"invalid_transition": "Invalid transition.",
 	"invalid_name": "Invalid name.",
 	"name_required": "You need to (type and) pick a name or enter a name.",

@@ -11,7 +11,7 @@ const { Utils, ChronographType } = require('../lib/utils.js');
 const api = require('../api.js');
 
 const originalLoad = Module._load;
-let TimerStart, TimerResume, TimerRunning, TimerSplit, StopwatchResume;
+let TimerStart, TimerResume, TimerRunning, TimerSplit, StopwatchResume, TransitionStart, TransitionResume;
 try {
 	Module._load = function(request, ...args) {
 		return request === 'homey' ? {} : originalLoad.call(this, request, ...args);
@@ -21,6 +21,8 @@ try {
 	TimerRunning = require('../lib/timer/conditions/timer_running.js');
 	TimerSplit = require('../lib/timer/triggers/timer_split.js');
 	StopwatchResume = require('../lib/stopwatch/actions/stopwatch_resume.js');
+	TransitionStart = require('../lib/transition/actions/transition_start.js');
+	TransitionResume = require('../lib/transition/actions/transition_resume.js');
 } finally {
 	Module._load = originalLoad;
 }
@@ -87,6 +89,82 @@ describe('Better Logic Flow arguments', () => {
 		assert.strictEqual(await cards.timer_running.run({ name: '{[wildcard]}' }), true);
 		assert.strictEqual(await cards.timer_split.run({ name: '{[room]} timer', time: 2, unit: 'seconds' },
 			{ id, name: 'Kitchen timer', time: 2, unit: 'seconds' }), true);
+	});
+
+	it('supports 50 ms steps in timer and transition start and resume cards after BLL evaluation', async () => {
+		for (const [Constructor, id, type] of [
+			[TimerStart, 'timer_start', ChronographType.TIMER],
+			[TimerStart, 'timer_start_v2', ChronographType.TIMER],
+			[TimerResume, 'timer_resume', ChronographType.TIMER],
+			[TimerResume, 'timer_resume_v2', ChronographType.TIMER],
+			[TransitionStart, 'transition_start', ChronographType.TRANSITION],
+			[TransitionResume, 'transition_resume', ChronographType.TRANSITION]
+		]) {
+			new Constructor(id, homey);
+			const name = `Milliseconds ${id}`;
+			const args = { name, time: id.endsWith('_v2') || type === ChronographType.TRANSITION
+				? '{[duration]} * 200' : 600, unit: 'milliseconds', from: 0, to: 10, steps: 2 };
+			await cards[id].run(args);
+			const instance = Chronograph.get(Utils.generateId(type, name));
+			assert.strictEqual(instance.getTargetDuration(), 600, id);
+			instance.pause();
+			for (const time of [0, 49, 51, 75]) {
+				await assert.rejects(cards[id].run({ ...args, time }), { message: 'invalid_millisecond_duration' });
+			}
+			if (id.endsWith('_v2') || type === ChronographType.TRANSITION) {
+				await assert.rejects(cards[id].run({ ...args, time: '{[duration]} * 17' }),
+					{ message: 'invalid_millisecond_duration' });
+			}
+			assert.strictEqual(Chronograph.get(instance.getId()), instance, id);
+			assert.strictEqual(instance.isRunning(), false, id);
+			if (id.includes('_resume')) {
+				await cards[id].run(args);
+				assert.strictEqual(instance.isRunning(), true, id);
+			}
+		}
+	});
+
+	it('accepts the minimum 50 ms duration for a timer and transition', async () => {
+		for (const [Constructor, id, type] of [
+			[TimerStart, 'timer_start_v2', ChronographType.TIMER],
+			[TransitionStart, 'transition_start', ChronographType.TRANSITION]
+		]) {
+			new Constructor(id, homey);
+			const name = `Minimum ${id}`;
+			await cards[id].run({ name, time: '50', unit: 'milliseconds', from: 0, to: 10, steps: 2 });
+			assert.strictEqual(Chronograph.get(Utils.generateId(type, name)).getTargetDuration(), 50);
+		}
+	});
+
+	it('evaluates a millisecond expression only once and preserves its original start arguments', async () => {
+		const originalEvalTime = Utils.evalTime;
+		try {
+			for (const [Constructor, id, type] of [
+				[TimerStart, 'timer_start_v2', ChronographType.TIMER],
+				[TimerResume, 'timer_resume_v2', ChronographType.TIMER],
+				[TransitionStart, 'transition_start', ChronographType.TRANSITION],
+				[TransitionResume, 'transition_resume', ChronographType.TRANSITION]
+			]) {
+				new Constructor(id, homey);
+				const name = `Expression ${id}`;
+				const args = { name, time: 'pick(50, 51)', unit: 'milliseconds', from: 0, to: 10, steps: 2 };
+				let evaluations = 0;
+				Utils.evalTime = () => ++evaluations === 1 ? 50 : 51;
+				await cards[id].run(args);
+				assert.strictEqual(evaluations, 1, id);
+				const instance = Chronograph.get(Utils.generateId(type, name));
+				assert.strictEqual(instance.getTargetDuration(), 50, id);
+				assert.strictEqual(instance._args.time, args.time, id);
+				if (id.includes('_resume')) {
+					instance.pause();
+					evaluations = 0;
+					await cards[id].run(args);
+					assert.strictEqual(evaluations, 1, `${id}: existing instance`);
+				}
+			}
+		} finally {
+			Utils.evalTime = originalEvalTime;
+		}
 	});
 
 	it('respects selected names, numeric argument types and missing BLL', async () => {

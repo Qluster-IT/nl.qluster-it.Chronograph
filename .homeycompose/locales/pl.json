@@ -3,6 +3,7 @@
 	"stopwatch_not_running": "Stoper __name__ nie działa.",
 	"transition_not_running": "Przejście __name__ nie działa.",
 	"invalid_duration": "Nieprawidłowy czas trwania.",
+	"invalid_millisecond_duration": "Dla milisekund wpisz co najmniej 50, w krokach co 50.",
 	"invalid_transition": "Nieprawidłowe przejście.",
 	"invalid_name": "Nieprawidłowa nazwa.",
 	"name_required": "Musisz wpisać i wybrać nazwę lub wprowadzić nazwę.",
